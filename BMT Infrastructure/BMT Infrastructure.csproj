@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BMT Core\BMT Core.csproj" />
     <ProjectReference Include="..\BMT UTIL\BMT UTIL.csproj" />
   </ItemGroup>

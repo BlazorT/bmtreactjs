@@ -8,11 +8,11 @@ public partial class Applog : EntityTransaction
 {
     //public long Id { get; set; }
 
+   // public long Id { get; set; }
+
     public string? MachineIp { get; set; }
 
     public int UserId { get; set; }
-
-    public int Dspid { get; set; }
 
     public int? MenuId { get; set; }
 
@@ -21,7 +21,4 @@ public partial class Applog : EntityTransaction
     public byte? ActionType { get; set; }
 
     public DateTime? LogTime { get; set; }
-
-    public virtual Dsp Dsp { get; set; } = null!;
-    public string? Synccode { get; set; }
 }
