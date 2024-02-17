@@ -1,0 +1,47 @@
+
+.rdg-cell {
+  text-align: center;
+}
+
+.rdg-row-odd {
+  background-color: #d3d3d34f;
+}
+.salesgrid-btn {
+  height: fit-content;
+  margin-top: auto;
+  margin-left: 1em;
+  width: 7em;
+ /* background-color: #d3d3d34f!important;*/
+}
+.salesgrid-btn:hover { 
+  cursor:pointer !important;
+}
+.saleGrid {
+  height: 29em;
+}
+.rdg-summary-row {
+  background-color: #f9f9f9 !important;
+}
+.sales-text-style{
+    text-align:end;
+}
+.sales-btn-style {
+  width: 10em;
+  font-weight: bold;
+  color: white;
+}
+.sales-btn-style:hover {
+  color: white;
+}
+@media (max-width:735px){
+  .sales-text-style {
+    text-align: center;
+  }
+}
+@media (min-width:768px) and (max-width:989px) {
+ 
+  .sales-btn-style {
+    width: 7em;
+    
+  }
+}

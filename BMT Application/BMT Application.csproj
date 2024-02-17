@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mapper\**" />
+    <EmbeddedResource Remove="Mapper\**" />
+    <None Remove="Mapper\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\ICitiesService.cs" />
+    <Compile Remove="Interfaces\ICommentReviewService.cs" />
+    <Compile Remove="Interfaces\ICurrenciesService.cs" />
+    <Compile Remove="Interfaces\IPriceService.cs" />
+    <Compile Remove="Interfaces\IProductService.cs" />
+    <Compile Remove="Services\CitiesService.cs" />
+    <Compile Remove="Services\CurrenciesService.cs" />
+    <Compile Remove="Services\InspectionRequestsService.cs" />
+    <Compile Remove="Services\PriceService.cs" />
+    <Compile Remove="Services\ProductService.cs" />
+    <Compile Remove="Services\VehicleAutoTransactionService.cs" />
+    <Compile Remove="Services\VehicleOfferService.cs" />
+    <Compile Remove="Services\VehiclesComparisonService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BMT Core\BMT Core.csproj" />
+  </ItemGroup>
+
+</Project>

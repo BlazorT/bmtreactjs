@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Specifications\**" />
+    <EmbeddedResource Remove="Specifications\**" />
+    <None Remove="Specifications\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Ownershiptype.cs" />
+    <Compile Remove="Entities\Price.cs" />
+    <Compile Remove="Repositories\ICitiesRepository.cs" />
+    <Compile Remove="Repositories\IPriceRepository.cs" />
+  </ItemGroup>
+
+</Project>

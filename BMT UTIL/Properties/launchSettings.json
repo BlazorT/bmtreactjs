@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Blazor.Web.UTIL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+    }
+  }
+}

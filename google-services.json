@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "712832871177",
+    "project_id": "dsps-a7aae",
+    "storage_bucket": "dsps-a7aae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712832871177:android:e6c159e1d2a40079bf81d8",
+        "android_client_info": {
+          "package_name": "com.blazor.dsps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqn23DgVJGIFdwAzX88cvEBzv6CHiVHwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

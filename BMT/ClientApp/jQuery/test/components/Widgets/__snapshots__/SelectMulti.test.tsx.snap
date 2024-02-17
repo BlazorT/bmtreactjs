@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#components/Widgets/SelectMulti Tests Snapshot 1`] = `
+<Component
+  id="test"
+  selectedValue={Array []}
+  values={
+    Array [
+      Object {
+        "label": "test",
+        "value": "test",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`#components/Widgets/SelectMulti Tests Snapshot 2`] = `
+<Component
+  id="test"
+  selectedValue={Array []}
+  values={
+    Array [
+      Object {
+        "label": "test",
+        "value": "test",
+      },
+    ]
+  }
+/>
+`;
