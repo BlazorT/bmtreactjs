@@ -17,9 +17,6 @@
 
         public byte? IsProxyEnabled { get; set; }
 
-        public byte? email_notification_enabled { get; set; } = 1;
-        public byte? sms_notification_enabled { get; set; } = 1;
-
         public byte? Sslenabled { get; set; }
 
         public long? SmsQouta { get; set; }

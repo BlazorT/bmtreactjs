@@ -5,7 +5,6 @@ namespace com.blazor.bmt.application.model;
 
 public partial class AuditentityModel
 {
-    public Int64 Id { get; set; }
     public int AuditEntityId { get; set; }
 
     public string? Name { get; set; }
@@ -20,5 +19,5 @@ public partial class AuditentityModel
 
     public int Status { get; set; }
 
-    public int? RowVer { get; set; }
+    public DateTime? RowVer { get; set; }
 }

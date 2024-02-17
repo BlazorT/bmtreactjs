@@ -36,22 +36,56 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="4dspsDb\**" />
     <Compile Remove="COM.Blazor.API\**" />
+    <Compile Remove="ServiceAgent\Interfaces\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="4dspsDb\**" />
     <Content Remove="COM.Blazor.API\**" />
+    <Content Remove="ServiceAgent\Interfaces\**" />
     <EmbeddedResource Remove="4dspsDb\**" />
     <EmbeddedResource Remove="COM.Blazor.API\**" />
+    <EmbeddedResource Remove="ServiceAgent\Interfaces\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="4dspsDb\**" />
     <None Remove="COM.Blazor.API\**" />
+    <None Remove="ServiceAgent\Interfaces\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\BlazorApiController.cs" />
+    <Compile Remove="Controllers\CommonController.cs" />
+    <Compile Remove="Controllers\DAController.cs" />
+    <Compile Remove="Controllers\DispatchmentController.cs" />
+    <Compile Remove="Controllers\InventoryController.cs" />
+    <Compile Remove="Controllers\LogController.cs" />
+    <Compile Remove="Controllers\ReportController.cs" />
+    <Compile Remove="Controllers\RosterPlanController.cs" />
+    <Compile Remove="Controllers\VehiclesController.cs" />
+    <Compile Remove="Controllers\WorkflowController.cs" />
     <Compile Remove="IUserService.cs" />
+    <Compile Remove="ServiceAgent\Authentication\BlazorBasicAuthentication.cs" />
     <Compile Remove="ServiceAgent\Extensions\EmailSenderExtensions.cs" />
-    <Compile Remove="ServiceAgent\Interfaces\IUserService.cs" />
+    <Compile Remove="ServiceAgent\Services\AppLogPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\BlazorRepoPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\BlazorUtilPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\CategoryPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\DispatchmentPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\DspPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\EnumPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\IndexPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\InspectionReportPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\IntegrationPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\InventoryDetailPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\MediaContentPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\NotificationPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\ProductsPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\RosterPlanPageService.cs" />
     <Compile Remove="ServiceAgent\Services\UserService .cs" />
+    <Compile Remove="ServiceAgent\Services\UsersPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\VehicleInspectionPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\VehiclesPageService.cs" />
+    <Compile Remove="ServiceAgent\Services\WorkflowPageService.cs" />
+    <Compile Remove="ServiceAgent\SignalR\BlazorNotificationHub.cs" />
     <Compile Remove="Startup.cs" />
     <Compile Remove="UserService .cs" />
     <Compile Remove="UsersViewModel.cs" />
@@ -64,8 +98,12 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\views\DSP\" />
+    <Folder Include="Controllers\" />
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="ServiceAgent\Authentication\" />
     <Folder Include="ServiceAgent\Extensions\" />
+    <Folder Include="ServiceAgent\Services\" />
+    <Folder Include="ServiceAgent\SignalR\" />
     <Folder Include="wwwroot\productimages\" />
   </ItemGroup>
 

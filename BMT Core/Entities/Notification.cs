@@ -8,7 +8,11 @@ public partial class Notification:EntityTransaction
 {
     //public long Id { get; set; }
 
-    public int Dspid { get; set; }
+    public int NetworkId { get; set; }
+
+    public int? ComaignId { get; set; }
+
+    public int? OrganizationId { get; set; }
 
     public byte NotificationTypeId { get; set; }
 

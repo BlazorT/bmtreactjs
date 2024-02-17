@@ -25,7 +25,7 @@ BlazorConstant.API_AUTH_KEY = Convert.ToString(builder.Configuration["APIAUTHKEY
 BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER = Convert.ToString(builder.Configuration["UploadImagesPath"]);
 GlobalSettings.DateTimeFormat = string.IsNullOrWhiteSpace("" + builder.Configuration["datetimeformat"]) ? GlobalSettings.DateTimeFormat : "" + builder.Configuration["datetimeformat"];
 // Add services to the container
- services.AddMemoryCache();
+services.AddMemoryCache();
 services.AddHttpContextAccessor();
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped(typeof(IAppLogRepository), typeof(AppLogRepository));
@@ -109,7 +109,7 @@ services.AddScoped(typeof(IInventoryDetailPageService), typeof(InventoryDetailPa
 services.AddScoped(typeof(IIntegrationPageService), typeof(IntegrationPageService));
 services.AddScoped(typeof(IVehicleInspectionPageService), typeof(VehicleInspectionPageService));
 
-services.AddScoped(typeof(IInspectionReportPageService), typeof(InspectionReportPageService));  
+services.AddScoped(typeof(IInspectionReportPageService), typeof(InspectionReportPageService));
 services.AddScoped(typeof(IMediaContentPageService), typeof(MediaContentPageService));
 services.AddScoped(typeof(IWorkflowPageService), typeof(WorkflowPageService));
 services.AddScoped(typeof(IRosterPlanPageService), typeof(RosterPlanPageService));

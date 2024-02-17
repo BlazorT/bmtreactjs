@@ -6,16 +6,22 @@ namespace com.blazor.bmt.application.model
 {
     public partial class AuditLogModel
     {
-        public long Id { get; set; }
-        public int AuditEntityId { get; set; }
-        public string KeyValue { get; set; }
-        public string AttributeName { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
-        public int DspId { get; set; }
-        public int CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public long AuditLogId { get; set; }
 
-       // public virtual Users CreatedByNavigation { get; set; }
+        public int AuditEntityId { get; set; }
+
+        public string KeyValue { get; set; } = null!;
+
+        public string AttributeName { get; set; } = null!;
+
+        public string OldValue { get; set; } = null!;
+
+        public string NewValue { get; set; } = null!;
+
+        public int StoreId { get; set; }
+
+        public int CreatedBy { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

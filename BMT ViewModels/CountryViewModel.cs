@@ -6,9 +6,9 @@ public partial class CountryViewModel
 {
     public int Id { get; set; }
 
-    public string? Code { get; set; }
-
     public string Name { get; set; } = null!;
+
+    public string? Code { get; set; }
 
     public string Description { get; set; } = null!;
 
@@ -18,11 +18,13 @@ public partial class CountryViewModel
 
     public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public int? LastUpdatedBy { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    public DateTime LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
+
+    public virtual ICollection<LeadViewModel> Leads { get; } = new List<LeadViewModel>();
 }

@@ -14,11 +14,6 @@ public partial class Menu:Entity
 
     public string? ActionName { get; set; }
 
-    public string? Tag { get; set; }
-    public string? Badge { get; set; }
-
-    public string? Title { get; set; }
-
     public string? MenueIcon { get; set; }
 
     public int? ParentId { get; set; }
@@ -29,11 +24,12 @@ public partial class Menu:Entity
 
     public int? LastUpdatedBy { get; set; }
 
+    public int? CreatedBy { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
     public DateTime? LastUpdatedAt { get; set; }
-
-    public int CreatedBy { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 
     public int? Status { get; set; }
 }
+

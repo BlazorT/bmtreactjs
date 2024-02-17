@@ -13,8 +13,6 @@ public partial class ApplogModel : BaseModelTransactions
 
     public int UserId { get; set; }
 
-    public int Dspid { get; set; }
-
     public int? MenuId { get; set; }
 
     public string? LogDesc { get; set; }
@@ -22,7 +20,4 @@ public partial class ApplogModel : BaseModelTransactions
     public byte? ActionType { get; set; }
 
     public DateTime? LogTime { get; set; }
-    public string? Synccode { get; set; }
-
-    //public virtual Dsp Dsp { get; set; } = null!;
 }

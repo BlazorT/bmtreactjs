@@ -6,73 +6,69 @@ namespace com.blazor.bmt.core;
 
 public partial class User:Entity
 {
-    public int Id { get; set; }
+  //  public int Id { get; set; }
 
-    public string UserId { get; set; } = null!;
+    public int? PaymentDetailId { get; set; }
+
+    public int? OrgId { get; set; }
+
+    public string UserCode { get; set; } = null!;
+
+    public int? RegistrationSource { get; set; }
+
+    public string? Fmctoken { get; set; }
+
+    public int? CityId { get; set; }
+
+    public string? UserName { get; set; }
+
+    public string? SecurityToken { get; set; }
+
+    public string? Contact { get; set; }
+
+    public string FirstName { get; set; } = null!;
 
     public string? MiddleName { get; set; }
 
     public string LastName { get; set; } = null!;
 
-    public string? FirstName { get; set; }
-
-    public string UserName { get; set; } = null!;
-
-    public int? StateId { get; set; }
-
-    public string? Fmctoken { get; set; }
-
-    public string? Im { get; set; }
+    public string? Nick { get; set; }
 
     public string Email { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
-
-    public int? Dspid { get; set; }
+    public string? Password { get; set; }
 
     public int RoleId { get; set; }
 
+    public string? Gpslocation { get; set; }
+
+    public string? Ims { get; set; }
+
+    public int? AddressId { get; set; }
+
+    public int GenderId { get; set; }
+
     public string? Avatar { get; set; }
 
-    public string? Address { get; set; }
+    public string? Remarks { get; set; }
 
-    public string PrimaryContact { get; set; } = null!;
-
-    public string? SecondaryContact { get; set; }
-
-    public string? IdentityId { get; set; }
-
-    public int? HasValidDrivingLicense { get; set; }
+    public string? Title { get; set; }
 
     public int Status { get; set; }
+
+    public decimal? BusinessVolume { get; set; }
+
+    public DateTime? Dob { get; set; }
+
+    public DateTime? RegistrationTime { get; set; }
 
     public int? CreatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; }
-
-    public byte? RegistrationSource { get; set; }
 
     public int? LastUpdatedBy { get; set; }
 
     public DateTime? LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
-
-    public string? Token { get; set; }
-
-    public DateTime? Dob { get; set; }
-
-    public string? LicenseNo { get; set; }
-
-    public int? IssuingStateId { get; set; }
-
-    public DateTime? LicenseIssueDate { get; set; }
-
-    public DateTime? LicenseExpiryDate { get; set; }
-
-    public string? Ssn { get; set; }
-
-    public int? VerificationMethod { get; set; }
-
-    public string? Remarks { get; set; }
 }

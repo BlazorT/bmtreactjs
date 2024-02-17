@@ -13,11 +13,6 @@ public partial class MenuModel
 
     public string? ActionName { get; set; }
 
-    public string? Tag { get; set; }
-
-    public string? Title { get; set; }
-    public string? Badge { get; set; }
-
     public string? MenueIcon { get; set; }
 
     public int? ParentId { get; set; }

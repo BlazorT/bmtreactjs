@@ -6,7 +6,7 @@ namespace com.blazor.bmt.application.model;
 
 public partial class RolemenuModel:BaseModel
 {
-   // public int Id { get; set; }
+    // public int Id { get; set; }
 
     public int RoleId { get; set; }
 

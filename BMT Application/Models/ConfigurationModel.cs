@@ -9,9 +9,11 @@ public partial class ConfigurationModel:BaseModel
 {
     //public int Id { get; set; }
 
-    public int Dspid { get; set; }
-
     public string Name { get; set; } = null!;
+
+    public int? OrganizationId { get; set; }
+
+    public int? NetworkId { get; set; }
 
     public string Description { get; set; } = null!;
 
@@ -21,11 +23,13 @@ public partial class ConfigurationModel:BaseModel
 
     public int Status { get; set; }
 
-    //public int? CreatedBy { get; set; }
+    public int? CreatedBy { get; set; }
 
-    //public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    //public int? LastUpdatedBy { get; set; }
+    public int? LastUpdatedBy { get; set; }
 
-    //public DateTime? LastUpdatedAt { get; set; }
+    public DateTime? LastUpdatedAt { get; set; }
+
+    public int RowVer { get; set; }
 }

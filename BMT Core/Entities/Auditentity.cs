@@ -19,5 +19,5 @@ public partial class Auditentity
 
     public int Status { get; set; }
 
-    public int? RowVer { get; set; }
+    public DateTime? RowVer { get; set; }
 }
