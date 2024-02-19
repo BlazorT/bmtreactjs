@@ -1,11 +1,9 @@
 ﻿using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositries;
-using com.blazor.dsps.core;
-using com.blazor.dsps.core.repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace com.blazor.dsps.core.repositories
+namespace com.blazor.bmt.core.repositories
 {
     public interface IConfigurationsRepository : IRepository<Configuration>
     {

@@ -2,7 +2,7 @@
 {
     public partial class AuditLogViewModel
     {
-        public long AuditLogId { get; set; }
+        public long Id { get; set; }
 
         public int AuditEntityId { get; set; }
 
@@ -14,7 +14,7 @@
 
         public string NewValue { get; set; } = null!;
 
-        public int StoreId { get; set; }
+        public int OrgId { get; set; }
 
         public int CreatedBy { get; set; }
 

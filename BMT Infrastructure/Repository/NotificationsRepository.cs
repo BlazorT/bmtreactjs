@@ -55,20 +55,20 @@ namespace com.blazor.bmt.infrastructure.repositories
         public async Task<IEnumerable<Notification>> GetNotificationsByCategoryAsync(int dspid)
         {
             return await _dbContext.Notifications.AsNoTracking()
-                .Where(x => x.Dspid== dspid && x.Status == 1)
+                .Where(x => x.OrganizationId == dspid && x.Status == 1)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Notification>> GetNotificationsByCategoryAndStatusAsnc(int Dspid, int status)
         {
             return await _dbContext.Notifications.AsNoTracking()
-                .Where(x => x.Dspid == Dspid && x.Status== (status==0? x.Status: status))
+                .Where(x => x.OrganizationId == Dspid && x.Status== (status==0? x.Status: status))
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Notification>> GetNotificationsAllFiltersAsync(Notification model)
         {
             return await _dbContext.Notifications.AsNoTracking()
-                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.Dspid == (model.Dspid == 0 ? x.Dspid : model.Dspid) && x.Status == (model.Status == 0 ? x.Status : model.Status) && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
+                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrganizationId == (model.OrganizationId == 0 ? x.OrganizationId : model.OrganizationId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
                 .ToListAsync();
         }
     }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace com.blazor.bmt.core
 {
-    public partial class Auditlog
+    public partial class Auditlog:EntityTransaction
     {
-        public long AuditLogId { get; set; }
+       // public long Id { get; set; }
 
         public int AuditEntityId { get; set; }
 
@@ -18,7 +18,7 @@ namespace com.blazor.bmt.core
 
         public string NewValue { get; set; } = null!;
 
-        public int StoreId { get; set; }
+        public int OrgId { get; set; }
 
         public int CreatedBy { get; set; }
 

@@ -6,7 +6,7 @@ namespace com.blazor.bmt.application.model
 {
     public partial class AuditLogModel
     {
-        public long AuditLogId { get; set; }
+        public long Id { get; set; }
 
         public int AuditEntityId { get; set; }
 
@@ -18,7 +18,7 @@ namespace com.blazor.bmt.application.model
 
         public string NewValue { get; set; } = null!;
 
-        public int StoreId { get; set; }
+        public int OrgId { get; set; }
 
         public int CreatedBy { get; set; }
 

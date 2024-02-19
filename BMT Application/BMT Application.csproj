@@ -22,7 +22,6 @@
     <Compile Remove="Services\CurrenciesService.cs" />
     <Compile Remove="Services\DispatchmentService.cs" />
     <Compile Remove="Services\DsppartnerService.cs" />
-    <Compile Remove="Services\DspService.cs" />
     <Compile Remove="Services\DspTablesService.cs" />
     <Compile Remove="Services\InspectionItemsService.cs" />
     <Compile Remove="Services\InspectionReportService.cs" />

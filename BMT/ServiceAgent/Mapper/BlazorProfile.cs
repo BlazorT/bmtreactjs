@@ -19,6 +19,7 @@ namespace com.blazor.bmt
             CreateMap<ConfigurationModel, ConfigurationsViewModel>();
            // CreateMap<BasicConfigurationModel, BasicConfigurationViewModel>();
             CreateMap<ApplogModel, AppLogViewModel>();
+            CreateMap<OrganizationModel, OrganizationViewModel>();
             CreateMap<AuditLogModel, AuditLogViewModel>();
             CreateMap<NotificationModel, NotificationViewModel>();
             //CreateMap<IntegrationservicesettingModel, IntegrationservicesettingViewModel>();
@@ -71,7 +72,7 @@ namespace com.blazor.bmt
            // CreateMap<Vehicle, VehicleModel>().ReverseMap();
             // cfg.CreateMap<VehicleModel, VehicleViewModel>().ReverseMap();
             //CreateMap<Dsppartner, DsppartnerModel>().ReverseMap(); //;
-            //CreateMap<Dsp, DspModel>().ReverseMap(); //;
+            CreateMap<Organization, OrganizationModel>().ReverseMap(); //;
             //CreateMap<Product, ProductModel>().ReverseMap(); //;
             //CreateMap<Integrationservicesetting, IntegrationservicesettingModel>().ReverseMap(); //;
             //CreateMap<Inspectionitem, InspectionitemModel>().ReverseMap(); //;

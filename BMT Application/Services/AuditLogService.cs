@@ -4,6 +4,7 @@ using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
 using com.blazor.bmt.core.interfaces;
 using com.blazor.bmt.core.repositories;
+using com.blazor.dsps.core.repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace com.blazor.bmt.application.services
         }
         public async Task<IEnumerable<AuditLogModel>> GetAuditlogDetails(AuditLogModel model)
         {
-            var entity = _mapper.Map<AuditLog>(model);
+            var entity = _mapper.Map<Auditlog>(model);
             var list = await _auditLogRepository.GetAuditLogDetailsAsync(entity);
             var mapped = _mapper.Map<IEnumerable<AuditLogModel>>(list);
             return mapped;
@@ -62,7 +63,7 @@ namespace com.blazor.bmt.application.services
         {
             //await ValidateProductIfExist(AppLogModel);
 
-            var mappedEntity = _mapper.Map<AuditLog>(AppLogModel);
+            var mappedEntity = _mapper.Map<Auditlog>(AppLogModel);
             if (mappedEntity == null)
                 throw new ApplicationException($"Entity could not be mapped.");
            

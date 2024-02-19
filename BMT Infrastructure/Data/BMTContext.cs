@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Eventing.Reader;
-using com.blazor.bmt.core;
+﻿using com.blazor.bmt.core;
 using com.blazor.bmt.util;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace com.blazor.bmt.infrastructure;
-public partial class _bmtContext : DbContext
+public partial class BMTContext : DbContext
 {
-    public _bmtContext()
+    public BMTContext()
     {
     }
 
-    public _bmtContext(DbContextOptions<_bmtContext> options)
+    public BMTContext(DbContextOptions<BMTContext> options)
         : base(options)
     {
         //this.Configuration.LazyLoadingEnabled = false;

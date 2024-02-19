@@ -1,7 +1,7 @@
-﻿using Blazor.Web.Core.Entities;
-using Blazor.Web.Core.Repositories;
-using Blazor.Web.Infrastructure.Data;
-using Blazor.Web.Infrastructure.Repository.Base;
+﻿
+using com.blazor.bmt.core;
+using com.blazor.bmt.infrastructure;
+using com.blazor.bmt.infrastructure.repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,11 @@ namespace Blazor.Web.Infrastructure.Repository
 {
     public class CitiesRepository : Repository<City>, ICitiesRepository
     {
-        public CitiesRepository(BlazorDBContext dbContext) : base(dbContext)
+        public CitiesRepository(_bmtContext dbContext) : base(dbContext)
         {
 
         }
-       
+
         public async Task<IEnumerable<City>> GetCitiesByStatusList(int status)
         {
             return await _dbContext.Cities.AsNoTracking()

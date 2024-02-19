@@ -343,7 +343,7 @@ namespace com.blazor.bmt.util
                     using (var command = connection.CreateCommand())
                     {
 
-                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultDspId,DefaultDspName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,dsp_admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,InsertSMSHistoryQuery,UpdateSMSNotificationsQuery,GetSMSNotificationsQuery,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM BasicConfigurations ";
+                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultOrgId,DefaultOrgName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,dsp_admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,InsertSMSHistoryQuery,UpdateSMSNotificationsQuery,GetSMSNotificationsQuery,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM BasicConfigurations ";
                         command.CommandType = System.Data.CommandType.Text;
                         using (DbDataReader dr = command.ExecuteReader())
                         {
@@ -354,8 +354,8 @@ namespace com.blazor.bmt.util
                                
                                 GlobalBasicConfigurationsViewModel.Id = Convert.ToByte(dr["Id"]);
                                 GlobalBasicConfigurationsViewModel.DefaultPublicUserId = Convert.ToInt32(dr["DefaultPublicUserId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspid = Convert.ToInt32(dr["DefaultDspId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultDspName"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
+                                GlobalBasicConfigurationsViewModel.DefaultDspid = Convert.ToInt32(dr["DefaultOrgId"]);
+                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgame"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
                                                                                                                   //SMS
                                 GlobalBasicConfigurationsViewModel.SmsQouta = Convert.ToInt32(dr["sms_qouta"]);
                                 GlobalBasicConfigurationsViewModel.Sslenabled = Convert.ToByte(dr["SSLEnabled"]);
@@ -406,6 +406,11 @@ namespace com.blazor.bmt.util
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
+                        pOrgId.Value = 1;
+                        parameter.Add(pOrgId);                       
+                        command.Parameters.AddRange(parameter.ToArray());
                         command.CommandType = System.Data.CommandType.StoredProcedure;
                         command.CommandText = "spGlobalLookUpData";
                         using (DbDataReader dr = command.ExecuteReader())
