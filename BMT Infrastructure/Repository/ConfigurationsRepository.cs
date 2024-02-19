@@ -1,6 +1,7 @@
 ﻿using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositories;
 using com.blazor.bmt.util;
+using com.blazor.dsps.core.repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,16 +27,16 @@ namespace com.blazor.bmt.infrastructure.repositories
             // second way
             // return await GetAllAsync();
         }
-        public async Task<IEnumerable<Configuration>> getConfigurationListAsyncByDSP(int DspId)
+        public async Task<IEnumerable<Configuration>> getConfigurationListAsyncByDSP(int Id)
         {
             return await _dbContext.Configurations.AsNoTracking()
-               .Where(x => x.Dspid == (DspId == 0 ? x.Dspid : DspId))
+               .Where(x => x.OrganizationId == (Id == 0 ? x.OrganizationId : Id))
                 .ToListAsync();
         }
         public async Task<Configuration> GetListByDspAndKeyAsync(int DspId, string key)
         {
             return await _dbContext.Configurations.AsNoTracking()
-               .Where(x => x.Dspid == DspId && x.Key.Contains(key) && x.Status==1)
+               .Where(x => x.OrganizationId == DspId && x.Key.Contains(key) && x.Status==1)
                 .FirstOrDefaultAsync();
 
             // second way

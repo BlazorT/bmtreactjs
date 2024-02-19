@@ -16,12 +16,9 @@
     <Compile Remove="Interfaces\ICurrenciesService.cs" />
     <Compile Remove="Interfaces\IPriceService.cs" />
     <Compile Remove="Interfaces\IProductService.cs" />
-    <Compile Remove="Services\AppLogService.cs" />
-    <Compile Remove="Services\AuditLogService.cs" />
     <Compile Remove="Services\BasicConfigurationsService.cs" />
     <Compile Remove="Services\CategoryService.cs" />
     <Compile Remove="Services\CitiesService.cs" />
-    <Compile Remove="Services\ConfigurationsService.cs" />
     <Compile Remove="Services\CurrenciesService.cs" />
     <Compile Remove="Services\DispatchmentService.cs" />
     <Compile Remove="Services\DsppartnerService.cs" />
@@ -40,8 +37,6 @@
     <Compile Remove="Services\ProductsService.cs" />
     <Compile Remove="Services\RosterplanService.cs" />
     <Compile Remove="Services\ShiftsService.cs" />
-    <Compile Remove="Services\StatesService.cs" />
-    <Compile Remove="Services\UsersService.cs" />
     <Compile Remove="Services\VehicleAutoTransactionService.cs" />
     <Compile Remove="Services\VehicleOfferService.cs" />
     <Compile Remove="Services\VehiclesComparisonService.cs" />
@@ -57,10 +52,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BMT Core\BMT Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

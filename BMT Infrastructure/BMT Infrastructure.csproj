@@ -13,13 +13,11 @@
   <ItemGroup>
     <Compile Remove="Data\BlazorDBContextSeed.cs" />
     <Compile Remove="Data\XBlazorDBContext.cs" />
-    <Compile Remove="Repository\AppLogRepository.cs" />
     <Compile Remove="Repository\AuditLogRepository.cs" />
     <Compile Remove="Repository\Base\SpecificationEvaluator.cs" />
     <Compile Remove="Repository\BasicConfigurationsRepository.cs" />
     <Compile Remove="Repository\CategoryRepository.cs" />
     <Compile Remove="Repository\CitiesRepository.cs" />
-    <Compile Remove="Repository\ConfigurationsRepository.cs" />
     <Compile Remove="Repository\DispatchmentRepository.cs" />
     <Compile Remove="Repository\DsppartnerRepository.cs" />
     <Compile Remove="Repository\DspRepository.cs" />
@@ -29,14 +27,9 @@
     <Compile Remove="Repository\InspectionReportRepository.cs" />
     <Compile Remove="Repository\IntegrationRepository.cs" />
     <Compile Remove="Repository\InventoryRepository.cs" />
-    <Compile Remove="Repository\MediaContentRepository.cs" />
-    <Compile Remove="Repository\NotificationsRepository.cs" />
-    <Compile Remove="Repository\OnlineUsersRepository.cs" />
     <Compile Remove="Repository\ProductsRepository.cs" />
     <Compile Remove="Repository\RosterplanRepository.cs" />
     <Compile Remove="Repository\ShiftsRepository.cs" />
-    <Compile Remove="Repository\StatesRepository.cs" />
-    <Compile Remove="Repository\UsersRepository.cs" />
     <Compile Remove="Repository\VehiclesInspectionRepository.cs" />
     <Compile Remove="Repository\VehiclesRepository.cs" />
     <Compile Remove="Repository\WorkflowFieldRepository.cs" />
