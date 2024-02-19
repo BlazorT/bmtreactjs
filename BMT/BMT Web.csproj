@@ -53,7 +53,6 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\BlazorApiController.cs" />
-    <Compile Remove="Controllers\CommonController.cs" />
     <Compile Remove="Controllers\DAController.cs" />
     <Compile Remove="Controllers\DispatchmentController.cs" />
     <Compile Remove="Controllers\InventoryController.cs" />
@@ -97,8 +96,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ServiceAgent\Interfaces\IAppLogPageService - Copy.cs" />
+    <Compile Include="ServiceAgent\Interfaces\IBlazorRepoPageService.cs" />
+    <Compile Include="ServiceAgent\Interfaces\IBlazorUtilPageService - Copy.cs" />
+    <Compile Include="ServiceAgent\Interfaces\INotificationPageService - Copy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ClientApp\src\views\DSP\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="ServiceAgent\Authentication\" />
     <Folder Include="ServiceAgent\Extensions\" />

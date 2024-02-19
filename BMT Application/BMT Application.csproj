@@ -14,6 +14,7 @@
     <Compile Remove="Interfaces\ICitiesService.cs" />
     <Compile Remove="Interfaces\ICommentReviewService.cs" />
     <Compile Remove="Interfaces\ICurrenciesService.cs" />
+    <Compile Remove="Interfaces\IOnlineUsersService.cs" />
     <Compile Remove="Interfaces\IPriceService.cs" />
     <Compile Remove="Interfaces\IProductService.cs" />
     <Compile Remove="Services\BasicConfigurationsService.cs" />

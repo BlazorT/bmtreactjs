@@ -10,7 +10,8 @@ using com.blazor.bmt.application.model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.ViewModels;
-using com.blazor.bmt.ui.services;
+//using com.blazor.bmt.ui.services;
+using com.blazor.dsps.viewmodels;
 
 namespace com.blazor.bmt.controllers
 {
@@ -24,13 +25,13 @@ namespace com.blazor.bmt.controllers
         private readonly IAppLogPageService _appLogPageService;
         private readonly IConfigurationsService _configurationsService;
         private readonly IStatesService _stateService;
-        private readonly IIntegrationPageService _integrationPageService;
-        private readonly IOnlineUsersService _onlineUsersService;
+       // private readonly IIntegrationPageService _integrationPageService;
+       // private readonly IOnlineUsersService _onlineUsersService;
         private readonly INotificationPageService _notificationPageService;
        // private readonly IBlazorUtilPageService _blazorUtilPageService;
-        private readonly IShiftsService _shiftsService;
+       // private readonly IShiftsService _shiftsService;
         private readonly IBlazorRepoPageService _blazorRepoPageService;
-        private readonly IBasicConfigurationsService _basicconfigurationsService;
+       // private readonly IBasicConfigurationsService _basicconfigurationsService;
 
         private readonly IBlazorUtilPageService _blazorUtilPageService;
 
@@ -38,21 +39,21 @@ namespace com.blazor.bmt.controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IShiftsService shiftsService, IBlazorUtilPageService blazorUtilPageService,IAppLogPageService appLogPageService, IIntegrationPageService integrationPageService, IBasicConfigurationsService basicconfigurationsService, INotificationPageService notificationPageService,  IBlazorRepoPageService blazorRepoPageService,IOnlineUsersService onlineUsersService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService,IAppLogPageService appLogPageService, INotificationPageService notificationPageService,  IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
             // this.dbContext = new _bmtContext();
             _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
-            _shiftsService = shiftsService ?? throw new ArgumentNullException(nameof(shiftsService));
+           // _shiftsService = shiftsService ?? throw new ArgumentNullException(nameof(shiftsService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-            _basicconfigurationsService = basicconfigurationsService ?? throw new ArgumentNullException(nameof(basicconfigurationsService));
+           // _basicconfigurationsService = basicconfigurationsService ?? throw new ArgumentNullException(nameof(basicconfigurationsService));
             _configurationsService = configurationsService ?? throw new ArgumentNullException(nameof(configurationsService));
-            _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
+          //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
             _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
-            _integrationPageService = integrationPageService ?? throw new ArgumentNullException(nameof(integrationPageService));
+            //_integrationPageService = integrationPageService ?? throw new ArgumentNullException(nameof(integrationPageService));
 
             _blazorUtilPageService = blazorUtilPageService ?? throw new ArgumentNullException(nameof(blazorUtilPageService));
 
@@ -101,27 +102,27 @@ namespace com.blazor.bmt.controllers
         [HttpGet("basicconfigurations")]
         [HttpPost("basicconfigurations")]
         [Route("basicconfigurations")]
-        public async Task<ActionResult> loadBasicConfigurations()
-        {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            try
-            {
-                 //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
-                    blazorApiResponse.status = true;
-                    blazorApiResponse.data = await _basicconfigurationsService.GetListByNameAsync("");
+        //public async Task<ActionResult> loadBasicConfigurations()
+        //{
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    try
+        //    {
+        //         //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+        //            blazorApiResponse.status = true;
+        //            blazorApiResponse.data = await _basicconfigurationsService.GetListByNameAsync("");
               
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
        // [HttpGet("submitconfigurations")]
         [HttpPost("submitconfigurations")]
         [Route("submitconfigurations")]
@@ -153,48 +154,48 @@ namespace com.blazor.bmt.controllers
         [HttpGet("submitbasicconfigurations")]
         [HttpPost("submitbasicconfigurations")]
         [Route("submitbasicconfigurations")]
-        public async Task<ActionResult> submitBasicConfigurations([FromBody] BasicConfigurationModel model)
-        {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            BlazorApiResponse response = new BlazorApiResponse();
-            try
-            {
-                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+        //public async Task<ActionResult> submitBasicConfigurations([FromBody] BasicConfigurationModel model)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    BlazorApiResponse response = new BlazorApiResponse();
+        //    try
+        //    {
+        //        //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
 
-                BasicConfigurationModel dbModel = await  _basicconfigurationsService.GetBasicConfigurstionByIdAsync(model.Id);
-                dbModel.LastUpdatedBy = model.LastUpdatedBy;// = GlobalUTIL.CurrentDateTime,
-                dbModel.LastUpdatedAt = model.LastUpdatedAt;
-                dbModel.SmtpServer = model.SmtpServer;
-                dbModel.SmtpUser = model.SmtpUser;
-                dbModel.SmsPassword = model.SmsPassword;
+        //        BasicConfigurationModel dbModel = await  _basicconfigurationsService.GetBasicConfigurstionByIdAsync(model.Id);
+        //        dbModel.LastUpdatedBy = model.LastUpdatedBy;// = GlobalUTIL.CurrentDateTime,
+        //        dbModel.LastUpdatedAt = model.LastUpdatedAt;
+        //        dbModel.SmtpServer = model.SmtpServer;
+        //        dbModel.SmtpUser = model.SmtpUser;
+        //        dbModel.SmsPassword = model.SmsPassword;
 
-                dbModel.SmtpUser = model.SmtpUser;
-                dbModel.Sslenabled = model.Sslenabled;
-                dbModel.SmsServiceUrl = model.SmsServiceUrl;
+        //        dbModel.SmtpUser = model.SmtpUser;
+        //        dbModel.Sslenabled = model.Sslenabled;
+        //        dbModel.SmsServiceUrl = model.SmsServiceUrl;
 
-                dbModel.Smtpport = model.Smtpport;
-                dbModel.SmsQouta = model.SmsQouta;
-                dbModel.SmsServiceUser = model.SmsServiceUser;
-                dbModel.SmtpSenderEmail = model.SmtpSenderEmail;
-                dbModel.SmtpUserPwd = model.SmtpUserPwd;
+        //        dbModel.Smtpport = model.Smtpport;
+        //        dbModel.SmsQouta = model.SmsQouta;
+        //        dbModel.SmsServiceUser = model.SmsServiceUser;
+        //        dbModel.SmtpSenderEmail = model.SmtpSenderEmail;
+        //        dbModel.SmtpUserPwd = model.SmtpUserPwd;
                
-                model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                // Update BasicconfigurationModel
-                await _basicconfigurationsService.Update(dbModel);
-                response.status = true;
-                response.message= string.Format(BlazorConstant.UPDATED_SUCCESS, model.DefaultDspname, GlobalUTIL.CurrentDateTime);
+        //        model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //        // Update BasicconfigurationModel
+        //        await _basicconfigurationsService.Update(dbModel);
+        //        response.status = true;
+        //        response.message= string.Format(BlazorConstant.UPDATED_SUCCESS, model.DefaultDspname, GlobalUTIL.CurrentDateTime);
 
-            }
-            catch (Exception ex)
-            {
-                response.status = false;
-                response.errorCode = "408";
-                response.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(response);
-            // .ToArray();
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.status = false;
+        //        response.errorCode = "408";
+        //        response.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(response);
+        //    // .ToArray();
+        //}
         [HttpPost("lovs")]
         [HttpGet("lovs")]
         [Route("lovs")]
@@ -275,25 +276,25 @@ namespace com.blazor.bmt.controllers
         [HttpPost("integrationservices")]
         [HttpGet("integrationservices")]
         [Route("integrationservices")]
-        public async Task<ActionResult> GetIntegrationServicesData([FromBody] IntegrationservicesettingViewModel vm)
-        {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
-            BlazorApiResponse response = new BlazorApiResponse();
-            try
-            {
-                response.status = true;
-                response.data = await _integrationPageService.GetIntegrationServicesAllAsync(vm);
-            }
-            catch (Exception ex)
-            {
-                response.status = false;
-                response.errorCode = "408";
-                response.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(response);
+        //public async Task<ActionResult> GetIntegrationServicesData([FromBody] IntegrationservicesettingViewModel vm)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+        //    BlazorApiResponse response = new BlazorApiResponse();
+        //    try
+        //    {
+        //        response.status = true;
+        //        response.data = await _integrationPageService.GetIntegrationServicesAllAsync(vm);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.status = false;
+        //        response.errorCode = "408";
+        //        response.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(response);
 
-        }
+        //}
         [HttpPost("rolemenus")]
         [HttpGet("rolemenus")]
         [Route("rolemenus")]
@@ -369,153 +370,153 @@ namespace com.blazor.bmt.controllers
         [HttpGet("shifts")]
         [HttpPost("shifts")]
         [Route("shifts")]
-        public async Task<ActionResult> loadShifts([FromBody] ShiftModel sm)
-        {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            try
-            {
-                var previousRequest = _cache.Get("" + this.User.Identity.Name + sm.Dspid + Request.Path);
-                if (previousRequest == null)
-                {
-                    blazorApiResponse.data = await _shiftsService.GetShiftsAllFiltersAsync(sm);
-                    blazorApiResponse.status = true;
+        //public async Task<ActionResult> loadShifts([FromBody] ShiftModel sm)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    try
+        //    {
+        //        var previousRequest = _cache.Get("" + this.User.Identity.Name + sm.Dspid + Request.Path);
+        //        if (previousRequest == null)
+        //        {
+        //            blazorApiResponse.data = await _shiftsService.GetShiftsAllFiltersAsync(sm);
+        //            blazorApiResponse.status = true;
 
-                    _cache.Set("" + this.User.Identity.Name + sm.Dspid + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-                }
-                else
-                {
-                    blazorApiResponse.status = true;
-                    //blazorApiResponse.effectedRows = previousRequest..cu(previousRequest as List<UsersViewModel>).Count;
-                    blazorApiResponse.errorCode = "407";
-                    blazorApiResponse.data = previousRequest;
-                    blazorApiResponse.message = "Too many requests, must be 40 Seconds interval between next request!";
-                }
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //            _cache.Set("" + this.User.Identity.Name + sm.Dspid + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
+        //        }
+        //        else
+        //        {
+        //            blazorApiResponse.status = true;
+        //            //blazorApiResponse.effectedRows = previousRequest..cu(previousRequest as List<UsersViewModel>).Count;
+        //            blazorApiResponse.errorCode = "407";
+        //            blazorApiResponse.data = previousRequest;
+        //            blazorApiResponse.message = "Too many requests, must be 40 Seconds interval between next request!";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
         [HttpGet("onlineusers")]
         [HttpPost("onlineusers")]
         [Route("onlineusers")]
-        public async Task<ActionResult> loadOnlineUsers([FromBody] OnlineUserViewModel ouvm)
-        {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            try
-            {
-                var previousRequest = _cache.Get("" + this.User.Identity.Name + Request.Path);
-                if (previousRequest == null)
-                {
-                    blazorApiResponse.data = await _onlineUsersService.GetListByStatusAsync(ouvm.Status,GlobalUTIL.CurrentDateTime.AddMonths(-12), GlobalUTIL.CurrentDateTime);
-                    blazorApiResponse.status = true;
+        //public async Task<ActionResult> loadOnlineUsers([FromBody] OnlineUserViewModel ouvm)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    try
+        //    {
+        //        var previousRequest = _cache.Get("" + this.User.Identity.Name + Request.Path);
+        //        if (previousRequest == null)
+        //        {
+        //            blazorApiResponse.data = await _onlineUsersService.GetListByStatusAsync(ouvm.Status,GlobalUTIL.CurrentDateTime.AddMonths(-12), GlobalUTIL.CurrentDateTime);
+        //            blazorApiResponse.status = true;
 
-                    _cache.Set("" + this.User.Identity.Name + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-                }
-                else
-                {
-                    blazorApiResponse.status = true;
-                    //blazorApiResponse.effectedRows = previousRequest..cu(previousRequest as List<UsersViewModel>).Count;
-                    blazorApiResponse.errorCode = "407";
-                    blazorApiResponse.data = previousRequest;
-                    blazorApiResponse.message = "Too many requests, must be 40 Seconds interval between next request!";
-                }
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //            _cache.Set("" + this.User.Identity.Name + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
+        //        }
+        //        else
+        //        {
+        //            blazorApiResponse.status = true;
+        //            //blazorApiResponse.effectedRows = previousRequest..cu(previousRequest as List<UsersViewModel>).Count;
+        //            blazorApiResponse.errorCode = "407";
+        //            blazorApiResponse.data = previousRequest;
+        //            blazorApiResponse.message = "Too many requests, must be 40 Seconds interval between next request!";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
         [HttpGet("submitonlineuser")]
         [HttpPost("submitonlineuser")]
         [Route("submitonlineuser")]
-        public async Task<ActionResult> submitOnlineUser([FromBody] OnlineUserViewModel onvm)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
+        //public async Task<ActionResult> submitOnlineUser([FromBody] OnlineUserViewModel onvm)
+        //{
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
                 
-                OnlineuserModel oumdl =await _onlineUsersService.GetOnlineUserByIdAsync(onvm.UserId);
-                if (oumdl == null)
-                {
-                    blazorApiResponse.data= await _onlineUsersService.Create(new OnlineuserModel { LoginTime = GlobalUTIL.CurrentDateTime, MachineIp = ""+Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = null, UserId = onvm.UserId });
-                    blazorApiResponse.status = true;
-                }
-                else {
-                    if(onvm.Status==1)
-                        await _onlineUsersService.Update(new OnlineuserModel {Id= onvm.Id, LoginTime = GlobalUTIL.CurrentDateTime, MachineIp = "" + Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = null, UserId = onvm.UserId });
-                    else
-                        await _onlineUsersService.Update(new OnlineuserModel { Id = onvm.Id, LoginTime = oumdl.LoginTime, MachineIp = "" + Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = GlobalUTIL.CurrentDateTime, UserId = onvm.UserId });
-                    blazorApiResponse.data = onvm;
-                    blazorApiResponse.status = true;
-                }
+        //        OnlineuserModel oumdl =await _onlineUsersService.GetOnlineUserByIdAsync(onvm.UserId);
+        //        if (oumdl == null)
+        //        {
+        //            blazorApiResponse.data= await _onlineUsersService.Create(new OnlineuserModel { LoginTime = GlobalUTIL.CurrentDateTime, MachineIp = ""+Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = null, UserId = onvm.UserId });
+        //            blazorApiResponse.status = true;
+        //        }
+        //        else {
+        //            if(onvm.Status==1)
+        //                await _onlineUsersService.Update(new OnlineuserModel {Id= onvm.Id, LoginTime = GlobalUTIL.CurrentDateTime, MachineIp = "" + Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = null, UserId = onvm.UserId });
+        //            else
+        //                await _onlineUsersService.Update(new OnlineuserModel { Id = onvm.Id, LoginTime = oumdl.LoginTime, MachineIp = "" + Request.HttpContext.Connection.RemoteIpAddress, Status = onvm.Status, LogoutTime = GlobalUTIL.CurrentDateTime, UserId = onvm.UserId });
+        //            blazorApiResponse.data = onvm;
+        //            blazorApiResponse.status = true;
+        //        }
                
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
         [HttpGet("submitintegrationservice")]
         [HttpPost("submitintegrationservice")]
         [Route("submitintegrationservice")]
-        public async Task<ActionResult> subIntegrationAddUpdate([FromBody] IntegrationservicesettingViewModel ivm)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
+        //public async Task<ActionResult> subIntegrationAddUpdate([FromBody] IntegrationservicesettingViewModel ivm)
+        //{
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
 
                 
-                if (ivm.Id <=0 )
-                {                  
-                    ivm.CreatedAt = GlobalUTIL.CurrentDateTime;
-                    ivm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    ivm.RowVer =  1;                    
-                    blazorApiResponse.data = await _integrationPageService.Create(ivm);
-                    blazorApiResponse.status = true;
-                }
-                else
-                {
-                    IntegrationservicesettingViewModel oumdl = await _integrationPageService.GetByIdAsync(ivm.Id);
-                    ivm.CreatedBy= oumdl.CreatedBy;
-                    ivm.CreatedAt = oumdl.CreatedAt;
-                    ivm.RowVer = oumdl.RowVer + 1;
-                    ivm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    await _integrationPageService.Update(ivm);
-                    blazorApiResponse.status = true;
-                    blazorApiResponse.data = ivm;
-                }
+        //        if (ivm.Id <=0 )
+        //        {                  
+        //            ivm.CreatedAt = GlobalUTIL.CurrentDateTime;
+        //            ivm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            ivm.RowVer =  1;                    
+        //            blazorApiResponse.data = await _integrationPageService.Create(ivm);
+        //            blazorApiResponse.status = true;
+        //        }
+        //        else
+        //        {
+        //            IntegrationservicesettingViewModel oumdl = await _integrationPageService.GetByIdAsync(ivm.Id);
+        //            ivm.CreatedBy= oumdl.CreatedBy;
+        //            ivm.CreatedAt = oumdl.CreatedAt;
+        //            ivm.RowVer = oumdl.RowVer + 1;
+        //            ivm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            await _integrationPageService.Update(ivm);
+        //            blazorApiResponse.status = true;
+        //            blazorApiResponse.data = ivm;
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
         #endregion
         #region "Submit Common Data"
 
@@ -602,7 +603,7 @@ namespace com.blazor.bmt.controllers
 
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         await _httpContextAccessor.HttpContext.SignInAsync(BlazorConstant.COOKIES_AUTHENTICATION_KEY, userPrincipal);
-                        UserViewModel uvm = new UserViewModel { Id = lvm.Id, Email = lvm.Email, Avatar = lvm.Avatar, RoleId = lvm.RoleId, UserName = lvm.userName, FirstName = lvm.FullName, PrimaryContact = lvm.UserContact, StateId = lvm.UserStateId };
+                        UserViewModel uvm = new UserViewModel { Id = lvm.Id, Email = lvm.Email, Avatar = lvm.Avatar, RoleId = lvm.RoleId, UserName = lvm.userName, FirstName = lvm.FullName, Contact = lvm.UserContact, CityId = lvm.UserStateId };
                         // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                         _cache.Set("" + lvm.Id, uvm);
 
@@ -647,75 +648,75 @@ namespace com.blazor.bmt.controllers
         [HttpGet("smtptestrun")]
         [HttpPost("smtptestrun")]
         [Route("smtptestrun")]
-        public async Task<ActionResult> SubSmtpTestRun([FromBody] BasicConfigurationModel model)
-        {
-            //string retrunURl = Request.Query["ReturnURL"];
-            BlazorResponseViewModel response = new BlazorResponseViewModel();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorResponseViewModel { status = false, id=1,   effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                 await _blazorUtilPageService.GenerateTestSMTPSettings(new BasicConfigurationViewModel { Id= model.Id, ApiAuthKey= model.ApiAuthKey, CreatedAt = model.CreatedAt, LastUpdatedAt = model.LastUpdatedAt, DefaultDspid = model.DefaultDspid, Smtpport = model.Smtpport, SmtpServer = model.SmtpServer, SmtpSenderEmail = model.SmtpSenderEmail, Sslenabled = model.Sslenabled, SmtpUser = model.SmtpUser, SmtpUserPwd = model.SmtpUserPwd, IsProxyEnabled = model.IsProxyEnabled, CreatedBy= model .CreatedBy});
-                response.data = model;
-                response.status = true;
-                response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, model.SmtpServer, "Email settings are successful ");
-                // Record log out activity
-            }
-            catch (Exception ex)
-            {
-                response.message = "Email Test Run Failed -  Error detail " + ex.InnerException.Message; 
-                response.status = false;
-            }
-            // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
-            //  return View(Url.Action("Dashboard_5", "Dashboards"));
-            return Ok(response);
-        }
+        //public async Task<ActionResult> SubSmtpTestRun([FromBody] BasicConfigurationModel model)
+        //{
+        //    //string retrunURl = Request.Query["ReturnURL"];
+        //    BlazorResponseViewModel response = new BlazorResponseViewModel();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorResponseViewModel { status = false, id=1,   effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
+        //         await _blazorUtilPageService.GenerateTestSMTPSettings(new BasicConfigurationViewModel { Id= model.Id, ApiAuthKey= model.ApiAuthKey, CreatedAt = model.CreatedAt, LastUpdatedAt = model.LastUpdatedAt, DefaultDspid = model.DefaultDspid, Smtpport = model.Smtpport, SmtpServer = model.SmtpServer, SmtpSenderEmail = model.SmtpSenderEmail, Sslenabled = model.Sslenabled, SmtpUser = model.SmtpUser, SmtpUserPwd = model.SmtpUserPwd, IsProxyEnabled = model.IsProxyEnabled, CreatedBy= model .CreatedBy});
+        //        response.data = model;
+        //        response.status = true;
+        //        response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, model.SmtpServer, "Email settings are successful ");
+        //        // Record log out activity
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.message = "Email Test Run Failed -  Error detail " + ex.InnerException.Message; 
+        //        response.status = false;
+        //    }
+        //    // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
+        //    //  return View(Url.Action("Dashboard_5", "Dashboards"));
+        //    return Ok(response);
+        //}
         [HttpGet("submitshift")]
         [HttpPost("submitshift")]
         [Route("submitshift")]
-        public async Task<ActionResult> submitShiftData([FromBody] ShiftModel mdl)
-        {
-            //string retrunURl = Request.Query["ReturnURL"];
-            BlazorResponseViewModel response = new BlazorResponseViewModel();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorResponseViewModel { status = false, id = 1, effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                // await _blazorUtilPageService.GenerateTestSMTPSettings(new BasicConfigurationViewModel { Id = model.Id, ApiAuthKey = model.ApiAuthKey, CreatedAt = model.CreatedAt, LastUpdatedAt = model.LastUpdatedAt, DefaultDspid = model.DefaultDspid, Smtpport = model.Smtpport, SmtpServer = model.SmtpServer, SmtpSenderEmail = model.SmtpSenderEmail, Sslenabled = model.Sslenabled, SmtpUser = model.SmtpUser, SmtpUserPwd = model.SmtpUserPwd, IsProxyEnabled = model.IsProxyEnabled, CreatedBy = model.CreatedBy });
-                if (mdl != null && mdl.id <= 0)
-                {
+        //public async Task<ActionResult> submitShiftData([FromBody] ShiftModel mdl)
+        //{
+        //    //string retrunURl = Request.Query["ReturnURL"];
+        //    BlazorResponseViewModel response = new BlazorResponseViewModel();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorResponseViewModel { status = false, id = 1, effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
+        //        // await _blazorUtilPageService.GenerateTestSMTPSettings(new BasicConfigurationViewModel { Id = model.Id, ApiAuthKey = model.ApiAuthKey, CreatedAt = model.CreatedAt, LastUpdatedAt = model.LastUpdatedAt, DefaultDspid = model.DefaultDspid, Smtpport = model.Smtpport, SmtpServer = model.SmtpServer, SmtpSenderEmail = model.SmtpSenderEmail, Sslenabled = model.Sslenabled, SmtpUser = model.SmtpUser, SmtpUserPwd = model.SmtpUserPwd, IsProxyEnabled = model.IsProxyEnabled, CreatedBy = model.CreatedBy });
+        //        if (mdl != null && mdl.id <= 0)
+        //        {
                   
-                    mdl.RowVer = 1;
-                    mdl.CreatedBy = mdl.CreatedBy;
-                    mdl.CreatedAt = GlobalUTIL.CurrentDateTime;
-                    mdl.LastUpdatedBy = mdl.LastUpdatedBy;
-                    mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            mdl.RowVer = 1;
+        //            mdl.CreatedBy = mdl.CreatedBy;
+        //            mdl.CreatedAt = GlobalUTIL.CurrentDateTime;
+        //            mdl.LastUpdatedBy = mdl.LastUpdatedBy;
+        //            mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
 
-                    response.data = await _shiftsService.Create(mdl);
-                    response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-                }
-                else if(mdl != null)
-                {
+        //            response.data = await _shiftsService.Create(mdl);
+        //            response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
+        //        }
+        //        else if(mdl != null)
+        //        {
                     
-                    mdl.RowVer = mdl.RowVer + 1;
-                    mdl.LastUpdatedBy = mdl.LastUpdatedBy;
-                    mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    await _shiftsService.Update(mdl);
-                    response.data = mdl;
-                    response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-                }
-                //response.data = mdl;
-                response.status = true;
-                response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, "Email settings are successful ");
-                // Record log out activity
-            }
-            catch (Exception ex)
-            {
-                response.message = "Email Test Run Failed -  Error detail " + ex.InnerException.Message;
-                response.status = false;
-            }
-            // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
-            //  return View(Url.Action("Dashboard_5", "Dashboards"));
-            return Ok(response);
-        }
+        //            mdl.RowVer = mdl.RowVer + 1;
+        //            mdl.LastUpdatedBy = mdl.LastUpdatedBy;
+        //            mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            await _shiftsService.Update(mdl);
+        //            response.data = mdl;
+        //            response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
+        //        }
+        //        //response.data = mdl;
+        //        response.status = true;
+        //        response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, "Email settings are successful ");
+        //        // Record log out activity
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.message = "Email Test Run Failed -  Error detail " + ex.InnerException.Message;
+        //        response.status = false;
+        //    }
+        //    // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
+        //    //  return View(Url.Action("Dashboard_5", "Dashboards"));
+        //    return Ok(response);
+        //}
 
         [HttpPost("submitgrouprights")]
         [Route("submitgrouprights")]
