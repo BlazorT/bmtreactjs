@@ -159,7 +159,7 @@ const Login = () => {
               <div className="card shadow-2-strong ">
                 <div className="card-body p-3 text-center">
                   <img className="" src="4DSPSLogoTransparent.png" alt="logo" />
-                  <p className="pt-3 signin-text"> 4DSPS Sign in check</p>
+                  <p className="pt-3 signin-text"> BMT Sign in check</p>
                   <form>
                     <Select
                       style="display:none;"
@@ -230,7 +230,7 @@ const Login = () => {
                   </div>
                   <hr className="my-2" />
                   <div className="login-footer">
-                    <p className="mb-0">© 2023 4DSPS All Rights Reserved</p>
+                    <p className="mb-0">© 2023 BMT All Rights Reserved</p>
                   </div>
                 </div>
               </div>

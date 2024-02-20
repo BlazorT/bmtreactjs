@@ -567,22 +567,22 @@ namespace com.blazor.bmt.controllers
                     GlobalSettings.loginRoleId = lvm.RoleId;
                     GlobalSettings.loginUserName = lvm.FullName;
                     GlobalSettings.loginUserId = lvm.Id;
-                    GlobalSettings.LoginUserCityId = lvm.UserCityId;
-                    GlobalSettings.loginAvatar = lvm.Avatar;
-                    GlobalSettings.LoginUserStateId = lvm.UserStateId;
-                    GlobalSettings.LoginUserContact = lvm.UserContact;
+                  //  GlobalSettings.LoginUserCityId = lvm.UserCityId;
+                   // GlobalSettings.loginAvatar = lvm.Avatar;
+                   // GlobalSettings.LoginUserStateId = lvm.UserStateId;
+                   // GlobalSettings.LoginUserContact = lvm.UserContact;
 
-                    GlobalSettings.DspName = lvm.DspName;
+                  //  GlobalSettings.DspName = lvm.DspName;
                     //GlobalSettings.VAT_TAXID = lvm.VAT_NTN;
-                    GlobalSettings.DspStateName = lvm.DspStateName;
+                  //  GlobalSettings.DspStateName = lvm.DspStateName;
                     GlobalSettings.DspEmail = lvm.Email;
-                    GlobalSettings.DspLogoPath = lvm.DspLogo;
+                  //  GlobalSettings.DspLogoPath = lvm.DspLogo;
                     //BasicConfigurationsViewModel.default_show_room_id = lvm.ShowRoomStateId;
-                    GlobalSettings.DspStateName = lvm.DspStateName;
-                    GlobalSettings.LoginUserContact = lvm.UserContact.Replace("+", "00");
+                  //  GlobalSettings.DspStateName = lvm.DspStateName;
+                  //  GlobalSettings.LoginUserContact = lvm.UserContact.Replace("+", "00");
                     GlobalSettings.LoginUserEmail = lvm.Email;
-                    GlobalSettings.DspCityName = lvm.DspCityName;
-                    GlobalSettings.TradeName = lvm.TradeName;
+                   // GlobalSettings.DspCityName = lvm.DspCityName;
+                  //  GlobalSettings.TradeName = lvm.TradeName;
                     //GlobalSettings.ShowRoomCurrency = lvm.ShowRoomCurrency;
                     // {
                     if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && ((lvm.AlreadyLoginStatus != (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN || (lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN && lvm.LoginMachineIp == ipAddress)) || GlobalUTIL.CurrentDateTime.Subtract(lvm.LoginTime).TotalHours >= 8))
@@ -592,18 +592,18 @@ namespace com.blazor.bmt.controllers
                         new Claim("UserName",(""+lvm.FullName).Trim()),
                         new Claim("UserId",""+lvm.Id),
                         new Claim("RoleId",(""+lvm.RoleId).Trim()),
-                        new Claim("DspId",(""+lvm.DspId).Trim()),
-                        new Claim(ClaimTypes.Name,(lvm.userName).Trim()),
+                      //  new Claim("DspId",(""+lvm.DspId).Trim()),
+                      //  new Claim(ClaimTypes.Name,(lvm.userName).Trim()),
                         new Claim(ClaimTypes.Email,(""+lvm.Email).Trim()),
                         new Claim(ClaimTypes.DateOfBirth,GlobalUTIL.CurrentDateTime.ToLongDateString() ),
                         new Claim(ClaimTypes.Role, (lvm.UserRole).Trim())
                      };
-                        GlobalUTIL.loadConfigurations(lvm.DspId);
+                        GlobalUTIL.loadConfigurations(lvm.Id);
                         var userIdentity = new ClaimsIdentity(userClaims, BlazorConstant.USER_IDENTTITY);
 
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         await _httpContextAccessor.HttpContext.SignInAsync(BlazorConstant.COOKIES_AUTHENTICATION_KEY, userPrincipal);
-                        UserViewModel uvm = new UserViewModel { Id = lvm.Id, Email = lvm.Email, Avatar = lvm.Avatar, RoleId = lvm.RoleId, UserName = lvm.userName, FirstName = lvm.FullName, Contact = lvm.UserContact, CityId = lvm.UserStateId };
+                        UserViewModel uvm = new UserViewModel { Id = lvm.Id, Email = lvm.Email, RoleId = lvm.RoleId, FirstName = lvm.FullName};
                         // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                         _cache.Set("" + lvm.Id, uvm);
 
@@ -612,7 +612,7 @@ namespace com.blazor.bmt.controllers
                         blazorResponseViewModel.data = lvm;
                         blazorResponseViewModel.id = lvm.Id;
                         blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
-                        blazorResponseViewModel.message = String.Format("Welcome <b>{0}</b> to {1} - successfully logged in!", lvm.FullName, lvm.DspName);
+                        blazorResponseViewModel.message = String.Format("Welcome <b>{0}</b> to {1} - successfully logged in!", lvm.FullName);
                         blazorResponseViewModel.status = true;
                     }
                     else if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN)

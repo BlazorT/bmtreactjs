@@ -146,7 +146,7 @@ function SignIn() {
   };
   const LoginClick = async (event) => {
     event.preventDefault();
-    if (userDetail.userName === '' || userDetail.password === '') {
+    if (userDetail.fullName === '' || userDetail.password === '') {
       setErrorMessage('Username & password are mandatory !');
       setIsLoading(false);
       return;
@@ -156,8 +156,9 @@ function SignIn() {
         `/Common/login?email=${userDetail.userName}&password=${userDetail.password}`,
         { method: 'POST' },
       );
-      //
+      console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
+        console.log(JSON.stringify(loginRes));
         getUtils();
         getMenus();
         setModalOpen(true);
@@ -176,20 +177,11 @@ function SignIn() {
       }
     }
   };
-
-  const RegisterClick = () => {
-    navigate('/dspRegister');
-  };
-  const JoinUsDA = () => {
-    navigate('/applyForm');
-  };
   const ClickProceed = () => {
     dispatch(
       setUserData({
         userId: loginRes.current.data.id,
-        dspId: loginRes.current.data.dspId,
         roleId: loginRes.current.data.roleId,
-        userInfo: loginRes.current.data,
         isAuthenticated: true,
       }),
     );
@@ -236,9 +228,9 @@ function SignIn() {
         <div className="col-12 col-md-8 col-lg-6 col-xl-5 LoginCardOverlayImg">
           <div className="LoginCardOverlayImg2ndView">
             <div className="card-body p-3 text-center">
-              <img className="LogoStyl mb-2" src="4dspslogo.svg" alt="logo" />
+              <img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />
               <br />
-              <strong className="signin-text labelName"> 4DSPS Sign in </strong>
+              <strong className="signin-text labelName"> BMT Sign in </strong>
               <form>
                 <div className="form-outline mb-2 mt-2 text-start">
                   <label htmlFor="" className="login_label mb-1 labelName">
@@ -298,7 +290,7 @@ function SignIn() {
             </div>
           </div>
           <div className="LoginCardOverlayImg3ndView">
-            <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />
+          {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
             <div className="text-center labelName mt-2">
               ©2023{' '}
               <a onClick={toggleModal} className="underline labelName">
@@ -307,7 +299,7 @@ function SignIn() {
             </div>
             <p className="pt-1 CardOverlaylbl labelName">
               {' '}
-              4DSPS is affiliated with Amazon or its subsidiaries.
+              BMT is affiliated with Amazon or its subsidiaries.
             </p>
           </div>
         </div>
@@ -318,7 +310,7 @@ function SignIn() {
                 <Carousel.Item>
                   <img
                     className="d-block w-100 carousalImg"
-                    src="carouselImg5.png"
+                    src="BDMT.jpg"
                     alt="First slide"
                   />
                   <Carousel.Caption>
@@ -330,106 +322,162 @@ function SignIn() {
                     </p>
                   </Carousel.Caption>
                 </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="carouselImg4.png"
-                    alt="Second slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Delivery Service</h5>
-                    <p> As a DSP, you are only as strong as your team of delivery associates. </p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="carouselImg3.png"
-                    alt="Third slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Partner Application</h5>
-                    <p>
-                      Your leadership won’t just set them up for success on the road today, but
-                      wherever their career takes them.
-                    </p>
-                  </Carousel.Caption>
-                </Carousel.Item>
+                {/*<Carousel.Item>*/}
+                {/*  <img*/}
+                {/*    className="d-block w-100 carousalImg"*/}
+                {/*    src="carouselImg4.png"*/}
+                {/*    alt="Second slide"*/}
+                {/*  />*/}
+                {/*  <Carousel.Caption>*/}
+                {/*    <h5>Delivery Service</h5>*/}
+                {/*    <p> As a DSP, you are only as strong as your team of delivery associates. </p>*/}
+                {/*  </Carousel.Caption>*/}
+                {/*</Carousel.Item>*/}
+                {/*<Carousel.Item>*/}
+                {/*  <img*/}
+                {/*    className="d-block w-100 carousalImg"*/}
+                {/*    src="carouselImg3.png"*/}
+                {/*    alt="Third slide"*/}
+                {/*  />*/}
+                {/*  <Carousel.Caption>*/}
+                {/*    <h5>Partner Application</h5>*/}
+                {/*    <p>*/}
+                {/*      Your leadership won’t just set them up for success on the road today, but*/}
+                {/*      wherever their career takes them.*/}
+                {/*    </p>*/}
+                {/*  </Carousel.Caption>*/}
+                {/*</Carousel.Item>*/}
               </Carousel>
             </div>
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
-              <h5 className="MainHeading pb-2">Opportunity To Lead</h5>
+              <h5 className="MainHeading pb-2">Social Media Campaign</h5>
               <p className="lineHeight">
-                An opportunity to lead As a DSP, you are only as strong as your team of delivery
-                associates. Your leadership won’t just set them up for success on the road today,
-                but wherever their career takes them. Successful candidates are passionate about
-                hiring and coaching, building a strong company culture, and giving back to the
-                community. A partnership with momentum While Amazon provides access to tools and
-                mentorship to help you hit the ground running and ensure that your delivery
-                associates have a safe work environment, you can expect to run a seasonal business
-                that is always evolving. When you’re at the forefront of change with Amazon,
-                innovation never stops.
+                Blazor Media Toolkit Campaign plays nice with others and integrates with over 700 apps and services like whatsapp,facebook,tweeter,messenger,youtube etc. From accounting to CMS and analytics applications, all the way to services that are focused on sales, support and lead generation. Visit their website and try out their platform for free to find out if Blazor Media Campaign(BMC) is the right solution to help grow your ....
               </p>
             </div>
           </div>
           <div className="SeprateDiv"> </div>
           <div className="CarousalMainDiv row py-3 d-flex align-items-center">
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
-              <h5 className="MainHeading pb-2">Partnership With Momentum</h5>
-              <p className="lineHeight">
-                A partnership with momentum While Amazon provides access to tools and mentorship to
-                help you hit the ground running and ensure that your delivery associates have a safe
-                work environment, you can expect to run a seasonal business that is always evolving.
-                When you’re at the forefront of change with Amazon, innovation never stops. As a
-                DSP, you are only as strong as your team of delivery associates. Your leadership
-                won’t just set them up for success on the road today, but wherever their career
-                takes them. Successful candidates are passionate about hiring and coaching, building
-                a strong company culture, and giving back to the community.
-              </p>
+              <h2><span className="txtColor">Blazor</span> Media Toolkit </h2>
+              {/*<h5 className="MainHeading pb-2">Partnership With Momentum</h5>*/}
+              <ul className="liFontsize">
+                <li>Facebook</li>
+                <li>WhatsApp</li>
+                <li>Twitter</li>
+                <li>SMS</li>
+                <li>Email</li>
+                <li>Linkedin</li>
+                <li>TikTok</li>
+                <li>Snapchat</li>
+                <li>Instagram</li>
+              </ul>
             </div>
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
               <Carousel data-bs-theme="dark">
                 <Carousel.Item>
                   <img
                     className="d-block w-100 carousalImg"
-                    src="landingBackground2.png"
+                    src="email.jpg"
                     alt="First slide"
                   />
                   <Carousel.Caption>
-                    <h5>Delivery Service</h5>
+                    <h5>Blazor Media Toolkit</h5>
                     <p>
                       {' '}
-                      A partnership with momentum While Amazon provides access to tools and
-                      mentorship to help you hit the ground running.
+                      Email
                     </p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
                   <img
                     className="d-block w-100 carousalImg"
-                    src="carouselImg4.png"
+                    src="whatsapp.jpg"
                     alt="Second slide"
                   />
                   <Carousel.Caption>
-                    <h5>Partner Application</h5>
+                    <h5>Blazor Media Toolkit</h5>
                     <p>
-                      Powered bulkhead door that opens when drivers reach their delivery location.
-                      Ventilated seats for fast heating and cooling.
+                   Whatsapp
                     </p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
                   <img
                     className="d-block w-100 carousalImg"
-                    src="carouselImg2.png"
+                    src="instagram.jpg"
                     alt="Third slide"
                   />
                   <Carousel.Caption>
-                    <h5>Tips for the Amazon</h5>
+                    <h5>Blazor Media Toolkit</h5>
                     <p>
-                      While Amazon provides access to tools and mentorship to help you hit the
-                      ground running and ensure that your delivery associates have a safe work
-                      environmen.
+                      Instagram
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100 carousalImg"
+                    src="linkedin.jpg"
+                    alt="Fourth slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>Blazor Media Toolkit</h5>
+                    <p>
+                     LinkedIn
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100 carousalImg"
+                    src="realtwiter.jpg"
+                    alt="Third slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>Blazor Media Toolkit</h5>
+                    <p>
+                     Twitter
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100 carousalImg"
+                    src="tiktok.jpg"
+                    alt="Fifth slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>Blazor Media Toolkit</h5>
+                    <p>
+                     Tiktok
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100 carousalImg"
+                    src="snapchat.png"
+                    alt="seventh slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>Blazor Media Toolkit</h5>
+                    <p>
+                      Snapchat
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100 carousalImg"
+                    src="fb.jpg"
+                    alt="sixth slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>Blazor Media Toolkit</h5>
+                    <p>
+                      Facebook
                     </p>
                   </Carousel.Caption>
                 </Carousel.Item>

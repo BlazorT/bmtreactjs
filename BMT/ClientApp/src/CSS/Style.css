@@ -3267,3 +3267,9 @@ fieldset.legend {
   text-align: right;
   margin-top: 0.5rem;
 }
+.txtColor {
+  color: #FEFCFF;
+}
+.liFontsize{
+    font-size:1.5rem;
+}
