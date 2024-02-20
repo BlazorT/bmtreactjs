@@ -3273,3 +3273,54 @@ fieldset.legend {
 .liFontsize{
     font-size:1.5rem;
 }
+.clientImg {
+  width: 160px !important;
+  height: 160px !important;
+  min-height: 80px;
+  min-width: 140px;
+  border-radius: 100%;
+  border: 2px solid rgb(171 44 42 / 79%);
+}
+
+.clientCardPadding {
+    border:none;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.clientImgBackgroundClr {
+  text-align: center;
+  background-color: #093253;
+  padding-top: 10px;
+}
+
+.clientBodyBackgroundClr {
+  background-color: #093253 !important;
+  text-align: center;
+}
+
+.ClientReview {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 100;
+  line-height: 1.42 !important;
+  color: #ffffff !important;
+}
+.card-deck{
+    display:flex;
+}
+.PlayStoreImg{
+    width:7em;
+    margin-left:0.7em;
+}
+.sec-heading center {
+  text-align: center !important;
+  font-size: 3em;
+}
+.ClientPost {
+  color: #ffffffa6;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 200;
+  line-height: 1.2 !important;
+}

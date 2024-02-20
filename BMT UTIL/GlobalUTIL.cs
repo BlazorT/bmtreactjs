@@ -355,7 +355,7 @@ namespace com.blazor.bmt.util
                                 GlobalBasicConfigurationsViewModel.Id = Convert.ToByte(dr["Id"]);
                                 GlobalBasicConfigurationsViewModel.DefaultPublicUserId = Convert.ToInt32(dr["DefaultPublicUserId"]);
                                 GlobalBasicConfigurationsViewModel.DefaultDspid = Convert.ToInt32(dr["DefaultOrgId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgame"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
+                                //GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgame"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
                                                                                                                   //SMS
                                 GlobalBasicConfigurationsViewModel.SmsQouta = Convert.ToInt32(dr["sms_qouta"]);
                                 GlobalBasicConfigurationsViewModel.Sslenabled = Convert.ToByte(dr["SSLEnabled"]);

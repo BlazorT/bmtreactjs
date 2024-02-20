@@ -56,6 +56,7 @@ function SignIn() {
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
   const [userDetail, setuserDetail] = useState({
     storeName: '',
     storeId: null,
@@ -196,6 +197,8 @@ function SignIn() {
       }),
     );
   };
+  
+
   const addUserToCookies = () => {
     // Set the cookie expiration date to 7 days from the current date
     const expirationDate = new Date();
@@ -292,14 +295,14 @@ function SignIn() {
           <div className="LoginCardOverlayImg3ndView">
           {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
             <div className="text-center labelName mt-2">
-              ©2023{' '}
+              © 2020{' '}
               <a onClick={toggleModal} className="underline labelName">
-                6BY7, LLC
+                Blazor Media Toolkit(BMT).
               </a>
             </div>
             <p className="pt-1 CardOverlaylbl labelName">
               {' '}
-              BMT is affiliated with Amazon or its subsidiaries.
+               All Rights Reserved
             </p>
           </div>
         </div>
@@ -500,7 +503,7 @@ function SignIn() {
                   src={
                     loginRes.current?.data?.dspLogo
                       ? loginRes.current.data.dspLogo
-                      : '4dspslogo.svg'
+                      : 'bmtlogo.png'
                   }
                   alt="logo"
                 />
@@ -529,6 +532,69 @@ function SignIn() {
               </div>
             </div>
           </Modal>
+          <div className="SeprateDiv"> </div>
+
+          <section id="Reviews" className="backgrdClr">
+            <div className="container">
+              <div className="row pb-2 pt-2">
+                <div className="col-lg-12 col-md-12">
+                  <div className="sec-heading center" style={{ textAlign: 'center' }}>
+                    <h2 className="sec-heading center" >Our Endorsements</h2>
+                  </div>
+                </div>
+              </div>
+              <div className="card-deck">
+                <div className="card clientCardPadding">
+                  <div className="clientImgBackgroundClr">
+                    <img
+                      className="card-img-top clientImg"
+                      src="Michael-Azran.jpg"
+                      alt="Michael-Azran"
+                    />
+                  
+                  </div>
+                  <div className="card-body clientBodyBackgroundClr">
+                    <span className="card-title AdvisorName">Michael-Azran</span><br />
+                    <p className="ClientPost">Michael-Azran, BDN, Canada</p>
+                    <p className="card-text ClientReview">Excellent performance.It was pleasure to work with Blazor.Knowledgeable and helpful professionals!.</p>
+
+                  </div>
+                </div>
+                <div className="card clientCardPadding">
+                  <div className="clientImgBackgroundClr">
+                    <img
+                      className="card-img-top clientImg"
+                      src="Abdul-Razaq.jpg"
+                      alt="Abdul Razaq"
+                    />
+                  </div>
+                  <div className="card-body clientBodyBackgroundClr">
+                    <span className="card-title AdvisorName">Abdul Razaq</span><br />
+                    <p className="ClientPost">Abdul Razaq, Barcelona,Spain  </p>
+                    <p className="card-text ClientReview">When i had a problem,recieved quick, prompted and issue resolving response from Blazor</p>
+
+                  </div>
+                </div>
+                <div className="card clientCardPadding">
+                  <div className="clientImgBackgroundClr">
+                    <img
+                      className="card-img-top clientImg"
+                      src="ymc.jpg"
+                      alt="Taymullah Abdul Rehman"
+                    />
+                  </div>
+                  <div className="card-body clientBodyBackgroundClr">
+                    <span className="card-title AdvisorName">Youngs Merchant Club</span><br />
+                    <p className="ClientPost">Taymullah Abdul Rehman, Co-Founder, YMC LLC</p>
+                    <p className="card-text ClientReview">Excellent work,dedication, delivered beyond expected,iam highly satisfy with them,will continue working with Blazor team for sure!!!</p>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+         
           <div className="SeprateDiv"> </div>
           <Fotter />
         </div>

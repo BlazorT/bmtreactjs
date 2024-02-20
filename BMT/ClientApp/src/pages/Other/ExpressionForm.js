@@ -182,7 +182,7 @@ const MyDataGrid = () => {
     <div className="job-application-form ">
       <div className="bg_Div">
         <div className="dashboard-stock-header dashboard-drop mb-2">
-          <div className="col-md-9 pointer">4DSPS Expression</div>
+          <div className="col-md-9 pointer">BMT Expression</div>
           <div className="col-md-2">
             <span className="lblAddPartner labelName heading-font-weight">Add Expression (+)</span>
           </div>

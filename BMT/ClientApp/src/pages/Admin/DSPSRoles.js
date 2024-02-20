@@ -109,7 +109,7 @@ const DSPSRoles = () => {
             <div>
               <div className="bg_Div mt-2 d-flex flex-column">
                 <DataGridHeader
-                  title="4DSPS Roles"
+                  title="BMT Roles"
                   otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}
                 />
 
