@@ -133,6 +133,7 @@ function SignIn() {
     };
 
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
+
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));
@@ -163,6 +164,7 @@ function SignIn() {
         console.log(JSON.stringify(loginRes));
         getUtils();
         getMenus();
+        console.log(getMenus());
         setModalOpen(true);
         navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {
