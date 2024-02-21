@@ -28,7 +28,7 @@ namespace com.blazor.bmt.util
         public static string? OrgCityName { get; set; }
         public static string? OrgStateName { get; set; }
         //public static string? DspCurrency { get; set; } = (new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID)).ISOCurrencySymbol;
-        public static string? OrgName { get; set; } = "NMT LLC";
+        public static string? OrgName { get; set; } = "BMT LLC";
         public static int DefaultOrgId { get; set; } = 1;
         public static string? OrgOwnerName { get; set; }
         public static string? OrgEmail { get; set; }
@@ -61,7 +61,7 @@ namespace com.blazor.bmt.util
         public static List<UserViewModel> userls = new List<UserViewModel>();
         public static string VehicleImagePath = "vehicleImages\\";
         public static string VehicleImageWebPath = "wwwroot\\vehicleImages\\";
-        public static List<string> Roles = new List<string>(new string[] { "SuperAdmin", "Admin", "Supervisor", "User", "Staff", "ShowRoomSupervisor" });
+        public static List<string> Roles = new List<string>(new string[] { "SuperAdmin", "Admin", "Supervisor", "User", "Staff", "OrgSupervisor" });
        
         public static string Encrypt(string toEncrypt, bool useHashing, string secKey)
         {
@@ -222,21 +222,21 @@ namespace com.blazor.bmt.util
             }
 
         }
-        public static List<UserViewModel> getMobileUsers(int dspId, int mobileSource = 0)
+        public static List<UserViewModel> getMobileUsers(int orgId, int mobileSource = 0)
         {
-            List<UserViewModel> showRoomUsers = new List<UserViewModel>();
+            List<UserViewModel> OrgUsers = new List<UserViewModel>();
             using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
                     List<MySqlParameter> parameter = new List<MySqlParameter>();
-                    MySqlParameter pStoreId = new MySqlParameter("@storeid", SqlDbType.Int);
-                    pStoreId.Value = dspId;
-                    parameter.Add(pStoreId);
-                    MySqlParameter pMobileSource = new MySqlParameter("@registrationSource", SqlDbType.Int);
-                    pMobileSource.Value = mobileSource;
-                    parameter.Add(pMobileSource);
+                    MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
+                    pOrgId.Value = orgId;
+                    parameter.Add(pOrgId);
+                    MySqlParameter pRegistrationSource = new MySqlParameter("p_registrationSource", SqlDbType.Int);
+                    pRegistrationSource.Value = mobileSource;
+                    parameter.Add(pRegistrationSource);
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddRange(parameter.ToArray());
                     command.CommandText = "spGetApiNotificationUsers";
@@ -256,12 +256,12 @@ namespace com.blazor.bmt.util
                             //user.status = Convert.ToInt32(dr["Status"]);
                             //user.primarycontact = Convert.ToString(dr["PrimaryContact"]);
                             //user.token = Convert.ToString(dr["Token"]);
-                            showRoomUsers.Add(user);
+                            OrgUsers.Add(user);
                         }//while (dr.Read())
                     }// using (DbDataReader dr = command.ExecuteReader())                        
                 }
             }
-            return showRoomUsers;
+            return OrgUsers;
         }
         public static void loadConfigurations(Int32 OrgId=1)
         {

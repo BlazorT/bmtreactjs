@@ -4,13 +4,10 @@ using Blazor.Web.Application.Models;
 using Blazor.Web.UI.Interfaces;
 using Blazor.Web.ViewModels;
 using AutoMapper;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
 using com.blazor.bmt.application.interfaces;
+using com.blazor.bmt.application.model;
 
 namespace Blazor.Web.UI.Services
 {
@@ -71,13 +68,13 @@ namespace Blazor.Web.UI.Services
         
         //    return ccvm;
         //}
-        public async Task<ConfigrationsCombinedViewModel> UpdateConfigurationChangeSet(int UserId,ConfigrationsCombinedViewModel config)
+        public async Task<ConfigrationsMergedViewModel> UpdateConfigurationChangeSet(int UserId, ConfigrationsMergedViewModel config)
         {
-          //  var list = await _configurationsService.GetConfigurstionsListByStatusAsync((int)UTIL.COMMON_STATUS.ACTIVE);
-          //  var mappedList = _mapper.Map<IEnumerable<ConfigrationsViewModel>>(list);
-          //  ConfigrationsCombinedViewModel ccvm = new ConfigrationsCombinedViewModel();
+            //  var list = await _configurationsService.GetConfigurstionsListByStatusAsync((int)UTIL.COMMON_STATUS.ACTIVE);
+            //  var mappedList = _mapper.Map<IEnumerable<ConfigrationsViewModel>>(list);
+            //  ConfigrationsCombinedViewModel ccvm = new ConfigrationsCombinedViewModel();
 
-            
+
 
             //  if (config.stmppwd.Trim() != UTIL.Configurations.stmppwd)
             //    {
@@ -105,7 +102,7 @@ namespace Blazor.Web.UI.Services
             //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.SMTP_SERVER);
             //    configurationsModel.Key = UTIL.BlazorConstants.SMTP_SERVER;
             //    configurationsModel.Value = config.stmpserver.Trim();
-            
+
             //    configurationsModel.LastUpdatedAt = UTIL.GlobalApp.CurrentDateTime;
             //    configurationsModel.LastUpdatedBy = UserId;
             //    configurationsModel.RowVer = configurationsModel.RowVer + 1;
@@ -131,16 +128,16 @@ namespace Blazor.Web.UI.Services
             //    configurationsModel.RowVer = configurationsModel.RowVer + 1;
             //    await _configurationsService.Update(configurationsModel);
             //}
-            //if (config.invitationEmailBody != UTIL.Configurations.invitationEmailBody)
-            //{
-            //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.EMAIL_EMAIL_BODY);
-            //    configurationsModel.Key = UTIL.BlazorConstants.EMAIL_EMAIL_BODY;
-            //    configurationsModel.Value = config.invitationEmailBody;                
-            //    configurationsModel.LastUpdatedAt = UTIL.GlobalApp.CurrentDateTime;
-            //    configurationsModel.LastUpdatedBy = UserId;
-            //    configurationsModel.RowVer = configurationsModel.RowVer + 1;
-            //    await _configurationsService.Update(configurationsModel);
-            //}
+            if (string.IsNullOrWhiteSpace(config.invitationEmailBody) )
+            {
+                ConfigurationModel configurationsModel = await _configurationsService.GetConfigurstionByKeyAndOrgAsync(config.OrgId, BlazorConstant.INVITATION_EMAIL_BODY);
+                configurationsModel.Key = BlazorConstant.INVITATION_EMAIL_BODY;
+                configurationsModel.Value = config.invitationEmailBody;
+                configurationsModel.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                configurationsModel.LastUpdatedBy = UserId;
+                configurationsModel.RowVer = configurationsModel.RowVer + 1;
+                await _configurationsService.Update(configurationsModel);
+            }
             //if (config.stmpuser != UTIL.Configurations.stmpuser)
             //{
             //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.SMTP_USER);
@@ -152,27 +149,27 @@ namespace Blazor.Web.UI.Services
             //    await _configurationsService.Update(configurationsModel);
             //}
 
-            //if (config.invitationEmailSubject != UTIL.Configurations.invitationEmailSubject)
-            //{
-            //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.EMAIL_SUBJECT);
-            //    configurationsModel.Key = UTIL.BlazorConstants.EMAIL_SUBJECT;
-            //    configurationsModel.Value = config.invitationEmailSubject;
-            //    configurationsModel.LastUpdatedAt = UTIL.GlobalApp.CurrentDateTime;
-            //    configurationsModel.LastUpdatedBy = UserId;
-            //    configurationsModel.RowVer = configurationsModel.RowVer + 1;
-            //    await _configurationsService.Update(configurationsModel);
-            //}
+            if (string.IsNullOrWhiteSpace(config.invitationEmailSubject))
+            {
+                ConfigurationModel configurationsModel = await _configurationsService.GetConfigurstionByKeyAndOrgAsync(config.OrgId, BlazorConstant.EMAIL_SUBJECT);
+                configurationsModel.Key = BlazorConstant.EMAIL_SUBJECT;
+                configurationsModel.Value = config.invitationEmailSubject;
+                configurationsModel.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                configurationsModel.LastUpdatedBy = UserId;
+                configurationsModel.RowVer = configurationsModel.RowVer + 1;
+                await _configurationsService.Update(configurationsModel);
+            }
 
-            //if (config.tax != UTIL.Configurations.tax)
-            //{
-            //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.TAX);
-            //    configurationsModel.Key = UTIL.BlazorConstants.TAX;
-            //    configurationsModel.Value = Math.Round(Convert.ToDouble(config.tax),2).ToString();
-            //    configurationsModel.LastUpdatedAt = UTIL.GlobalApp.CurrentDateTime;
-            //    configurationsModel.LastUpdatedBy = UserId;
-            //    configurationsModel.RowVer = configurationsModel.RowVer + 1;
-            //    await _configurationsService.Update(configurationsModel);
-            //}
+            if (config.tax != null)
+            {
+                ConfigurationModel configurationsModel = await _configurationsService.GetConfigurstionByKeyAndOrgAsync(config.OrgId, BlazorConstant.TAX);
+                configurationsModel.Key = BlazorConstant.TAX;
+                configurationsModel.Value = Math.Round(Convert.ToDouble(config.tax), 2).ToString();
+                configurationsModel.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                configurationsModel.LastUpdatedBy = UserId;
+                configurationsModel.RowVer = configurationsModel.RowVer + 1;
+                await _configurationsService.Update(configurationsModel);
+            }        
             //if (config.ftpUser != UTIL.Configurations.ftpUser)
             //{
             //    ConfigurationsModel configurationsModel = await _configurationsService.GetConfigurationByKeyAsync(UTIL.BlazorConstants.FTP_USER);

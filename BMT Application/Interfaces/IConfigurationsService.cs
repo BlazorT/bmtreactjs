@@ -12,7 +12,7 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<ConfigurationModel>> GetListByNameAsync(string details);
         Task<ConfigurationModel> GetConfigurationByKeyAsync(string keyword);
         Task<IEnumerable<ConfigurationModel>> GetConfigurationByDspAsync(int DspId);
-        Task<ConfigurationModel> GetConfigurstionByKeyAndDspeAsync(int ShowRoomId, string key);
+        Task<ConfigurationModel> GetConfigurstionByKeyAndOrgAsync(int OrgId, string key);
         Task<ConfigurationModel> Create(ConfigurationModel configurationsModel);
         Task Update(ConfigurationModel configurationsModel);
 

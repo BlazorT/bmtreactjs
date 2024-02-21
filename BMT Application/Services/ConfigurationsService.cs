@@ -44,11 +44,11 @@ namespace com.blazor.bmt.application.services
                 throw ex;
             }
         }
-        public async Task<ConfigurationModel> GetConfigurstionByKeyAndDspeAsync(int Dspid, string key)
+        public async Task<ConfigurationModel> GetConfigurstionByKeyAndOrgAsync(int OrgId, string key)
         {
             try
             {
-                var conf = await _configurationsRepository.GetListByDspAndKeyAsync(Dspid, key);
+                var conf = await _configurationsRepository.GetListByDspAndKeyAsync(OrgId, key);
                 if (conf == null)
                     conf = new Configuration();
                 var mapped = _mapper.Map<ConfigurationModel>(conf);
@@ -60,11 +60,11 @@ namespace com.blazor.bmt.application.services
                 throw ex;
             }
         }
-        public async Task<IEnumerable<ConfigurationModel>> GetConfigurationByDspAsync(int DspId)
+        public async Task<IEnumerable<ConfigurationModel>> GetConfigurationByDspAsync(int OrgId)
         {
             try
             {
-                var lst = await _configurationsRepository.getConfigurationListAsyncByDSP(DspId);
+                var lst = await _configurationsRepository.getConfigurationListAsyncByDSP(OrgId);
                 var mapped = _mapper.Map<IEnumerable<ConfigurationModel>>(lst);
                 return mapped;
             }

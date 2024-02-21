@@ -90,6 +90,8 @@ namespace com.blazor.bmt.util
         public static string TIME_INTERVAL_FOR_SENDING_SMS_SECS = "TimeIntervalForSendingSMS";
         // Admin Group
         public static string BLAZOR_ADMIN_GROUP = "znawazch@gmail.com";
+        // TAX
+        public static string TAX = "tax";
         //EMAIL
         public static string SMTP_EMAIL_USER = "stmpuser";
         public static string SENDER_EMAIL_USER = "stmpuser";

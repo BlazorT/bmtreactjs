@@ -66,8 +66,10 @@ namespace com.blazor.bmt.viewmodels
         public  string SMS_SERVICE_USERNAME { get; set; } = String.Empty;
         public  string SMS_MESSAGE_TEMPLATE { get; set; } = String.Empty;
         public  string SMS_SERVICE_PWD { get; set; } = String.Empty;
-        public int ShowRoomId { get; set; }
-        public string ShowRoomName { get; set; } = String.Empty;
+        public int OrgId { get; set; }
+        public int UserId { get; set; }
+        public double? tax { get; set; }
+        public string OrgName { get; set; } = String.Empty;
         public  string API_AUTH_KEY { get; set; } = String.Empty;
       
         public  string stmpuser { get; set; } = "user";

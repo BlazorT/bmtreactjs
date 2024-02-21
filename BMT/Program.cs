@@ -1,4 +1,5 @@
 using AutoMapper;
+using Blazor.Web.Application.Interfaces;
 using Blazor.Web.UI.Interfaces;
 using Blazor.Web.UI.Services;
 using com.blazor.bmt;
@@ -38,14 +39,14 @@ services.AddScoped(typeof(IMediaContentRepository), typeof(MediaContentRepositor
 //services.AddScoped(typeof(IInventoryRepository), typeof(InventoryRepository));
 // Repositry
 services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-//services.AddScoped<IStatesRepository, StatesRepository>();
+services.AddScoped<IAddressRepository, AddressRepository>();
 //services.AddScoped<IDsppartnerRepository, DsppartnerRepository>();
 //services.AddScoped<IDspRepository, DspRepository>();
 //services.AddScoped<IUsersRepository, UsersRepository>();
 //services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IConfigurationsRepository, ConfigurationsRepository>();
 //services.AddScoped<IBasicConfigurationsRepository, BasicConfigurationsRepository>();
-//services.AddScoped<IProductRepository, ProductsRepository>();
+services.AddScoped<ICitiesRepository, CitiesRepository>();
 //services.AddScoped<IIntegrationRepository, IntegrationRepository>();
 services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 //services.AddScoped<IVehiclesInspectionRepository, VehiclesInspectionRepository>();
@@ -62,7 +63,7 @@ services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
 // ServiceLayer
-//services.AddScoped(typeof(IAppLogService), typeof(AppLogService));
+services.AddScoped(typeof(IAddressService), typeof(AddressService));
 services.AddScoped(typeof(IStatesService), typeof(StatesService));
 services.AddScoped(typeof(IConfigurationsService), typeof(ConfigurationsService));
 //services.AddScoped(typeof(IDsppartnerService), typeof(DsppartnerService));
@@ -73,7 +74,7 @@ services.AddScoped<INotificationService, NotificationService>();
 //services.AddScoped<IVehiclesService, VehiclesService>();
 services.AddScoped<IMediaContentService, MediaContentService>();
 services.AddScoped<IOrganizationService, OrganizationService>();
-//services.AddScoped<ICategoryService, CategoryService>();
+services.AddScoped<ICitiesService, CitiesService>();
 services.AddScoped<IUsersService, UsersService>();
 services.AddScoped<IAppLogService, AppLogService>();
 services.AddScoped<IAuditLogService, AuditLogService>();

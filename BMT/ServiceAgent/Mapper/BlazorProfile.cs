@@ -14,7 +14,7 @@ namespace com.blazor.bmt
             CreateMap<StateModel, StatesViewModel>();
             CreateMap<CountryModel, CountryViewModel>();
             //CreateMap<CategoryModel, CategoryViewModel>();
-            //CreateMap<ProductModel, ProductViewModel>();
+            CreateMap<CityModel, CityViewModel>();
             //CreateMap<InventorydetailModel, Inventorydetailviewmodel>();
             CreateMap<ConfigurationModel, ConfigurationsViewModel>();
            // CreateMap<BasicConfigurationModel, BasicConfigurationViewModel>();
@@ -86,6 +86,7 @@ namespace com.blazor.bmt
             CreateMap<UserModel, UserViewModel>().ReverseMap();
             CreateMap<Country, CountryModel>().ReverseMap();
             CreateMap<State, StateModel>().ReverseMap();
+            CreateMap<City, CityModel>().ReverseMap();
 
             CreateMap<Configuration, ConfigurationModel>().ReverseMap();
            // CreateMap<Basicconfiguration, BasicConfigurationModel>().ReverseMap();

@@ -375,25 +375,25 @@ namespace Blazor.Web.UI.Services
                     {
                         //************************  PARAMETERS*******************************//
                         List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pkeyword = new SqlParameter("@keyword", "" + name);
+                        SqlParameter pkeyword = new SqlParameter("p_keyword", "" + name);
                         parameter.Add(pkeyword);
-                        SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.Int);
+                        SqlParameter pUserId = new SqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = Convert.ToInt32(userId);
                         parameter.Add(pUserId);
-                        SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+                        SqlParameter pStatus = new SqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = status;
                         parameter.Add(pStatus);
-                        SqlParameter pOrgId = new SqlParameter("@OrgId", SqlDbType.Int);
+                        SqlParameter pOrgId = new SqlParameter("p_OrgId", SqlDbType.Int);
                         pOrgId.Value = OrgId;
                         parameter.Add(pOrgId);
-                        SqlParameter pRoleId = new SqlParameter("@RoleId", SqlDbType.Int);
+                        SqlParameter pRoleId = new SqlParameter("p_RoleId", SqlDbType.Int);
                         pRoleId.Value = roleId;
                         parameter.Add(pRoleId);
                         //(@keyword varchar(100), @MerchantId int= 0, @SchoolId int= 0, @CategoryId int= 0, @DateFrom Date , @DateTo Date)
-                        SqlParameter pDateFrom = new SqlParameter("@DateFrom", System.Data.SqlDbType.DateTime);
+                        SqlParameter pDateFrom = new SqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
                         pDateFrom.Value = dtFrom.Year <= 1900 ? new DateTime(GlobalUTIL.CurrentDateTime.Year, 1, 1) : dtFrom;
                         parameter.Add(pDateFrom);
-                        SqlParameter pDateTo = new SqlParameter("@DateTo", System.Data.SqlDbType.DateTime);
+                        SqlParameter pDateTo = new SqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
                         pDateTo.Value = dtTo.Year <= 1900 ? GlobalUTIL.CurrentDateTime : dtTo;
                         parameter.Add(pDateTo);
                         command.Parameters.AddRange(parameter.ToArray());
@@ -1171,66 +1171,66 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pId = new SqlParameter("@id", SqlDbType.Int);
+                        SqlParameter pId = new SqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id; //model.id;
                         parameter.Add(pId);
-                        SqlParameter pStoreId = new SqlParameter("@OrgId", SqlDbType.Int);
+                        SqlParameter pStoreId = new SqlParameter("p_OrgId", SqlDbType.Int);
                         pStoreId.Value = model.OrgId; //model.storeid;
                         parameter.Add(pStoreId);
                         //  @regsource int=0, @RegistrationType int=0
-                        SqlParameter pUsername = new SqlParameter("@username", SqlDbType.NVarChar);
+                        SqlParameter pUsername = new SqlParameter("p_username", SqlDbType.NVarChar);
                         pUsername.Value = ""+ model.UserName;  //Contact model.username;
                         parameter.Add(pUsername);
-                        SqlParameter pFirstName = new SqlParameter("@firstName", SqlDbType.NVarChar);
+                        SqlParameter pFirstName = new SqlParameter("p_firstname", SqlDbType.NVarChar);
                         pFirstName.Value = "" + model.FirstName;  //Contact model.username;
                         parameter.Add(pFirstName);
-                        SqlParameter pLastName = new SqlParameter("@lastName", SqlDbType.NVarChar);
+                        SqlParameter pLastName = new SqlParameter("p_lastname", SqlDbType.NVarChar);
                         pLastName.Value = "" + model.LastName;   //Contact model.username;
                         parameter.Add(pLastName);
-                        SqlParameter pAuthToken = new SqlParameter("@SecurityToken", SqlDbType.NVarChar);
+                        SqlParameter pAuthToken = new SqlParameter("p_SecurityToken", SqlDbType.NVarChar);
                         pAuthToken.Value = "" + model.SecurityToken;  //Contact model.username;
                         parameter.Add(pAuthToken);
-                        SqlParameter pcontact = new SqlParameter("@contact", SqlDbType.NVarChar);
+                        SqlParameter pcontact = new SqlParameter("p_Contact", SqlDbType.NVarChar);
                         pcontact.Value = "" + model.Contact;  // model.Contact;
                         parameter.Add(pcontact);
-                        SqlParameter pPassword = new SqlParameter("@Password", SqlDbType.NVarChar);
+                        SqlParameter pPassword = new SqlParameter("p_Password", SqlDbType.NVarChar);
                         pPassword.Value = string.IsNullOrWhiteSpace(model.Password) ? string.Empty : GlobalUTIL.Encrypt(System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String("" + model.Password)), true, BlazorConstant.SECKEY);
                         parameter.Add(pPassword);
-                        SqlParameter pemail = new SqlParameter("@email", SqlDbType.NVarChar);
+                        SqlParameter pemail = new SqlParameter("p_email", SqlDbType.NVarChar);
                         pemail.Value = "" + model.Email; // "" + model.email;
                         parameter.Add(pemail);
 
-                        SqlParameter pCityId = new SqlParameter("@CityId", SqlDbType.Int);
+                        SqlParameter pCityId = new SqlParameter("p_CityId", SqlDbType.Int);
                         pCityId.Value = 0;
                         parameter.Add(pCityId);
-                        SqlParameter pStateId = new SqlParameter("@stateId", SqlDbType.Int);
+                        SqlParameter pStateId = new SqlParameter("p_stateId", SqlDbType.Int);
                         pStateId.Value = 0;// Convert.ToInt32(string.IsNullOrWhiteSpace(HttpContext.Request.Form["stateid"]) ? "0" : HttpContext.Request.Form["stateid"]); //model.StateId == null ? 0 : model.StateId;
                         parameter.Add(pStateId);
-                        SqlParameter pCityName = new SqlParameter("@cityName", SqlDbType.NVarChar);
+                        SqlParameter pCityName = new SqlParameter("p_cityName", SqlDbType.NVarChar);
                         pCityName.Value = "" + model.CityName;
                         parameter.Add(pCityName);
 
-                        SqlParameter prole = new SqlParameter("@roleId", SqlDbType.NVarChar);
+                        SqlParameter prole = new SqlParameter("p_roleId", SqlDbType.Int);
                         prole.Value = Convert.ToInt32(model.RoleId);  //"" + model.roleid;
                         parameter.Add(prole);
-                        SqlParameter pImageName = new SqlParameter("@logoimageName", SqlDbType.NVarChar);
+                        SqlParameter pImageName = new SqlParameter("p_logoimageName", SqlDbType.NVarChar);
                         pImageName.Value = string.IsNullOrWhiteSpace(model.Avatar) ? "" : model.Avatar;
                         parameter.Add(pImageName);
 
-                        SqlParameter pFMCToken = new SqlParameter("@FMCToken", SqlDbType.NVarChar);
+                        SqlParameter pFMCToken = new SqlParameter("p_FMCToken", SqlDbType.NVarChar);
                         pFMCToken.Value = "" ;  //"" + model.fmctoken;
                         parameter.Add(pFMCToken);
-                        SqlParameter pIMEI = new SqlParameter("@IMEI", SqlDbType.NVarChar);
+                        SqlParameter pIMEI = new SqlParameter("p_IMEI", SqlDbType.NVarChar);
                         pIMEI.Value = "" + model.UserCode; // "" + model.IM;
                         parameter.Add(pIMEI);
-                        SqlParameter pRegSource = new SqlParameter("@regsource", SqlDbType.Int);
+                        SqlParameter pRegSource = new SqlParameter("p_regsource", SqlDbType.Int);
                         pRegSource.Value = model.RegistrationSource;//  model.regsource;
                         parameter.Add(pRegSource);
 
-                        SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+                        SqlParameter pStatus = new SqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = model.Status; // model.status;
                         parameter.Add(pStatus);
-                        SqlParameter pRegistrationType = new SqlParameter("@RegistrationType", SqlDbType.Int);
+                        SqlParameter pRegistrationType = new SqlParameter("p_RegistrationType", SqlDbType.Int);
                         pRegistrationType.Value = model.RegistrationSource; // register & login;
                         parameter.Add(pRegistrationType);
                         command.CommandText = "spAddUpdateUser";

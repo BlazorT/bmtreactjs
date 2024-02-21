@@ -135,7 +135,7 @@ namespace com.blazor.bmt.controllers
                     //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
                     blazorApiResponse.status = true;
                     //ConfigurationModel mdl = new ConfigurationModel(); //{ id= cvm.id };
-              //  await _blazorUtilPageService.UpdateConfigurationChangeSet(cvm.us,  cvm);
+                await _blazorUtilPageService.UpdateConfigurationChangeSet(cvm.UserId,  cvm);
                 GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
 
             }
