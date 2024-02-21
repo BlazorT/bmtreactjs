@@ -56,7 +56,8 @@ const AppHeader = () => {
         ),
       }),
     );
-    await userLogout('/Common/logout', { method: 'POST' });
+    // Need to pass id
+    await userLogout('/Common/logout?id=' + user.userId, { method: 'POST' });
 
     if (logoutRes.current?.status === true) {
       navigate('');
