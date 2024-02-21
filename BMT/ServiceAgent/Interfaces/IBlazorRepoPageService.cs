@@ -20,9 +20,9 @@ namespace Blazor.Web.UI.Interfaces
         Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignsViewModel model);
         Task<IEnumerable<MenuViewModel>> loadRoleMenus(int roleid);
         Task<BlazorResponseViewModel> AddUpdateRoleRights(List<RolerightViewModel> vLst);
-         Task<BlazorResponseViewModel> postCompaignData(CompaignModel model, int UserId);
+         Task<BlazorResponseViewModel> postCompaignData(CompaignsViewModel model, int UserId);
         Task<IEnumerable<OrganizationViewModel>> GetOrganizationsData(OrganizationViewModel model);
-        Task<IEnumerable<CompaignModel>> GetCompaignsData(CompaignModel model);
+        Task<IEnumerable<CompaignsViewModel>> GetCompaignsData(CompaignsViewModel model);
         Task<IEnumerable<NetworkViewModel>> GetNetworkData(int status = 1);
     }
 }
