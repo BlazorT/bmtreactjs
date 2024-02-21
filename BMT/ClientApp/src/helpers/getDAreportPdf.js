@@ -21,7 +21,7 @@ export const getDAreportPdf = (reportRows, reportField) => {
 
   // Logo
   const logo = new Image();
-  logo.src = '4DSPSLogo.jpeg'; // Replace with the path to your logo image
+  logo.src = 'bmtlogo.png'; // Replace with the path to your logo image
   doc.addImage(logo, 'jpeg', doc.internal.pageSize.width - 30, 1, 30, 30);
 
   // Main Heading

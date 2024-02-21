@@ -83,7 +83,7 @@ function ResetPassword(prop) {
   return (
     <form className="needs-validation forgot-password-form " onSubmit={handleSubmit} noValidate>
       <div className="centerimage">
-        <img className="forgot-password-img" src="4dspslogo.svg" alt="logo" />
+        <img className="forgot-password-img" src="bmtlogo.png" alt="logo" />
       </div>
       <div className="text-leftside mb-3">
         <h2 className="forgot-password-title text-center ">Reset Password</h2>

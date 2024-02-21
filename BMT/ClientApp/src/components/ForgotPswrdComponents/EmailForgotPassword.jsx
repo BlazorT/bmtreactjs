@@ -65,7 +65,7 @@ function EmailForgotPassword(prop) {
   return (
     <form className="needs-validation forgot-password-form" onSubmit={handleSubmit} noValidate>
       <div className="centerimage">
-        <img className="forgot-password-img" src="4dspslogo.svg" alt="logo" />
+        <img className="forgot-password-img" src="bmtlogo.png" alt="logo" />
       </div>
       <div className="text-leftside">
         <h2 className="forgot-password-title text-center">Forgot Password ?</h2>

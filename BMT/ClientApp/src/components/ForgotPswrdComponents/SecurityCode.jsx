@@ -127,7 +127,7 @@ function SecurityCode(prop) {
   return (
     <form className="needs-validation forgot-password-form" onSubmit={handleSubmit} noValidate>
       <div className="mt-5 centerimage mb-3">
-        <img className="forgot-password-img" src="4dspslogo.svg" alt="logo" />
+        <img className="forgot-password-img" src="bmtlogo.png" alt="logo" />
         <h2 className="forgot-password-title">Enter Security Code</h2>
         <p className="forgot-password-email-title ">
           Enter security code, open your mail box and get your securtiy code. if could not see
