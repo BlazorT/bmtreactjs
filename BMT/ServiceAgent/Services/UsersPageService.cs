@@ -127,7 +127,7 @@ namespace Blazor.Web.UI.Services
             {
                 //string emailbody = string.Empty;
                 // it indicate first time send email, then 2nd time just verifying
-                var ulst = await _usersAppService.GetAllUsersList(new UserModel { id = 0, OrgId = 0, Email = (email.Contains("@") && email.Contains(".")) ? email : "", UserName = !(email.Contains("@") && email.Contains(".")) ? email : "",  RowVer = 0, CreatedAt = GlobalUTIL.CurrentDateTime.AddYears(-10), Status = 0, LastName = "", FirstName = "", RoleId = 0, Password = "" });
+                var ulst = await _usersAppService.GetAllUsersList(new UserModel { id = 0, OrgId = 0, Email = (email.Contains("p_") && email.Contains(".")) ? email : "", UserName = !(email.Contains("p_") && email.Contains(".")) ? email : "",  RowVer = 0, CreatedAt = GlobalUTIL.CurrentDateTime.AddYears(-10), Status = 0, LastName = "", FirstName = "", RoleId = 0, Password = "" });
                 if (ulst.Any())
                 {
                     dUser = ulst.FirstOrDefault();

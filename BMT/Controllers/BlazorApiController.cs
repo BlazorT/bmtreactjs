@@ -196,7 +196,7 @@ namespace com.blazor.bmt.controllers
         //}
         [HttpGet("orgs")]
         [HttpPost("orgs")]
-        [Route("dsorgsps")]
+        [Route("orgs")]
         //public async Task<ActionResult> GetDspsListAsync([FromBody] DspViewModel vmdl)
         public async Task<ActionResult> GetDspsListAsync()
         {

@@ -37,7 +37,7 @@ namespace com.blazor.bmt.controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
@@ -50,7 +50,7 @@ namespace com.blazor.bmt.controllers
           //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
-          //  _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
+          _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
             //_integrationPageService = integrationPageService ?? throw new ArgumentNullException(nameof(integrationPageService));
 
             _blazorUtilPageService = blazorUtilPageService ?? throw new ArgumentNullException(nameof(blazorUtilPageService));
@@ -597,7 +597,7 @@ namespace com.blazor.bmt.controllers
                         blazorResponseViewModel.data = lvm;
                         blazorResponseViewModel.id = lvm.Id;
                         blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
-                        blazorResponseViewModel.message = String.Format("Welcome <b>{0}</b> to {1} - successfully logged in!", lvm.FullName);
+                        blazorResponseViewModel.message = String.Format("Welcome <b>{0}</b> to {1} - successfully logged in!", lvm.FullName, ""+uvm.OrgName);
                         blazorResponseViewModel.status = true;
                     }
                     else if (lvm.UserStatus == (int)COMMON_STATUS.ACTIVE && lvm.AlreadyLoginStatus == (int)LOGIN_ACTIVITY.LOGGED_IN)
@@ -727,7 +727,7 @@ namespace com.blazor.bmt.controllers
                 ////  JSON
 
                 //List<MySqlParameter> parameter = new List<MySqlParameter>();
-                //MySqlParameter pJSON = new MySqlParameter("@rightsjson", SqlDbType.NVarChar);
+                //MySqlParameter pJSON = new MySqlParameter("p_rightsjson", SqlDbType.NVarChar);
                 //pJSON.Value = rightsJson;
                 //parameter.Add(pJSON);
 

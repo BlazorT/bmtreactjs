@@ -25,19 +25,19 @@ namespace Blazor.Web.UI.Services
             IEnumerable<ReportViewModel> reportViewModel = new List<ReportViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                    SqlParameter pOrgId = new SqlParameter("@OrgId", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         pOrgId.Value = 0;
-                        parameter.Add(pOrgId);               
-                    SqlParameter DateFrom = new SqlParameter("@DateFrom", SqlDbType.DateTime);
+                        parameter.Add(pOrgId);
+                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", SqlDbType.DateTime);
                     DateFrom.Value = resportViewmodel.CreatedAt;
                     parameter.Add(DateFrom);
-                    SqlParameter DateTo = new SqlParameter("@DateTo", SqlDbType.DateTime);
+                        MySqlParameter DateTo = new MySqlParameter("p_DateTo", SqlDbType.DateTime);
                     DateTo.Value = resportViewmodel.LastUpdatedAt;
                     parameter.Add(DateTo);                   
                         command.CommandText = "spOrgRegistrationReportData";
@@ -78,23 +78,23 @@ namespace Blazor.Web.UI.Services
             IEnumerable<ReportCompaignsViewModel> reportViewModel = new List<ReportCompaignsViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                      
-                        SqlParameter pOrganizationId = new SqlParameter("@OrgId", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         pOrganizationId.Value = resportViewmodel.OrganizationId;
                         parameter.Add(pOrganizationId);
-                        SqlParameter pStatusId = new SqlParameter("@Status", SqlDbType.Int);
+                        MySqlParameter pStatusId = new MySqlParameter("p_Status", SqlDbType.Int);
                         pStatusId.Value = resportViewmodel.Status==null?0: resportViewmodel.Status;
                         parameter.Add(pStatusId);
-                        SqlParameter DateFrom = new SqlParameter("@DateFrom", System.Data.SqlDbType.DateTime);
+                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
                         DateFrom.Value = resportViewmodel.CreatedAt;
                         parameter.Add(DateFrom);
-                        SqlParameter DateTo = new SqlParameter("@DateTo", System.Data.SqlDbType.DateTime);
+                        MySqlParameter DateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
                         DateTo.Value = resportViewmodel.LastUpdatedAt;
                         parameter.Add(DateTo);
                         command.CommandText = "spCompaignsReportData";
@@ -142,20 +142,20 @@ namespace Blazor.Web.UI.Services
             IEnumerable<ReportStatsViewModel> reportViewModel = new List<ReportStatsViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameter = new List<SqlParameter>();                  
-                        SqlParameter SubscriberStatus = new SqlParameter("@OrgId", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter SubscriberStatus = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         SubscriberStatus.Value = stats.OrgId;
                         parameter.Add(SubscriberStatus);
-                        SqlParameter DateFrom = new SqlParameter("@DateFrom", System.Data.SqlDbType.DateTime);
+                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
                         DateFrom.Value = stats.CreatedAt;
                         parameter.Add(DateFrom);
 
-                        SqlParameter DateTo = new SqlParameter("@DateTo", System.Data.SqlDbType.DateTime);
+                        MySqlParameter DateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
                         DateTo.Value = stats.LastUpdatedAt;
                         parameter.Add(DateTo);
                         command.CommandText = "spStatsReportData";
@@ -201,25 +201,25 @@ namespace Blazor.Web.UI.Services
             LoginViewModel login = new LoginViewModel();
             try
             {
-             using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                    SqlParameter email = new SqlParameter("@email", model.Email);
-                        parameters.Add(email);
-                    SqlParameter cred = new SqlParameter("@password", model.Password);
-                        parameters.Add(cred);
-                        SqlParameter pRoleId = new SqlParameter("@RoleId", SqlDbType.Int);
+                        List<MySqlParameter> paras = new List<MySqlParameter>();
+                        MySqlParameter email = new MySqlParameter("p_email", model.Email);
+                        paras.Add(email);
+                        MySqlParameter cred = new MySqlParameter("p_password", model.Password);
+                        paras.Add(cred);
+                        MySqlParameter pRoleId = new MySqlParameter("p_RoleId", SqlDbType.Int);
                         pRoleId.Value = model.RoleId;
-                        parameters.Add(pRoleId);
-                        SqlParameter pRegistrationSource = new SqlParameter("@RegistrationSource", SqlDbType.Int);
+                        paras.Add(pRoleId);
+                        MySqlParameter pRegistrationSource = new MySqlParameter("p_RegistrationSource", SqlDbType.Int);
                         pRegistrationSource.Value = model.RegistrationSource;
-                        parameters.Add(pRegistrationSource);
+                        paras.Add(pRegistrationSource);
                         command.CommandText = "spPerformUserValidaton";
                         command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.Parameters.AddRange(parameters.ToArray());                    
+                        command.Parameters.AddRange(paras.ToArray());                    
                         using (DbDataReader reader = command.ExecuteReader())
                         {
 
@@ -231,7 +231,7 @@ namespace Blazor.Web.UI.Services
                                         {
                                             Id = Convert.ToInt32(usr["ID"]),
                                             FullName = "" + usr["FullName"],
-                                            Email = model.Email,
+                                            Email = "" + usr["Email"],
                                             LoginTime = Convert.ToDateTime(usr["LoginTime"]),
                                             UserStatus = Convert.ToInt32(usr["UserStatus"]),
                                             AlreadyLoginStatus = Convert.ToInt32(usr["AlreadyLoginStatus"]),
@@ -272,27 +272,27 @@ namespace Blazor.Web.UI.Services
         //            {
         //                //************************  PARAMETERS*******************************//
         //                List<SqlParameter> parameter = new List<SqlParameter>();
-        //                SqlParameter pkeyword = new SqlParameter("@keyword", "" + name);
+        //                SqlParameter pkeyword = new MySqlParameter("p_keyword", "" + name);
         //                parameter.Add(pkeyword);                  
-        //                SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+        //                SqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
         //                pStatus.Value = status;
         //                parameter.Add(pStatus);
-        //                SqlParameter pOrgId = new SqlParameter("@OrgId", SqlDbType.Int);
+        //                SqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
         //                pOrgId.Value = orgId;
         //                parameter.Add(pOrgId);
-        //                SqlParameter pRoleid = new SqlParameter("@RoleId", SqlDbType.Int);
+        //                SqlParameter pRoleid = new MySqlParameter("p_RoleId", SqlDbType.Int);
         //                pRoleid.Value = roleId;
         //                parameter.Add(pRoleid);
 
-        //                SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.Int);
+        //                SqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
         //                pUserId.Value = UserId;
         //                parameter.Add(pUserId);
 
         //                //(@keyword varchar(100), @MerchantId int= 0, @SchoolId int= 0, @CategoryId int= 0, @DateFrom Date , @DateTo Date)
-        //                SqlParameter pDateFrom = new SqlParameter("@DateFrom", System.Data.SqlDbType.DateTime);
+        //                SqlParameter pDateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
         //                pDateFrom.Value = dtFrom.Year <= 1900?new DateTime(UTIL.GlobalApp.CurrentDateTime.Year,1,1): dtFrom;
         //                parameter.Add(pDateFrom);
-        //                SqlParameter pDateTo = new SqlParameter("@DateTo", System.Data.SqlDbType.DateTime);
+        //                SqlParameter pDateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
         //                pDateTo.Value = dtTo.Year <= 1900 ? UTIL.GlobalApp.CurrentDateTime : dtTo;
         //                parameter.Add(pDateTo);
         //                command.Parameters.AddRange(parameter.ToArray());
@@ -368,32 +368,31 @@ namespace Blazor.Web.UI.Services
             List<UserViewModel> uvm = new List<UserViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        //************************  PARAMETERS*******************************//
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pkeyword = new SqlParameter("p_keyword", "" + name);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pkeyword = new MySqlParameter("p_keyword", "" + name);
                         parameter.Add(pkeyword);
-                        SqlParameter pUserId = new SqlParameter("p_UserId", SqlDbType.Int);
+                        MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = Convert.ToInt32(userId);
                         parameter.Add(pUserId);
-                        SqlParameter pStatus = new SqlParameter("p_status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = status;
                         parameter.Add(pStatus);
-                        SqlParameter pOrgId = new SqlParameter("p_OrgId", SqlDbType.Int);
+                        MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         pOrgId.Value = OrgId;
                         parameter.Add(pOrgId);
-                        SqlParameter pRoleId = new SqlParameter("p_RoleId", SqlDbType.Int);
+                        MySqlParameter pRoleId = new MySqlParameter("p_RoleId", SqlDbType.Int);
                         pRoleId.Value = roleId;
                         parameter.Add(pRoleId);
                         //(@keyword varchar(100), @MerchantId int= 0, @SchoolId int= 0, @CategoryId int= 0, @DateFrom Date , @DateTo Date)
-                        SqlParameter pDateFrom = new SqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
+                        MySqlParameter pDateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
                         pDateFrom.Value = dtFrom.Year <= 1900 ? new DateTime(GlobalUTIL.CurrentDateTime.Year, 1, 1) : dtFrom;
                         parameter.Add(pDateFrom);
-                        SqlParameter pDateTo = new SqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
+                        MySqlParameter pDateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
                         pDateTo.Value = dtTo.Year <= 1900 ? GlobalUTIL.CurrentDateTime : dtTo;
                         parameter.Add(pDateTo);
                         command.Parameters.AddRange(parameter.ToArray());
@@ -455,7 +454,8 @@ namespace Blazor.Web.UI.Services
         public async Task<IEnumerable<NetworkViewModel>>  GetNetworkData(int status=1) {
             List<NetworkViewModel> ls = new List<NetworkViewModel>();
             try {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING)) {
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
+                {
                     connection.Open();
                     using (var command = connection.CreateCommand()) {
                         //************************  PARAMETERS*******************************//
@@ -496,13 +496,13 @@ namespace Blazor.Web.UI.Services
             IEnumerable<DashboardViewModel> DashViewModel = new List<DashboardViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        SqlParameter pOrganizationId = new SqlParameter("@OrgId", SqlDbType.Int);
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         pOrganizationId.Value = Convert.ToInt32(viewModel.OrganizationId);
                         parameters.Add(pOrganizationId);
                         command.Parameters.AddRange(parameters.ToArray());
@@ -545,22 +545,22 @@ namespace Blazor.Web.UI.Services
             List<OrganizationViewModel> organizations = new List<OrganizationViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        SqlParameter pOrganizationId = new SqlParameter("@OrganizationId", SqlDbType.Int);
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrganizationId", SqlDbType.Int);
                         pOrganizationId.Value = Convert.ToInt32(model.Id);
-                        parameters.Add(pOrganizationId);                      
-                        SqlParameter pNetworkId = new SqlParameter("@NetworkId", SqlDbType.Int);
+                        parameters.Add(pOrganizationId);
+                        MySqlParameter pNetworkId = new MySqlParameter("p_NetworkId", SqlDbType.Int);
                         pNetworkId.Value = (model.NetworkId == null ?0: model.NetworkId)  ;
                         parameters.Add(pNetworkId);
-                        SqlParameter pRegistrationDate = new SqlParameter("@RegistrationDate", SqlDbType.Date);
+                        MySqlParameter pRegistrationDate = new MySqlParameter("p_RegistrationDate", SqlDbType.Date);
                         pRegistrationDate.Value = model.CreatedAt.Year<=1900?System.DateTime.UtcNow.AddYears(-5): model.CreatedAt;
                         parameters.Add(pRegistrationDate);
-                        SqlParameter pStatus = new SqlParameter("@Status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_Status", SqlDbType.Int);
                         pStatus.Value = model.Status;
                         parameters.Add(pStatus);
                         command.Parameters.AddRange(parameters.ToArray());
@@ -616,13 +616,13 @@ namespace Blazor.Web.UI.Services
             List<OrgpackagedetailViewModel> organizations = new List<OrgpackagedetailViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        SqlParameter pOrganizationId = new SqlParameter("@OrganizationId", SqlDbType.Int);
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrganizationId", SqlDbType.Int);
                         pOrganizationId.Value = Convert.ToInt32(model.Id);
                         parameters.Add(pOrganizationId);
                         command.Parameters.AddRange(parameters.ToArray());
@@ -678,37 +678,35 @@ namespace Blazor.Web.UI.Services
             List<CompaignsViewModel> compaigns = new List<CompaignsViewModel>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
-
                     using (var command = connection.CreateCommand())
                     {
-                        //@userid int=0, @orgId int=0 ,@status int=0, @name nvarchar(200)='', @networkId int, @DateFrom date= getutcdate, @DateTo
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        SqlParameter pstore = new SqlParameter("@orgId", SqlDbType.Int);
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pstore = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pstore.Value = model.OrgId;
                         parameters.Add(pstore);
-                        SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = model.Status;
                         parameters.Add(pStatus);
-                        SqlParameter pName = new SqlParameter("@name", SqlDbType.NVarChar);
+                        MySqlParameter pName = new MySqlParameter("p_name", SqlDbType.NVarChar);
                         pName.Value = model.Name;
                         parameters.Add(pName);
-                        //SqlParameter pNetworkId = new SqlParameter("@networkId", SqlDbType.Int);
+                        //SqlParameter pNetworkId = new MySqlParameter("p_networkId", SqlDbType.Int);
                         //pNetworkId.Value = model.NetworkId;
                         //parameters.Add(pNetworkId);
-                        SqlParameter pFromDate = new SqlParameter("@DateFrom", SqlDbType.DateTime);
+                        MySqlParameter pFromDate = new MySqlParameter("p_DateFrom", SqlDbType.DateTime);
                         pFromDate.Value = model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddMonths(-12) : model.CreatedAt;
                         parameters.Add(pFromDate);
-                        SqlParameter pToDate = new SqlParameter("@DateTo", SqlDbType.DateTime);
+                        MySqlParameter pToDate = new MySqlParameter("p_DateTo", SqlDbType.DateTime);
                         pToDate.Value = model.LastUpdatedAt == null || model.CreatedAt.Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
                         parameters.Add(pToDate);
 
-                        SqlParameter pId = new SqlParameter("@Id", SqlDbType.BigInt);
+                        MySqlParameter pId = new MySqlParameter("p_Id", SqlDbType.BigInt);
                         pId.Value = Convert.ToInt64(model.Id);
                         parameters.Add(pId);
-                        SqlParameter pUserId = new SqlParameter("@userid", SqlDbType.Int);
+                        MySqlParameter pUserId = new MySqlParameter("p_userid", SqlDbType.Int);
                         pUserId.Value = Convert.ToInt32(model.LastUpdatedBy);
                         parameters.Add(pUserId);
                         command.CommandText = "spWebApiPOSGetCompaigns";
@@ -768,13 +766,13 @@ namespace Blazor.Web.UI.Services
             try
             {
 
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        SqlParameter pNetworkId = new SqlParameter("@networkId", SqlDbType.Int);
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pNetworkId = new MySqlParameter("p_networkId", SqlDbType.Int);
                         pNetworkId.Value = networkId;
                         parameters.Add(pNetworkId);
                         command.CommandText = "spGetPricingGlobalList";
@@ -830,17 +828,17 @@ namespace Blazor.Web.UI.Services
         //            using (var command = connection.CreateCommand())
         //            {
         //                List<SqlParameter> parameter = new List<SqlParameter>();
-        //                SqlParameter Key = new SqlParameter("@Key", "" + vvcm.videoKey);
+        //                SqlParameter Key = new MySqlParameter("p_Key", "" + vvcm.videoKey);
         //                parameter.Add(Key);
 
-        //                SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
+        //                SqlParameter id = new MySqlParameter("p_Id", SqlDbType.Int);
         //                id.Value = vvcm.id;
         //                parameter.Add(id);
 
-        //                SqlParameter Count = new SqlParameter("@Count", SqlDbType.Int);
+        //                SqlParameter Count = new MySqlParameter("p_Count", SqlDbType.Int);
         //                Count.Direction = ParameterDirection.Output;
         //                parameter.Add(Count);
-        //                SqlParameter ViewCount = new SqlParameter("@ViewCount", SqlDbType.Int);
+        //                SqlParameter ViewCount = new MySqlParameter("p_ViewCount", SqlDbType.Int);
         //                ViewCount.Value = vvcm.viewsCount;
         //                parameter.Add(ViewCount);
         //                command.Parameters.AddRange(parameter.ToArray());
@@ -867,15 +865,15 @@ namespace Blazor.Web.UI.Services
             try
             {
 
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = "spLoadConfigurationsList";                      
-                        SqlParameter pShowRoomId = new SqlParameter("@orgId", SqlDbType.Int);
-                        pShowRoomId.Value = orgId;                     
-                        command.Parameters.Add(pShowRoomId);
+                        command.CommandText = "spLoadConfigurationsList";
+                        MySqlParameter pOrgId = new MySqlParameter("p_orgId", SqlDbType.Int);
+                        pOrgId.Value = orgId;                     
+                        command.Parameters.Add(pOrgId);
                         command.CommandType = CommandType.StoredProcedure;
                         using (DbDataReader sts = command.ExecuteReader())
                         {
@@ -1075,16 +1073,16 @@ namespace Blazor.Web.UI.Services
                     var options = new JsonSerializerOptions() { WriteIndented = true };
                     NetworkJSON = JsonSerializer.Serialize<List<OrgpackagedetailViewModel>>(lst, options);
                 
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        //@orgId int=0,@NetworksJSON as nvarchar(2000) ='', @UserId int=0
-                        SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.Int);
+                            //@orgId int=0,@NetworksJSON as nvarchar(2000) ='', @UserId int=0
+                            MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = UserId;
                         command.Parameters.Add(pUserId);
-                        SqlParameter pNetworkSettingsJSON = new SqlParameter("@NetworkSettingsJSON", SqlDbType.NVarChar, 3000);
+                            MySqlParameter pNetworkSettingsJSON = new MySqlParameter("p_NetworkSettingsJSON", MySqlDbType.LongText, 4000);
                         pNetworkSettingsJSON.Value = NetworkJSON;
                         command.Parameters.Add(pNetworkSettingsJSON);                        
                         command.CommandText = "spUpdateNetworkSettingData";
@@ -1123,19 +1121,19 @@ namespace Blazor.Web.UI.Services
                     var options = new JsonSerializerOptions() { WriteIndented = true }; 
                     NetworkJSON = JsonSerializer.Serialize<List<networkidvalues>>(lst, options);
                 }
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
                         //@orgId int=0,@NetworksJSON as nvarchar(2000) ='', @UserId int=0
-                        SqlParameter pOrgId = new SqlParameter("@orgId", SqlDbType.Int);
+                        MySqlParameter pOrgId = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pOrgId.Value = 0;
                         command.Parameters.Add(pOrgId);
-                        SqlParameter pNetworksJSON = new SqlParameter("@NetworksJSON", SqlDbType.NVarChar);
+                        MySqlParameter pNetworksJSON = new MySqlParameter("p_NetworksJSON", SqlDbType.NVarChar);
                         pNetworksJSON.Value = NetworkJSON;
                         command.Parameters.Add(pNetworksJSON);
-                        SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.Int);
+                        MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = UserId;
                         command.Parameters.Add(pUserId);
                         command.CommandText = "spUpdateNetworkStatusAndQoutas";
@@ -1165,72 +1163,72 @@ namespace Blazor.Web.UI.Services
             BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pId = new SqlParameter("p_id", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id; //model.id;
                         parameter.Add(pId);
-                        SqlParameter pStoreId = new SqlParameter("p_OrgId", SqlDbType.Int);
+                        MySqlParameter pStoreId = new MySqlParameter("p_OrgId", SqlDbType.Int);
                         pStoreId.Value = model.OrgId; //model.storeid;
                         parameter.Add(pStoreId);
                         //  @regsource int=0, @RegistrationType int=0
-                        SqlParameter pUsername = new SqlParameter("p_username", SqlDbType.NVarChar);
+                        MySqlParameter pUsername = new MySqlParameter("p_username", SqlDbType.NVarChar);
                         pUsername.Value = ""+ model.UserName;  //Contact model.username;
                         parameter.Add(pUsername);
-                        SqlParameter pFirstName = new SqlParameter("p_firstname", SqlDbType.NVarChar);
+                        MySqlParameter pFirstName = new MySqlParameter("p_firstname", SqlDbType.NVarChar);
                         pFirstName.Value = "" + model.FirstName;  //Contact model.username;
                         parameter.Add(pFirstName);
-                        SqlParameter pLastName = new SqlParameter("p_lastname", SqlDbType.NVarChar);
+                        MySqlParameter pLastName = new MySqlParameter("p_lastname", SqlDbType.NVarChar);
                         pLastName.Value = "" + model.LastName;   //Contact model.username;
                         parameter.Add(pLastName);
-                        SqlParameter pAuthToken = new SqlParameter("p_SecurityToken", SqlDbType.NVarChar);
+                        MySqlParameter pAuthToken = new MySqlParameter("p_SecurityToken", SqlDbType.NVarChar);
                         pAuthToken.Value = "" + model.SecurityToken;  //Contact model.username;
                         parameter.Add(pAuthToken);
-                        SqlParameter pcontact = new SqlParameter("p_Contact", SqlDbType.NVarChar);
+                        MySqlParameter pcontact = new MySqlParameter("p_Contact", SqlDbType.NVarChar);
                         pcontact.Value = "" + model.Contact;  // model.Contact;
                         parameter.Add(pcontact);
-                        SqlParameter pPassword = new SqlParameter("p_Password", SqlDbType.NVarChar);
+                        MySqlParameter pPassword = new MySqlParameter("p_Password", SqlDbType.NVarChar);
                         pPassword.Value = string.IsNullOrWhiteSpace(model.Password) ? string.Empty : GlobalUTIL.Encrypt(System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String("" + model.Password)), true, BlazorConstant.SECKEY);
                         parameter.Add(pPassword);
-                        SqlParameter pemail = new SqlParameter("p_email", SqlDbType.NVarChar);
+                        MySqlParameter pemail = new MySqlParameter("p_email", SqlDbType.NVarChar);
                         pemail.Value = "" + model.Email; // "" + model.email;
                         parameter.Add(pemail);
 
-                        SqlParameter pCityId = new SqlParameter("p_CityId", SqlDbType.Int);
+                        MySqlParameter pCityId = new MySqlParameter("p_CityId", SqlDbType.Int);
                         pCityId.Value = 0;
                         parameter.Add(pCityId);
-                        SqlParameter pStateId = new SqlParameter("p_stateId", SqlDbType.Int);
+                        MySqlParameter pStateId = new MySqlParameter("p_stateId", SqlDbType.Int);
                         pStateId.Value = 0;// Convert.ToInt32(string.IsNullOrWhiteSpace(HttpContext.Request.Form["stateid"]) ? "0" : HttpContext.Request.Form["stateid"]); //model.StateId == null ? 0 : model.StateId;
                         parameter.Add(pStateId);
-                        SqlParameter pCityName = new SqlParameter("p_cityName", SqlDbType.NVarChar);
+                        MySqlParameter pCityName = new MySqlParameter("p_cityName", SqlDbType.NVarChar);
                         pCityName.Value = "" + model.CityName;
                         parameter.Add(pCityName);
 
-                        SqlParameter prole = new SqlParameter("p_roleId", SqlDbType.Int);
+                        MySqlParameter prole = new MySqlParameter("p_roleId", SqlDbType.Int);
                         prole.Value = Convert.ToInt32(model.RoleId);  //"" + model.roleid;
                         parameter.Add(prole);
-                        SqlParameter pImageName = new SqlParameter("p_logoimageName", SqlDbType.NVarChar);
+                        MySqlParameter pImageName = new MySqlParameter("p_logoimageName", SqlDbType.NVarChar);
                         pImageName.Value = string.IsNullOrWhiteSpace(model.Avatar) ? "" : model.Avatar;
                         parameter.Add(pImageName);
 
-                        SqlParameter pFMCToken = new SqlParameter("p_FMCToken", SqlDbType.NVarChar);
+                        MySqlParameter pFMCToken = new MySqlParameter("p_FMCToken", SqlDbType.NVarChar);
                         pFMCToken.Value = "" ;  //"" + model.fmctoken;
                         parameter.Add(pFMCToken);
-                        SqlParameter pIMEI = new SqlParameter("p_IMEI", SqlDbType.NVarChar);
+                        MySqlParameter pIMEI = new MySqlParameter("p_IMEI", SqlDbType.NVarChar);
                         pIMEI.Value = "" + model.UserCode; // "" + model.IM;
                         parameter.Add(pIMEI);
-                        SqlParameter pRegSource = new SqlParameter("p_regsource", SqlDbType.Int);
+                        MySqlParameter pRegSource = new MySqlParameter("p_regsource", SqlDbType.Int);
                         pRegSource.Value = model.RegistrationSource;//  model.regsource;
                         parameter.Add(pRegSource);
 
-                        SqlParameter pStatus = new SqlParameter("p_status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = model.Status; // model.status;
                         parameter.Add(pStatus);
-                        SqlParameter pRegistrationType = new SqlParameter("p_RegistrationType", SqlDbType.Int);
+                        MySqlParameter pRegistrationType = new MySqlParameter("p_RegistrationType", SqlDbType.Int);
                         pRegistrationType.Value = model.RegistrationSource; // register & login;
                         parameter.Add(pRegistrationType);
                         command.CommandText = "spAddUpdateUser";
@@ -1263,25 +1261,25 @@ namespace Blazor.Web.UI.Services
             BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
             {
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pId = new SqlParameter("@id", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id;
                         parameter.Add(pId);
 
-                        SqlParameter pRemarks = new SqlParameter("@Remarks", SqlDbType.NVarChar);
+                        MySqlParameter pRemarks = new MySqlParameter("p_Remarks", SqlDbType.NVarChar);
                         pRemarks.Value = "" + model.Remarks;
                         parameter.Add(pRemarks);
 
-                        SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = model.Status;
                         parameter.Add(pStatus);
 
-                        SqlParameter pUserId = new SqlParameter("@UserId", SqlDbType.Int);
+                        MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = model.LastUpdatedBy;
                         parameter.Add(pUserId);
 
@@ -1331,57 +1329,57 @@ namespace Blazor.Web.UI.Services
                     NetworkSchedulesJSON = JsonSerializer.Serialize<List<CompaignexecutionscheduleViewModel>>(cdtl, options);
                 }
 
-                using (SqlConnection connection = new SqlConnection(BlazorConstant.CONNECTION_STRING))
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
                 {
                     connection.Open();
                     using (var command = connection.CreateCommand())
                     {
                         //  @id,networkId,orgId,Desc,Name,title,HashTags,startTime,finishTime,userId,status @Name nvarchar(100),@title nvarchar(100),@hashtag nvarchar(100),@startTime datetime,@finishTime datetime,@Desc nvarchar(4000), @status int=0
-                        List<SqlParameter> parameter = new List<SqlParameter>();
-                        SqlParameter pId = new SqlParameter("@id", SqlDbType.Int);
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id;
                         parameter.Add(pId);
-                        //SqlParameter pstore = new SqlParameter("@networkId", SqlDbType.Int);
+                        //SqlParameter pstore = new MySqlParameter("p_networkId", SqlDbType.Int);
                         //pstore.Value = model.NetworkId;
                         //parameter.Add(pstore);
-                        SqlParameter pmakedetailid = new SqlParameter("@orgId", SqlDbType.Int);
+                        MySqlParameter pmakedetailid = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pmakedetailid.Value = model.OrgId;
                         parameter.Add(pmakedetailid);
-                        SqlParameter pDescription = new SqlParameter("@Desc", SqlDbType.NVarChar);
+                        MySqlParameter pDescription = new MySqlParameter("p_Desc", SqlDbType.NVarChar);
                         pDescription.Value = "" + model.Description;
                         parameter.Add(pDescription);
-                        SqlParameter pName = new SqlParameter("@Name", SqlDbType.NVarChar);
+                        MySqlParameter pName = new MySqlParameter("p_Name", SqlDbType.NVarChar);
                         pName.Value = "" + model.Name;
                         parameter.Add(pName);
-                        SqlParameter pTitle = new SqlParameter("@title", SqlDbType.NVarChar);
+                        MySqlParameter pTitle = new MySqlParameter("p_title", SqlDbType.NVarChar);
                         pTitle.Value = model.Title;
                         parameter.Add(pTitle);
-                        SqlParameter pHashtagt = new SqlParameter("@HashTags", SqlDbType.NVarChar);
+                        MySqlParameter pHashtagt = new MySqlParameter("p_HashTags", SqlDbType.NVarChar);
                         pHashtagt.Value = model.HashTags;
                         parameter.Add(pHashtagt);
-                        SqlParameter pNetworkJSON = new SqlParameter("@networksSchedulesJSON", SqlDbType.VarChar);
+                        MySqlParameter pNetworkJSON = new MySqlParameter("p_networksSchedulesJSON", MySqlDbType.LongText,4000);
                         pNetworkJSON.Value = NetworkSchedulesJSON;
                         parameter.Add(pNetworkJSON);
-                        SqlParameter pTotalBudget = new SqlParameter("@TotalBudget", SqlDbType.Float);
+                        MySqlParameter pTotalBudget = new MySqlParameter("p_TotalBudget", SqlDbType.Float);
                         pTotalBudget.Value = (model.TotalBudget == null ? 0 : model.TotalBudget);//.TotalBudget;
                         parameter.Add(pTotalBudget);
-                        SqlParameter pDiscount = new SqlParameter("@Discount", SqlDbType.Float);
+                        MySqlParameter pDiscount = new MySqlParameter("p_Discount", SqlDbType.Float);
                         pDiscount.Value = (model.Discount == null ? 0 : model.Discount);
                         parameter.Add(pDiscount);
                         //@HashTags nvarchar(2000)= '',@startTime DATE = GETDATE, @finishTime DATE = GETutcDATE,@userId int= 0, @status  int= 1
-                        SqlParameter pCompaignDetails = new SqlParameter("@CompaignDetails", SqlDbType.NVarChar);
+                        MySqlParameter pCompaignDetails = new MySqlParameter("p_CompaignDetails", MySqlDbType.LongText, 4000);
                         pCompaignDetails.Value = NetworkDetailsJSON;
                         parameter.Add(pCompaignDetails);
-                        SqlParameter pStartTime = new SqlParameter("@startTime", SqlDbType.DateTime);
+                        MySqlParameter pStartTime = new MySqlParameter("p_startTime", SqlDbType.DateTime);
                         pStartTime.Value = (model.StartTime == null ? GlobalUTIL.CurrentDateTime : model.StartTime);
                         parameter.Add(pStartTime);
-                        SqlParameter pFinishTime = new SqlParameter("@finishTime", SqlDbType.DateTime);
+                        MySqlParameter pFinishTime = new MySqlParameter("p_finishTime", SqlDbType.DateTime);
                         pFinishTime.Value = (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddMonths(1) : model.FinishTime);
                         parameter.Add(pFinishTime);
-                        SqlParameter pUserid = new SqlParameter("@userId", SqlDbType.Int);
+                        MySqlParameter pUserid = new MySqlParameter("p_userId", SqlDbType.Int);
                         pUserid.Value = model.CreatedBy <= 0 ? model.LastUpdatedBy : model.CreatedBy;
                         parameter.Add(pUserid);
-                        SqlParameter pStatus = new SqlParameter("@status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
                         pStatus.Value = model.Status;
                         parameter.Add(pStatus);
                         command.CommandText = "spWebApiCreateCompaignWithNetworkDetails";

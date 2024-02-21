@@ -339,7 +339,7 @@ namespace Blazor.Web.UI.Services
             try
             {
                 EmailSender EmailSender = new EmailSender();
-                if (string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.SmtpUser) || !GlobalBasicConfigurationsViewModel.SmtpUser.Contains("@@"))
+                if (string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.SmtpUser) || !GlobalBasicConfigurationsViewModel.SmtpUser.Contains("p_@"))
                     GlobalUTIL.loadConfigurations(1);
                 await EmailSender.SendAccountStatusChangeEmailNotificationAsync(recipientId, remarks);              
 
