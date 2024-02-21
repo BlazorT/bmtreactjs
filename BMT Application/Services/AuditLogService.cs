@@ -3,7 +3,7 @@ using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
 using com.blazor.bmt.core.interfaces;
-using com.blazor.dsps.core.repositories;
+using com.blazor.bmt.core.repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

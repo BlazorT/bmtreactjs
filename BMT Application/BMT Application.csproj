@@ -26,7 +26,6 @@
     <Compile Remove="Services\InspectionRequestsService.cs" />
     <Compile Remove="Services\IntegrationService.cs" />
     <Compile Remove="Services\InventoryDetailService.cs" />
-    <Compile Remove="Services\OnlineUsersService.cs" />
     <Compile Remove="Services\PriceService.cs" />
     <Compile Remove="Services\ProductService.cs" />
     <Compile Remove="Services\ProductsService.cs" />

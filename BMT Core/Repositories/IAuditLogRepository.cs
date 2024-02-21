@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace com.blazor.dsps.core.repositories
+namespace com.blazor.bmt.core.repositories
 {
     public interface IAuditLogRepository : IRepositoryTransaction<Auditlog>
     {

@@ -22,6 +22,7 @@ namespace com.blazor.bmt
             CreateMap<OrganizationModel, OrganizationViewModel>();
             CreateMap<AuditLogModel, AuditLogViewModel>();
             CreateMap<NotificationModel, NotificationViewModel>();
+           // CreateMap<MediacontentModel, MediacontentViewModel>();
             //CreateMap<IntegrationservicesettingModel, IntegrationservicesettingViewModel>();
             //CreateMap<VehicleModel, VehicleViewModel>();
             //CreateMap<VehicleinspectionModel, VehicleinspectionItemViewModel>();
@@ -35,8 +36,8 @@ namespace com.blazor.bmt
             //CreateMap<RosterplanModel, RosterplanViewModel>();
             //CreateMap<DspstableModel, DspstableViewModel>();
 
-           // CreateMap<VehicleViewModel, VehicleModel>();
-          //  CreateMap<BasicConfigurationViewModel, BasicConfigurationModel>();
+            // CreateMap<VehicleViewModel, VehicleModel>();
+            //  CreateMap<BasicConfigurationViewModel, BasicConfigurationModel>();
             CreateMap<ConfigurationsViewModel, ConfigurationModel>();
             CreateMap<AppLogViewModel, ApplogModel>();
             CreateMap<AuditLogViewModel, AuditLogModel>();
