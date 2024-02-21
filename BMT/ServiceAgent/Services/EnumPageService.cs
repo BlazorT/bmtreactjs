@@ -1,13 +1,19 @@
-﻿
+﻿using Blazor.Web.Application.Interfaces;
+using Blazor.Web.UI.Interfaces;
+using Blazor.Web.ViewModels;
 // Microsoft Namespaces
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Linq;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
-using com.blazor.bmt.ui.interfaces;
 
-namespace com.blazor.bmt.ui.services
+
+namespace Blazor.Web.UI.Services
 {
     public class EnumPageService : IEnumPageService
     {
@@ -19,120 +25,157 @@ namespace com.blazor.bmt.ui.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        public async Task<IEnumerable<EnumViewModel>> GetEnumCollection(UTIL.PARENT_ENUMS enumOption, string IncludeAll)
+        public async Task<IEnumerable<EnumViewModel>> GetEnumCollection(PARENT_ENUMS enumOption, string IncludeAll)
         {
             List<EnumViewModel> enumList = new List<EnumViewModel>();
 
             switch (enumOption)
             {
-                case UTIL.PARENT_ENUMS.STATUS_USERS:
-                    var lst = Enum.GetValues(typeof(UTIL.STATUS_USERS)).Cast<UTIL.STATUS_USERS>().Select(x => x).ToList();
+                case PARENT_ENUMS.STATUS_USERS:
+                    var lst = Enum.GetValues(typeof(STATUS_USERS)).Cast<STATUS_USERS>().Select(x => x).ToList();
                     enumList = lst.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.STATUS_USERS),o.ToString())
+                        name = GetEnumDesciption(typeof(STATUS_USERS),o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.STATUS_NOTIFICATION:
-                    var tlst = Enum.GetValues(typeof(UTIL.STATUS_NOTIFICATION)).Cast<UTIL.STATUS_NOTIFICATION>().Select(x => x).ToList();
-                    enumList = tlst.Select(o => new EnumViewModel
+                case PARENT_ENUMS.STATUS_BUSINESS_PLAN:
+                    var lsts = Enum.GetValues(typeof(STATUS_BUSINESS_PLAN)).Cast<STATUS_BUSINESS_PLAN>().Select(x => x).ToList();
+                    enumList = lsts.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.STATUS_NOTIFICATION), o.ToString())
-
-                    }).ToList();
-                    break;               
-                case UTIL.PARENT_ENUMS.AD_SOURCE:
-                    var adtlst = Enum.GetValues(typeof(UTIL.AD_SOURCE)).Cast<UTIL.AD_SOURCE>().Select(x => x).ToList();
-                    enumList = adtlst.Select(o => new EnumViewModel {
-                        id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.AD_SOURCE), o.ToString())
+                        name = GetEnumDesciption(typeof(STATUS_BUSINESS_PLAN), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.VEHICLE_STATUS:
-                    var vinsulst = Enum.GetValues(typeof(UTIL.VEHICLE_STATUS)).Cast<UTIL.VEHICLE_STATUS>().Select(x => x).ToList();
-                    enumList = vinsulst.Select(o => new EnumViewModel
+                case PARENT_ENUMS.POST_TYPES:
+                    var psts = Enum.GetValues(typeof(POST_TYPES)).Cast<POST_TYPES>().Select(x => x).ToList();
+                    enumList = psts.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.VEHICLE_STATUS), o.ToString())
+                        name = GetEnumDesciption(typeof(POST_TYPES), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.AUDIT_ENTITIES:
-                    var dlst = Enum.GetValues(typeof(UTIL.AUDIT_ENTITIES)).Cast<UTIL.AUDIT_ENTITIES>().Select(x => x).ToList();
-                    enumList = dlst.Select(o => new EnumViewModel
+                case PARENT_ENUMS.INTERVAL_TYPES:
+                    var ITYPES = Enum.GetValues(typeof(INTERVAL_TYPES)).Cast<INTERVAL_TYPES>().Select(x => x).ToList();
+                    enumList = ITYPES.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.AUDIT_ENTITIES), o.ToString())
+                        name = GetEnumDesciption(typeof(INTERVAL_TYPES), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.AVAILIBILITY_STATUS:
-                    var plst = Enum.GetValues(typeof(UTIL.AVAILIBILITY_STATUS)).Cast<UTIL.AVAILIBILITY_STATUS>().Select(x => x).ToList();
-                    enumList = plst.Select(o => new EnumViewModel
+                case PARENT_ENUMS.MEDIA_NETWORKS:
+                    var MTypesLs = Enum.GetValues(typeof(MEDIA_NETWORKS)).Cast<MEDIA_NETWORKS>().Select(x => x).ToList();
+                    enumList = MTypesLs.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.AVAILIBILITY_STATUS), o.ToString())
-
-                    }).ToList();
-                    break;             
-                case UTIL.PARENT_ENUMS.BUSINESS_ENTITIES:
-                    var pCategories = Enum.GetValues(typeof(UTIL.BUSINESS_ENTITIES)).Cast<UTIL.BUSINESS_ENTITIES>().Select(x => x).ToList();
-                    enumList = pCategories.Select(o => new EnumViewModel
-                    {
-                        id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.BUSINESS_ENTITIES), o.ToString())
+                        name = GetEnumDesciption(typeof(MEDIA_NETWORKS), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.BUSINESS_TYPES:
-                    var englst = Enum.GetValues(typeof(UTIL.BUSINESS_TYPES)).Cast<UTIL.BUSINESS_TYPES>().Select(x => x).ToList();
-                    enumList = englst.Select(o => new EnumViewModel
+                case PARENT_ENUMS.COMMON_STATUS:
+                    var lstcs = Enum.GetValues(typeof(COMMON_STATUS)).Cast<COMMON_STATUS>().Select(x => x).ToList();
+                    enumList = lstcs.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.BUSINESS_TYPES), o.ToString())
+                        name = GetEnumDesciption(typeof(COMMON_STATUS), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.VEHICLE_CATEGORIES:
-                    var vhltypels = Enum.GetValues(typeof(UTIL.VEHICLE_CATEGORIES)).Cast<UTIL.VEHICLE_CATEGORIES>().Select(x => x).ToList();
-                    enumList = vhltypels.Select(o => new EnumViewModel
+                case PARENT_ENUMS.PACKAGES:
+                    var lstcc = Enum.GetValues(typeof(PACKAGES)).Cast<PACKAGES>().Select(x => x).ToList();
+                    enumList = lstcc.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.VEHICLE_CATEGORIES), o.ToString())
+                        name = GetEnumDesciption(typeof(PACKAGES), o.ToString())
 
                     }).ToList();
                     break;
-                case UTIL.PARENT_ENUMS.USER_ROLES:
-                    var vhlst = Enum.GetValues(typeof(UTIL.USER_ROLES)).Cast<UTIL.USER_ROLES>().Select(x => x).ToList();
-                    enumList = vhlst.Select(o => new EnumViewModel
-                    {
-                        id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.USER_ROLES), o.ToString())
+                //case UTIL.PARENT_ENUMS.PLANS_APPROVAL_STATUS:
+                //    var lstv = Enum.GetValues(typeof(Blazor.Web.UTIL.PLANS_APPROVAL_STATUS)).Cast<Blazor.Web.UTIL.PLANS_APPROVAL_STATUS>().Select(x => x).ToList();
+                //    enumList = lstv.Select(o => new EnumViewModel
+                //    {
+                //        id = (int)o,
+                //        name = GetEnumDesciption(typeof(Blazor.Web.UTIL.PLANS_APPROVAL_STATUS), o.ToString())
 
-                    }).ToList();
-                    break;                      
-                case UTIL.PARENT_ENUMS.STATUS_ADMIN_USERS:
-                    var lstSAU = Enum.GetValues(typeof(UTIL.STATUS_ADMIN_USERS)).Cast<UTIL.STATUS_ADMIN_USERS>().Select(x => x).ToList();
+                //    }).ToList();
+                //    break;
+                case PARENT_ENUMS.STATUS_ADMIN_USERS:
+                    var lstSAU = Enum.GetValues(typeof(STATUS_ADMIN_USERS)).Cast<STATUS_ADMIN_USERS>().Select(x => x).ToList();
                     enumList = lstSAU.Select(o => new EnumViewModel
                     {
                         id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.STATUS_ADMIN_USERS), o.ToString())
-
-                    }).ToList();
-                    break;          
-         
-                case UTIL.PARENT_ENUMS.TRANSACTION_TYPES:
-                    var lstt = Enum.GetValues(typeof(UTIL.TRANSACTION_TYPES)).Cast<UTIL.TRANSACTION_TYPES>().Select(x => x).ToList();
-                    enumList = lstt.Select(o => new EnumViewModel
-                    {
-                        id = (int)o,
-                        name = GetEnumDesciption(typeof(UTIL.TRANSACTION_TYPES), o.ToString())
+                        name = GetEnumDesciption(typeof(STATUS_ADMIN_USERS), o.ToString())
 
                     }).ToList();
                     break;
+                case PARENT_ENUMS.STATUS_NOTIFICATION:
+                    var lstn = Enum.GetValues(typeof(STATUS_NOTIFICATION)).Cast<STATUS_NOTIFICATION>().Select(x => x).ToList();
+                    enumList = lstn.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(STATUS_NOTIFICATION), o.ToString())
+
+                    }).ToList();
+                    break;
+                case PARENT_ENUMS.TRANSACTION_TYPES:
+                    var lstt = Enum.GetValues(typeof(TRANSACTION_TYPES)).Cast<TRANSACTION_TYPES>().Select(x => x).ToList();
+                    enumList = lstt.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(TRANSACTION_TYPES), o.ToString())
+
+                    }).ToList();
+                    break;
+                case PARENT_ENUMS.PAYMENT_METHODS:
+                    var lstp = Enum.GetValues(typeof(PAYMENT_METHODS)).Cast<PAYMENT_METHODS>().Select(x => x).ToList();
+                    enumList = lstp.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(PAYMENT_METHODS), o.ToString())
+
+                    }).ToList();
+                    break;
+                //case UTIL.PARENT_ENUMS.DONATION_PACKAGES:
+                //    var lstsp = Enum.GetValues(typeof(Blazor.Web.UTIL.DONATION_PACKAGES)).Cast<Blazor.Web.UTIL.DONATION_PACKAGES>().Select(x => x).ToList();
+                //    enumList = lstsp.Select(o => new EnumViewModel
+                //    {
+                //        id = (int)o,
+                //        name = GetEnumDesciption(typeof(Blazor.Web.UTIL.DONATION_PACKAGES), o.ToString())
+
+                //    }).OrderByDescending(x=>x.id).ToList();
+                //    break;
+                case PARENT_ENUMS.USERROLES:
+                    var lstur = Enum.GetValues(typeof(USERROLES)).Cast<USERROLES>().Select(x => x).ToList();
+                    enumList = lstur.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(USERROLES), o.ToString())
+
+                    }).ToList();
+                    break;
+                case PARENT_ENUMS.MESSAGE_RESPONSE_TYPES:
+                    var lstmt = Enum.GetValues(typeof(MESSAGE_RESPONSE_TYPES)).Cast<MESSAGE_RESPONSE_TYPES>().Select(x => x).ToList();
+                    enumList = lstmt.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(MESSAGE_RESPONSE_TYPES), o.ToString())
+
+                    }).ToList();
+                    break;
+                case PARENT_ENUMS.LOGIN_ACTIVITY:
+                    var lstat = Enum.GetValues(typeof(LOGIN_ACTIVITY)).Cast<LOGIN_ACTIVITY>().Select(x => x).ToList();
+                    enumList = lstat.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(LOGIN_ACTIVITY), o.ToString())
+
+                    }).ToList();
+                    break;
+
             }
 
             if (!string.IsNullOrWhiteSpace("" + IncludeAll.Trim())) {
@@ -145,20 +188,12 @@ namespace com.blazor.bmt.ui.services
             //var description= type.GetMember(typeof(enm).GetEnumName(val))[0].GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault();
             return (memInfo== null ? mame :memInfo.Description );
     }
-        
-        public async Task<EnumViewModel> GenEnumViewModel(Enum enumOption, int Id)
-        {
+        public async Task<EnumViewModel> GenEnumViewModel(Enum enumOption, int Id){
 
-            
-        //Enum.GetValues(typeof(UTIL.COMMON_STATUS)).Cast<UTIL.COMMON_STATUS>().FirstOrDefault().GetType().GetCustomAttributes(typeof(DescriptionAttribute), false)
-            var roles = Enum.GetValues(typeof(UTIL.COMMON_STATUS)).Cast<UTIL.COMMON_STATUS>()
-        .Select(r => new
-        {
-            id = (int)r,
-            name = ((DescriptionAttribute)r.GetType().GetCustomAttributes(typeof(DescriptionAttribute), false)[0]).Description
-        }).ToList();
-            //  throw new Exception("Not Implemented");
-            return new EnumViewModel { id = roles.FirstOrDefault().id, name = roles.FirstOrDefault().name };
+        //    var roles = Enum.GetValues(typeof(Blazor.Web.UTIL.STATUS)).Cast<Blazor.Web.UTIL.STATUS>()
+        //.Select(r => new { id = (int)r, name = ((DescriptionAttribute)r.GetType().GetCustomAttributes(typeof(DescriptionAttribute), false)[0]).Description      
+        //}).ToList();
+            throw new Exception("Not Implemented");
         }
     }
 }

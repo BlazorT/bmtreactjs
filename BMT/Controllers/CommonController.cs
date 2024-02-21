@@ -9,9 +9,7 @@ using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Blazor.Web.ViewModels;
-//using com.blazor.bmt.ui.services;
-using com.blazor.dsps.viewmodels;
+using Blazor.Web.UI.Interfaces;
 
 namespace com.blazor.bmt.controllers
 {
@@ -39,7 +37,7 @@ namespace com.blazor.bmt.controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService,IAppLogPageService appLogPageService, INotificationPageService notificationPageService,  IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
@@ -52,7 +50,7 @@ namespace com.blazor.bmt.controllers
           //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
-            _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
+          //  _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
             //_integrationPageService = integrationPageService ?? throw new ArgumentNullException(nameof(integrationPageService));
 
             _blazorUtilPageService = blazorUtilPageService ?? throw new ArgumentNullException(nameof(blazorUtilPageService));
@@ -82,7 +80,7 @@ namespace com.blazor.bmt.controllers
                     blazorApiResponse.data = GlobalSettings.Configurations.FirstOrDefault();
                 }
                 else {
-                    GlobalUTIL.loadConfigurations(Convert.ToInt32(filter.dspid));
+                    GlobalUTIL.loadConfigurations(Convert.ToInt32(filter.orgId));
                     blazorApiResponse.data = GlobalSettings.Configurations.FirstOrDefault();
                 }
                    
@@ -126,7 +124,7 @@ namespace com.blazor.bmt.controllers
        // [HttpGet("submitconfigurations")]
         [HttpPost("submitconfigurations")]
         [Route("submitconfigurations")]
-        public async Task<ActionResult> submitConfigurations([FromBody] ConfigurationsViewModel cvm)
+        public async Task<ActionResult> submitConfigurations([FromBody] ConfigrationsMergedViewModel cvm)
         {
 
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
@@ -137,8 +135,8 @@ namespace com.blazor.bmt.controllers
                     //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
                     blazorApiResponse.status = true;
                     //ConfigurationModel mdl = new ConfigurationModel(); //{ id= cvm.id };
-                await _blazorUtilPageService.UpdateConfigurationChangeSet(cvm.DspId,  cvm);
-                GlobalUTIL.loadConfigurations(cvm.DspId);
+              //  await _blazorUtilPageService.UpdateConfigurationChangeSet(cvm.us,  cvm);
+                GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
 
             }
             catch (Exception ex)
@@ -214,36 +212,23 @@ namespace com.blazor.bmt.controllers
                     try
                     {
                         var lst = GlobalUTIL.LoadGlobalLookUpCollectionViewModel();
-                        lookUps.dastatuses = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.STATUS).ToList();
-                        lookUps.states = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.STATES).ToList();
-                        lookUps.countries = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.COUNTRIES).ToList();
-                        lookUps.businesstypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.BUSINESS_TYPES).ToList();
-                        lookUps.productgroups = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.PRODUCT_GROUPS).ToList();
-                        lookUps.substatuses = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.SUB_STATUS).ToList();
-                        lookUps.auditentities = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.AUDIT_ENTITIES).ToList();
-                        lookUps.businessentities = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.BUSINESS_ENTITIES).ToList();
-
-                        lookUps.notificationtypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
-                        lookUps.categories = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.CATEGORIES).ToList();
-                        lookUps.userroles = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.USER_ROLES).ToList();
+                        //lookUps.dastatuses = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATUS).ToList();
+                        lookUps.states = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATES).ToList();
+                        lookUps.countries = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.COUNTRIES).ToList();                      
+                        lookUps.notificationtypes = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
+                       // var lst = UTIL.GlobalApp.LoadGlobalLookUpCollectionViewModel(0);
+                        lookUps.networks = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NETWORKS).ToList();
+                        lookUps.states = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATES).ToList();
+                        lookUps.statuses = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATUS).ToList();
+                        lookUps.Intervals = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.INTERVAL_TYPES).ToList();
+                        lookUps.alerts = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.ALERT_LEVELS).ToList();
+                        lookUps.notifications = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
                         // lookUps.no = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.PACKAGE).ToList();
-                        lookUps.servicetypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.SERVICE_TYPES).ToList();
-                        lookUps.vehicletypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.VEHICLETYPES).ToList();
-                        lookUps.ownerships = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.VEHICLE_OWNERSHIPS).ToList();
-                        lookUps.makes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.MAKES).ToList();
-                        lookUps.menus = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.MENUS).ToList();
 
-                        lookUps.commonstatuses = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.COMMON_STATUS).ToList();
-                        lookUps.inspectiontypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.INSPECTION_STATUS).ToList();
-                        lookUps.Vehiclestatuss = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.VEHICLE_STATUS).ToList();
-                        lookUps.Inventorycategories = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.INVENTORY_CATEGORIES).ToList();
-                        lookUps.inspectionitems = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.INSPECTION_ITEMS).ToList();
-                        lookUps.datatypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.DATE_TYPES).ToList();
-                        lookUps.fieldtypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.FIELD_TYPES).ToList();
-                        lookUps.rostertypes = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.ROSTER_STATUS).ToList();
-                        lookUps.synchstatuses = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.SYNCH_STATUS).ToList();
-                        lookUps.DSP_TABLES = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.DS_TABLES).ToList();
-                        lookUps.product_assignment_types = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.ASSIGNMENT_TYPES).ToList();
+                        lookUps.packages = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.PACKAGE).ToList();
+                        lookUps.Currencies = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.CURRENCIES).ToList();
+                        //lookUps.Countries = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.COUNTRIES).ToList();
+                        lookUps.PostTypes = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.POST_TYPES).ToList();
                         response.data = lookUps;
                         response.status = true;
                     }
@@ -532,7 +517,7 @@ namespace com.blazor.bmt.controllers
                Int32 UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);// _cache.Remove(this.User.Claims.Where(x=>x.Type== "UserId").FirstOrDefault().Value);               
                await _notificationPageService.loggedOut(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(), UserId);
                 // Record log out activity              
-                await _appLogPageService.ProcessLoginActivity(UserId, UTIL.LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
+                await _appLogPageService.ProcessLoginActivity(UserId, LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
                 blazorResponseViewModel.data = "";
                 blazorResponseViewModel.status = true;
                 _cache.Remove(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
@@ -559,7 +544,7 @@ namespace com.blazor.bmt.controllers
             try
             {
                 string ipAddress = "" + Request.HttpContext.Connection.RemoteIpAddress;
-                LoginViewModel lvm = await _blazorRepoPageService.GetUserVerificationData(new LoginViewModel { Email = ("" + email).Trim(), RoleId = (int)UTIL.COMMON_STATUS_ALL.ALL, Password = GlobalUTIL.Encrypt(("" + password).Trim(), true, BlazorConstant.SECKEY) });
+                LoginViewModel lvm = await _blazorRepoPageService.GetUserVerificationData(new UserViewModel { Email = ("" + email).Trim(), RoleId = (int)COMMON_STATUS_ALL.ALL, Password = GlobalUTIL.Encrypt(("" + password).Trim(), true, BlazorConstant.SECKEY) });
 
                 if (lvm != null)
                 {
@@ -575,7 +560,7 @@ namespace com.blazor.bmt.controllers
                   //  GlobalSettings.DspName = lvm.DspName;
                     //GlobalSettings.VAT_TAXID = lvm.VAT_NTN;
                   //  GlobalSettings.DspStateName = lvm.DspStateName;
-                    GlobalSettings.DspEmail = lvm.Email;
+                    GlobalSettings.OrgEmail = lvm.Email;
                   //  GlobalSettings.DspLogoPath = lvm.DspLogo;
                     //BasicConfigurationsViewModel.default_show_room_id = lvm.ShowRoomStateId;
                   //  GlobalSettings.DspStateName = lvm.DspStateName;
@@ -585,7 +570,7 @@ namespace com.blazor.bmt.controllers
                   //  GlobalSettings.TradeName = lvm.TradeName;
                     //GlobalSettings.ShowRoomCurrency = lvm.ShowRoomCurrency;
                     // {
-                    if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && ((lvm.AlreadyLoginStatus != (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN || (lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN && lvm.LoginMachineIp == ipAddress)) || GlobalUTIL.CurrentDateTime.Subtract(lvm.LoginTime).TotalHours >= 8))
+                    if (lvm.UserStatus == (int)COMMON_STATUS.ACTIVE && ((lvm.AlreadyLoginStatus != (int)LOGIN_ACTIVITY.LOGGED_IN || (lvm.AlreadyLoginStatus == (int)LOGIN_ACTIVITY.LOGGED_IN && lvm.LoginMachineIp == ipAddress)) || GlobalUTIL.CurrentDateTime.Subtract(lvm.LoginTime).TotalHours >= 8))
                     {
                         var userClaims = new List<Claim>()
                     {
@@ -607,20 +592,20 @@ namespace com.blazor.bmt.controllers
                         // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                         _cache.Set("" + lvm.Id, uvm);
 
-                        await _notificationPageService.loggedIn(lvm, ipAddress);
-                        await _appLogPageService.ProcessLoginActivity(lvm.Id, UTIL.LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
+                        await _notificationPageService.loggedIn(uvm, ipAddress);
+                        await _appLogPageService.ProcessLoginActivity(lvm.Id, LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
                         blazorResponseViewModel.data = lvm;
                         blazorResponseViewModel.id = lvm.Id;
                         blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
                         blazorResponseViewModel.message = String.Format("Welcome <b>{0}</b> to {1} - successfully logged in!", lvm.FullName);
                         blazorResponseViewModel.status = true;
                     }
-                    else if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN)
+                    else if (lvm.UserStatus == (int)COMMON_STATUS.ACTIVE && lvm.AlreadyLoginStatus == (int)LOGIN_ACTIVITY.LOGGED_IN)
                     {
                         blazorResponseViewModel.message = "Failed- already logged in from another machine!";
                         blazorResponseViewModel.status = false;
                     }
-                    else if (lvm.UserStatus != (int)UTIL.COMMON_STATUS.ACTIVE)
+                    else if (lvm.UserStatus != (int)COMMON_STATUS.ACTIVE)
                     {
                         blazorResponseViewModel.message = "Failed- account dormant,for access need to contact administrator!";
                         blazorResponseViewModel.status = false;

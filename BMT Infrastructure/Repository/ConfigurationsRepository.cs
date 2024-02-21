@@ -1,7 +1,5 @@
 ﻿using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositories;
-using com.blazor.bmt.util;
-using com.blazor.bmt.core.repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -56,7 +54,7 @@ namespace com.blazor.bmt.infrastructure.repositories
             //var spec = new UsersWithRoleSpecification(name);
             //return await GetAsync(spec);
             return await _dbContext.Configurations.AsNoTracking()
-               .Where(x => x.Name.ToLower().Contains(name.ToLower()) && x.Status==(int)UTIL.COMMON_STATUS.ACTIVE)
+               .Where(x => x.Name.ToLower().Contains(name.ToLower()) && x.Status==(int)util.COMMON_STATUS.ACTIVE)
                 .ToListAsync();
            
         }
@@ -65,7 +63,7 @@ namespace com.blazor.bmt.infrastructure.repositories
             //var spec = new UsersWithRoleSpecification(name);
             //return await GetAsync(spec);
             return await _dbContext.Configurations.AsNoTracking()
-               .Where(x => x.Key.ToLower().Contains(key.ToLower()) && x.Status == (int)UTIL.COMMON_STATUS.ACTIVE)
+               .Where(x => x.Key.ToLower().Contains(key.ToLower()) && x.Status == (int)util.COMMON_STATUS.ACTIVE)
                 .FirstOrDefaultAsync();
 
         }

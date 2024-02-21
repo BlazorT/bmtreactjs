@@ -1,59 +1,64 @@
-﻿using AutoMapper;
+﻿
+using Blazor.Web.UI.Interfaces;
+// Microsoft Namespaces
+using AutoMapper;
 using com.blazor.bmt.application.interfaces;
-using com.blazor.bmt.application.model;
-using com.blazor.bmt.ui.interfaces;
-using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
+using com.blazor.bmt.util;
+using com.blazor.bmt.application.model;
 
-namespace com.blazor.bmt.ui.services
+namespace Blazor.Web.UI.Services
 {
     public class NotificationPageService : INotificationPageService
     {
-
-        private readonly INotificationService _notificationService;
-        private readonly IOnlineUsersService _onlineUsersService;
+        private readonly INotificationService _notificationService;       
         private readonly IMapper _mapper;
         private readonly ILogger<NotificationPageService> _logger;
+        private readonly IOnlineUsersService _onlineUsersService;
         public NotificationPageService(INotificationService notificationService, IOnlineUsersService onlineUsersService, IMapper mapper, ILogger<NotificationPageService> logger)
-        {
-            _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        {   _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));           
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+           
+        }
+     
+        public async Task<IEnumerable<NotificationViewModel>> GetNotificationList()
+        {
+
+            var address = await _notificationService.GetNotificationList();
+            var list = _mapper.Map<IEnumerable<NotificationViewModel>>(address);
+            return list;
         }
 
-        public async Task<OnlineuserModel> loggedIn(LoginViewModel usr, string remoteMachineIp)
+        public async Task<OnlineuserModel> loggedIn(UserViewModel usr, string remoteMachineIp)
         {
             OnlineuserModel uolm = new OnlineuserModel();
             try
+            {if (usr != null) { 
+                uolm = await _onlineUsersService.GetOnlineUserByIdAsync(usr.Id);
+            if (uolm == null || uolm.UserId == 0)
             {
-                if (usr != null)
-                {
-                    uolm = await _onlineUsersService.GetOnlineUserByIdAsync(usr.Id);
-                    if (uolm == null || uolm.UserId == 0)
-                    {
-                        uolm = new OnlineuserModel();
-                        uolm.UserId = usr.Id;
-                        uolm.LoginTime = System.DateTime.Now;
-                        uolm.MachineIp = remoteMachineIp;
-                        uolm.Status = (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN;
-                        await _onlineUsersService.Create(uolm);
+                    uolm = new OnlineuserModel();
+                    uolm.UserId = usr.Id;
+                    uolm.LoginTime = System.DateTime.Now;
+                    uolm.MachineIp = remoteMachineIp;
+                    uolm.Status = (int)LOGIN_ACTIVITY.LOGGED_IN;
+                     await _onlineUsersService.Create(uolm);
 
-                    }
-                    else
-                    {
+                }
+            else {
 
-                        uolm.Status = (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN;
-                        uolm.LoginTime = System.DateTime.Now;
-                        uolm.MachineIp = remoteMachineIp;
-                        await _onlineUsersService.Update(uolm);
-                    }
+                    uolm.Status = (int)LOGIN_ACTIVITY.LOGGED_IN;
+                    uolm.LoginTime = System.DateTime.Now;
+                    uolm.MachineIp = remoteMachineIp;
+                    await _onlineUsersService.Update(uolm);
+                }
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 _logger.LogError(ex.StackTrace);
-                // throw ex;
+               // throw ex;
             }
             return uolm;
         }
@@ -63,78 +68,64 @@ namespace com.blazor.bmt.ui.services
             try
             {
                 usronlineModel = await _onlineUsersService.GetOnlineUserByIdAsync(userId);
-                if (usronlineModel == null || usronlineModel.UserId == 0)
+                if (usronlineModel == null || usronlineModel.UserId ==0)
                 {
                     usronlineModel = new OnlineuserModel();
                     usronlineModel.UserId = userId;
                     usronlineModel.LoginTime = System.DateTime.Now.AddMinutes(-10);
                     usronlineModel.LogoutTime = System.DateTime.Now;
                     usronlineModel.MachineIp = remoteMachineIp;
-                    usronlineModel.Status = (int)UTIL.LOGIN_ACTIVITY.LOGGED_OUT;
+                    usronlineModel.Status = (int)LOGIN_ACTIVITY.LOGGED_OUT;
                     usronlineModel = await _onlineUsersService.Create(usronlineModel);
                 }
                 else
                 {
-                    usronlineModel.Status = (int)UTIL.LOGIN_ACTIVITY.LOGGED_OUT;
+                    usronlineModel.Status = (int)LOGIN_ACTIVITY.LOGGED_OUT;
                     usronlineModel.LogoutTime = System.DateTime.Now;
                     usronlineModel.MachineIp = remoteMachineIp;
                     await _onlineUsersService.Update(usronlineModel);
                 }
 
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 _logger.LogError(ex.StackTrace);
-                // throw ex;
+                throw ex;
             }
             return usronlineModel;
         }
-
-        public async Task<IEnumerable<NotificationViewModel>> GetNotificationList()
+        public async Task<IEnumerable<NotificationViewModel>> GetNotificationDetails(NotificationViewModel notificationViewModel)
         {
-            //if (string.IsNullOrWhiteSpace(productName))
-            // {
-            var list = await _notificationService.GetNotificationList();
-            var mapped = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
-            return mapped;
-
+            var mapped = _mapper.Map<NotificationModel>(notificationViewModel);
+            var list = await _notificationService.GetNotificationDetails(mapped);
+            var retEntity = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
+            return retEntity;
         }
-        public async Task<IEnumerable<NotificationViewModel>> GetNotificationsByName(string name)
+        public async Task<IEnumerable<NotificationViewModel>> GetNotificationByDateRangeAndStatusAsync(STATUS_NOTIFICATION status, DateTime dtFrom , DateTime dtTo )
         {
-            //if (string.IsNullOrWhiteSpace(productName))
-            // {
-            var list = await _notificationService.GetNotificationsByName(name);
-            var mapped = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
-            return mapped;
-
+          
+            var list = await _notificationService.GetNotificationByDateRangeAndStatus(status, dtFrom, dtTo);
+            var retEntity = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
+            return retEntity;
         }
-
-        public async Task<NotificationViewModel> GetNotificationById(Int64 id)
+        public async Task<IEnumerable<NotificationViewModel>> GetNotificationBySearchKeyword(string keyword)
         {
-            var model = await _notificationService.GetNotificationById(id);
-            var mapped = _mapper.Map<NotificationViewModel>(model);
-            return mapped;
+            var list = await _notificationService.GetNotificationBySearchKeyword(keyword);
+            var retEntity = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
+            return retEntity;
         }
-        public async Task<IEnumerable<NotificationViewModel>> GetNotificationsAllFiltersAsync(NotificationViewModel model) {
-            var CModel = _mapper.Map<NotificationModel>(model);
-            var list = await _notificationService.GetNotificationsAllFiltersAsync(CModel);
-            var mapped = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
-            return mapped;
-
-        }
-        public async Task<IEnumerable<NotificationViewModel>> GetNotificationsByCategoryAndStatusAsnc(int showRoomId, int status)
+        public async Task<NotificationViewModel> GetNotificationById(long NotificationId)
         {
-            var list = await _notificationService.GetNotificationsByCategoryAndStatusAsnc(showRoomId, status);
-            var mapped = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
-            return mapped;
-
+            var entity = await _notificationService.GetNotificationById(NotificationId);
+            var retEntity = _mapper.Map<NotificationViewModel>(entity);
+        //  var mapped = _mapper.Map<IEnumerable<PriceViewModel>>(list);
+            return retEntity;
         }
-        public async Task<NotificationViewModel> Create(NotificationViewModel vModel)
+
+        public async Task<NotificationViewModel> CreateNotification(NotificationViewModel notificationViewModel)
         {
-            var mapped = _mapper.Map<NotificationModel>(vModel);
+            var mapped = _mapper.Map<NotificationModel>(notificationViewModel);
             if (mapped == null)
-                throw new Exception($"Entity could not be mapped.");
-
+                throw new Exception($"Entity could not be mapped.");           
             var entityDto = await _notificationService.Create(mapped);
             _logger.LogInformation($"Entity successfully added - NotificationPageService");
 
@@ -142,9 +133,9 @@ namespace com.blazor.bmt.ui.services
             return mappedViewModel;
         }
 
-        public async Task Update(NotificationViewModel vmodel)
+        public async Task UpdateNotification(NotificationViewModel notificationViewModel)
         {
-            var mapped = _mapper.Map<NotificationModel>(vmodel);
+            var mapped = _mapper.Map<NotificationModel>(notificationViewModel);
             if (mapped == null)
                 throw new Exception($"Entity could not be mapped.");
 
@@ -152,15 +143,15 @@ namespace com.blazor.bmt.ui.services
             _logger.LogInformation($"Entity successfully added - NotificationPageService");
         }
 
-        public async Task Delete(NotificationViewModel vmodel)
+        public async Task DeleteNotification(NotificationViewModel notificationViewModel)
         {
-            var mapped = _mapper.Map<NotificationModel>(vmodel);
-            if (mapped == null)
-                throw new Exception($"Entity could not be mapped.");
+            throw new Exception("Not implemented");
+            //var mapped = _mapper.Map<AppLogModel>(appLogViewModel);
+            //if (mapped == null)
+            //    throw new Exception($"Entity could not be mapped.");
 
-            await _notificationService.Delete(mapped);
-            _logger.LogInformation($"Entity successfully added - NotificationPageService");
+            //await _appLogService.Delete(mapped);
+            //_logger.LogInformation($"Entity successfully added - NotificationPageService");
         }
     }
-    }
-
+}

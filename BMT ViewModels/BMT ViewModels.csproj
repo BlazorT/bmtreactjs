@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="ApplogModel.cs" />
+    <Compile Remove="EfmigrationshistoryViewModel.cs" />
     <Compile Remove="ReportConfigurationsViewModel.cs" />
   </ItemGroup>
 

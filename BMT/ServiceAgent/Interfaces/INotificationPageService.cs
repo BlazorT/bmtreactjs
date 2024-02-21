@@ -1,24 +1,24 @@
 ﻿using com.blazor.bmt.application.model;
+using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace com.blazor.bmt.ui.interfaces
+namespace Blazor.Web.UI.Interfaces
 {
-        public interface INotificationPageService
+    public interface INotificationPageService
     {
+
+
         Task<IEnumerable<NotificationViewModel>> GetNotificationList();
-        Task<NotificationViewModel> GetNotificationById(Int64 id);
-        Task<IEnumerable<NotificationViewModel>> GetNotificationsByName(string keyword);
-        Task<IEnumerable<NotificationViewModel>> GetNotificationsAllFiltersAsync(NotificationViewModel model);
+        Task<NotificationViewModel> GetNotificationById(long notificationId);
+        Task<IEnumerable<NotificationViewModel>> GetNotificationDetails(NotificationViewModel notificationViewModel);
 
-        Task<IEnumerable<NotificationViewModel>> GetNotificationsByCategoryAndStatusAsnc(int showRoomId, int status);
-        Task<OnlineuserModel> loggedIn(LoginViewModel usr, string remoteMachineIp);
+        //Task<IEnumerable<NotificationModel>> GetNotificationByUserId(int userId);
+        Task<IEnumerable<NotificationViewModel>> GetNotificationBySearchKeyword(string keyword);
+        Task<IEnumerable<NotificationViewModel>> GetNotificationByDateRangeAndStatusAsync(STATUS_NOTIFICATION status,System.DateTime dtFrom, System.DateTime dtTo);
+        Task<OnlineuserModel> loggedIn(UserViewModel usr, string remoteMachineIp);
         Task<OnlineuserModel> loggedOut(string remoteMachineIp, int userId);
-        Task<NotificationViewModel> Create(NotificationViewModel model);
-        Task Update(NotificationViewModel model);
-        Task Delete(NotificationViewModel model);
+        Task<NotificationViewModel> CreateNotification(NotificationViewModel notificationViewModel);
+        
+        Task UpdateNotification(NotificationViewModel notificationViewModel);
+        Task DeleteNotification(NotificationViewModel notificationViewModel);
     }
-    }
-
+}

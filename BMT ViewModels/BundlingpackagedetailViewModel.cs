@@ -2,6 +2,8 @@
 
 public partial class BundlingpackagedetailViewModel 
 {
+    public string unitName;
+
     public long Id { get; set; }
 
     public int? NetworkId { get; set; }
@@ -37,4 +39,5 @@ public partial class BundlingpackagedetailViewModel
     public int Status { get; set; }
 
     public int RowVer { get; set; }
+    public string Name { get; set; }
 }

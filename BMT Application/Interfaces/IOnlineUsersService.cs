@@ -1,9 +1,9 @@
-﻿using com.blazor.dsps.application.model;
+﻿using com.blazor.bmt.application.model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace com.blazor.dsps.application.interfaces
+namespace com.blazor.bmt.application.interfaces
 {
     public interface IOnlineUsersService
     {

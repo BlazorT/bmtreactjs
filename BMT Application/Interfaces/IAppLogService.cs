@@ -3,7 +3,7 @@ using com.blazor.bmt.application.model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Blazor.Web.Application.Interfaces
+namespace com.blazor.bmt.application.interfaces
 {
     public interface IAppLogService
     {

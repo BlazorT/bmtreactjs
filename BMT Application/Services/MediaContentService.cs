@@ -2,8 +2,6 @@
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
-using com.blazor.bmt.core.interfaces;
-using com.blazor.bmt.core.repositories;
 using com.blazor.bmt.core.repositries;
 using System;
 using System.Collections.Generic;

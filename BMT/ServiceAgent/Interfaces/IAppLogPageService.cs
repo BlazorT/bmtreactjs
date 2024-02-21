@@ -1,7 +1,10 @@
-﻿using com.blazor.bmt.util;
+﻿using Blazor.Web.ViewModels;
+using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace com.blazor.bmt.ui.interfaces
+namespace Blazor.Web.UI.Interfaces
 {
     public interface IAppLogPageService
     {
@@ -9,9 +12,9 @@ namespace com.blazor.bmt.ui.interfaces
         Task<IEnumerable<AppLogViewModel>> GetAppLogs();
         Task<AppLogViewModel> GetAppLogById(long logId);
         Task<IEnumerable<AppLogViewModel>> GetAppLogByUser(int userId);       
-        Task CreateAppLog(AppLogViewModel appLogViewModel);
-        Task ProcessLoginActivity(int UserId, UTIL.LOGIN_ACTIVITY activity, string remoteMachineIp);
-        Task UpdateAppLog(AppLogViewModel appLogViewModel);
-        Task DeleteAppLog(AppLogViewModel appLogViewModel);
+        Task CreateAppLog(AppLogViewModel AppLogViewModel);
+        Task ProcessLoginActivity(int UserId, LOGIN_ACTIVITY activity, string remoteMachineIp);
+        Task UpdateAppLog(AppLogViewModel AppLogViewModel);
+        Task DeleteAppLog(AppLogViewModel AppLogViewModel);
     }
 }

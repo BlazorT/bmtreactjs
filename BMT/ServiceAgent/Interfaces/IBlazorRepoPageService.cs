@@ -1,32 +1,31 @@
 ﻿using com.blazor.bmt.viewmodels;
-using Microsoft.AspNetCore.Mvc;
-
-namespace com.blazor.bmt.ui.interfaces
+namespace Blazor.Web.UI.Interfaces
 {
     public interface IBlazorRepoPageService
     {
-       // Task<IEnumerable<VehicleViewModel>> GetVehiclesAllAsync(VehicleViewModel vModel);      
-        Task<IEnumerable<ReportViewModel>> GetUsersReportData(ReportViewModel resportViewmodel);
-        Task<IEnumerable<ReportViewModel>> GetVehiclesReportData(ReportViewModel resportViewmodel);       
-        Task<BlazorApiResponse> UpdateGlobalSettings(BasicConfigurationViewModel model);
-       // Task<BlazorResponseViewModel> GetInventoryDetailedDataData(Inventorydetailviewmodel resportViewmodel);
-        Task<BlazorResponseViewModel> GetUsersReportData(UserViewModel model);
-       // Task<BlazorResponseViewModel> GetDispatchmentofProductsAndVehiclesData(DispatchmentViewModel model);
-       // Task<BlazorResponseViewModel> GetRosterFleetsData(RosterplanViewModel model);
-       // Task<BlazorResponseViewModel> GetVehicleInspectionsData(InspectionreportViewModel model);
-       // Task<BlazorResponseViewModel> GetVehicleDetailedData(VehicleViewModel model);
-        Task<IEnumerable<AppLogViewModel>> GetLogDetailsData(AppLogViewModel vmdl);
-        Task<IEnumerable<AuditLogViewModel>> GetAuditLogDetailsData(AuditLogViewModel vmdl);
-       // Task<BlazorResponseViewModel> GetDSPDetailedData(DspViewModel model);
-        Task<BlazorResponseViewModel> GetDADetailsData(UserViewModel umdl);    
-       // Task<VehicleViewModel> GetVehicleDetailsByIDAync(Int64 Id);
+        Task<IEnumerable<ReportViewModel>> GetOrgRegistrationReportData(ReportViewModel resportViewmodel);
+        Task<IEnumerable<ReportCompaignsViewModel>> GetOrgCompaignsReportData(ReportCompaignsViewModel resportViewmodel);
+        Task<IEnumerable<ReportStatsViewModel>> GetStatsReportData(ReportStatsViewModel resportViewmodel);
+        Task<IEnumerable<DashboardViewModel>> GetDashboardData(DashboardViewModel viewModel);
+        //Task<IEnumerable<DashboardViewModel>> GetDashboardData(DashboardViewModel viewModel);
+        Task<IEnumerable<OrgpackagedetailViewModel>> GetOrganizationBundlingData(OrganizationViewModel model);
+        Task<IEnumerable<UserViewModel>> GetBMTUsersListAsync(int userId, int OrgId, int roleId, string name, int status, DateTime dtFrom, DateTime dtTo);
+       // Task<IEnumerable<UsersViewModel>> GetBMTUsersListAsync(int UserId, int orgId, int roleId, string name, int status, DateTime dtFrom, DateTime dtTo);
+       // Task<IEnumerable<Configration>> LoadBasicConfigurationsData();
+        Task<IEnumerable<Configration>> LoadOrgConfigurationsData(int OrgId);
+       // Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignViewModel model);
+        Task<BlazorResponseViewModel> SocialMediaCreateLogin(UserViewModel model);
+        Task<IEnumerable<BundlingpackagedetailViewModel>> LoadCustomBundlingPackagesData(int networks);
+        Task<BlazorResponseViewModel> UpdateNetworksData(List<networkidvalues> lst, int UserId);
+        Task<BlazorResponseViewModel> AddUpdateNetworkSettingsFormData(List<OrgpackagedetailViewModel> lst, int UserId);
+
         Task<IEnumerable<MenuViewModel>> loadRoleMenus(int roleid);
         Task<BlazorResponseViewModel> AddUpdateRoleRights(List<RolerightViewModel> vLst);
-      //  Task<BlazorResponseViewModel> updateDispatchments([FromBody] List<DispatchmentCustomViewMode> dlst);
-       // Task<BlazorResponseViewModel> UpdateDADispatchments([FromBody] List<DispatchmentViewModel> dlst);
-        Task<LoginViewModel> GetUserVerificationData(LoginViewModel model);
-        Task<List<object>> GetDashboardData(int showroomId);
-
+        // Task<BlazorResponseViewModel> postCompaignData(CompaignViewModel model, int UserId);
+        Task<LoginViewModel> GetUserVerificationData(UserViewModel model);
+        Task<IEnumerable<OrganizationViewModel>> GetOrganizationsData(OrganizationViewModel model);
+        //Task<IEnumerable<CompaignViewModel>> GetCompaignsData(CompaignViewModel model);
+        Task<IEnumerable<NetworkViewModel>> GetNetworkData(int status = 1);
     }
 }
 

@@ -23,20 +23,20 @@ namespace com.blazor.bmt.util
         public static int LoginUserCityId { get; set; }
         public static int LoginUserStateId { get; set; }
         public static string? LoginUserEmail { get; set; }
-        public static string? DspContact { get; set; }
-        public static string? DspWhatsApp { get; set; }
-        public static string? DspCityName { get; set; }
-        public static string? DspStateName { get; set; }
+        public static string? OrgContact { get; set; }
+        public static string? OrgWhatsApp { get; set; }
+        public static string? OrgCityName { get; set; }
+        public static string? OrgStateName { get; set; }
         //public static string? DspCurrency { get; set; } = (new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID)).ISOCurrencySymbol;
-        public static string? DspName { get; set; } = "6BY7 LLC";
-        public static int DefaultDspId { get; set; } = 1;
-        public static string? DspOwnerName { get; set; }
-        public static string? DspEmail { get; set; }
+        public static string? OrgName { get; set; } = "NMT LLC";
+        public static int DefaultOrgId { get; set; } = 1;
+        public static string? OrgOwnerName { get; set; }
+        public static string? OrgEmail { get; set; }
         public static string? TradeName { get; set; }
-        public static string? DspLogoPath { get; set; }
-        public static string? DspAddress { get; set; }
+        public static string? OrgLogoPath { get; set; }
+        public static string? OrgAddress { get; set; }
         public static List<ConfigurationsViewModel> Configurations { get; set; } = new List<ConfigurationsViewModel>();
-        public static int DspCityId { get; set; }
+        public static int OrgCityId { get; set; }
         //public static int ShowRoomStateId { get; set; }
        // public static int DefaultPublicUser { get; set; }
         
@@ -263,7 +263,7 @@ namespace com.blazor.bmt.util
             }
             return showRoomUsers;
         }
-        public static void loadConfigurations(Int32 DspId=1)
+        public static void loadConfigurations(Int32 OrgId=1)
         {
             using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
             {
@@ -271,9 +271,9 @@ namespace com.blazor.bmt.util
                 using (var command = connection.CreateCommand())
                 {
                     List<MySqlParameter> parameter = new List<MySqlParameter>();
-                    MySqlParameter pDspId = new MySqlParameter("p_DspId", SqlDbType.Int);
-                    pDspId.Value = 1;
-                    parameter.Add(pDspId);
+                    MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
+                    pOrgId.Value = 1;
+                    parameter.Add(pOrgId);
                     command.CommandText = "spWebApiConfigs";
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddRange(parameter.ToArray());
@@ -282,7 +282,7 @@ namespace com.blazor.bmt.util
                     {
                         while (dr.Read())
                         {
-                            viewModel.DspId = DspId;
+                            viewModel.OrgId = OrgId;
                             // Notification
                      
                             if (BlazorConstant.SMS_MESSAGE_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())
@@ -302,24 +302,24 @@ namespace com.blazor.bmt.util
                                 viewModel.invitationEmailSubject = "" + (dr["value"]);                                                     
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
-                            if (BlazorConstant.DSP_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.DSPPerformanceNotification = "" + (dr["value"]);
-                            if (BlazorConstant.DA_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.DAPerformanceNotification = "" + (dr["value"]);
+                            //if (BlazorConstant.DSP_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.DSPPerformanceNotification = "" + (dr["value"]);
+                            //if (BlazorConstant.DA_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.DAPerformanceNotification = "" + (dr["value"]);
                             if (BlazorConstant.SMS_MESSAGE_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.SmsMessageBody = "" + (dr["value"]);
-                            if (BlazorConstant.ONBOARDING_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.OnBoardedEmaillBody = "" + (dr["value"]);
-                            if (BlazorConstant.BACKGROUND_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.BackgroundCheckEmaillBody = "" + (dr["value"]);
-                            if (BlazorConstant.DRUG_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.DrugCheckEmaillBody = "" + (dr["value"]);
-                            if (BlazorConstant.OFFGROUND_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.OffboardedEmailBody = "" + (dr["value"]);
-                            if (BlazorConstant.DA_REPLY_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.DAReplyNotification = "" + (dr["value"]);
-                            if (BlazorConstant.DA_JOB_PROCESS_UPDATED.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.DAJObApplyProcessUpdated = "" + (dr["value"]);
+                            //if (BlazorConstant.ONBOARDING_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.OnBoardedEmaillBody = "" + (dr["value"]);
+                            //if (BlazorConstant.BACKGROUND_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.BackgroundCheckEmaillBody = "" + (dr["value"]);
+                            //if (BlazorConstant.DRUG_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.DrugCheckEmaillBody = "" + (dr["value"]);
+                            //if (BlazorConstant.OFFGROUND_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.OffboardedEmailBody = "" + (dr["value"]);
+                            //if (BlazorConstant.DA_REPLY_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.DAReplyNotification = "" + (dr["value"]);
+                            //if (BlazorConstant.DA_JOB_PROCESS_UPDATED.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                            //    viewModel.DAJObApplyProcessUpdated = "" + (dr["value"]);
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
                             if (BlazorConstant.ACCOUNT_STATUS_CHANGED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
@@ -328,7 +328,7 @@ namespace com.blazor.bmt.util
                                 viewModel.profilePwdResetEmail = "" + (dr["value"]);
 
     }//while (dr.Read())
-                        if(viewModel.DspId >0)
+                        if(viewModel.OrgId >0)
                         GlobalSettings.Configurations.Add(viewModel);
                     }// using (DbDataReader dr = command.ExecuteReader())                        
                 }
@@ -355,7 +355,7 @@ namespace com.blazor.bmt.util
                                 GlobalBasicConfigurationsViewModel.Id = Convert.ToByte(dr["Id"]);
                                 GlobalBasicConfigurationsViewModel.DefaultPublicUserId = Convert.ToInt32(dr["DefaultPublicUserId"]);
                                 GlobalBasicConfigurationsViewModel.DefaultDspid = Convert.ToInt32(dr["DefaultOrgId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgame"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
+                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgName"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
                                                                                                                   //SMS
                                 GlobalBasicConfigurationsViewModel.SmsQouta = Convert.ToInt32(dr["sms_qouta"]);
                                 GlobalBasicConfigurationsViewModel.Sslenabled = Convert.ToByte(dr["SSLEnabled"]);

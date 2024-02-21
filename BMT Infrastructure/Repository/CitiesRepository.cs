@@ -1,14 +1,13 @@
 ﻿
 using com.blazor.bmt.core;
-using com.blazor.bmt.infrastructure;
-using com.blazor.bmt.infrastructure.repositories;
+using com.blazor.bmt.core.repositries;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blazor.Web.Infrastructure.Repository
+namespace com.blazor.bmt.infrastructure.repositories
 {
     public class CitiesRepository : Repository<City>, ICitiesRepository
     {

@@ -14,7 +14,6 @@
     <Compile Remove="Entities\Ownershiptype.cs" />
     <Compile Remove="Entities\Price.cs" />
     <Compile Remove="Repositories\IBasicConfigurationsRepository.cs" />
-    <Compile Remove="Repositories\ICitiesRepository.cs" />
     <Compile Remove="Repositories\IPriceRepository.cs" />
   </ItemGroup>
 

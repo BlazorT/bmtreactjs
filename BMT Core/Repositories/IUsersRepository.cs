@@ -12,7 +12,7 @@ namespace com.blazor.bmt.core.repositries
         Task<IEnumerable<User>> GetUsersByNameAsync(string Name);
         Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId, int dspId = 0);
         Task<IEnumerable<User>> GetUsersAllFiltersAsync(User model);
-        Task<IEnumerable<User>> GetDspUsersAllFiltersAsync(User model);
-        Task<IEnumerable<User>> GetDspMobileUsersAllFiltersAsync(User model);
+        Task<IEnumerable<User>> GetOrgUsersAllFiltersAsync(User model);
+        Task<IEnumerable<User>> GetOrgMobileUsersAllFiltersAsync(User model);
     }
 }

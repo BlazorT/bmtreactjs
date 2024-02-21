@@ -8,6 +8,7 @@ using com.blazor.bmt.ui.interfaces;
 using com.blazor.bmt.application.model;
 using Microsoft.AspNetCore.Authorization;
 using MySql.Data.MySqlClient;
+using Blazor.Web.UI.Interfaces;
 
 namespace com.blazor.bmt.controllers
 {
@@ -18,8 +19,8 @@ namespace com.blazor.bmt.controllers
     { //Almas 
         private IMemoryCache _cache;
         private readonly ILogger<BlazorApiController> _logger;
-        private readonly IDspPageService _dspPageService;
-        private readonly IProductPageService _productPageService;
+        private readonly IOrgPageService _orgPageService;
+       // private readonly IProductPageService _productPageService;
         private readonly IMediaContentPageService _mediaContentPageService;
         private readonly IBlazorRepoPageService _blazorRepoPageService;
         private readonly IAppLogPageService _appLogPageService;
@@ -27,15 +28,15 @@ namespace com.blazor.bmt.controllers
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         string applicationPath = string.Empty;
         private _bmtContext? dbContext;
-        public BlazorApiController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IMediaContentPageService mediaContentPageService, IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IDspPageService dspPageService, IProductPageService productPageService, IUsersPageService userPageService,  ILogger<BlazorApiController> logger,  IMemoryCache cache)
+        public BlazorApiController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IMediaContentPageService mediaContentPageService, IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IOrgPageService orgPageService, IUsersPageService userPageService,  ILogger<BlazorApiController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration; 
             this.dbContext = new _bmtContext();
             _cache = cache;
-            _dspPageService = dspPageService ?? throw new ArgumentNullException(nameof(dspPageService));
+            _orgPageService = orgPageService ?? throw new ArgumentNullException(nameof(orgPageService));
             _userPageService = userPageService ?? throw new ArgumentNullException(nameof(userPageService));
-            _productPageService = productPageService ?? throw new ArgumentNullException(nameof(productPageService));
+           // _productPageService = productPageService ?? throw new ArgumentNullException(nameof(productPageService));
             _mediaContentPageService = mediaContentPageService ?? throw new ArgumentNullException(nameof(mediaContentPageService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
@@ -62,7 +63,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _userPageService.GetUsersListAsync(0, 1);
+               // blazorApiResponse.data = await _userPageService.GetUsersListAsync(0, 1);
                 blazorApiResponse.status = true;               
             }
             catch (Exception ex)
@@ -85,7 +86,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data= await _userPageService.GetUsersListAllAsync(new UserViewModel { Id = string.IsNullOrWhiteSpace(filter.id)?0: Convert.ToInt32(filter.id), Dspid = Convert.ToInt32(filter.dspid), Email = ""+filter.email, CreatedAt = GlobalUTIL.CurrentDateTime.AddYears(-2), LastUpdatedAt = GlobalUTIL.CurrentDateTime });
+                blazorApiResponse.data= await _userPageService.GetUsersBySearchFiltersAsync(string.IsNullOrWhiteSpace(filter.roleId) ? 0 : Convert.ToInt32(filter.roleId) , filter.name, string.IsNullOrWhiteSpace(filter.status)?0: Convert.ToInt32(filter.status), GlobalUTIL.CurrentDateTime.AddYears(-2),  GlobalUTIL.CurrentDateTime );
                 blazorApiResponse.errorCode = "200";
                 blazorApiResponse.status = true;
             }
@@ -134,7 +135,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _blazorRepoPageService.GetDADetailsData(usr);
+                blazorApiResponse.data = await _blazorRepoPageService.GetBMTUsersListAsync(usr.Id, Convert.ToInt32(usr.OrgId), usr.RoleId, usr.UserName, usr.Status, usr.CreatedAt, usr.LastUpdatedAt==null?GlobalUTIL.CurrentDateTime: Convert.ToDateTime(usr.LastUpdatedAt));
                 blazorApiResponse.status = true;
             }
             catch (Exception ex)
@@ -157,7 +158,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _userPageService.GetUserByByEmail(mdl.email, mdl.userId);
+                blazorApiResponse.data = await _userPageService.GetUserByEmailSync(string.IsNullOrWhiteSpace(mdl.roleId)?Convert.ToInt16(mdl.roleId):0, mdl.email);
                 blazorApiResponse.status = true;
             }
             catch (Exception ex)
@@ -170,32 +171,32 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        [HttpGet]
-        [HttpPost]
-        [Route("products")]
-        public async Task<ActionResult> GetProducts([FromBody] ProductViewModel model)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            // List<User> cstrs = new List<User>();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                blazorApiResponse.data = await _productPageService.GetProductsAllFiltersAsync(model);
-                blazorApiResponse.status = true;
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
-        [HttpGet("dsps")]
-        [HttpPost("dsps")]
-        [Route("dsps")]
+        //[HttpGet]
+        //[HttpPost]
+        //[Route("products")]
+        //public async Task<ActionResult> GetProducts([FromBody] ProductViewModel model)
+        //{
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    // List<User> cstrs = new List<User>();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
+        //        blazorApiResponse.data = await _productPageService.GetProductsAllFiltersAsync(model);
+        //        blazorApiResponse.status = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
+        [HttpGet("orgs")]
+        [HttpPost("orgs")]
+        [Route("dsorgsps")]
         //public async Task<ActionResult> GetDspsListAsync([FromBody] DspViewModel vmdl)
         public async Task<ActionResult> GetDspsListAsync()
         {
@@ -204,7 +205,7 @@ namespace com.blazor.bmt.controllers
             try
             {
 
-                blazorApiResponse.data = await _dspPageService.GetDspsByName("");//.ToListAsync();
+                blazorApiResponse.data = await _orgPageService.GetOrgsByName("");//.ToListAsync();
                 blazorApiResponse.status = true;
             }
             catch (Exception ex)
@@ -219,68 +220,43 @@ namespace com.blazor.bmt.controllers
         }
 
         #region "Partners"
-        [HttpGet("dspspartners")]
-        [HttpPost("dspspartners")]
-        [Route("dspspartners")]
-        //public async Task<ActionResult> GetDspsListAsync([FromBody] DspViewModel vmdl)
-        public async Task<ActionResult> GetDspPartnersListAsync([FromBody] WebApiFilters filters)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                blazorApiResponse.data = await _dspPageService.DspPartnerList(Convert.ToInt32(filters.dspid), Convert.ToInt32(filters.status));//.ToListAsync();
-                blazorApiResponse.status = true;
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
-        [HttpPost("submitdsppartners")]
-        [Route("submitdsppartners")]
-        public async Task<ActionResult> submitDspPartnersData([FromBody] List<DsppartnerViewModel> plst)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                if (plst != null && plst.Any())
-                {
-                    blazorApiResponse.data = await _dspPageService.DspPartnerBulkAddorUpdates(plst);
-                    blazorApiResponse.status = true;
-                    blazorApiResponse.message = string.Format(BlazorConstant.UPDATED_SUCCESS, plst.Count.ToString(), GlobalUTIL.CurrentDateTime);
-                    // blazorApiResponse.message = string.Format(BlazorConstant.INSERTED_SUCCESS, uvm.LastName, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-                }
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //[HttpGet("dspspartners")]
+        //[HttpPost("dspspartners")]
+        //[Route("dspspartners")]
+        ////public async Task<ActionResult> GetDspsListAsync([FromBody] DspViewModel vmdl)
+        //public async Task<ActionResult> GetDspPartnersListAsync([FromBody] WebApiFilters filters)
+        //{
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
+        //        blazorApiResponse.data = await _dspPageService.DspPartnerList(Convert.ToInt32(filters.dspid), Convert.ToInt32(filters.status));//.ToListAsync();
+        //        blazorApiResponse.status = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
+       
         #endregion
-        [HttpGet("dspsfulldata")]
-        [HttpPost("dspsfulldata")]
-        [Route("dspsfulldata")]
+        [HttpGet("orgsfulldata")]
+        [HttpPost("orgsfulldata")]
+        [Route("orgsfulldata")]
         //public async Task<ActionResult> GetDspsListAsync([FromBody] DspViewModel vmdl)
-        public async Task<ActionResult> GetDspsFullDataListAsync([FromBody] DspViewModel model)
+        public async Task<ActionResult> GetOrgsFullDataListAsync([FromBody] OrganizationViewModel model)
         {
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
 
-                blazorApiResponse.data = await _blazorRepoPageService.GetDSPDetailedData(model);//.ToListAsync();
+                blazorApiResponse.data = await _blazorRepoPageService.GetOrganizationsData(model);//.ToListAsync();
                 blazorApiResponse.status = true;
             }
             catch (Exception ex)
@@ -294,47 +270,47 @@ namespace com.blazor.bmt.controllers
             // .ToArray();
         }
         //[HttpGet]
-        [HttpPost]
-        [Route("addupdateproduct")]
-        public async Task<ActionResult> UpdateProduct([FromBody] ProductViewModel pvm)
-        {
-            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-            // List<User> cstrs = new List<User>();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-            try
-            {
-                if (pvm != null && pvm.Id <= 0)
-                {
-                    pvm.CreatedAt = GlobalUTIL.CurrentDateTime;
-                    pvm.CreatedBy = pvm.LastUpdatedBy;
-                    pvm.RowVer = 1;
-                    pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    pvm.LastUpdatedBy = pvm.LastUpdatedBy;
-                    blazorApiResponse.data= await _productPageService.Create(pvm);
-                }
-                else {
-                   var dbProduct= await _productPageService.GetProductByIdAsync(pvm.Id);
-                    pvm.CreatedBy = dbProduct.CreatedBy;
-                    pvm.CreatedAt = dbProduct.CreatedAt;
-                    pvm.RowVer = dbProduct.RowVer+1;
-                    pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    pvm.LastUpdatedBy = pvm.LastUpdatedBy;
-                   await _productPageService.Update(pvm);
-                    blazorApiResponse.data = pvm;
-                }          
-                blazorApiResponse.message = string.Format("User {0} has been saved", pvm.Name);
-                blazorApiResponse.status = true;                
-            }
-            catch (Exception ex)
-            {
-                blazorApiResponse.status = false;
-                blazorApiResponse.errorCode = "408";
-                blazorApiResponse.message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return Ok(blazorApiResponse);
-            // .ToArray();
-        }
+        //[HttpPost]
+        //[Route("addupdateproduct")]
+        //public async Task<ActionResult> UpdateProduct([FromBody] ProductViewModel pvm)
+        //{
+        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+        //    // List<User> cstrs = new List<User>();
+        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+        //    try
+        //    {
+        //        if (pvm != null && pvm.Id <= 0)
+        //        {
+        //            pvm.CreatedAt = GlobalUTIL.CurrentDateTime;
+        //            pvm.CreatedBy = pvm.LastUpdatedBy;
+        //            pvm.RowVer = 1;
+        //            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
+        //            blazorApiResponse.data= await _productPageService.Create(pvm);
+        //        }
+        //        else {
+        //           var dbProduct= await _productPageService.GetProductByIdAsync(pvm.Id);
+        //            pvm.CreatedBy = dbProduct.CreatedBy;
+        //            pvm.CreatedAt = dbProduct.CreatedAt;
+        //            pvm.RowVer = dbProduct.RowVer+1;
+        //            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+        //            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
+        //           await _productPageService.Update(pvm);
+        //            blazorApiResponse.data = pvm;
+        //        }          
+        //        blazorApiResponse.message = string.Format("User {0} has been saved", pvm.Name);
+        //        blazorApiResponse.status = true;                
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        blazorApiResponse.status = false;
+        //        blazorApiResponse.errorCode = "408";
+        //        blazorApiResponse.message = ex.Message;
+        //        _logger.LogError(ex.StackTrace);
+        //    }
+        //    return Ok(blazorApiResponse);
+        //    // .ToArray();
+        //}
         [HttpPost]
         [Route("updateda")]
         public async Task<ActionResult> UpdateDAUser([FromBody] UserViewModel uvm)
@@ -348,15 +324,15 @@ namespace com.blazor.bmt.controllers
                 {
                     uvm.CreatedAt = GlobalUTIL.CurrentDateTime;
                     uvm.CreatedBy = uvm.LastUpdatedBy;
-                    uvm.VerificationMethod = uvm.VerificationMethod==null?0: uvm.VerificationMethod;            
-                    uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null ? 0 : uvm.HasValidDrivingLicense;
+                    //uvm.VerificationMethod = uvm.VerificationMethod==null?0: uvm.VerificationMethod;            
+                    //uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null ? 0 : uvm.HasValidDrivingLicense;
                     uvm.RegistrationSource = uvm.RegistrationSource==null?0: uvm.RegistrationSource;
                     uvm.RowVer = 1;
-                    uvm.Token = string.IsNullOrWhiteSpace(uvm.Token) ? ""+(new Random()).NextInt64(100000,99999999) : uvm.Token;
+                   // uvm.Token = string.IsNullOrWhiteSpace(uvm.Token) ? ""+(new Random()).NextInt64(100000,99999999) : uvm.Token;
                     uvm.Password=GlobalUTIL.Encrypt(string.IsNullOrWhiteSpace(uvm.Password) ? uvm.Password : System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(("" + uvm.Password).Trim())), true, BlazorConstant.SECKEY);
                     uvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                     uvm.LastUpdatedBy = uvm.LastUpdatedBy;
-                    blazorApiResponse.data = await _userPageService.Create(uvm);
+                    blazorApiResponse.data = await _userPageService.CreateUser(uvm);
                 }
                 else
                 {
@@ -366,16 +342,16 @@ namespace com.blazor.bmt.controllers
                     uvm.CreatedAt = usr.CreatedAt;
                     uvm.CreatedBy = usr.CreatedBy;
                     uvm.RowVer = usr.RowVer + 1;
-                    uvm.VerificationMethod = usr.VerificationMethod;
+                    //uvm.VerificationMethod = usr.VerificationMethod;
                     uvm.Fmctoken = usr.Fmctoken;
-                    uvm.Token = string.IsNullOrWhiteSpace(uvm.Token)?usr.Token: uvm.Token;
+                   // uvm.Token = string.IsNullOrWhiteSpace(uvm.Token)?usr.Token: uvm.Token;
                     uvm.Password = usr.Password;
-                    uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null? usr.HasValidDrivingLicense: uvm.HasValidDrivingLicense;
+                   // uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null? usr.HasValidDrivingLicense: uvm.HasValidDrivingLicense;
                     uvm.RegistrationSource = usr.RegistrationSource;
                     //uvm.CreatedBy = usr.CreatedBy;
                     uvm.RowVer = usr.RowVer + 1;
                    // uvm.Password=  GlobalUTIL.Encrypt(string.IsNullOrWhiteSpace(uvm.Password) ? uvm.Password:System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String((""+uvm.Password).Trim())), true, BlazorConstant.SECKEY);
-                    await _userPageService.Update(uvm);
+                    await _userPageService.CreateUser(uvm);
                     blazorApiResponse.data = uvm;
                 }
                 //usr.de = uvm.status;
@@ -415,7 +391,7 @@ namespace com.blazor.bmt.controllers
                 usr.Status = uvm.Status;
                 usr.RowVer= uvm.RowVer+1;
                     //uvm.Password = GlobalUTIL.Encrypt(string.IsNullOrWhiteSpace(uvm.Password) ? uvm.Password : System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(("" + uvm.Password).Trim())), true, BlazorConstant.SECKEY);
-                    await _userPageService.Update(usr);
+                    await _userPageService.UpdateUser(usr);
                     blazorApiResponse.data = usr;                
                 //usr.de = uvm.status;
                 // blazorApiResponse.data = uvm;
@@ -433,8 +409,8 @@ namespace com.blazor.bmt.controllers
             // .ToArray();
         }
         [HttpPost]
-        [Route("adupdatedsp")]
-        public async Task<ActionResult> UpdateDsp([FromBody] DspViewModel dvm)
+        [Route("adupdateorg")]
+        public async Task<ActionResult> UpdateOrg([FromBody] OrganizationViewModel dvm)
         {
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             // List<User> cstrs = new List<User>();
@@ -448,16 +424,16 @@ namespace com.blazor.bmt.controllers
                     dvm.RowVer = 1;
                     dvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                     dvm.LastUpdatedBy = dvm.LastUpdatedBy;
-                    blazorApiResponse.data = await _dspPageService.Create(dvm);
+                    blazorApiResponse.data = await _orgPageService.Create(dvm);
                 }
                 else
                 {
                     dvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                     dvm.LastUpdatedBy = dvm.LastUpdatedBy;
-                    await _dspPageService.Update(dvm);
+                    await _orgPageService.Update(dvm);
                     blazorApiResponse.data = dvm;
                 }
-                blazorApiResponse.message = string.Format("User {0} has been saved", ("" + dvm.Name).Length <= 0 ? dvm.TradeName : dvm.Name + "" + dvm.TradeName);
+                blazorApiResponse.message = string.Format("User {0} has been saved", ("" + dvm.Name).Length <= 0 ? dvm.Name : dvm.Name + "" + dvm.Name);
                 blazorApiResponse.status = true;
          
             }
@@ -472,8 +448,8 @@ namespace com.blazor.bmt.controllers
             // .ToArray();
         }
         [HttpPost]
-        [Route("dspstatusupdate")]
-        public async Task<ActionResult> UpdateDspStatus([FromBody] DspViewModel dvm)
+        [Route("orgstatusupdate")]
+        public async Task<ActionResult> UpdateOrgStatus([FromBody] OrganizationViewModel dvm)
         {
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             // List<User> cstrs = new List<User>();
@@ -481,15 +457,15 @@ namespace com.blazor.bmt.controllers
             try
             {
                
-                    var dbModel = await _dspPageService.GetDspById(dvm.Id);
+                    var dbModel = await _orgPageService.GetOrgById(dvm.Id);
                     dbModel.Status = dvm.Status;
                     dbModel.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                     dbModel.LastUpdatedBy = dvm.LastUpdatedBy;                   
                    
-                    await _dspPageService.Update(dbModel);
+                    await _orgPageService.Update(dbModel);
                     blazorApiResponse.data = dvm;
                
-                blazorApiResponse.message = string.Format("User {0} has been saved", ("" + dvm.Name).Length <= 0 ? dvm.TradeName : dvm.Name + "" + dvm.TradeName);
+                blazorApiResponse.message = string.Format("User {0} has been saved", ("" + dvm.Name).Length <= 0 ? dvm.Name : dvm.Name + "" + dvm.Name);
                 blazorApiResponse.status = true;
 
             }
@@ -544,7 +520,7 @@ namespace com.blazor.bmt.controllers
                                     f.Flush();
                                     f.Close();
                                 }
-                                vFiles.Add(new MediacontentViewModel { Id = mcbm.id,Daid= mcbm.Daid, UserId = mcbm.UserId, Sr =  fileCounter, FileName = BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename, RowVer=1,Remarks = filename, MimeType = Path.GetExtension(file.FileName), CreatedAt = GlobalUTIL.CurrentDateTime, CreatedBy = mcbm.CreatedBy,LastUpdatedAt = GlobalUTIL.CurrentDateTime, LastUpdatedBy = mcbm.CreatedBy });
+                                vFiles.Add(new MediacontentViewModel { Id = mcbm.id, CompaignId = mcbm.CompaignId,  Name = BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename, RowVer=1,Remarks = filename, MimeType = Path.GetExtension(file.FileName), CreatedAt = GlobalUTIL.CurrentDateTime, CreatedBy = mcbm.CreatedBy,LastUpdatedAt = GlobalUTIL.CurrentDateTime, LastUpdatedBy = mcbm.CreatedBy });
                             }
                         }
                     }
@@ -603,7 +579,7 @@ namespace com.blazor.bmt.controllers
                                     f.Flush();
                                     f.Close();
                                 }
-                                vFiles.Add(new MediacontentViewModel { Id = mcbm.id, Sr = fileCounter, FileName = BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename, Remarks = filename, MimeType = Path.GetExtension(file.FileName), LastUpdatedAt = GlobalUTIL.CurrentDateTime, LastUpdatedBy = mcbm.CreatedBy });
+                                vFiles.Add(new MediacontentViewModel { Id = mcbm.id,  Name = BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename, Remarks = filename, MimeType = Path.GetExtension(file.FileName), LastUpdatedAt = GlobalUTIL.CurrentDateTime, LastUpdatedBy = mcbm.CreatedBy });
                             }
                         }
                     }
@@ -611,7 +587,7 @@ namespace com.blazor.bmt.controllers
                     {
                        // var contentFileUploads = await _mediaContentPageService.addorupdateBulkData(vFiles);
                         response.data = vFiles.FirstOrDefault().Name;
-                        response.keyValue = vFiles.FirstOrDefault().FileName;
+                        response.keyValue = vFiles.FirstOrDefault().Name;
                         response.updateTime = GlobalUTIL.CurrentDateTime;
                     }
                     response.message = string.Format(BlazorConstant.UPLOAD_SUCCESS, (vFiles.Any() ? vFiles.Count : 0), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
@@ -640,7 +616,7 @@ namespace com.blazor.bmt.controllers
                 var previousRequest = _cache.Get(uvm.Email + Request.Path);
                 if (previousRequest == null)
                 {
-                    blazorApiResponse= await _userPageService.forgotPassword(uvm.Email, uvm.Token, uvm.Password);                   
+                    blazorApiResponse= await _userPageService.forgotPassword(uvm.Email, "", uvm.Password);                   
                     _cache.Set(uvm.Email + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(5));
                 }
                 else

@@ -12,11 +12,11 @@
 
   <ItemGroup>
     <Compile Remove="Data\BlazorDBContextSeed.cs" />
+    <Compile Remove="Data\BMTContext.cs" />
     <Compile Remove="Data\XBlazorDBContext.cs" />
     <Compile Remove="Repository\Base\SpecificationEvaluator.cs" />
     <Compile Remove="Repository\BasicConfigurationsRepository.cs" />
     <Compile Remove="Repository\CategoryRepository.cs" />
-    <Compile Remove="Repository\CitiesRepository.cs" />
     <Compile Remove="Repository\DispatchmentRepository.cs" />
     <Compile Remove="Repository\DsppartnerRepository.cs" />
     <Compile Remove="Repository\DspTablesRepository.cs" />

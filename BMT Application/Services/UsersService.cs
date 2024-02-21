@@ -31,13 +31,13 @@ namespace com.blazor.bmt.application.services
         }       
         public async Task<IEnumerable<UserModel>> GetMobileUsersByAllFiltersAsync(UserModel model) {
             var umodal = _mapper.Map<User>(model);
-            var ulist = await _userRepository.GetDspMobileUsersAllFiltersAsync(umodal);
+            var ulist = await _userRepository.GetOrgMobileUsersAllFiltersAsync(umodal);
             var mapped = _mapper.Map<IEnumerable<UserModel>>(ulist);
             return mapped;
         }
         public async Task<IEnumerable<UserModel>> GetAllDspUsersList(UserModel model) {
             var umodal = _mapper.Map<User>(model);
-            var ulist = await _userRepository.GetDspUsersAllFiltersAsync(umodal);           
+            var ulist = await _userRepository.GetOrgUsersAllFiltersAsync(umodal);           
             var mapped = _mapper.Map<IEnumerable<UserModel>>(ulist);
             return mapped;
         }

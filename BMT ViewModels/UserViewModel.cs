@@ -67,5 +67,10 @@ public partial class UserViewModel
     public DateTime? LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
+    public string CityName { get; set; }
+    public string CompleteName { get; set; }
+    public string RoleName { get; set; }
+    public string OrgName { get; set; }
+    public string StateName { get; set; }
 }
 

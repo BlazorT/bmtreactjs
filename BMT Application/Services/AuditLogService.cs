@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Blazor.Web.Application.Interfaces;
+using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
 using com.blazor.bmt.core.interfaces;
-using com.blazor.bmt.core.repositories;
 using com.blazor.dsps.core.repositories;
 using System;
 using System.Collections.Generic;

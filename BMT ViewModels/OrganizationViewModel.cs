@@ -43,4 +43,10 @@ public partial class OrganizationViewModel
     public DateTime? LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
+    public int? NetworkId { get; set; }
+    public string? CurrencyName { get; set; }
+    public int? CompaignsCount { get; set; }
+    public string? CityName { get; set; }
+    public string? UserName { get; set; }
+    public int? StateId { get; set; }
 }

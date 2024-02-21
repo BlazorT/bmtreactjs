@@ -10,9 +10,9 @@ namespace com.blazor.bmt.viewmodels
   
         public string SMS_MESSAGE_TEMPLATE { get; set; } = String.Empty;
         public string SMS_SERVICE_PWD { get; set; } = String.Empty;
-        public int DspId { get; set; }
+        public int OrgId { get; set; } = 1;
         public int? LastUpdatedBy { get; set; }
-        public string DspName { get; set; } = String.Empty;
+        public string OrgName { get; set; } = String.Empty;
        
        
         public string ViewCountIntervalSeconds { get; set; } = "30";
@@ -22,30 +22,32 @@ namespace com.blazor.bmt.viewmodels
         // public static string flagReportEmailBody { get; set; } = String.Empty;
         public string invitationEmailBody { get; set; } = String.Empty;
         public string invitationEmailSubject { get; set; } = String.Empty;
+
+        public string stmpuser { get; set; } = "user";
+        public string stmpserver { get; set; } = "smtp.gmail.com";        
+        public string stmppwd { get; set; } = "htt6755";
+        public string smtpport { get; set; } = "587";       
+        public string flagReportEmailBody { get; set; } = String.Empty;
+        public string vehicleUploadEmailbody { get; set; } = String.Empty;
+        public string accountActivateEmailBody { get; set; } = String.Empty;
+        public string accountBlockEmailBody { get; set; } = String.Empty;
+        public string CompaignUploadNotificationEmailSubject { get; set; } = String.Empty;
+        public string archiveTime { get; set; } = String.Empty;
+        public string freeTimeInSeconds { get; set; } = String.Empty;
+        public bool enableComments { get; set; } = false;
+        public bool enableFreeMinutes { get; set; } = false;
+
         public string profilePwdResetEmail = "profilePwdResetEmail";
         public string profilePwdResetEmailSubject = "4DSPS - Forgot Password";
         //  public static string VehicleOfferNotificationEmailBody { get; set; } = "VehicleOfferNotificationEmailBody";       
         public string SmsMessageBody { get; set; } = "smsMessageBody";
-        public string OnBoardedEmaillBody { get; set; } = "OnBoardedEmaillBody";
-        public string OnBoardedEmaillBodySubject { get; set; } = "4DSPS - Onground Intimation";
-
-        public string BackgroundCheckEmaillBody { get; set; } = "BackgroundCheckEmaillBody";
-        public string BackgroundCheckEmaillBodySubject { get; set; } = "4DSPS - Background Check";
-        // public static string accountStatusEmailSubject { get; set; } = String.Empty;
-        public string DrugCheckEmaillBody { get; set; } = "DrugCheckEmaillBody";
-        public string DrugCheckEmaillSubject { get; set; } = "4DSPS - Drug Test";
-        public string OffboardedEmailBody { get; set; } = "OffboardedEmailBody";      
-        public string DSPPerformanceNotification { get; set; } = "DSPPerformanceNotification";    
-
-        public string DAPerformanceNotification { get; set; } = "DAPerformanceNotification";
-        public string DAReplyNotification { get; set; } = "DAReplyNotification";
-        public string DAJObApplyProcessUpdated { get; set; } = "DAJObApplyProcessUpdated";      
-
+      
+        public string OrganizationRejectedEmailBody { get; set; } = "OrganizationRejectedEmailBody";
+        public string OrganizationApprovedEmailBody { get; set; } = "OrganizationApprovedEmailBody";
         public string AccountDeletedEmailBody { get; set; } = "AccountDeletedEmailBody";     
         public string AccountStatusChangedEmailBody { get; set; } = "AccountStatusChangedEmailBody";  
       
-        public string archiveTime { get; set; } = String.Empty;
-        public string freeTimeInSeconds { get; set; } = String.Empty;
+       
         public bool enableSMS { get; set; } = false;       
         public string VehicleSharingEmailBody { get; set; } = String.Empty;
         public string VehicleSharingEmailSubject { get; set; } = "6BY7 LLC - Vehicle uploaded";
@@ -122,7 +124,7 @@ namespace com.blazor.bmt.viewmodels
     public partial class ConfigrationsCombinedViewModel
     {
         public static int Id { get; set; }
-        public static int DspId { get; set; }
+        public static int OrgId { get; set; }
         public static string Name { get; set; } = null!;
         public static string Description { get; set; } = null!;
         public static string Key { get; set; } = null!;

@@ -1,11 +1,12 @@
-﻿// Microsoft Namespaces
+﻿using Blazor.Web.UI.Interfaces;
 using AutoMapper;
-using Blazor.Web.Application.Interfaces;
-using com.blazor.bmt.application.model;
-using com.blazor.bmt.ui.interfaces;
-using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-namespace com.blazor.bmt.ui.services
+using com.blazor.bmt.util;
+using com.blazor.bmt.application.model;
+using com.blazor.bmt.application.interfaces;
+
+
+namespace Blazor.Web.UI.Services
 {
     public class AppLogPageService : IAppLogPageService
     {
@@ -22,7 +23,7 @@ namespace com.blazor.bmt.ui.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
+       
         public async Task<IEnumerable<AppLogViewModel>> GetAppLogs()
         {
 
@@ -40,7 +41,7 @@ namespace com.blazor.bmt.ui.services
         {
             var entity = await _appLogService.GetApplogById(logId);
             var retEntity = _mapper.Map<AppLogViewModel>(entity);
-            //  var mapped = _mapper.Map<IEnumerable<PriceViewModel>>(list);
+        //  var mapped = _mapper.Map<IEnumerable<PriceViewModel>>(list);
             return retEntity;
         }
 
@@ -50,7 +51,7 @@ namespace com.blazor.bmt.ui.services
             var mapped = _mapper.Map<IEnumerable<AppLogViewModel>>(list);
             return mapped;
         }
-        public async Task ProcessLoginActivity(int UserId, UTIL.LOGIN_ACTIVITY activity, string remoteMachineIp)
+        public async Task ProcessLoginActivity(int UserId ,LOGIN_ACTIVITY activity, string remoteMachineIp)
         {
             try
             {
@@ -58,17 +59,15 @@ namespace com.blazor.bmt.ui.services
                 ApplogModel appLogModel = new ApplogModel();
                 appLogModel.ActionType = (Byte)activity;
                 appLogModel.LogTime = System.DateTime.Now;
-                appLogModel.Dspid = GlobalSettings.DefaultDspId;
-                appLogModel.LogDesc = activity == UTIL.LOGIN_ACTIVITY.LOGGED_OUT ? BlazorConstant.LOGGED_OUT_MSG : BlazorConstant.LOGGED_IN_MSG;
+                appLogModel.LogDesc = activity== LOGIN_ACTIVITY.LOGGED_OUT?BlazorConstant.LOGGED_OUT_MSG: BlazorConstant.LOGGED_IN_MSG;
                 appLogModel.MachineIp = remoteMachineIp;
                 appLogModel.UserId = UserId;
-                await _appLogService.Create(appLogModel);
+             await   _appLogService.Create(appLogModel);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
-                throw ex;
-            }
+                throw ex; }
 
 
         }
@@ -76,14 +75,14 @@ namespace com.blazor.bmt.ui.services
         {
             var mapped = _mapper.Map<ApplogModel>(AppLogViewModel);
             if (mapped == null)
-                throw new Exception($"Entity could not be mapped.");
-            await _appLogService.Create(mapped);
+                throw new Exception($"Entity could not be mapped.");           
+             await _appLogService.Create(mapped);
             _logger.LogInformation($"Entity successfully added - AppLogPageService");
         }
 
-        public async Task UpdateAppLog(AppLogViewModel appLogViewModel)
+        public async Task UpdateAppLog(AppLogViewModel AppLogViewModel)
         {
-            var mapped = _mapper.Map<ApplogModel>(appLogViewModel);
+            var mapped = _mapper.Map<ApplogModel>(AppLogViewModel);
             if (mapped == null)
                 throw new Exception($"Entity could not be mapped.");
 
@@ -91,10 +90,10 @@ namespace com.blazor.bmt.ui.services
             _logger.LogInformation($"Entity successfully added - AppLogPageService");
         }
 
-        public async Task DeleteAppLog(AppLogViewModel appLogViewModel)
+        public async Task DeleteAppLog(AppLogViewModel AppLogViewModel)
         {
             throw new Exception("Not implemented");
-            //var mapped = _mapper.Map<AppLogModel>(appLogViewModel);
+            //var mapped = _mapper.Map<AppLogModel>(AppLogViewModel);
             //if (mapped == null)
             //    throw new Exception($"Entity could not be mapped.");
 

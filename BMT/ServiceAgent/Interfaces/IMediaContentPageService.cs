@@ -1,16 +1,16 @@
 ﻿
-using com.blazor.bmt.core;
 using com.blazor.bmt.viewmodels;
-
-namespace com.blazor.bmt.ui.interfaces
+namespace Blazor.Web.UI.Interfaces
 {
     public interface IMediaContentPageService
     {
+        
+        Task<MediacontentViewModel> GetMediaContentByIdAsync(System.Int64 mediaContentId);
 
-        Task<MediacontentViewModel> GetMediaContentByIdSync(Int64 Id);
+        //Task<IEnumerable<MediacontentViewModel>> GetPaymentsByCategoryAsync(UTIL.Pack.PACKAGES packages);
         Task<IEnumerable<MediacontentViewModel>> addorupdateBulkData(List<MediacontentViewModel> ls);
-        Task<MediacontentViewModel> Create(MediacontentViewModel model);
-        //Task Update(Inventorydetailviewmodel model);
-        //Task Delete(Inventorydetailviewmodel model);
+        Task<MediacontentViewModel> Create(MediacontentViewModel MediaContentViewModel);
+
+
     }
 }
