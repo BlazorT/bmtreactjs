@@ -2446,6 +2446,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   width: 100%;
   text-align: center;
   margin-left: 0%;
+  height:12em;
 }
 .DSPLandingproceedViewPara {
   color: white;
@@ -2454,9 +2455,10 @@ input[type='date']::-webkit-calendar-picker-indicator {
   text-align: left;
 }
 .DSPLandingproceedLogo {
-  height: 174px;
-  /* width: 218px; */
+  height: 10em;
+  width: 10em;
   margin-top: 1%;
+  border-radius:50%;
 }
 .PROCEEDTitle {
   color: white;

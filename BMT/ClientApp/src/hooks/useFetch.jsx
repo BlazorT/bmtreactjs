@@ -58,7 +58,7 @@ function useFetch() {
       const res = await fetch(url, options);
       console.log({ res });
       const json = await res.json();
-     
+      console.log({ json });
       response.current = json;
 
       if (callback && typeof callback === 'function') {

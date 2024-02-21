@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import CIcon from '@coreui/icons-react';
 import Carousel from 'react-bootstrap/Carousel';
-
+import moment from 'moment';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -58,10 +58,11 @@ function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   
   const [userDetail, setuserDetail] = useState({
-    storeName: '',
-    storeId: null,
-    userName: '',
+    fullName: '',
     password: '',
+    //roleId: 1,
+    //userStatus: 0,
+    //alreadyLoginStatus:0,
   });
 
   const togglePasswordVisibility = () => {
@@ -154,7 +155,7 @@ function SignIn() {
     } else {
       setIsLoading(true);
       await userLogin(
-        `/Common/login?email=${userDetail.userName}&password=${userDetail.password}`,
+        `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`,
         { method: 'POST' },
       );
       console.log(loginRes.current, loginErr);
@@ -163,6 +164,7 @@ function SignIn() {
         getUtils();
         getMenus();
         setModalOpen(true);
+        navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {
         dispatch(
           updateToast({
@@ -242,11 +244,11 @@ function SignIn() {
                   <input
                     type="text"
                     className="form-control item bgTextbox"
-                    id="username"
+                    id="fullName"
                     onChange={handleChange}
-                    value={userDetail.userName}
-                    name="userName"
-                    placeholder="Username"
+                    value={userDetail.fullName}
+                    name="fullName"
+                    placeholder="fullName"
                   />
                 </div>
                 <div className="form-outline mb-1 text-start">
@@ -487,51 +489,51 @@ function SignIn() {
               </Carousel>
             </div>
           </div>
-          <Modal
-            isOpen={modalOpen}
-            toggle={toggleModal}
-            className="custom-modal PROCEEDModal"
-            backdrop={false}
-          >
-            <video controls={false} autoPlay={true} muted={true} className="ProceedLandingVid">
-              <source src="BackgroundVideo.mp4" type="video/mp4" />
-            </video>
-            <div className="DSPLandingproceedView row">
-              <div className="col-md-2">
-                <img
-                  className="DSPLandingproceedLogo"
-                  src={
-                    loginRes.current?.data?.dspLogo
-                      ? loginRes.current.data.dspLogo
-                      : 'bmtlogo.png'
-                  }
-                  alt="logo"
-                />
-                <br />
-              </div>
-              <div className="col-md-10 mt-2">
-                <strong className="PROCEEDTitle">
-                  {loginRes.current?.data?.dspName}, {loginRes.current?.data?.dspStateName} ,
-                  {getCountryById(loginRes.current?.data?.dspStateId)}
-                </strong>
-                <p className="DSPLandingproceedViewPara">
-                  An opportunity to lead As a DSP, you are only as strong as your team of delivery
-                  associates. Your leadership won’t just set them up for success on the road today,
-                  but wherever their career takes them. Successful candidates are passionate about
-                  hiring and coaching, building a strong company culture, and giving back to the
-                  community.
-                </p>
-                <button
-                  onClick={ClickProceed}
-                  type="submit"
-                  className="btn btn_Default minWidth sales-btn-style mb-3"
-                >
-                  PROCEED <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>
-                  <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>{' '}
-                </button>
-              </div>
-            </div>
-          </Modal>
+          {/*<Modal*/}
+          {/*  isOpen={modalOpen}*/}
+          {/*  toggle={toggleModal}*/}
+          {/*  className="custom-modal PROCEEDModal"*/}
+          {/*  backdrop={false}*/}
+          {/*>*/}
+          {/*  <video controls={false} autoPlay={true} muted={true} className="ProceedLandingVid">*/}
+          {/*    <source src="BackgroundVideo.mp4" type="video/mp4" />*/}
+          {/*  </video>*/}
+          {/*  <div className="DSPLandingproceedView row">*/}
+          {/*    <div className="col-md-2">*/}
+          {/*      <img*/}
+          {/*        className="DSPLandingproceedLogo"*/}
+          {/*        src={*/}
+          {/*          loginRes.current?.data?.dspLogo*/}
+          {/*            ? loginRes.current.data.dspLogo*/}
+          {/*            : 'bmtlogo.png'*/}
+          {/*        }*/}
+          {/*        alt="logo"*/}
+          {/*      />*/}
+          {/*      <br />*/}
+          {/*    </div>*/}
+          {/*    <div className="col-md-10 mt-2">*/}
+          {/*      <strong className="PROCEEDTitle">*/}
+          {/*        {loginRes.current?.data?.dspName}, {loginRes.current?.data?.dspStateName} ,*/}
+          {/*        {getCountryById(loginRes.current?.data?.dspStateId)}*/}
+          {/*      </strong>*/}
+          {/*      <p className="DSPLandingproceedViewPara">*/}
+          {/*        An opportunity to lead As a BMT, you are only as strong as your team of delivery*/}
+          {/*        associates. Your leadership won’t just set them up for success on the road today,*/}
+          {/*        but wherever their career takes them. Successful candidates are passionate about*/}
+          {/*        hiring and coaching, building a strong company culture, and giving back to the*/}
+          {/*        community.*/}
+          {/*      </p>*/}
+          {/*      <button*/}
+          {/*        onClick={ClickProceed}*/}
+          {/*        type="submit"*/}
+          {/*        className="btn btn_Default minWidth sales-btn-style mb-3"*/}
+          {/*      >*/}
+          {/*        PROCEED <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>*/}
+          {/*        <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>{' '}*/}
+          {/*      </button>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</Modal>*/}
           <div className="SeprateDiv"> </div>
 
           <section id="Reviews" className="backgrdClr">

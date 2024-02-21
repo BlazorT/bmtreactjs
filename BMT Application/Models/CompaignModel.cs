@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace com.blazor.bmt.application.model;
 
-public partial class CompaignViewModel 
+public partial class CompaignModel 
 {
     public long Id { get; set; }
 

@@ -114,8 +114,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BMT Application\BMT Application.csproj" />
+    <ProjectReference Include="..\BMT Core\BMT Core.csproj" />
     <ProjectReference Include="..\BMT Infrastructure\BMT Infrastructure.csproj" />
-    <ProjectReference Include="..\BMT UTIL\BMT UTIL.csproj" />
     <ProjectReference Include="..\BMT ViewModels\BMT ViewModels.csproj" />
   </ItemGroup>
 
