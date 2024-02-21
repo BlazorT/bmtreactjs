@@ -508,19 +508,19 @@ namespace com.blazor.bmt.controllers
         // [HttpGet("logout")]
         [HttpPost("logout")]
         [Route("logout")]
-        public async Task<BlazorResponseViewModel> logOut()
+        public async Task<BlazorResponseViewModel> logOut(int id=0)
         {
             BlazorResponseViewModel blazorResponseViewModel = new BlazorResponseViewModel();
            // ViewBag.returnUrl = string.Empty;
             try
             {
-               Int32 UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);// _cache.Remove(this.User.Claims.Where(x=>x.Type== "UserId").FirstOrDefault().Value);               
-               await _notificationPageService.loggedOut(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(), UserId);
+               //Int32 UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);// _cache.Remove(this.User.Claims.Where(x=>x.Type== "UserId").FirstOrDefault().Value);               
+               await _notificationPageService.loggedOut(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(), id);
                 // Record log out activity              
-                await _appLogPageService.ProcessLoginActivity(UserId, LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
+                await _appLogPageService.ProcessLoginActivity(id, LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
                 blazorResponseViewModel.data = "";
                 blazorResponseViewModel.status = true;
-                _cache.Remove(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
+                _cache.Remove(id);
                 await _httpContextAccessor.HttpContext.SignOutAsync(BlazorConstant.COOKIES_AUTHENTICATION_KEY);
                 blazorResponseViewModel.status = true;
             }
