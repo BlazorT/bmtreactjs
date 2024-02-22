@@ -616,7 +616,7 @@ namespace com.blazor.bmt.controllers
                 var previousRequest = _cache.Get(uvm.Email + Request.Path);
                 if (previousRequest == null)
                 {
-                    blazorApiResponse= await _userPageService.forgotPassword(uvm.Email, "", uvm.Password);                   
+                    blazorApiResponse= await _userPageService.forgotPassword(uvm.Email, uvm.SecurityToken, uvm.Password);                   
                     _cache.Set(uvm.Email + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(5));
                 }
                 else

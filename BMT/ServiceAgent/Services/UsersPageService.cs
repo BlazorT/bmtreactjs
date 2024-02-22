@@ -136,7 +136,7 @@ namespace Blazor.Web.UI.Services
                         // User Inactivated and 
                         dUser.Status = (int)COMMON_STATUS.IN_ACTIVE;
                         dUser.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                      //  dUser.Token = finalToken;
+                        dUser.SecurityToken = finalToken;
                         dUser.RowVer = dUser.RowVer + 1;
                         dUser.Password = string.Empty;
                         await _usersAppService.Update(dUser);
