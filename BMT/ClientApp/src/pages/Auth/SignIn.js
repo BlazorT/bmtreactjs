@@ -83,32 +83,21 @@ function SignIn() {
   };
 
   const addGlobalUtils = (data) => {
-    globalutil.setdastatuses(data.dastatuses);
+    globalutil.setnetworks(data.networks);
     globalutil.setstates(data.states);
-    globalutil.setmakes(data.makes);
-    globalutil.setuserroles(data.userroles);
+    globalutil.setstatuses(data.statuses);
+    globalutil.setIntervals(data.Intervals);
     globalutil.setcountries(data.countries);
-    globalutil.setbusinesstypes(data.businesstypes);
-    globalutil.setproductgroups(data.productgroups);
-    globalutil.setsubstatuses(data.substatuses);
-    globalutil.setauditentities(data.auditentities);
-    globalutil.setbusinessentities(data.businessentities);
-    globalutil.setnotificationtypes(data.notificationtypes);
-    globalutil.setsubstatuses(data.categories);
+    globalutil.setcategories(data.categories);
+    globalutil.setalerts(data.alerts);
+    globalutil.setpackages(data.packages);
+    globalutil.setCurrencies(data.Currencies);
+    globalutil.setPostTypes(data.PostTypes);    
+    globalutil.setmenus(data.menus);  
     globalutil.setservicetypes(data.servicetypes);
-    globalutil.setvehicletypes(data.vehicletypes);
-    globalutil.setownerships(data.ownerships);
-    globalutil.setmenus(data.menus);
     globalutil.setcommonstatuses(data.commonstatuses);
-    globalutil.setvehiclestatuss(data.vehiclestatuss);
-    globalutil.setinspectionstatuses(data.inspectiontypes);
-    globalutil.setinspectionitems(data.inspectionitems);
-    globalutil.setdatatypes(data.datatypes);
-    globalutil.setfieldtypes(data.fieldtypes);
-    globalutil.setsynchstatuses(data.synchstatuses);
-    globalutil.setrostertypes(data.rostertypes);
-    globalutil.setdsP_TABLES(data.dsP_TABLES);
-    globalutil.setproduct_assignment_types(data.product_assignment_types);
+    globalutil.setauditentities(data.auditentities);  
+    globalutil.setuserroles(data.userroles);
   };
 
   const getUtils = async () => {

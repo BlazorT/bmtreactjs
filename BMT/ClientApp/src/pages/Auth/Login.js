@@ -36,7 +36,7 @@ const Login = () => {
       status: '1',
     };
     try {
-      const response = await fetch('/BlazorApi/stores', {
+      const response = await fetch('/BlazorApi/orgs', {
         method: 'POST',
         headers: {
           Authorization: `cVQ-h9G7QPCs3ErRdmsGNE:APA91bGlsWbE6ouc9jbIskdJOSF0SqwWq-9HXGGeewcs5ESpH-ryhoKYgcYIx19Iay_geMmufvWNb0M6woPo1jYNvIS0tiGZjXluSDuDbLeHyDeHJJ1ZGL_eq06EVb_0AyfsVeCjHND8`,
@@ -98,7 +98,7 @@ const Login = () => {
         password: String(pass),
       };
       try {
-        const response = await fetch('/BlazorApi/storeusers', {
+        const response = await fetch('/BlazorApi/users', {
           method: 'POST',
           headers: {
             Authorization: `cVQ-h9G7QPCs3ErRdmsGNE:APA91bGlsWbE6ouc9jbIskdJOSF0SqwWq-9HXGGeewcs5ESpH-ryhoKYgcYIx19Iay_geMmufvWNb0M6woPo1jYNvIS0tiGZjXluSDuDbLeHyDeHJJ1ZGL_eq06EVb_0AyfsVeCjHND8`,

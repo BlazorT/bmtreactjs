@@ -55,7 +55,7 @@ namespace com.blazor.bmt.controllers
         }////     
         [HttpGet]
         [HttpPost]
-        [Route("das")]
+        [Route("users")]
         public async Task<ActionResult> GetDAUsers()
         {
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
@@ -63,7 +63,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-               // blazorApiResponse.data = await _userPageService.GetUsersListAsync(0, 1);
+                blazorApiResponse.data = await _userPageService.GetUsers();
                 blazorApiResponse.status = true;               
             }
             catch (Exception ex)
