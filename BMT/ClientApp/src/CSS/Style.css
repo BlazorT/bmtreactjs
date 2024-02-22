@@ -107,7 +107,8 @@
   font-family: 'Permanent Marker';
 }
 .card-body img {
-  width: 8em;
+  width: 10em;
+  border-radius: 0.5em;
 }
 .card {
   position: relative;
@@ -565,9 +566,9 @@ button[type='button']:hover {
   gap: 1rem;
 }
 .forgot-password-img {
-  height: 10em;
-  width: 10em;
-  border-radius: 50%;
+  height: 8em;
+  width: 16em;
+  border-radius: 1em;
 }
 .forgot-password-title {
   font-family: sans-serif;
@@ -2396,7 +2397,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   margin: 1px 10px 2px 10px;
 }
 .PlaySoreIcon {
-  height: 2.563em;
+  height: 3em;
   width: 11.25em;
   border: 1px solid;
   border-radius: 6px;

@@ -52,6 +52,7 @@ function AppFooter() {
       <ContactUs isOpen={contactUsmodalOpen} toggle={ContactModal} />
       <TermOfUse isOpen={termOfUsemodalOpen} toggle={TermOfUseModal} />
 
+
     </div>
   );
 }
