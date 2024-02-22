@@ -115,7 +115,7 @@ function SignIn() {
     await fetchUtils('/Common/lovs');
 
     if (utilRes?.current?.status === true) {
-      console.log(utilRes.current.data);
+      console.log(utilRes.current.data,'util');
       addGlobalUtils(utilRes.current.data);
     } else {
       dispatch(
@@ -161,7 +161,7 @@ function SignIn() {
       );
       console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
-        console.log(JSON.stringify(loginRes));
+        console.log(JSON.stringify(loginRes),'login');
         getUtils();
         getMenus();
         console.log(getMenus());

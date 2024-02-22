@@ -54,11 +54,11 @@ function useFetch() {
         ...customOptions,
         signal: abortController.signal, // Pass the signal to the options
       };
-      console.log(url, options);
+     // console.log(url, options);
       const res = await fetch(url, options);
-      console.log({ res });
+    //  console.log({ res });
       const json = await res.json();
-      console.log({ json });
+     // console.log({ json });
       response.current = json;
 
       if (callback && typeof callback === 'function') {

@@ -35,7 +35,8 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
           ? undefined // Let the browser set the Content-Type for FormData
           : initialOptions.headers,
       });
-
+      console.log({ response });
+      console.log({ error });
       if (!response.ok) {
         showToast(`API error: ${response.statusText}`);
       }
