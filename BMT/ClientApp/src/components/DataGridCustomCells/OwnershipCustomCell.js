@@ -12,7 +12,7 @@ function OwnershipCustomeCell({ value }) {
   return (
     <div className="d-flex flex-column">
       <p className="m-0 mb-1">
-        {globalutil.ownerships().find((item) => item.id === value.row.Ownership).name}
+  {/*      {globalutil.ownerships().find((item) => item.id === value.row.Ownership).name}*/}
       </p>
       <p className="m-0">{value.row.OwnershipType}</p>
       <div className="d-flex justify-content-start align-items-center mt-1">

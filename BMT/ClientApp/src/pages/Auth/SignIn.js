@@ -87,7 +87,7 @@ function SignIn() {
     globalutil.setstates(data.states);
     globalutil.setstatuses(data.statuses);
     globalutil.setIntervals(data.Intervals);
-    globalutil.setcountries(data.countries);
+   // globalutil.setcountries(data.countries);
     globalutil.setcategories(data.categories);
     globalutil.setalerts(data.alerts);
     globalutil.setpackages(data.packages);
@@ -153,7 +153,7 @@ function SignIn() {
         console.log(JSON.stringify(loginRes),'login');
         getUtils();
         getMenus();
-        console.log(getMenus());
+        console.log(getMenus(),'menus');
         setModalOpen(true);
         navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {

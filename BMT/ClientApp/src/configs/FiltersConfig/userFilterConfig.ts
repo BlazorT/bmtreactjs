@@ -35,7 +35,7 @@ export const getUsersFiltersFields = (
     id: 'status',
     name: 'status',
     disableOption: 'Select DA Status',
-    options: globalutil.dastatuses(),
+    options: globalutil.statuses(),
     className: 'form-control item form-select',
     title: 'DA status',
   },

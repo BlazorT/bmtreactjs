@@ -20,7 +20,7 @@ function StatusCustomeCell({ value }) {
           ) : (
             <CloseIcon fontSize="medium" className="text-danger " />
           )}
-          {globalutil.vehiclestatuss().find((item) => item.id == value.row.status).name}
+        {/*  {globalutil.vehiclestatuss().find((item) => item.id == value.row.status).name}*/}
         </p>
       </div>
       {value.row.GroundedIssue && <p className="m-0 text-dim">{value.row.GroundedIssue}</p>}

@@ -24,8 +24,8 @@ const ScheduleStatusCell = ({ status, type, params, isDull, vehicleList }) => {
               //border-1 border-${mapStatus[status]} border
               className={`w-100 h-100 d-flex align-items-center position-relative p-2`}
             >
-              {globalutil.makes().find((item) => item.id === vehicle.makeDetailId)?.name || ''}
-              {globalutil.vehicletypes().find((item) => item.id === vehicle.categoryId)?.name || ''}
+              {/*{globalutil.makes().find((item) => item.id === vehicle.makeDetailId)?.name || ''}*/}
+              {/*{globalutil.vehicletypes().find((item) => item.id === vehicle.categoryId)?.name || ''}*/}
               {/* <div className="">{time.replace(/:\d{2} /, ' ')}</div> */}
               <div className="position-absolute top-0 end-0 m-0 p-1">
                 <WarningIcon fontSize="small" className="fs-6" />
@@ -40,11 +40,11 @@ const ScheduleStatusCell = ({ status, type, params, isDull, vehicleList }) => {
             >
               <div>{vehicle?.name?.toUpperCase() + ', ' + vehicle.code}</div>
               <div className="">
-                {(globalutil.makes().find((item) => item.id === vehicle.makeDetailId)?.name || '') +
-                  ' ' +
-                  globalutil.vehicletypes().find((item) => item.id === vehicle.categoryId)?.name +
-                  ' ' +
-                  vehicle.numberPlate}
+                {/*{(globalutil.makes().find((item) => item.id === vehicle.makeDetailId)?.name || '') +*/}
+                {/*  ' ' +*/}
+                {/*  globalutil.vehicletypes().find((item) => item.id === vehicle.categoryId)?.name +*/}
+                {/*  ' ' +*/}
+                {/*  vehicle.numberPlate}*/}
               </div>
               <div className="position-absolute top-0 end-0 m-0 p-1">
                 {status !== 1 ? (

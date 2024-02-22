@@ -35,18 +35,18 @@ const InspectionReportCell = ({ reportField, fetchInspection, rows, value }) => 
       { method: 'POST', body: JSON.stringify(body) },
       (res) => {
         if (res.status) {
-          const initialArray = res.data.inspectionItems.map((field) => ({
-            desc: globalutil.inspectionitems().find((item) => item.id == field.inspectionItemId)
-              .desc,
-            name: globalutil.inspectionitems().find((item) => item.id == field.inspectionItemId)
-              .name,
-            remarks: field.remarks,
-            found: field.found,
-          }));
+          //const initialArray = res.data.inspectionItems.map((field) => ({
+          //  desc: globalutil.inspectionitems().find((item) => item.id == field.inspectionItemId)
+          //    .desc,
+          //  name: globalutil.inspectionitems().find((item) => item.id == field.inspectionItemId)
+          //    .name,
+          //  remarks: field.remarks,
+          //  found: field.found,
+          //}));
 
-          const reportRows = makeGroupingRows(initialArray);
-          const doc = getInspectionPdf(reportRows, reportField);
-          doc.output('dataurlnewwindow');
+     /*     const reportRows = makeGroupingRows(initialArray);*/
+          //const doc = getInspectionPdf(reportRows, reportField);
+        //  doc.output('dataurlnewwindow');
         } else {
           dispatch(
             updateToast({

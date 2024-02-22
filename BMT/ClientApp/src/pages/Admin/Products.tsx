@@ -40,8 +40,8 @@ const Products: React.FC = () => {
       productName: `${data.name} ,${data.shortCode}`,
       manufactured: countries.find((item) => item.id === data.manufactureCountryId)?.name || null,
       productFor: data.businessEntityId === 1 ? 'DA' : data.businessEntityId === 2 ? 'Vehicle' : '',
-      category:
-        globalutil.productGroup().find((item: any) => item.id === data.categoryId)?.name || null,
+      //category:
+      //  globalutil.productGroup().find((item: any) => item.id === data.categoryId)?.name || null,
       status: data.status,
       lastUpdatedAt: data.lastUpdatedAt,
     }));

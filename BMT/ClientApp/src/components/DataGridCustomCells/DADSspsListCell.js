@@ -48,7 +48,7 @@ const DADSspsListCell = (prop) => {
   };
 
   const toggleStatus = async (status) => {
-    console.log(globalutil.commonstatuses());
+   
     setIsLoading(delLoading.current);
 
     const data = {
