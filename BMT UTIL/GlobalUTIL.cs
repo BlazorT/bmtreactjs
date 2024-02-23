@@ -308,18 +308,7 @@ namespace com.blazor.bmt.util
                             //    viewModel.DAPerformanceNotification = "" + (dr["value"]);
                             if (BlazorConstant.SMS_MESSAGE_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.SmsMessageBody = "" + (dr["value"]);
-                            //if (BlazorConstant.ONBOARDING_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.OnBoardedEmaillBody = "" + (dr["value"]);
-                            //if (BlazorConstant.BACKGROUND_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.BackgroundCheckEmaillBody = "" + (dr["value"]);
-                            //if (BlazorConstant.DRUG_CHECK_EMAIL.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.DrugCheckEmaillBody = "" + (dr["value"]);
-                            //if (BlazorConstant.OFFGROUND_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.OffboardedEmailBody = "" + (dr["value"]);
-                            //if (BlazorConstant.DA_REPLY_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.DAReplyNotification = "" + (dr["value"]);
-                            //if (BlazorConstant.DA_JOB_PROCESS_UPDATED.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.DAJObApplyProcessUpdated = "" + (dr["value"]);
+                          
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
                             if (BlazorConstant.ACCOUNT_STATUS_CHANGED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status

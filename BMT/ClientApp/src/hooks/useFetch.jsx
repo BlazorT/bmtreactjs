@@ -31,21 +31,8 @@ function useFetch() {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
-    // const isServerActive = await checkServerStatus();
-
-    // if (!isServerActive) {
-    //   dispatch(
-    //     updateToast({
-    //       isToastOpen: true,
-    //       toastMessage: 'Connection to the server is not active',
-    //       toastVariant: 'error',
-    //     }),
-    //   );
-    //   loading.current = false;
-    //   return;
-    // }
-
     const fullUrl = `${process.env.REACT_APP_API_BASE_URL || ''}${url}`;
+    alert(fullUrl);
 
     try {
       loading.current = true;
