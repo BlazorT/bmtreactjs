@@ -37,15 +37,15 @@ public partial class OrganizationModel : BaseModel
 
     public int Status { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
     public DateTime? ExpiryTime { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+   // public DateTime? LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
 }

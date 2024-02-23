@@ -13,13 +13,13 @@ public partial class ContentcategoryModel : BaseModel
 
     public string Name { get; set; } = null!;
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    //public DateTime? LastUpdatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
     public int Status { get; set; }
 

@@ -41,11 +41,11 @@ public partial class GlobalnetworkdetailModel : BaseModelTransactions
 
     public DateTime? ApprovalTime { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+   // public DateTime? LastUpdatedAt { get; set; }
 
     public int Status { get; set; }
 
-    public int RowVer { get; set; }
+   // public int RowVer { get; set; }
 
     public int? IsCurrent { get; set; }
 }

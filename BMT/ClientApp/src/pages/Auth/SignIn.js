@@ -42,7 +42,8 @@ function SignIn() {
     response: menuRes,
     error: menuErr,
     loading: menuLoading,
-    fetchData: fetchMenus,
+    fetchData: fetchMenus, 
+
   } = useFetch();
 
   const {
@@ -122,7 +123,8 @@ function SignIn() {
     };
 
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
-    console.log(menuRes, 'menusRes');
+   // console.log(menuRes, 'menusRes');
+   // console.log(menuRes.current, menuErr);
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));
@@ -153,7 +155,8 @@ function SignIn() {
         console.log(JSON.stringify(loginRes),'login');
         getUtils();
         getMenus();
-        console.log(getMenus(),'menus');
+        console.log(getMenus(),'menuss');
+        console.log(getUtils(),'utilss');
         setModalOpen(true);
         navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {

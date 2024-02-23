@@ -25,11 +25,11 @@ public partial class BundlingpackagedetailModel : BaseModelTransactions
 
     public int BundlingAllowed { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
     public DateTime? FinishTime { get; set; }
 

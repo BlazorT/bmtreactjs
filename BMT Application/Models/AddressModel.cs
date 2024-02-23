@@ -33,7 +33,7 @@ public partial class AddressModel : BaseModel
 
     public string? CustomAttributes { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+  //  public DateTime CreatedAt { get; set; }
 
     public int? RowVer { get; set; }
 }

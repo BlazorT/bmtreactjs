@@ -25,17 +25,17 @@ public partial class CompaignexecutionscheduleModel : BaseModelTransactions
 
     public DateTime? StartTime { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    //public DateTime? LastUpdatedAt { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
     public int Status { get; set; }
 
-    public int RowVer { get; set; }
+  //  public int RowVer { get; set; }
 
    // public virtual ICollection<Compaignscheduleday> Compaignscheduledays { get; } = new List<Compaignscheduleday>();
 }

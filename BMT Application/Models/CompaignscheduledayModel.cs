@@ -13,17 +13,17 @@ public partial class CompaignscheduledayModel : BaseModelTransactions
 
     public int? DayNumber { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    //public DateTime? LastUpdatedAt { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
     public int Status { get; set; }
 
-    public int RowVer { get; set; }
+   // public int RowVer { get; set; }
 
    // public virtual Compaignexecutionschedule CompaignSchedule { get; set; } = null!;
 }

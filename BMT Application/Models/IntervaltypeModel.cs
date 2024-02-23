@@ -15,13 +15,13 @@ public partial class IntervaltypeModel : BaseModel
 
     public byte? SortOrder { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    //public DateTime? LastUpdatedAt { get; set; }
 
     public int? Status { get; set; }
 }
