@@ -117,8 +117,8 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
             performance: data.performance,
             primaryContact: data.primaryContact,
             violations: data.violations,
-            status: globalutil.dastatuses().find((item) => item.id === data.status)
-              ? globalutil.dastatuses().find((item) => item.id === data.status).name
+            status: globalutil.statuses().find((item) => item.id === data.status)
+              ? globalutil.statuses().find((item) => item.id === data.status).name
               : '',
             createdAt: formatDate(data.createdAt),
             // lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
@@ -342,7 +342,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                     label="Status"
                     icon={cilFlagAlt}
                     id="status"
-                    options={globalutil.dastatuses()}
+                    options={globalutil.statuses()}
                     className="form-control item form-select"
                     value={filters.status}
                     disableOption="Select Status"

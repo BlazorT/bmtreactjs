@@ -2512,9 +2512,23 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 @media only screen and (min-width: 200px) and (max-width: 767px) {
-  .ContainerView {
-    margin-top: 5em;
+  .card-deck{
+      display:block!important;
   }
+  
+  button {
+    margin-top: 10px;
+    padding: 4px 10px!important;
+    margin-right: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  /*.ContainerView {
+    margin-top: 5em;
+  }*/
   .carousalImg {
     height: 100% !important;
   }
@@ -2561,7 +2575,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
     width: 83% !important;
   }
   .card-body img {
-    width: 4em !important;
+    width: 10em !important;
   }
   .DSPLandingproceedView {
     position: relative !important;

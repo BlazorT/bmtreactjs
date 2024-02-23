@@ -181,7 +181,7 @@ export const getDaAppllyInputs = (
     label: 'Status',
     icon: cilInfo,
     id: 'status',
-    options: globalutil.dastatuses(),
+    options: globalutil.statuses(),
     className: 'form-control item form-select',
     value: daUserData.status,
     name: 'status',

@@ -65,8 +65,8 @@ const DeliveryAssociates = () => {
       state: data.issuingstate,
       lastUpdatedAt: formatDate(data.createdAt),
       lastUpdated: data.lastUpdatedAt,
-      daStatus: globalutil.dastatuses().find((item) => item.id === data.status)
-        ? globalutil.dastatuses().find((item) => item.id === data.status).name
+      daStatus: globalutil.statuses().find((item) => item.id === data.status)
+        ? globalutil.statuses().find((item) => item.id === data.status).name
         : '',
       status: data.status,
       fleet: data.fleet,

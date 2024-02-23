@@ -36,17 +36,25 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="4dspsDb\**" />
+    <Compile Remove="ClientApp\src\pages\Inventory\**" />
+    <Compile Remove="ClientApp\src\pages\Workflow\**" />
     <Compile Remove="COM.Blazor.API\**" />
     <Compile Remove="ServiceAgent\Interfaces\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="4dspsDb\**" />
+    <Content Remove="ClientApp\src\pages\Inventory\**" />
+    <Content Remove="ClientApp\src\pages\Workflow\**" />
     <Content Remove="COM.Blazor.API\**" />
     <Content Remove="ServiceAgent\Interfaces\**" />
     <EmbeddedResource Remove="4dspsDb\**" />
+    <EmbeddedResource Remove="ClientApp\src\pages\Inventory\**" />
+    <EmbeddedResource Remove="ClientApp\src\pages\Workflow\**" />
     <EmbeddedResource Remove="COM.Blazor.API\**" />
     <EmbeddedResource Remove="ServiceAgent\Interfaces\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="4dspsDb\**" />
+    <None Remove="ClientApp\src\pages\Inventory\**" />
+    <None Remove="ClientApp\src\pages\Workflow\**" />
     <None Remove="COM.Blazor.API\**" />
     <None Remove="ServiceAgent\Interfaces\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
@@ -87,7 +95,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />
     <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />
+    <None Remove="ClientApp\src\pages\Inventory\InventoryManagement.js" />
+    <None Remove="ClientApp\src\pages\Workflow\WorkFlowFieldMapping.js" />
+    <None Remove="ClientApp\src\pages\Workflow\WorkFlowList.js" />
+    <None Remove="ClientApp\src\pages\Workflow\WorkFlowSubTask.js" />
+    <None Remove="ClientApp\src\pages\Workflow\WorkFlowTask.js" />
   </ItemGroup>
 
   <ItemGroup>

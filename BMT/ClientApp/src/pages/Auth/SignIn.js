@@ -122,7 +122,7 @@ function SignIn() {
     };
 
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
-
+    console.log(menuRes, 'menusRes');
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));
