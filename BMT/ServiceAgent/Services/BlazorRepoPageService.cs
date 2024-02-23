@@ -975,6 +975,7 @@ namespace Blazor.Web.UI.Services
                                     Name = "" + dr["MenuName"],
                                     ActionName = "" + dr["ActionName"],
                                     ParentId = Convert.ToInt32(dr["ParentId"]),
+                                    Description = "" + dr["Description"],                                    
                                     SortOrder = Convert.ToInt32(dr["SortOrder"]),
                                     ParentMSortOrder = Convert.ToInt32(dr["ParentMSortOrder"]),
                                     submenuId = Convert.ToInt32(dr["SubMenuId"]),
