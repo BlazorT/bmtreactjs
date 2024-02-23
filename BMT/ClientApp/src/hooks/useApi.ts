@@ -17,7 +17,7 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
   const [data, setData] = useState<T | null>(initialData || null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+ // alert(url);
   const showToast = useShowToast();
 
   const postData = async (postData: ApiPostDataType<T>) => {

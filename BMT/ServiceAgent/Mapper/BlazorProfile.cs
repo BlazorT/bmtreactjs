@@ -12,6 +12,7 @@ namespace com.blazor.bmt
             //CreateMap<DspModel, DspViewModel>();
             //CreateMap<DsppartnerModel, DsppartnerViewModel>();
             CreateMap<StateModel, StatesViewModel>();
+           
             CreateMap<CountryModel, CountryViewModel>();
             //CreateMap<CategoryModel, CategoryViewModel>();
             CreateMap<CityModel, CityViewModel>();

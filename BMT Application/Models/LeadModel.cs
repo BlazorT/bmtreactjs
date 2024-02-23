@@ -33,15 +33,15 @@ public partial class LeadModel : BaseModelTransactions
 
     public DateTime? ApproveTime { get; set; }
 
-    public int? LastUpdatedBy { get; set; }
+    //public int? LastUpdatedBy { get; set; }
 
-    public DateTime? LastUpdatedAt { get; set; }
+    //public DateTime? LastUpdatedAt { get; set; }
 
-    public int? CreatedBy { get; set; }
+    //public int? CreatedBy { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
 
-    public int RowVer { get; set; }
+    //public int RowVer { get; set; }
 
     public int Status { get; set; }
 

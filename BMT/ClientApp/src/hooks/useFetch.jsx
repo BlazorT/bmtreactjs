@@ -32,7 +32,7 @@ function useFetch() {
     abortControllerRef.current = abortController;
 
     const fullUrl = `${process.env.REACT_APP_API_BASE_URL || ''}${url}`;
-    alert(fullUrl);
+   // alert(fullUrl);
 
     try {
       loading.current = true;

@@ -36,27 +36,27 @@ function EmailForgotPassword(prop) {
         password: '',
         rowVer: 0,
         status: 0,
-        createdAt: moment().utc().format(),
+        createdAt: moment().utc().add(-5,'y').format(),
         createdBy: 0,
       };
-
+      console.log(forgotPassword);
       const emailRes = await postData(forgotPassword);
       console.log({ emailRes });
 
-      if (emailRes.status === true) {
+      if (emailRes!= null && emailRes.status === true) {
         setToken(emailRes.data.token);
         showToast(
           `Token successfully sent to ${email}, please check your email for further instructions.`,
         );
         setOnTaskName('securityCode');
-      } else {
+      } else if (emailRes != null) {
         if (emailRes.message === '') showToast('Email does not exist or in valid', 'error');
         else showToast(emailRes.message, 'error');
       }
     }
   };
 
-  const handleForotPassword = (event) => {
+  const handleForgotPassword = (event) => {
     setEmail(event.target.value.replace(/\s/g, ''));
   };
 
@@ -80,7 +80,7 @@ function EmailForgotPassword(prop) {
           label="Email"
           value={email}
           autoComplete="off"
-          onChange={handleForotPassword}
+          onChange={handleForgotPassword}
           icon={cilEnvelopeClosed}
           type="text"
           id="email"
