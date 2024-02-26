@@ -75,7 +75,7 @@ const Users: React.FC = () => {
       lastUpdatedAt: data.lastUpdatedAt,
       status: data.status,
     }));
-
+    console.log(mappedArray,'users')
     setRows(mappedArray);
   };
 
@@ -120,7 +120,7 @@ const Users: React.FC = () => {
       </AppContainer>
       <AppContainer>
         <DataGridHeader
-          title="DSP Users"
+          title="BMT Users"
           addButton={pageRoles.canAdd === 1 ? 'User' : ''}
           addBtnClick={pageRoles.canAdd === 1 ? () => navigate('/UserRegister') : undefined}
           otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}

@@ -121,7 +121,7 @@ function SignIn() {
     const menuBody = {
       roleId: loginRes.current?.data.roleId.toString(),
     };
-
+    console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
    // console.log(menuRes, 'menusRes');
    // console.log(menuRes.current, menuErr);
@@ -158,6 +158,7 @@ function SignIn() {
         console.log(getMenus(),'menuss');
         console.log(getUtils(),'utilss');
         setModalOpen(true);
+        ClickProceed();
         navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {
         dispatch(

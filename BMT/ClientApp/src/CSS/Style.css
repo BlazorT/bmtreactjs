@@ -506,12 +506,25 @@ button[type='button']:hover {
   font-weight: 400;
 }
 .basic-drop-shadow {
-  box-shadow: 0 0 1px;
-  padding: 15px;
+ /* box-shadow: 0 0 1px;*/
+ /* padding: 15px;*/
   color: #d8dbe0;
   padding-right: 1.25em;
   margin-left: 14px;
-  width: 31%;
+  width: 100%;
+}
+.txtFont{
+    font-size:1.4em;
+}
+.p-w-md {
+  padding: 0.8em;
+}
+.css-10vg0a6-MuiResponsiveChart-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+.m-b-xs{
+    font-size:14px;
 }
 .txt-FontWeight {
   font-weight: 700;
@@ -3340,4 +3353,7 @@ fieldset.legend {
   font-size: 14px;
   font-weight: 200;
   line-height: 1.2 !important;
+}
+.white th{
+    color:white;
 }

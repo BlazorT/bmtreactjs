@@ -16,13 +16,19 @@ export const useFetchUsers = () => {
     const userBody = {
       userId: user.userId.toString(),
       roleId: role,
-      dspid: user.roleId === 1 ? 0 : user.dspId,
+      orgId: user.roleId === 1 ? 0 : user.orgId,
       email: '',
+      userCode: '',
       userName: '',
       lastName: '',
       password: '',
-      primaryContact: '',
+      primaryContact: 1,
+      rowVer: 0,
+      genderId: '',
+      securityToken: '',
       businesstype: 0,
+      dob: moment().utc().format(),
+      registrationTime: moment().utc().format(),
       stateId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       keyword: filters ? filters.keyword : '',
@@ -33,7 +39,7 @@ export const useFetchUsers = () => {
         ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : moment().utc().format(),
     };
-
+    console.log(userBody,'body')
     const res = await postData(userBody);
     // console.log({ res });
     if (res.data.status) {
