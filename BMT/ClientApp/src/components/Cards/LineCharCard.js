@@ -10,7 +10,7 @@ const LineCharCard = (prop) => {
     'Jan',
     'Feb',
     'Mar',
-    'Aril',
+    'April',
     'May',
     'June',
     'July',
