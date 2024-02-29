@@ -14,24 +14,25 @@ export const useFetchUsers = () => {
 
   const fetchUsers = async (role, filters) => {
     const userBody = {
-      userId: user.userId.toString(),
-      roleId: role,
-      orgId: user.roleId === 1 ? 0 : user.orgId,
+      // userCode: user.userId.toString(),
+      id: 0,
+      roleId: role,     
+      orgId: user.orgId === 1 ? 0 : user.orgId,
       email: '',
       userCode: '',
       userName: '',
       lastName: '',
+      firstName: '',
       password: '',
-      primaryContact: 1,
+      contact: "",
       rowVer: 0,
-      genderId: '',
-      securityToken: '',
-      businesstype: 0,
-      dob: moment().utc().format(),
+      genderId: 0,
+      securityToken: '',      
+     // dob: moment().utc().format(),
       registrationTime: moment().utc().format(),
-      stateId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
+     cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
-      keyword: filters ? filters.keyword : '',
+     // keyword: filters ? filters.keyword : '',
       createdAt: filters
         ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
         : moment().subtract(1, 'year').utc().format(),
@@ -41,7 +42,7 @@ export const useFetchUsers = () => {
     };
     console.log(userBody,'body')
     const res = await postData(userBody);
-    // console.log({ res });
+     alert(JSON.stringify( res) );
     if (res.data.status) {
       return res.data.data;
     } else {
