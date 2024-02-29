@@ -38,7 +38,7 @@ import useApi from 'src/hooks/useApi';
 
 const DAApplyForm = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Apply Form (DA)',
+    (item) => item.name === 'BMT Subscription',
   );
   const user = useSelector((state) => state.user);
 
@@ -353,7 +353,7 @@ const DAApplyForm = () => {
     <React.Fragment>
       <AppContainer>
         <DataGridHeader
-          title="DSP Basic Information"
+          title="Organization Basic Information"
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}
         />
@@ -362,56 +362,7 @@ const DAApplyForm = () => {
           <React.Fragment>
             <Form name="apply-da-form">
               <Inputs inputFields={daApplyInputs} yesFn={goToAnotherPage} submitFn={submitDA}>
-                <AppContainer>
-                  <DataGridHeader
-                    title="Identification"
-                    otherControls={[{ icon: cilChevronBottom, fn: toggleOther }]}
-                    filterDisable={true}
-                  />
-                  {showOther && (
-                    <div className="show-stock">
-                      <div className="MainHeading">
-                        <label className="lblHeadingIdentification labelName"> SSN </label>
-                      </div>
-                      <Inputs inputFields={daAppllySsnInputs} isBtn={false} />
-
-                      <div className="MainHeading">
-                        <label className="lblHeadingIdentification labelName"> ID </label>
-                      </div>
-                      <Inputs inputFields={daAppllyIDInputs} isBtn={false} />
-
-                      <div className="MainHeading">
-                        <label className="lblHeadingIdentification labelName">
-                          Birth Certificate
-                        </label>
-                      </div>
-                      <Inputs inputFields={daAppllyBirthInputs} isBtn={false} />
-                      <div className="mb-0 dashboard-table mt-2">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <div className="form-outline text-start">
-                              <label
-                                htmlFor="additionalInfo"
-                                className="login_label labelName mb-2"
-                              >
-                                Additional Information
-                              </label>
-                              <textarea
-                                value={daIdentificationData.additionalInfo}
-                                onChange={handleDAIdentification}
-                                className="FullWidth form-control"
-                                rows="3"
-                                name="additionalInfo"
-                                id="additionalInfo"
-                                placeholder="Additional information"
-                              ></textarea>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </AppContainer>
+                
                 <CFormCheck
                   className="mt-3 d-flex flex-row justify-content-center"
                   title="Are you agree for this?"

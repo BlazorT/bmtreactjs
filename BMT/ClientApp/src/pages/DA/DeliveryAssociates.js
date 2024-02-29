@@ -20,58 +20,60 @@ import globalutil from 'src/util/globalutil';
 import { getDaFiltersFields } from 'src/configs/FiltersConfig/daFilterConfig';
 import { getdaAssociatesCols } from 'src/configs/ColumnsConfig/daAssociatesCols';
 
-import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import { useFetchOrganization } from 'src/hooks/api/useFetchOrganization';
 import AppContainer from 'src/components/UI/AppContainer';
 
 const DeliveryAssociates = () => {
   dayjs.extend(utc);
 
   useEffect(() => {
-    getDasList();
+    getOrgsList();
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Delivery Associates',
+    (item) => item.name === 'Organization Users',
   );
   const navigate = useNavigate();
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
-  const [daData, setDaData] = useState([]);
+  const [orgData, setOrgData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
 
   const [filters, setFilters] = useState({
-    keyword: '',
+    name: '',
     state: '',
-    boardingStatus: '',
-    performance: '',
+    status: '',
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
   const [rows, setRows] = useState([]);
 
-  const { data, loading, fetchUsers: getUserbyRole } = useFetchUsers();
+  const { data, loading, fetchOrganization: getUserbyRole } = useFetchOrganization();
 
-  const getDasList = async (filter) => {
+  const getOrgsList = async (filter) => {
     const usersList = await getUserbyRole(3, filter);
 
-    // console.log({ usersList });
-    setDaData(usersList);
+     console.log({ usersList });
+    setOrgData(usersList);
 
     const mappedArray = usersList.map((data) => ({
       id: data.id,
-      firstName: data.firstName,
-      code: data.userId,
-      state: data.issuingstate,
-      lastUpdatedAt: formatDate(data.createdAt),
-      lastUpdated: data.lastUpdatedAt,
-      daStatus: globalutil.statuses().find((item) => item.id === data.status)
+      name: data.name,
+      cityId: data.cityId,
+      compaignsCount: data.compaignsCount,
+      currencyName: data.currencyName,
+      state: data.stateId,
+      createdAt: data.createdAt,
+      expiryTime: data.expiryTime,
+      status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
         : '',
-      status: data.status,
-      fleet: data.fleet,
+      //status: data.status,
     }));
-
+    console.log(mappedArray, 'org');
     setRows(mappedArray);
   };
 
@@ -104,19 +106,18 @@ const DeliveryAssociates = () => {
   };
 
   const handleReset = () => {
-    getDasList();
+    getOrgsList();
     setFilters({
-      keyword: '',
+      name: '',
       state: '',
-      boardingStatus: '',
-      performance: '',
+      status: '',
       createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
 
-  const daFilterFields = getDaFiltersFields(filters, changeFilter);
-  const daAssociatesCols = getdaAssociatesCols(getDasList, daData, pageRoles);
+  const orgFilterFields = getDaFiltersFields(filters, changeFilter);
+  const daAssociatesCols = getdaAssociatesCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {
     return <Loading />;
@@ -136,20 +137,20 @@ const DeliveryAssociates = () => {
               <CustomFilters
                 filters={filters}
                 changeFilter={changeFilter}
-                fetching={getDasList}
+                fetching={getOrgsList}
                 handleReset={handleReset}
-                filterFields={daFilterFields}
+                filterFields={orgFilterFields}
               />
             )}
           </AppContainer>
 
           <AppContainer>
             <DataGridHeader
-              title="Delivery Associates"
-              addButton={pageRoles.canAdd === 1 ? 'DA' : ''}
+              title="Organization Users"
+              addButton={pageRoles.canAdd === 1 ? 'Organization' : ''}
               addBtnClick={() => navigate('/applyForm')}
               otherControls={[
-                { icon: cilCalendarCheck, fn: NoticeModal },
+              /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
                 { icon: cilChevronBottom, fn: toggleGrid },
               ]}
             />
@@ -161,12 +162,12 @@ const DeliveryAssociates = () => {
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
                 sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
-                summary={[
-                  {
-                    field: 'status',
-                    aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
-                  },
-                ]}
+                //summary={[
+                //  {
+                //    field: 'status',
+                //    aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
+                //  },
+                //]}
                 hiddenCols={{
                   columnVisibilityModel: {
                     status: false,

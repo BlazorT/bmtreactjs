@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CCol, CRow } from '@coreui/react';
-import { CFormCheck } from '@coreui/react';
 
 // Icons
 import { cilChevronBottom } from '@coreui/icons';
@@ -32,7 +30,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
-const UserRegister = () => {
+const OrganizationAdd = () => {
   const location = useLocation();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -53,7 +51,7 @@ const UserRegister = () => {
   const [dspList, setdspList] = useState([]);
   const [isThisBrandnew, setIsThisBrandnew] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
@@ -133,12 +131,12 @@ const UserRegister = () => {
       ...daUserData,
       secondaryContact: daUserData.isWhatsappAsso ? daUserData.primaryContact : '',
       password: btoa(daUserData.password),
-      orgId: parseInt(daUserData.orgId),
+      dspid: parseInt(daUserData.dspid),
       lastUpdatedBy: user.userId,
       lastUpdatedAt: moment().utc().format(),
       remarks: 'created user',
     };
-    setIsLoading(false);
+
     // Upload & Submit
     const fUpload = document.getElementById('fileAvatar');
 
@@ -253,57 +251,8 @@ const UserRegister = () => {
           />
           <Form name="da-user-form">
             {showForm && (
-                <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser} >
-                  <CRow className="w-50 align-self-center mt-3 mb-3">
-                    <label htmlFor="completed" className="login_label labelName m-0 text-white mb-2">
-                      Gender
-                    </label>
-                    <CCol md={6}>
-                      <input
-                        type="radio"
-                        id="completed"
-                        name="isRequired"
-
-                        value={0}
-
-                      />
-                      <label htmlFor="completed" className="login_label labelName m-0 text-white ">
-                        Male
-                      </label>
-                    </CCol>
-                    <CCol md={6}>
-                      <input
-                        type="radio"
-                        id="optional"
-                        name="isRequired"
-                        value={1}
-
-                      />
-                      <label htmlFor="optional" className="login_label labelName m-0 text-white ">
-                        FeMale
-                      </label>
-                    </CCol>
-                  </CRow>
-                  <CFormCheck
-                    name="isTermsAccepted"
-                    checked={daUserData.isTermsAccepted}
-                    onChange={handleUserInput}
-                    className="d-flex flex-row justify-content-center"
-                    id="isTermsAccepted"
-                    required
-                    label={
-                      <span>
-                        By providing this info, you agree to our terms & conditions, read our{' '}
-                        <strong className="lblTerms" onClick={TermsModal}>
-                          Terms & Conditions (EULA)
-                        </strong>
-                      </span>
-                    }
-                  />
-                </Inputs>
-
-              )}
-              
+              <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser} />
+            )}
           </Form>
           <EmailBrandNewModal
             isOpen={modalOpen}
@@ -320,4 +269,4 @@ const UserRegister = () => {
   );
 };
 
-export default UserRegister;
+export default OrganizationAdd;

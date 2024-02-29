@@ -3,10 +3,10 @@ import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
 
 export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'firstName',
-    headerName: 'Name',
+    field: 'name',
+    headerName: 'Organization Name',
     flex: 1,
-    minWidth: 100,
+    minWidth: 160,
     editable: false,
     filterable: true,
     sortable: true,
@@ -14,8 +14,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'code',
-    headerName: 'Code',
+    field: 'cityId',
+    headerName: 'City',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -25,8 +25,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'state',
-    headerName: 'State ',
+    field: 'compaignsCount',
+    headerName: 'Campaigns # ',
     flex: 1,
     minWidth: 60,
     // Width: 100,
@@ -37,8 +37,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'status',
-    headerName: 'Status',
+    field: 'currencyName',
+    headerName: 'Currency',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -49,8 +49,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'daStatus',
-    headerName: 'Status',
+    field: 'createdAt',
+    headerName: 'Register Date',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -61,8 +61,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'lastUpdatedAt',
-    headerName: 'Registration Date',
+    field: 'expiryTime',
+    headerName: 'Expiry Time',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -73,19 +73,7 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     hideable: false,
     headerClassName: 'custom-header-data-grid',
   },
-  {
-    field: 'lastUpdated',
-    headerName: 'Registration Date',
-    flex: 1,
-    minWidth: 120,
-    editable: false,
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: true,
-    hide: true,
-    hideable: false,
-    headerClassName: 'custom-header-data-grid',
-  },
+ 
   {
     field: 'imageUrl',
     headerName: 'Action',

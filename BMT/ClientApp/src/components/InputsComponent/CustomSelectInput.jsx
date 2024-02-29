@@ -53,8 +53,8 @@ const CustomSelectInput = (prop) => {
             <option className="text-dim" value="">
               {disableOption ? disableOption : 'Please select an option'}
             </option>
-            <optgroup className="option-border"></optgroup>
-            {options.map((option, index) => (
+           {/* <optgroup className="option-border"></optgroup>*/}
+            {Array.isArray(options)&&options.map((option, index) => (
               <React.Fragment key={index}>
                 {/* <optgroup className="padding-options"></optgroup> */}
                 <option value={option.id ? option.id : index}>

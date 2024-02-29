@@ -21,10 +21,10 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn }) => {
   const getColWidth = (inputName) => {
     const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo'];
     const smallWidthFields = [
-      'primaryContact',
+      /*'primaryContact',*/
       'isWhatsAppAsso',
       'isWhatsappAsso',
-      'contact',
+      /*'contact',*/
       'hasValidDrivingLicense',
       'licenseNo',
     ];
