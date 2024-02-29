@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { CCol, CRow, CContainer, CCollapse } from '@coreui/react';
-import { cilBell, cilTruck, cilBarChart, cilFire, cilSpeedometer } from '@coreui/icons';
+import { cilBell, cilTruck, cilChevronBottom, cilBarChart, cilFire, cilSpeedometer } from '@coreui/icons';
 import LineCharCard from 'src/components/Cards/LineCharCard';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
@@ -14,6 +14,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 const Dashboard = (prop) => {
   const [operationsVisible, setOperationVisible] = useState(true);
   const [peopleVisible, setPeopleVisible] = useState(true);
+  const [showFilters, setshowFilters] = useState(false);
 
   const user = useSelector((state) => state.user);
   const { title, attributesStatus2, attributesStatus3 } = prop;
@@ -124,11 +125,10 @@ const Dashboard = (prop) => {
       align: 'center',
 
     },
-    
-
-
-
   ]);
+  const toggleStock = () => {
+    setshowFilters((prev) => !prev);
+  };
   return (
       <>
    
@@ -191,52 +191,57 @@ const Dashboard = (prop) => {
             </div>
           </div>
     
-        </div>
-      
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="ibox">
-                <div className="ibox-content DashboardGrid">
-                  <div className="row">
-                <h3 className="txtFont">Last 12 Month Funds Data</h3>
-                  </div>
-                  <div className="row">
-                   
-                <div className="bg_Div mb-2 d-flex flex-column">
-                  <DataGridHeader title="Campaign Report" />
-                  <div className="show-stock">
-                    <div className="row ">
-                      <div className="col-md-12 col-xl-12">
-                        <CustomDatagrid
-                          rows={vehDisprows}
-                          columns={vehDispcolumns}
-                          rowHeight={55}
-                          pagination={true}
-                        />
+      </div>
+      <DataGridHeader
+        title="Last 12 Month Funds Data"
+        otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+      />
+      {showFilters && (
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="ibox">
+              <div className="ibox-content DashboardGrid">
+                {/*<div className="row">*/}
+                {/*  <h3 className="txtFont">Last 12 Month Funds Data</h3>*/}
+                {/*</div>*/}
+                <div className="row">
+                  <div className="bg_Div mb-2 d-flex flex-column">
+                    <DataGridHeader title="Campaign Report" />
+                    <div className="show-stock">
+                      <div className="row ">
+                        <div className="col-md-12 col-xl-12">
+                          <CustomDatagrid
+                            rows={vehDisprows}
+                            columns={vehDispcolumns}
+                            rowHeight={55}
+                            pagination={true}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                           
-                      {/*<table className="table ibox-content DashboardGrid table-striped" id="DashboardTable">*/}
-                      {/*  <thead >*/}
-                      {/*    <tr className="white">*/}
-                      {/*      <th scope="col" >Month</th>*/}
-                      {/*      <th scope="col">Total Compaigns</th>*/}
-                      {/*      <th scope="col">New Compaigns</th>*/}
-                      {/*      <th scope="col">Total Funds</th>*/}
-                      {/*      <th scope="col">Increase  (%)</th>*/}
-                      {/*    </tr>*/}
-                      {/*  </thead>*/}
-                      {/*  <tbody id="gridBody" className="white" >*/}
-                      {/*  </tbody>*/}
-                      {/*</table>*/}
-                   
-                  </div>
+
+                  {/*<table className="table ibox-content DashboardGrid table-striped" id="DashboardTable">*/}
+                  {/*  <thead >*/}
+                  {/*    <tr className="white">*/}
+                  {/*      <th scope="col" >Month</th>*/}
+                  {/*      <th scope="col">Total Compaigns</th>*/}
+                  {/*      <th scope="col">New Compaigns</th>*/}
+                  {/*      <th scope="col">Total Funds</th>*/}
+                  {/*      <th scope="col">Increase  (%)</th>*/}
+                  {/*    </tr>*/}
+                  {/*  </thead>*/}
+                  {/*  <tbody id="gridBody" className="white" >*/}
+                  {/*  </tbody>*/}
+                  {/*</table>*/}
+
                 </div>
               </div>
             </div>
-            </div>
+          </div>
+        </div>
+      )}
+        
           </>
   );
 };
