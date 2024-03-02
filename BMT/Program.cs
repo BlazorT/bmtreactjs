@@ -80,20 +80,6 @@ services.AddScoped<ICitiesService, CitiesService>();
 services.AddScoped<IUsersService, UsersService>();
 services.AddScoped<IAppLogService, AppLogService>();
 services.AddScoped<IAuditLogService, AuditLogService>();
-//services.AddScoped<IProductsService, ProductsService>();
-//services.AddScoped(typeof(IInventoryDetailService), typeof(InventoryDetailService));
-//services.AddScoped(typeof(IIntegrationService), typeof(IntegrationService));
-//services.AddScoped(typeof(IVehicleInspectionService), typeof(VehiclesInspectionsService));
-//services.AddScoped(typeof(IInspectionItemsService), typeof(InspectionItemsService));
-//services.AddScoped(typeof(IInspectionReportService), typeof(InspectionReportService));
-//services.AddScoped<IWorkflowTasksService, WorkflowTasksService>();
-//services.AddScoped<IWFFieldService, WFFieldService>();
-//services.AddScoped<IDispatchmentService, DispatchmentService>();
-//services.AddScoped<IDspTablesService, DspTablesService>();
-
-//services.AddScoped<IFleetrosterplanService, FleetrosterplanService>();
-//services.AddScoped<IRosterplanService, RosterplanService>();
-//services.AddScoped<IShiftsService, ShiftsService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();
@@ -104,19 +90,10 @@ services.AddScoped<IBlazorRepoPageService, BlazorRepoPageService>();
 services.AddScoped<INotificationPageService, NotificationPageService>();
 //services.AddScoped<IProductPageService, ProductsPageService>();
 services.AddScoped<IBlazorUtilPageService, BlazorUtilPageService>();
-//services.AddScoped<IEnumPageService, EnumPageService>();
-////services.AddScoped<IUserPageService, UserService>();
-services.AddScoped<IOrgPageService, OrgPageService>();
-//services.AddScoped(typeof(IInventoryDetailPageService), typeof(InventoryDetailPageService));
-//services.AddScoped(typeof(IIntegrationPageService), typeof(IntegrationPageService));
-//services.AddScoped(typeof(IVehicleInspectionPageService), typeof(VehicleInspectionPageService));
 
+services.AddScoped<IOrgPageService, OrgPageService>();
 //services.AddScoped(typeof(IInspectionReportPageService), typeof(InspectionReportPageService));
 services.AddScoped(typeof(IMediaContentPageService), typeof(MediaContentPageService));
-//services.AddScoped(typeof(IWorkflowPageService), typeof(WorkflowPageService));
-//services.AddScoped(typeof(IRosterPlanPageService), typeof(RosterPlanPageService));
-//services.AddScoped(typeof(IDispatchmentPageService), typeof(DispatchmentPageService));
-//services.AddScoped(typeof(IBlazorUtilPageService), typeof(BlazorUtilPageService));
 
 services.AddScoped<IAuthorizationHandler, RolesAuthorizationHandler>();
 services.AddDbContext<com.blazor.bmt.infrastructure._bmtContext>(options => options.UseMySQL(BlazorConstant.CONNECTION_STRING).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);  //Cannot find UseMysql*
