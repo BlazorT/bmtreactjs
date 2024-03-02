@@ -64,7 +64,6 @@
     <Compile Remove="Controllers\DAController.cs" />
     <Compile Remove="Controllers\DispatchmentController.cs" />
     <Compile Remove="Controllers\InventoryController.cs" />
-    <Compile Remove="Controllers\LogController.cs" />
     <Compile Remove="Controllers\ReportController.cs" />
     <Compile Remove="Controllers\RosterPlanController.cs" />
     <Compile Remove="Controllers\VehiclesController.cs" />
