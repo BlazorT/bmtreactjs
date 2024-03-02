@@ -19,7 +19,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     ),
   },
   {
-    field: 'Name',
+    field: 'firstName',
     headerName: 'Name',
     flex: 1,
     minWidth: 80,

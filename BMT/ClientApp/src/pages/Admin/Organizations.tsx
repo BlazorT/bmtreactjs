@@ -13,7 +13,7 @@ import utc from 'dayjs/plugin/utc';
 import { getUsersListCols } from 'src/configs/ColumnsConfig/usersListCols';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import { getUsersFiltersFields } from 'src/configs/FiltersConfig/userFilterConfig';
-import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import { useFetchUsers } from 'src/hooks/api/useFetchOrg';
 import AppContainer from 'src/components/UI/AppContainer';
 import { RootState } from 'src/store';
 
@@ -62,7 +62,7 @@ const Users: React.FC = () => {
   const fetching = async (filter?: any) => {
     const usersList = await fetchUsers(0, filter);
     setUsersData(usersList);
-    //formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
+    formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
   };
 
   const formatApiDataAsRows = (apiData: any[]) => {
