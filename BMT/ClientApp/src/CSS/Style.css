@@ -424,7 +424,7 @@ button[type='button']:hover {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgb(198, 77, 83)'/></svg>");
 }
 .form-switch {
-  float: inline-end;
+ /* float: inline-end;*/
   margin-top: 3px;
 }
 .FloatRight0 {
@@ -3356,4 +3356,8 @@ fieldset.legend {
 }
 .white th{
     color:white;
+}
+.networkTitle {
+  background: rgb(3 28 52) !important;
+  padding:0.5em;
 }

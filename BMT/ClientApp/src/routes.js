@@ -11,7 +11,7 @@ const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
 const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
 const WorkFlow = React.lazy(() => import('./pages/Workflow/WorkFlowList'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
-const SingleDispatchment = React.lazy(() => import('./pages/Admin/SingleDispatchment'));
+const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
 const DeliveryAssociates = React.lazy(() => import('./pages/DA/DeliveryAssociates'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
@@ -108,7 +108,7 @@ export const rolesRoutes = [
   { path: '/Notification', name: 'Notification', element: Notification },
   { path: '/Products', name: 'Products', element: Products },
   { path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
-  { path: '/SingleDispatchment', name: 'SingleDispatchment', element: SingleDispatchment },
+  { path: '/networksetting', name: 'networksetting', element: networksetting },
   // { path: '/Expression', name: 'Expression', element: Expression },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
