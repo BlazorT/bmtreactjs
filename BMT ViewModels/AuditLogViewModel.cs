@@ -9,7 +9,8 @@
         public string KeyValue { get; set; } = null!;
 
         public string AttributeName { get; set; } = null!;
-
+        public string? entityName  { get; set; } = null!;
+        public string? Username { get; set; } = null!;
         public string OldValue { get; set; } = null!;
 
         public string NewValue { get; set; } = null!;

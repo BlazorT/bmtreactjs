@@ -7,9 +7,8 @@ using com.blazor.bmt.util;
 using com.blazor.bmt.ui.interfaces;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Blazor.Web.Application.Interfaces;
+
+using Blazor.Web.UI.Interfaces;
 
 namespace com.blazor.bmt.controllers
 {
@@ -57,7 +56,7 @@ namespace com.blazor.bmt.controllers
               
                     try
                     {
-                        response.data= await _blazorRepoPageService.GetLogDetailsData(vm);                   
+                        response.data= await _appLogPageService.GetAppLogByUser(vm.UserId);                   
                         response.status = true;
                     }
                     catch (Exception ex)
