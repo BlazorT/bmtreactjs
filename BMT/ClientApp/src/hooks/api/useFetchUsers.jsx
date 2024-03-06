@@ -42,9 +42,9 @@ export const useFetchUsers = () => {
     };
     console.log(userBody,'body')
     const res = await postData(userBody);
-    // alert(JSON.stringify( res) );
+     alert(JSON.stringify( res) );
     if (res.data.status) {
-      return res.data.data;
+      return res.data;
     } else {
       showToast(res.message, 'error');
       return [];

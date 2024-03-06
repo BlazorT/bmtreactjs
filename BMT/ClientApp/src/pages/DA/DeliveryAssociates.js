@@ -26,7 +26,10 @@ import AppContainer from 'src/components/UI/AppContainer';
 const DeliveryAssociates = () => {
   dayjs.extend(utc);
 
+  const [networkTabs,setNetworkTabs]=useState([])
+
   useEffect(() => {
+    
     getOrgsList();
   }, []);
 

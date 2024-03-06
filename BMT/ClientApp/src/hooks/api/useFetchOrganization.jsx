@@ -31,10 +31,10 @@ export const useFetchOrganization = () => {
     };
     console.log(userBody,'body')
     const res = await postData(userBody);
-     alert(JSON.stringify( res) );
+    console.log(( res) );
    // alert((res.data.status) );
-    if (res.data.status) {
-      return res.data.data;
+    if (res.status) {
+      return res.data;
     } else {
       showToast(res.message, 'error');
       return [];
