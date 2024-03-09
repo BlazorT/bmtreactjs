@@ -25,7 +25,7 @@ namespace com.blazor.bmt.controllers
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;      
         #region "Constructor and initialization"
-        public OrganiaztionController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IGlobalNetworkDetailService globalNetworkDetailService IBlazorRepoPageService blazorRepoPageService, IUsersPageService usersPageService, IHttpContextAccessor httpContextAccessor, ILogger<OrganiaztionController> logger,  IMemoryCache cache)
+        public OrganiaztionController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IGlobalNetworkDetailService globalNetworkDetailService, IBlazorRepoPageService blazorRepoPageService, IUsersPageService usersPageService, IHttpContextAccessor httpContextAccessor, ILogger<OrganiaztionController> logger,  IMemoryCache cache)
         {
             _logger = logger;         
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));

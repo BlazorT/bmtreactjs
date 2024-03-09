@@ -8,6 +8,9 @@ using System.Data.SqlClient;
 using com.blazor.bmt.util;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using com.blazor.bmt.core.baseentity;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 
 namespace Blazor.Web.UI.Services
 {
@@ -72,6 +75,68 @@ namespace Blazor.Web.UI.Services
             }
             return reportViewModel.OrderBy(x=>x.OrgId).AsQueryable();
            
+        }
+
+        public async Task<IEnumerable<AuditLogViewModel>> GetAuditLogDetailsData(AuditLogViewModel viewModel) {
+            List<AuditLogViewModel> vList = new List<AuditLogViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrgId", MySqlDbType.Int32);
+                        pOrganizationId.Value = viewModel.OrgId;
+                        parameter.Add(pOrganizationId);
+                        MySqlParameter pEntityid = new MySqlParameter("p_entityid", MySqlDbType.Int32);
+                        pEntityid.Value = viewModel.AuditEntityId == null ? 0 : viewModel.AuditEntityId;
+                        parameter.Add(pEntityid);
+                        MySqlParameter pKeyword = new MySqlParameter("p_keyword", MySqlDbType.VarChar);
+                        pKeyword.Value = ""+viewModel.KeyValue;
+                        parameter.Add(pKeyword);
+                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", MySqlDbType.DateTime);
+                        DateFrom.Value = viewModel.CreatedAt;
+                        parameter.Add(DateFrom);                       
+                        command.CommandText = "spGetAuditLogData";
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.Parameters.AddRange(parameter.ToArray());
+
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
+                        {
+                            while (dr.Read())
+                            {
+                                vList.Add(new AuditLogViewModel
+                                {
+                                    Id = Convert.ToInt64(dr["Id"]),
+                                    AuditEntityId = Convert.ToInt32(dr["AuditEntityId"]),
+                                    KeyValue = dr["KeyValue"].ToString(),
+                                    OldValue = dr["OldValue"].ToString(),
+                                    NewValue = "" + dr["NewValue"],
+                                    Username = "" + dr["LastName"] + " " + dr["MiddleName"],
+                                    entityName = "" + dr["EntityName"],
+                                    CreatedAt = Convert.ToDateTime(dr["CreatedAt"]),
+                                    AttributeName = "" + dr["AttributeName"]
+                                });
+
+                            }
+                        }
+
+
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return vList.AsQueryable();
         }
         public async Task<IEnumerable<ReportCompaignsViewModel>> GetOrgCompaignsReportData(ReportCompaignsViewModel resportViewmodel)
         {
@@ -139,7 +204,7 @@ namespace Blazor.Web.UI.Services
         }
         public async Task<IEnumerable<ReportStatsViewModel>> GetStatsReportData(ReportStatsViewModel stats)
         {
-            IEnumerable<ReportStatsViewModel> reportViewModel = new List<ReportStatsViewModel>();
+            List<ReportStatsViewModel> dList = new List<ReportStatsViewModel>();
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
@@ -162,38 +227,34 @@ namespace Blazor.Web.UI.Services
                         command.CommandType = System.Data.CommandType.StoredProcedure;
                         command.Parameters.AddRange(parameter.ToArray());
 
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
                         {
-                            DataTable dt = new DataTable();
-                            dt.Load(reader);
-                            var statsrs = from sts in dt.AsEnumerable()
-                                        select new ReportStatsViewModel
-                                        {
-                                            MonthName = sts["MName"].ToString(),
-                                            TotalCompaigns = Convert.ToInt32(sts["TotalCompaigns"]),
-                                            CompletedCompaigns = Convert.ToInt32(sts["CompletedCompaigns"]),
-                                            InprogressCompaigns = Convert.ToInt32(sts["InprogressCompaigns"]),
-                                            budget = Math.Round(Convert.ToDouble(sts["budget"]), 2),
-                                            MonthNo = Convert.ToInt32(sts["MNo"])                                           
-                                        };
+                            while (dr.Read())
+                            {
+                                dList.Add(new ReportStatsViewModel
+                                {
 
-                            if (stats != null)
-                                reportViewModel = _mapper.Map<IEnumerable<ReportStatsViewModel>>(statsrs);
+                                    MonthName = dr["MName"].ToString(),
+                                    TotalCompaigns = Convert.ToInt32(dr["TotalCompaigns"]),
+                                    CompletedCompaigns = Convert.ToInt32(dr["CompletedCompaigns"]),
+                                    InprogressCompaigns = Convert.ToInt32(dr["InprogressCompaigns"]),
+                                    budget = Math.Round(Convert.ToDouble(dr["budget"]), 2),
+                                    MonthNo = Convert.ToInt32(dr["MNo"])
+
+                                });
+                            }
+
+
                         }
-
-
                     }
                 }
-
-
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
                 throw ex;
             }
-            return reportViewModel.OrderByDescending(x => x.CreatedAt).AsQueryable();
+            return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
 
         }
         public async Task<LoginViewModel> GetUserVerificationData(UserViewModel model)
