@@ -1637,6 +1637,10 @@ input[type='radio']:checked {
   box-shadow: 0 0 10px;
 }
 @media (min-width: 1710px) and (max-width: 2400px) {
+  .css-wops1b-MuiResponsiveChart-container{
+width:1550px!important;
+height:600px!important;
+  }
   .da-popover:before {
     position: relative;
     /* right: 2vw; */

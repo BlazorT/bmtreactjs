@@ -27,11 +27,12 @@ const LineCharCard = (prop) => {
               {/*<p className="dashboard-light-text ">{item.heading2}</p>*/}
               
               <LineChart
-                width={500}
-                height={300}
+                width={980}
+                height={500}
                 series={[
                   { data: pData, label: 'Notification' },
                   { data: uData, label: 'Funds' },
+
                 ]}
                 xAxis={[{ scaleType: 'point', data: xLabels }]}
               />
