@@ -258,28 +258,7 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-        [HttpPost("integrationservices")]
-        [HttpGet("integrationservices")]
-        [Route("integrationservices")]
-        //public async Task<ActionResult> GetIntegrationServicesData([FromBody] IntegrationservicesettingViewModel vm)
-        //{
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
-        //    BlazorApiResponse response = new BlazorApiResponse();
-        //    try
-        //    {
-        //        response.status = true;
-        //        response.data = await _integrationPageService.GetIntegrationServicesAllAsync(vm);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.status = false;
-        //        response.errorCode = "408";
-        //        response.message = ex.Message;
-        //        _logger.LogError(ex.StackTrace);
-        //    }
-        //    return Ok(response);
-
-        //}
+    
         [HttpPost("rolemenus")]
         [HttpGet("rolemenus")]
         [Route("rolemenus")]
@@ -352,45 +331,10 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        [HttpGet("shifts")]
-        [HttpPost("shifts")]
-        [Route("shifts")]
-        //public async Task<ActionResult> loadShifts([FromBody] ShiftModel sm)
-        //{
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-        //    try
-        //    {
-        //        var previousRequest = _cache.Get("" + this.User.Identity.Name + sm.Dspid + Request.Path);
-        //        if (previousRequest == null)
-        //        {
-        //            blazorApiResponse.data = await _shiftsService.GetShiftsAllFiltersAsync(sm);
-        //            blazorApiResponse.status = true;
-
-        //            _cache.Set("" + this.User.Identity.Name + sm.Dspid + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-        //        }
-        //        else
-        //        {
-        //            blazorApiResponse.status = true;
-        //            //blazorApiResponse.effectedRows = previousRequest..cu(previousRequest as List<UsersViewModel>).Count;
-        //            blazorApiResponse.errorCode = "407";
-        //            blazorApiResponse.data = previousRequest;
-        //            blazorApiResponse.message = "Too many requests, must be 40 Seconds interval between next request!";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        blazorApiResponse.status = false;
-        //        blazorApiResponse.errorCode = "408";
-        //        blazorApiResponse.message = ex.Message;
-        //        _logger.LogError(ex.StackTrace);
-        //    }
-        //    return Ok(blazorApiResponse);
-        //    // .ToArray();
-        //}
-        [HttpGet("onlineusers")]
-        [HttpPost("onlineusers")]
-        [Route("onlineusers")]
+       
+        //[HttpGet("onlineusers")]
+        //[HttpPost("onlineusers")]
+        //[Route("onlineusers")]
         //public async Task<ActionResult> loadOnlineUsers([FromBody] OnlineUserViewModel ouvm)
         //{
         //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
@@ -424,9 +368,9 @@ namespace com.blazor.bmt.controllers
         //    return Ok(blazorApiResponse);
         //    // .ToArray();
         //}
-        [HttpGet("submitonlineuser")]
-        [HttpPost("submitonlineuser")]
-        [Route("submitonlineuser")]
+        //[HttpGet("submitonlineuser")]
+        //[HttpPost("submitonlineuser")]
+        //[Route("submitonlineuser")]
         //public async Task<ActionResult> submitOnlineUser([FromBody] OnlineUserViewModel onvm)
         //{
         //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
@@ -460,9 +404,9 @@ namespace com.blazor.bmt.controllers
         //    return Ok(blazorApiResponse);
         //    // .ToArray();
         //}
-        [HttpGet("submitintegrationservice")]
-        [HttpPost("submitintegrationservice")]
-        [Route("submitintegrationservice")]
+        //[HttpGet("submitintegrationservice")]
+        //[HttpPost("submitintegrationservice")]
+        //[Route("submitintegrationservice")]
         //public async Task<ActionResult> subIntegrationAddUpdate([FromBody] IntegrationservicesettingViewModel ivm)
         //{
         //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
@@ -654,54 +598,7 @@ namespace com.blazor.bmt.controllers
         //    // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
         //    //  return View(Url.Action("Dashboard_5", "Dashboards"));
         //    return Ok(response);
-        //}
-        [HttpGet("submitshift")]
-        [HttpPost("submitshift")]
-        [Route("submitshift")]
-        //public async Task<ActionResult> submitShiftData([FromBody] ShiftModel mdl)
-        //{
-        //    //string retrunURl = Request.Query["ReturnURL"];
-        //    BlazorResponseViewModel response = new BlazorResponseViewModel();
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorResponseViewModel { status = false, id = 1, effectedRows = 0, data = "Authorization Failed" });
-        //    try
-        //    {
-        //        // await _blazorUtilPageService.GenerateTestSMTPSettings(new BasicConfigurationViewModel { Id = model.Id, ApiAuthKey = model.ApiAuthKey, CreatedAt = model.CreatedAt, LastUpdatedAt = model.LastUpdatedAt, DefaultDspid = model.DefaultDspid, Smtpport = model.Smtpport, SmtpServer = model.SmtpServer, SmtpSenderEmail = model.SmtpSenderEmail, Sslenabled = model.Sslenabled, SmtpUser = model.SmtpUser, SmtpUserPwd = model.SmtpUserPwd, IsProxyEnabled = model.IsProxyEnabled, CreatedBy = model.CreatedBy });
-        //        if (mdl != null && mdl.id <= 0)
-        //        {
-                  
-        //            mdl.RowVer = 1;
-        //            mdl.CreatedBy = mdl.CreatedBy;
-        //            mdl.CreatedAt = GlobalUTIL.CurrentDateTime;
-        //            mdl.LastUpdatedBy = mdl.LastUpdatedBy;
-        //            mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-
-        //            response.data = await _shiftsService.Create(mdl);
-        //            response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-        //        }
-        //        else if(mdl != null)
-        //        {
-                    
-        //            mdl.RowVer = mdl.RowVer + 1;
-        //            mdl.LastUpdatedBy = mdl.LastUpdatedBy;
-        //            mdl.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-        //            await _shiftsService.Update(mdl);
-        //            response.data = mdl;
-        //            response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, mdl.Name, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
-        //        }
-        //        //response.data = mdl;
-        //        response.status = true;
-        //        response.message = string.Format(BlazorConstant.INSERTED_SUCCESS, mdl.Name, "Email settings are successful ");
-        //        // Record log out activity
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.message = "Email Test Run Failed -  Error detail " + ex.InnerException.Message;
-        //        response.status = false;
-        //    }
-        //    // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
-        //    //  return View(Url.Action("Dashboard_5", "Dashboards"));
-        //    return Ok(response);
-        //}
+        //}      
 
         [HttpPost("submitgrouprights")]
         [Route("submitgrouprights")]
@@ -720,86 +617,7 @@ namespace com.blazor.bmt.controllers
                     blazorResponseViewModel.status = true;
                     blazorResponseViewModel.message = String.Format(BlazorConstant.UPDATED_SUCCESS, "Role Rights", GlobalUTIL.CurrentDateTime);
                 }
-                //// LoginViewModel lvm = await _blazorRepoPageService.GetUserVerificationData(new LoginViewModel { Email = ("" + email).Trim(), RoleId = (int)UTIL.COMMON_STATUS_ALL.ALL, Password = GlobalUTIL.Encrypt(("" + password).Trim(), true, BlazorConstant.SECKEY) });
 
-                //var opt = new JsonSerializerOptions() { WriteIndented = true };
-                //string rightsJson = JsonSerializer.Serialize<List<RolerightViewModel>>(lrts, opt);
-                ////  JSON
-
-                //List<MySqlParameter> parameter = new List<MySqlParameter>();
-                //MySqlParameter pJSON = new MySqlParameter("p_rightsjson", SqlDbType.NVarChar);
-                //pJSON.Value = rightsJson;
-                //parameter.Add(pJSON);
-
-                ////if (lvm != null)
-                ////{
-                ////    GlobalSettings.loginRoleName = lvm.UserRole;
-                ////    GlobalSettings.loginRoleId = lvm.RoleId;
-                ////    GlobalSettings.loginUserName = lvm.FullName;
-                ////    GlobalSettings.loginUserId = lvm.Id;
-                ////    GlobalSettings.LoginUserCityId = lvm.UserCityId;
-                ////    GlobalSettings.loginAvatar = lvm.Avatar;
-                ////    GlobalSettings.LoginUserStateId = lvm.UserStateId;
-                ////    GlobalSettings.LoginUserContact = lvm.UserContact;
-
-                ////    GlobalSettings.DspName = lvm.DspName;
-                ////    //GlobalSettings.VAT_TAXID = lvm.VAT_NTN;
-                ////    GlobalSettings.DspStateName = lvm.DspStateName;
-                ////    GlobalSettings.DspEmail = lvm.Email;
-                ////    GlobalSettings.DspLogoPath = lvm.DspLogo;
-                ////    //BasicConfigurationsViewModel.default_show_room_id = lvm.ShowRoomStateId;
-                ////    GlobalSettings.DspStateName = lvm.DspStateName;
-                ////    GlobalSettings.LoginUserContact = lvm.UserContact.Replace("+", "00");
-                ////    GlobalSettings.LoginUserEmail = lvm.Email;
-                ////    GlobalSettings.DspCityName = lvm.DspCityName;
-                ////    GlobalSettings.TradeName = lvm.TradeName;
-                ////    //GlobalSettings.ShowRoomCurrency = lvm.ShowRoomCurrency;
-                ////    // {
-                ////    if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && ((lvm.AlreadyLoginStatus != (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN || (lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN && lvm.LoginMachineIp == ipAddress)) || GlobalUTIL.CurrentDateTime.Subtract(lvm.LoginTime).TotalHours >= 8))
-                ////    {
-                ////        var userClaims = new List<Claim>()
-                ////    {
-                ////        new Claim("UserName",(""+lvm.FullName).Trim()),
-                ////        new Claim("UserId",""+lvm.Id),
-                ////        new Claim("RoleId",(""+lvm.RoleId).Trim()),
-                ////        new Claim("DspId",(""+lvm.DspId).Trim()),
-                ////        new Claim(ClaimTypes.Name,(lvm.userName).Trim()),
-                ////        new Claim(ClaimTypes.Email,(""+lvm.Email).Trim()),
-                ////        new Claim(ClaimTypes.DateOfBirth,GlobalUTIL.CurrentDateTime.ToLongDateString() ),
-                ////        new Claim(ClaimTypes.Role, (lvm.UserRole).Trim())
-                ////     };
-                ////        GlobalUTIL.loadConfigurations(lvm.DspId);
-                ////        var userIdentity = new ClaimsIdentity(userClaims, BlazorConstant.USER_IDENTTITY);
-
-                ////        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                ////        //await _httpContextAccessor.HttpContext.SignInAsync(BlazorConstant.COOKIES_AUTHENTICATION_KEY, userPrincipal);
-                ////        UserViewModel uvm = new UserViewModel { Id = lvm.Id, Email = lvm.Email, Avatar = lvm.Avatar, RoleId = lvm.RoleId, UserName = lvm.userName, FirstName = lvm.FullName, PrimaryContact = lvm.UserContact, StateId = lvm.UserStateId };
-                ////        // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
-                ////        _cache.Set("" + lvm.Id, uvm);
-
-                ////        await _notificationPageService.loggedIn(lvm, ipAddress);
-                ////        await _appLogPageService.ProcessLoginActivity(lvm.Id, UTIL.LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
-                ////        blazorResponseViewModel.data = lvm.UserRole;
-                ////        blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
-                ////        blazorResponseViewModel.message = String.Format("Welcome to {0} - Successfully logged in!", GlobalSettings.DspName);
-                ////        blazorResponseViewModel.status = true;
-                ////    }
-                ////    else if (lvm.UserStatus == (int)UTIL.COMMON_STATUS.ACTIVE && lvm.AlreadyLoginStatus == (int)UTIL.LOGIN_ACTIVITY.LOGGED_IN)
-                ////    {
-                ////        blazorResponseViewModel.message = "Failed- Already logged in from another machine!";
-                ////        blazorResponseViewModel.status = false;
-                ////    }
-                ////    else if (lvm.UserStatus != (int)UTIL.COMMON_STATUS.ACTIVE)
-                ////    {
-                ////        blazorResponseViewModel.message = "Failed- Account dormant,for access need to contact administrator!";
-                ////        blazorResponseViewModel.status = false;
-                ////    }
-                ////}
-                ////else
-                ////{
-                ////    blazorResponseViewModel.status = false;
-                ////    blazorResponseViewModel.message = "Failed- User name or password incorrect or user does not belong to this role!";
-                ////}
                 if (!string.IsNullOrWhiteSpace(HttpContext.Request.Query["returnUrl"]))
                     blazorResponseViewModel.returnURL = HttpContext.Request.Query["returnUrl"];
 
@@ -809,9 +627,7 @@ namespace com.blazor.bmt.controllers
             {
                 blazorResponseViewModel.message = string.Format(BlazorConstant.UPDATE_FAILED, "", (ex.InnerException == null ? ex.Message : ex.InnerException.Message)); ;
                 blazorResponseViewModel.status = false;
-            }
-            // return Redirect(Url.Action("Dashboard_5", "Dashboards")); //
-            //  return View(Url.Action("Dashboard_5", "Dashboards"));
+            }        
             return blazorResponseViewModel;
         }
         #endregion

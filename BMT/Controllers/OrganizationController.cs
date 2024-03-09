@@ -14,10 +14,10 @@ namespace com.blazor.bmt.controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class OrganiaztionController : ControllerBase
+    public class OrganizationController : ControllerBase
     { //Almas 
         private IMemoryCache _cache;
-        private readonly ILogger<OrganiaztionController> _logger;       
+        private readonly ILogger<OrganizationController> _logger;       
         private readonly IBlazorRepoPageService _blazorRepoPageService;
         private readonly IUsersPageService _usersPageService;
         // private readonly IDspTablesService _dspTablesService;
@@ -25,7 +25,7 @@ namespace com.blazor.bmt.controllers
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;      
         #region "Constructor and initialization"
-        public OrganiaztionController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IGlobalNetworkDetailService globalNetworkDetailService, IBlazorRepoPageService blazorRepoPageService, IUsersPageService usersPageService, IHttpContextAccessor httpContextAccessor, ILogger<OrganiaztionController> logger,  IMemoryCache cache)
+        public OrganizationController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IGlobalNetworkDetailService globalNetworkDetailService, IBlazorRepoPageService blazorRepoPageService, IUsersPageService usersPageService, IHttpContextAccessor httpContextAccessor, ILogger<OrganizationController> logger,  IMemoryCache cache)
         {
             _logger = logger;         
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));

@@ -82,7 +82,7 @@ const SingleDispatchment = () => {
     const form = document.querySelector('.service-integration-form');
     formValidator();
     if (form.checkValidity()) {
-      alert('valid');
+     // alert('valid');
       //const networkSetting = {
       //  id: networkSettingData.id,
       //  name: networkSettingData.emailrecipients,
@@ -126,7 +126,7 @@ const SingleDispatchment = () => {
 
           }
         ]);
-        alert('after save');
+       // alert('after save');
 
       }
 

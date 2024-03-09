@@ -193,9 +193,11 @@ const Dashboard = (prop) => {
           </div>
     
       </div>
+      <AppContainer>
       <DataGridHeader
-        title="Last 12 Month Funds Data"
-        otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+          title="Last 12 Month Funds Data"
+          otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+          filterDisable={true}
       />
       {showFilters && (
         <div className="row">
@@ -242,7 +244,7 @@ const Dashboard = (prop) => {
           </div>
         </div>
       )}
-        
+      </AppContainer>
           </>
   );
 };
