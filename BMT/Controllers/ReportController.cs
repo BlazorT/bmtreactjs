@@ -10,6 +10,7 @@ using com.blazor.bmt.application.model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.Application.Interfaces;
+using Blazor.Web.UI.Interfaces;
 
 namespace com.blazor.bmt.controllers
 {
@@ -25,7 +26,7 @@ namespace com.blazor.bmt.controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public ReportController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IAppLogPageService appLogPageService,  IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<LogController> logger,  IMemoryCache cache)
+        public ReportController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment,  IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<LogController> logger,  IMemoryCache cache)
         {
             _logger = logger;         
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
