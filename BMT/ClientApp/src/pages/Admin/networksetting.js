@@ -79,94 +79,94 @@ const SingleDispatchment = () => {
    // console.log(e);
     e.preventDefault();
   };
-  const onSave = async () => {
-    const form = document.querySelector('.service-integration-form');
-    alert('.service-integration-form');
-    formValidator();
-    //alert('Before Validation');
-    if (form.checkValidity()) {
-      alert('valid');
-      //const networkSetting = {
-      //  id: networkSettingData.id,
-      //  name: networkSettingData.emailrecipients,
-      //  serviceUri: networkSettingData.EmailexcelBulkUpload,
-      //  businessId: networkSettingData.EmailBusinessId,
-      //  url: networkSettingData.EmailUrl,
-      //  sender: networkSettingData.Emailsender,
-      //  password: networkSettingData.AccountPaswrd,
-      //  startTime: networkSettingData.EmaildtpFrom,
-      //  finishTime: networkSettingData.EmaildtpTo,
-      //  autoReplyAllowed: networkSettingData.EmailAutoReplycheck16,
-      //  autoReplyContent: networkSettingData.emailautoreply,
-      //  postTypeId: networkSettingData.EmailPostType,
-      //  status: networkSettingData.status === '' ? 5 : networkSettingData.status,
-      //  rowVer: networkSettingData.rowVer,
-      //  createdAt: moment().utc().format(),
-      //  lastUpdatedAt: moment().utc().format(),
-      //};
-      console.log((networkSelect +" , " + (globalutil.networks().filter((network) => network.name == 'EMAIL')[0].id)), 'networks');
-      if (networkSelect == (globalutil.networks().filter((network) => network.name.toUpperCase() == 'EMAIL')[0].id)) {
-        alert('network.name == mail');
-        setdataList([
-          ...dataList,
-          {
-            id: networkSettingData.id,
-            networkId: networkSelect,
-            name: networkSettingData.emailrecipients,
-            serviceUri: networkSettingData.EmailexcelBulkUpload,
-            businessId: networkSettingData.EmailBusinessId,
-            url: networkSettingData.EmailUrl,
-            sender: networkSettingData.Emailsender,
-            password: networkSettingData.AccountPaswrd,
-            startTime: networkSettingData.EmaildtpFrom,
-            finishTime: networkSettingData.EmaildtpTo,
-            autoReplyAllowed: networkSettingData.EmailAutoReplycheck16,
-            autoReplyContent: networkSettingData.emailautoreply,
-            postTypeId: networkSettingData.EmailPostType,
-            status: networkSettingData.status === '' ? 5 : networkSettingData.status,
-            rowVer: networkSettingData.rowVer,
-            createdAt: moment().utc().format(),
-            lastUpdatedAt: moment().utc().format(),
+  //const onSave = async () => {
+  //  const form = document.querySelector('.service-integration-form');
+  //  alert('.service-integration-form');
+  //  formValidator();
+  //  //alert('Before Validation');
+  //  if (form.checkValidity()) {
+  //    alert('valid');
+  //    //const networkSetting = {
+  //    //  id: networkSettingData.id,
+  //    //  name: networkSettingData.emailrecipients,
+  //    //  serviceUri: networkSettingData.EmailexcelBulkUpload,
+  //    //  businessId: networkSettingData.EmailBusinessId,
+  //    //  url: networkSettingData.EmailUrl,
+  //    //  sender: networkSettingData.Emailsender,
+  //    //  password: networkSettingData.AccountPaswrd,
+  //    //  startTime: networkSettingData.EmaildtpFrom,
+  //    //  finishTime: networkSettingData.EmaildtpTo,
+  //    //  autoReplyAllowed: networkSettingData.EmailAutoReplycheck16,
+  //    //  autoReplyContent: networkSettingData.emailautoreply,
+  //    //  postTypeId: networkSettingData.EmailPostType,
+  //    //  status: networkSettingData.status === '' ? 5 : networkSettingData.status,
+  //    //  rowVer: networkSettingData.rowVer,
+  //    //  createdAt: moment().utc().format(),
+  //    //  lastUpdatedAt: moment().utc().format(),
+  //    //};
+  //    console.log((networkSelect +" , " + (globalutil.networks().filter((network) => network.name == 'EMAIL')[0].id)), 'networks');
+  //    if (networkSelect == (globalutil.networks().filter((network) => network.name.toUpperCase() == 'EMAIL')[0].id)) {
+  //      alert('network.name == mail');
+  //      setdataList([
+  //        ...dataList,
+  //        {
+  //          id: networkSettingData.id,
+  //          networkId: networkSelect,
+  //          name: networkSettingData.emailrecipients,
+  //          serviceUri: networkSettingData.EmailexcelBulkUpload,
+  //          businessId: networkSettingData.EmailBusinessId,
+  //          url: networkSettingData.EmailUrl,
+  //          sender: networkSettingData.Emailsender,
+  //          password: networkSettingData.AccountPaswrd,
+  //          startTime: networkSettingData.EmaildtpFrom,
+  //          finishTime: networkSettingData.EmaildtpTo,
+  //          autoReplyAllowed: networkSettingData.EmailAutoReplycheck16,
+  //          autoReplyContent: networkSettingData.emailautoreply,
+  //          postTypeId: networkSettingData.EmailPostType,
+  //          status: networkSettingData.status === '' ? 5 : networkSettingData.status,
+  //          rowVer: networkSettingData.rowVer,
+  //          createdAt: moment().utc().format(),
+  //          lastUpdatedAt: moment().utc().format(),
 
-          }
-        ]);
-       // alert('after save');
+  //        }
+  //      ]);
+  //     // alert('after save');
 
-      }
+  //    }
 
-    }
-      setIsLoading(createNetworkSettingLoading.current);
-      await createNetworkSetting('/Organination/addupdatenetworksettings', {
-        method: 'POST',
-       // body: JSON.stringify(networkSetting),
-      });
-      console.log(createNetworkSettingRes);
-      if (createNetworkSettingRes.current?.status === true) {
-        dispatch(
-          updateToast({
-            isToastOpen: true,
-            toastMessage: createNetworkSettingRes.current.message,
-            toastVariant: 'success',
-          }),
-        );
-        //navigate('/ServiceIntegrated');
-        //getServices();
-        setNetworkSettingData(initialData);
-       // toggle();
-      } else {
-        dispatch(
-          updateToast({
-            isToastOpen: true,
-            toastMessage: createNetworkSettingRes.current?.message,
-            toastVariant: 'error',
-            //  `${JSON.stringify(createUserRes.current.message)}`,
-          }),
-        );
+  //  }
+  //    setIsLoading(createNetworkSettingLoading.current);
+  //    await createNetworkSetting('/Organination/addupdatenetworksettings', {
+  //      method: 'POST',
+  //     // body: JSON.stringify(networkSetting),
+  //    });
+  //    console.log(createNetworkSettingRes);
+  //    if (createNetworkSettingRes.current?.status === true) {
+  //      dispatch(
+  //        updateToast({
+  //          isToastOpen: true,
+  //          toastMessage: createNetworkSettingRes.current.message,
+  //          toastVariant: 'success',
+  //        }),
+  //      );
+  //      //navigate('/ServiceIntegrated');
+  //      //getServices();
+  //      setNetworkSettingData(initialData);
+  //     // toggle();
+  //    } else {
+  //      dispatch(
+  //        updateToast({
+  //          isToastOpen: true,
+  //          toastMessage: createNetworkSettingRes.current?.message,
+  //          toastVariant: 'error',
+  //          //  `${JSON.stringify(createUserRes.current.message)}`,
+  //        }),
+  //      );
 
-        setIsLoading(createNetworkSettingLoading.current);
-      }
-   // }
-  };
+  //      setIsLoading(createNetworkSettingLoading.current);
+  //    }
+  // // }
+  //};
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
