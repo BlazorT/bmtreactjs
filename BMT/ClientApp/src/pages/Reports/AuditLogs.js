@@ -26,7 +26,7 @@ const AuditLogs = () => {
   dayjs.extend(utc);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'DA Report',
+    (item) => item.name === 'Audit Log',
   );
 
   useEffect(() => {
@@ -68,17 +68,18 @@ const AuditLogs = () => {
   useEffect(() => {
     getLogList();
   }, []);
- // console.log(getLogList);
+  //console.log(getLogList);
   const getLogList = async (filters) => {
     const fetchBody = {
       id: 0,
       auditEntityId: 0,
-      dspId: user.dspId,
+      orgId: user.orgId,
       attributeName: '',
       userName: '',
       oldValue: '',
       newValue: '',
       keyValue: '',
+      createdBy: 0,
       createdAt: moment().utc().subtract(1, 'year').format(),
       ...filters,
       //logTime: moment().utc().startOf('year').format(),
@@ -91,11 +92,12 @@ const AuditLogs = () => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
+        console.log(res, 'res');
         if (res.status === true) {
           const mappedArray = res.data.map((data, index) => ({
             id: data.id,
             entityName: data.entityName,
-            dspId: data.dspId,
+            orgId: data.orgId,
             userName: data.userName,
             fieldName: data.fieldName,
             keyValue: data.keyValue,

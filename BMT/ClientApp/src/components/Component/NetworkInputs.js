@@ -126,13 +126,15 @@ const NetworkInputs = (prop) => {
     );
   };
 
-  const onSave =  () => {
+  const onSave = () => {
+    alert('onsave');
     const form = document.querySelector('.service-integration-form');
     formValidator();
     if (form.checkValidity()) {
       setNetworkList((prev) => [...prev, networkState])
     }
-    console.log('test');
+    console.log({ networkList });
+   // console.log('test');
    // setIsLoading(createNetworkSettingLoading.current);
   }
   const onSubmit = async () => {
@@ -222,6 +224,7 @@ const NetworkInputs = (prop) => {
       </CCol>
     </CRow>
 
+    <AppContainer>
     <DataGridHeader
       title="Message Template"
       otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
@@ -245,7 +248,9 @@ const NetworkInputs = (prop) => {
         </CCol>
 
       </CRow>
-    )}
+      )}
+    </AppContainer>
+    <AppContainer>
     <DataGridHeader
       title="Integration Setting"
       otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
@@ -530,7 +535,7 @@ const NetworkInputs = (prop) => {
             icon={cilUser}
             value={networkState.postTypeId}
             onChange={handleNetworkSetting}
-          
+            //options={globalutil.postTypes()}
             type="text"
             id="postTypeId"
             name="postTypeId"
@@ -554,7 +559,8 @@ const NetworkInputs = (prop) => {
           />
         </CCol>
       </CRow>
-    )}
+      )}
+    </AppContainer>
     <div className="CenterAlign pt-2">
       <button
         onClick={() => onCancel()}

@@ -27,7 +27,7 @@ const Logs = () => {
   dayjs.extend(utc);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === '4DSPS Log',
+    (item) => item.name === 'BMT Log',
   );
 
   useEffect(() => {
@@ -88,6 +88,7 @@ const Logs = () => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
+        console.log(res, 'res');
         if (res.status === true) {
           const mappedArray = res.data.map((data, index) => ({
             id: data.id,

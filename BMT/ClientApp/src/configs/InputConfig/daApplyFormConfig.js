@@ -180,7 +180,7 @@ export const getDaAppllyInputs = (
       value: daUserData.currencyId,
       name: 'currencyId',
       onChange: (e) => handleUserInput(e),
-      isRequired: true,
+      isRequired: false,
       disabled: canAdd === 0,
       disableOption: 'Select currency',
       message: 'Please select currency',
@@ -195,7 +195,7 @@ export const getDaAppllyInputs = (
       value: daUserData.country,
       name: 'country',
       onChange: (e) => handleUserInput(e),
-      isRequired: true,
+      isRequired: false,
       disableOption: 'Select Country',
       message: 'Please select your country',
     },
@@ -208,8 +208,8 @@ export const getDaAppllyInputs = (
       value: daUserData.cityId,
       name: 'cityId',
       onChange: (e) => handleUserInput(e),
-      isRequired: true,
-      disableOption: daUserData.country === '' ? 'Select Country First' : 'Select State',
+      isRequired: false,
+      disableOption: daUserData.country === '' ? 'Select Country First' : 'Select City',
       message: 'Please select your city',
       options:
         daUserData.country === ''
