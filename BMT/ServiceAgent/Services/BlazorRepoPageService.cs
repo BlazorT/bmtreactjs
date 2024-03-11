@@ -115,8 +115,8 @@ namespace Blazor.Web.UI.Services
                                 {
                                     Id = Convert.ToInt64(dr["Id"]),
                                     AuditEntityId = Convert.ToInt32(dr["AuditEntityId"]),
-                                    KeyValue = dr["KeyValue"].ToString(),
-                                    OldValue = dr["OldValue"].ToString(),
+                                    KeyValue = ""+dr["KeyValue"],
+                                    OldValue =""+ dr["OldValue"],
                                     NewValue = "" + dr["NewValue"],
                                     Username = "" + dr["LastName"] + " " + dr["MiddleName"],
                                     entityName = "" + dr["EntityName"],
