@@ -313,19 +313,19 @@ const DAApplyForm = () => {
     }
   };
 
-  const IsThisBrandNewClick = () => {
-    setIsThisBrandnew(!isThisBrandnew);
-  };
+  //const IsThisBrandNewClick = () => {
+  //  setIsThisBrandnew(!isThisBrandnew);
+  //};
   const maxlength = 14;
   const associatedWithAmazonNo = () => {
     toggleModal();
     setEmailReadonly(false);
   };
 
-  const associatedWithAmazon = () => {
-    toggleModal();
-    setEmailReadonly(true);
-  };
+  //const associatedWithAmazon = () => {
+  //  toggleModal();
+  //  setEmailReadonly(true);
+  //};
 
   const handleFocus = () => {
     toggleModal(true);
@@ -357,7 +357,6 @@ const DAApplyForm = () => {
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}
         />
-
         {showStock && (
           <React.Fragment>
             <Form name="apply-da-form">
@@ -393,14 +392,7 @@ const DAApplyForm = () => {
           onNo={confirmationModal}
         />
       </AppContainer>
-      <EmailBrandNewModal
-        isOpen={modalOpen}
-        toggle={toggleModal}
-        isThisBrandnew={isThisBrandnew}
-        IsThisBrandNewClick={IsThisBrandNewClick}
-        associatedWithAmazonNo={associatedWithAmazonNo}
-        associatedWithAmazon={associatedWithAmazon}
-      />
+     
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </React.Fragment>
   );

@@ -30,10 +30,10 @@ import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardT
 
 const UserReport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
-  console.log(JSON.stringify(globalutil.userroles()), 'hii');
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'User Report',
-  );
+ // console.log(JSON.stringify(globalutil.userroles()));
+  //const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
+  //  (item) => item.name === 'Users Report',
+  //);
   const generatePdf = async () => {
     const body = {
       id: rows[0].id,
@@ -41,7 +41,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     const reportRows = makeGroupingRows(rows);
     const doc = getUserReportPdf(reportRows, reportField);
     doc.output('dataurlnewwindow');
-    console.log(reportRows, 'repoertdata');
+   // console.log(reportRows, 'repoertdata');
   };
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId.toString(),
+    orgId: user.orgId,
     keyword: '',
     status: '0',
     createdAt: dayjs().utc().startOf('month').format(),
@@ -71,7 +71,6 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
 
     getLogList(filterBody);
 
-    getLogList(filterBody);
   };
   const {
     response: GetLogRes,
@@ -87,7 +86,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       id: 0,
       roleId: 0,
       userId: '',
-      dspid: user.dspId.toString(),
+      orgId: user.orgId,
       userRole: '',
       email: '',
       lastName: '',
@@ -103,16 +102,15 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       //logTime: moment().utc().startOf('year').format(),
     };
 
-    //alert(JSON.stringify(fetchBody));
+    console.log(JSON.stringify(fetchBody));
     await GetLog(
       '/Report/dausersreportdata',
       {
         method: 'POST',
         body: JSON.stringify(fetchBody),
       },
-
       (res) => {
-        console.log(res);
+        console.log(res,'user responce');
         if (res.status === true) {
           const mappedArray = res.data.data.map((data) => ({
             id: data.id,
@@ -130,8 +128,6 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             //  lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
 
           }));
-
-
           setRows(mappedArray);
         } else {
           dispatch(
@@ -398,8 +394,8 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
                       columns={columns}
                       rowHeight={'normal'}
                       pagination={true}
-                      canExport={pageRoles.canExport}
-                      canPrint={pageRoles.canPrint}
+                     // canExport={pageRoles.canExport}
+                     // canPrint={pageRoles.canPrint}
                       summary={
                         [
                           //{
