@@ -20,13 +20,13 @@ namespace com.blazor.bmt.controllers
     public class ReportController : ControllerBase
     { //Almas 
         private IMemoryCache _cache;
-        private readonly ILogger<LogController> _logger;       
+        private readonly ILogger<ReportController> _logger;       
         private readonly IBlazorRepoPageService _blazorRepoPageService;       
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public ReportController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment,  IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<LogController> logger,  IMemoryCache cache)
+        public ReportController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment,  IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<ReportController> logger,  IMemoryCache cache)
         {
             _logger = logger;         
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
@@ -37,9 +37,7 @@ namespace com.blazor.bmt.controllers
             // applicationPath = _hostingEnvironment.ContentRootPath;
             _logger.LogInformation("Web Api Service Started  at - " + System.DateTime.Now.ToLongTimeString());
         }
-        #endregion
-             
-
+        #endregion  
         [HttpPost("dausersreportdata")]
         [HttpGet("dausersreportdata")]
         [Route("dausersreportdata")]
@@ -51,7 +49,7 @@ namespace com.blazor.bmt.controllers
             BlazorApiResponse response = new BlazorApiResponse();
             try
             {
-                        response.data= await _blazorRepoPageService.GetUsersReportData(vm);                   
+                        response.data= await _blazorRepoPageService.GetBMTUsersListAsync(vm.Id, Convert.ToInt32(vm.OrgId), vm.RoleId, ""+ vm.UserName, vm.Status, vm.CreatedAt, vm.LastUpdatedAt==null? Convert.ToDateTime(vm.LastUpdatedAt):GlobalUTIL.CurrentDateTime);                   
                         response.status = true;
             }
             catch (Exception ex)
@@ -64,11 +62,6 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-
-        
-
-
-      
     }
 
 }
