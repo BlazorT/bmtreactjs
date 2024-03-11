@@ -565,7 +565,7 @@ const NetworkInputs = (prop) => {
       </button>
 
       <button
-        onClick={ onSave}
+        onClick={onSave}
         type="submit"
         className="btn btn_Default m-2 sales-btn-style"
       >

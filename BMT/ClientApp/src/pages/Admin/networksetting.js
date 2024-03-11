@@ -10,10 +10,10 @@ import { useSelector } from 'react-redux';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+//import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { CFormCheck } from '@coreui/react';
-import NetworkInput from 'src/components/Component/NetworkInputs'
+import NetworkInput from 'src/components/Component/NetworkInputs';
 import moment from 'moment';
 import {
   cilUser,
@@ -23,20 +23,20 @@ import {
   cilFlagAlt,
 } from '@coreui/icons';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
+//import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import CustomSearch from 'src/components/InputsComponent/CustomSearch';
 import Loading from 'src/components/UI/Loading';
-import DaNewAssignment from 'src/components/Component/DaNewAssignment';
-import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+//import DaNewAssignment from 'src/components/Component/DaNewAssignment';
+//import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
+//import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
 import Button from 'src/components/InputsComponent/Button';
 import LoadingBtn from 'src/components/UI/LoadingBtn';
 import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
-import NetworkInputs from 'src/components/Component/NetworkInputs';
+//import NetworkInputs from 'src/components/Component/NetworkInputs';
 
 const SingleDispatchment = () => {
   const user = useSelector((state) => state.user);
@@ -76,13 +76,16 @@ const SingleDispatchment = () => {
   };
   const [networkSettingData, setNetworkSettingData] = useState(initialData);
   const handleSubmit = (e) => {
+   // console.log(e);
     e.preventDefault();
   };
   const onSave = async () => {
     const form = document.querySelector('.service-integration-form');
+    alert('.service-integration-form');
     formValidator();
+    //alert('Before Validation');
     if (form.checkValidity()) {
-     // alert('valid');
+      alert('valid');
       //const networkSetting = {
       //  id: networkSettingData.id,
       //  name: networkSettingData.emailrecipients,
@@ -102,7 +105,8 @@ const SingleDispatchment = () => {
       //  lastUpdatedAt: moment().utc().format(),
       //};
       console.log((networkSelect +" , " + (globalutil.networks().filter((network) => network.name == 'EMAIL')[0].id)), 'networks');
-      if (networkSelect == (globalutil.networks().filter((network) => network.name == 'EMAIL')[0].id)) {
+      if (networkSelect == (globalutil.networks().filter((network) => network.name.toUpperCase() == 'EMAIL')[0].id)) {
+        alert('network.name == mail');
         setdataList([
           ...dataList,
           {
@@ -132,7 +136,7 @@ const SingleDispatchment = () => {
 
     }
       setIsLoading(createNetworkSettingLoading.current);
-      await createNetworkSetting('/Organiaztion/addupdatenetworksettings', {
+      await createNetworkSetting('/Organination/addupdatenetworksettings', {
         method: 'POST',
        // body: JSON.stringify(networkSetting),
       });
