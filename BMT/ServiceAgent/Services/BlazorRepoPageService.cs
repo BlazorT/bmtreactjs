@@ -99,7 +99,10 @@ namespace Blazor.Web.UI.Services
                         parameter.Add(pKeyword);
                         MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", MySqlDbType.DateTime);
                         DateFrom.Value = viewModel.CreatedAt;
-                        parameter.Add(DateFrom);                       
+                        parameter.Add(DateFrom);
+                        MySqlParameter pDateT0 = new MySqlParameter("p_dateto", MySqlDbType.DateTime);
+                        pDateT0.Value = GlobalUTIL.CurrentDateTime;
+                        parameter.Add(pDateT0);
                         command.CommandText = "spGetAuditLogData";
                         command.CommandType = System.Data.CommandType.StoredProcedure;
                         command.Parameters.AddRange(parameter.ToArray());
