@@ -117,7 +117,9 @@ namespace com.blazor.bmt.util
         public static string INVITATION_EMAIL_BODY { get; set; } = "invitationEmailBody";
         public static string INVITATION_EMAIL_SUBJECT { get; set; } = "invitationEmailSubject";       
         public static string ACCOUNT_PASSWORD_RESET_EMAIL_BODY = "profilePwdResetEmail";
-      //  public static string VehicleOfferNotificationEmailBody { get; set; } = "VehicleOfferNotificationEmailBody";       
+        public static IFormatProvider? INSERTED_SUCCESS_API;
+
+        //  public static string VehicleOfferNotificationEmailBody { get; set; } = "VehicleOfferNotificationEmailBody";       
         public static string SMS_MESSAGE_BODY { get; set; } = "smsMessageBody";
         public static string ONBOARDING_EMAIL_BODY { get; set; } = "OnBoardedEmaillBody";
         public static string BACKGROUND_CHECK_EMAIL { get; set; } = "BackgroundCheckEmaillBody";

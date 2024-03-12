@@ -51,9 +51,7 @@ namespace com.blazor.bmt.controllers
                 int UserId = 0;
                 if (pcdl != null)
                 {
-                    
                     response = await _blazorRepoPageService.AddUpdateNetworkSettingsFormData(pcdl, UserId);
-
                 }
                 else
                 {

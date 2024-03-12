@@ -495,25 +495,8 @@ namespace com.blazor.bmt.controllers
                     GlobalSettings.loginRoleName = lvm.UserRole;
                     GlobalSettings.loginRoleId = lvm.RoleId;
                     GlobalSettings.loginUserName = lvm.FullName;
-                    GlobalSettings.loginUserId = lvm.Id;
-                  //  GlobalSettings.LoginUserCityId = lvm.UserCityId;
-                   // GlobalSettings.loginAvatar = lvm.Avatar;
-                   // GlobalSettings.LoginUserStateId = lvm.UserStateId;
-                   // GlobalSettings.LoginUserContact = lvm.UserContact;
-
-                  //  GlobalSettings.DspName = lvm.DspName;
-                    //GlobalSettings.VAT_TAXID = lvm.VAT_NTN;
-                  //  GlobalSettings.DspStateName = lvm.DspStateName;
-                    GlobalSettings.OrgEmail = lvm.Email;
-                  //  GlobalSettings.DspLogoPath = lvm.DspLogo;
-                    //BasicConfigurationsViewModel.default_show_room_id = lvm.ShowRoomStateId;
-                  //  GlobalSettings.DspStateName = lvm.DspStateName;
-                  //  GlobalSettings.LoginUserContact = lvm.UserContact.Replace("+", "00");
-                    GlobalSettings.LoginUserEmail = lvm.Email;
-                   // GlobalSettings.DspCityName = lvm.DspCityName;
-                  //  GlobalSettings.TradeName = lvm.TradeName;
-                    //GlobalSettings.ShowRoomCurrency = lvm.ShowRoomCurrency;
-                    // {
+                    GlobalSettings.loginUserId = lvm.Id; 
+                    GlobalSettings.LoginUserEmail = lvm.Email;           
                     if (lvm.UserStatus == (int)COMMON_STATUS.ACTIVE && ((lvm.AlreadyLoginStatus != (int)LOGIN_ACTIVITY.LOGGED_IN || (lvm.AlreadyLoginStatus == (int)LOGIN_ACTIVITY.LOGGED_IN && lvm.LoginMachineIp == ipAddress)) || GlobalUTIL.CurrentDateTime.Subtract(lvm.LoginTime).TotalHours >= 8))
                     {
                         var userClaims = new List<Claim>()

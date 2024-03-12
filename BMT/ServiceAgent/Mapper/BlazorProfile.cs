@@ -14,7 +14,10 @@ namespace com.blazor.bmt
             CreateMap<CountryModel, CountryViewModel>();
             //CreateMap<CategoryModel, CategoryViewModel>();
             CreateMap<CityModel, CityViewModel>();
-            //CreateMap<InventorydetailModel, Inventorydetailviewmodel>();
+            CreateMap<CompaignModel, CompaignsViewModel>();
+            CreateMap<CompaignnetworkModel, CompaignNetworkViewModel>();
+            CreateMap<CompaignexecutionscheduleModel, CompaignexecutionscheduleViewModel>();
+            CreateMap<CompaignscheduledayModel, CompaignscheduledayViewModel>();
             CreateMap<ConfigurationModel, ConfigurationsViewModel>();
             CreateMap<GlobalnetworkdetailModel, GlobalnetworkdetailViewModel>();
             CreateMap<ApplogModel, AppLogViewModel>();
@@ -47,11 +50,15 @@ namespace com.blazor.bmt
             CreateMap<City, CityModel>().ReverseMap();
 
             CreateMap<Configuration, ConfigurationModel>().ReverseMap();
-           // CreateMap<Basicconfiguration, BasicConfigurationModel>().ReverseMap();
+            // Compaign
+            CreateMap<Compaign, CompaignModel>().ReverseMap();
+            CreateMap<Compaignnetwork, CompaignnetworkModel>().ReverseMap();
+            CreateMap<Compaignexecutionschedule, CompaignexecutionscheduleModel>();
+            CreateMap<Compaignscheduleday, CompaignscheduledayModel>();
             //CreateMap<Vehicle, AutoSellPurchaseRequestModel>().ReverseMap();
             CreateMap<Mediacontent, MediacontentModel>().ReverseMap();
-            CreateMap<Notification, NotificationModel>().ReverseMap();
-          
+            CreateMap<Notification, NotificationModel>().ReverseMap();                    
+
             CreateMap<Auditentity, AuditentityModel>().ReverseMap();
             CreateMap<Menu, MenuModel>().ReverseMap();
             CreateMap<Rolemenu, RolemenuModel>().ReverseMap();

@@ -294,6 +294,7 @@ namespace Blazor.Web.UI.Services
                                         select new LoginViewModel
                                         {
                                             Id = Convert.ToInt32(usr["ID"]),
+                                            OrgId = Convert.ToInt32(usr["OrgId"]==null?0: usr["OrgId"]),
                                             FullName = "" + usr["FullName"],
                                             Email = "" + usr["Email"],
                                             LoginTime = Convert.ToDateTime(usr["LoginTime"]),

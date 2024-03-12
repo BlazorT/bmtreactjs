@@ -138,7 +138,7 @@ const NetworkInputs = (prop) => {
    // setIsLoading(createNetworkSettingLoading.current);
   }
   const onSubmit = async () => {
-    console.log({networkList});
+    alert(JSON.stringify(networkList));
     if (networkList.length > 0) {
       await createNetworkSetting('/Organiaztion/addupdatenetworksettings', {
         method: 'POST',

@@ -77,7 +77,7 @@ const SingleDispatchment = () => {
   const [networkSettingData, setNetworkSettingData] = useState(initialData);
   const handleSubmit = (e) => {
    // console.log(e);
-    e.preventDefault();
+    //e.preventDefault();
   };
   //const onSave = async () => {
   //  const form = document.querySelector('.service-integration-form');

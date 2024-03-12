@@ -30,7 +30,7 @@ services.AddMemoryCache();
 services.AddHttpContextAccessor();
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped(typeof(IAppLogRepository), typeof(AppLogRepository));
-//services.AddScoped(typeof(IAuditLogRepository), typeof(AuditLogRepository));
+services.AddScoped(typeof(ICompaignRepository), typeof(CompaignRepository));
 services.AddScoped(typeof(IStatesRepository), typeof(StatesRepository));
 services.AddScoped(typeof(IUsersRepository), typeof(UsersRepository));
 
@@ -80,6 +80,7 @@ services.AddScoped<ICitiesService, CitiesService>();
 services.AddScoped<IUsersService, UsersService>();
 services.AddScoped<IAppLogService, AppLogService>();
 services.AddScoped<IAuditLogService, AuditLogService>();
+services.AddScoped<ICompaignService, CompaignService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();

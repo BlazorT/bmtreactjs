@@ -10,6 +10,7 @@
         public string LoginMachineIp { get; set; }
         public string UserRole { get; set; }
         public int RoleId { get; set; }
+        public int?OrgId  { get; set; }
         public int UserStatus { get; set; }
         public int AlreadyLoginStatus { get; set; }
     }
