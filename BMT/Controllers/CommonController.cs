@@ -219,7 +219,7 @@ namespace com.blazor.bmt.controllers
                         lookUps.notificationtypes = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
                        // var lst = UTIL.GlobalApp.LoadGlobalLookUpCollectionViewModel(0);
                         lookUps.networks = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NETWORKS).ToList();
-                        lookUps.states = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATES).ToList();
+                       // lookUps.states = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATES).ToList();
                         lookUps.statuses = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.STATUS).ToList();
                         lookUps.Intervals = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.INTERVAL_TYPES).ToList();
                         lookUps.alerts = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.ALERT_LEVELS).ToList();
