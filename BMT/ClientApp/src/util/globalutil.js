@@ -72,30 +72,31 @@ export default class globalutil {
     else return null;
   }
   // Currencies
-  static setCurrencies(Currencies) {
-    localStorage.setItem('Currencies', JSON.stringify(Currencies));
+  static setCurrencies(currencies) {
+    localStorage.setItem('currencies', JSON.stringify(currencies));
   }
-  static Currencies() {
+  static currencies() {
     if (
-      localStorage.getItem('Currencies') !== '' &&
-      localStorage.getItem('Currencies') !== null
+      localStorage.getItem('currencies') !== '' &&
+      localStorage.getItem('currencies') !== null
     )
-      return JSON.parse(localStorage.getItem('Currencies'));
+      return JSON.parse(localStorage.getItem('currencies'));
     else return null;
   }
   //Post Types
-  static setPostTypes(PostTypes) {
-    localStorage.setItem('PostTypes', JSON.stringify(PostTypes));
+  static setPostTypes(postTypes) {
+    localStorage.setItem('postTypes', JSON.stringify(postTypes));
   }
 
   //PostTypes
-  static PostTypes() {
-    if (localStorage.getItem('PostTypes') !== '' && localStorage.getItem('PostTypes') !== null)
-      return JSON.parse(localStorage.getItem('PostTypes'));
+  static postTypes() {
+    if (localStorage.getItem('postTypes') !== '' && localStorage.getItem('postTypes') !== null)
+      return JSON.parse(localStorage.getItem('postTypes'));
     else return null;
   }
   //states
   static states() {
+    
     if (localStorage.getItem('states') !== '' && localStorage.getItem('states') !== null)
       return JSON.parse(localStorage.getItem('states'));
     else return null;

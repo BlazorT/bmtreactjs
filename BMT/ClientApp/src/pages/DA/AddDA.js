@@ -35,7 +35,7 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { useFetchDsps } from 'src/hooks/api/useFetchDsps';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 const AddDA = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Apply Form (DA)',
@@ -90,7 +90,7 @@ const AddDA = () => {
   const [showOther, setShowOther] = useState(false);
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
-  const { getDsps } = useFetchDsps();
+  const { getOrgs } = useFetchOrgs();
   const [dspList, setdspList] = useState([]);
   const { createUpdateUser } = useUpdateUser();
 
@@ -235,8 +235,8 @@ const AddDA = () => {
     setIsThisBrandnew(true);
   };
   const fetchDspList = async () => {
-    const dspData = await getDsps();
-    setdspList(dspData);
+    const orgData = await getOrgs();
+    setdspList(orgData);
     setIsLoading(false);
   };
   const daApplyInputs = getDaAppllyInputs(

@@ -289,8 +289,8 @@ namespace com.blazor.bmt.controllers
         //    // .ToArray();
         //}
         [HttpPost]
-        [Route("updateda")]
-        public async Task<ActionResult> UpdateDAUser([FromBody] UserViewModel uvm)
+        [Route("updateuser")]
+        public async Task<ActionResult> UpdateOrgUser([FromBody] UserViewModel uvm)
         {
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             // List<User> cstrs = new List<User>();

@@ -92,8 +92,8 @@ function SignIn() {
     globalutil.setcategories(data.categories);
     globalutil.setalerts(data.alerts);
     globalutil.setpackages(data.packages);
-    globalutil.setCurrencies(data.Currencies);
-    globalutil.setPostTypes(data.PostTypes);    
+    globalutil.setCurrencies(data.currencies);
+    globalutil.setPostTypes(data.postTypes);    
     globalutil.setmenus(data.menus);  
     globalutil.setservicetypes(data.servicetypes);
     globalutil.setcommonstatuses(data.commonstatuses);
@@ -152,7 +152,7 @@ function SignIn() {
       );
       console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
-        console.log(JSON.stringify(loginRes),'login');
+        console.log((loginRes),'login');
         getUtils();
         getMenus();
         console.log(getMenus(),'menuss');

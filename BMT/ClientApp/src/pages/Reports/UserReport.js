@@ -119,7 +119,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         if (res.status === true) {
           const mappedArray = res.data.map((data) => ({
             id: data.id,
-            roleId: data.roleId,
+            roleName: data.roleName,
            // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
             //userId: data.userId,
             //dspid: user.dspId.toString(),
@@ -163,7 +163,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
     {
-      field: 'roleId',
+      field: 'roleName',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Role',
       flex: 1,
@@ -240,7 +240,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         mappedObject = {
           userName: 'name',
           userRole: 'Role',
-          primaryContact: 'Contact',
+          contact: 'Contact',
           email: 'Email',
           status: 'status',
           createdAt: 'date of joining'
@@ -251,7 +251,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         mappedObject = {
           userName: field.userName,
           userRole: field.userRole,
-          primaryContact: field.primaryContact,
+          contact: field.contact,
           email: field.email,
           status: field.status,
           createdAt: field.createdAt,
@@ -261,7 +261,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     });
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.userName, item.userRole, item.primaryContact, item.email, item.status.toString(), item.createdAt];
+      const rowData = [item.userName, item.userRole, item.contact, item.email, item.status.toString(), item.createdAt];
       return [rowData];
 
     });

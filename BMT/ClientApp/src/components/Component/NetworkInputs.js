@@ -522,6 +522,7 @@ const NetworkInputs = (prop) => {
             id="replyAttachment"
             name="replyAttachment"
             placeholder="auto reply attachment"
+            disableOption='Select Auto Reply Attachment'
             className="form-control item"
             isRequired={false}
             title="auto reply attachment "
@@ -535,12 +536,13 @@ const NetworkInputs = (prop) => {
             icon={cilUser}
             value={networkState.postTypeId}
             onChange={handleNetworkSetting}
-            //options={globalutil.postTypes()}
+            options={globalutil.postTypes()}
             type="text"
             id="postTypeId"
             name="postTypeId"
             placeholder="post type"
-            className="form-control item"
+              className="form-control item"
+              disableOption= 'Select Post Type'
             isRequired={false}
             title="post type "
           // message="Enter Buisness Name"

@@ -40,10 +40,10 @@ export const useFetchUsers = () => {
         ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : moment().utc().format(),
     };
-    console.log(userBody,'body')
+   // console.log(userBody,'body')
     const res = await postData(userBody);
      alert(JSON.stringify( res) );
-    if (res.data.status) {
+    if (res.status) {
       return res.data;
     } else {
       showToast(res.message, 'error');

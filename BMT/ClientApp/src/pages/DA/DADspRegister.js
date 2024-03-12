@@ -3,18 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import moment from 'moment';
-
 import { cilChevronBottom } from '@coreui/icons';
-
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import DAaddPartnerModal from 'src/components/Modals/DAaddPartnerModal';
-
 import { formValidator } from 'src/helpers/formValidator';
-
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-
 import {
   getDaDspsRegisterInputs,
   getInitialDspData,
@@ -70,7 +65,7 @@ const DADspRegister = () => {
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   // const { createUpdateDsp, createUpdateDspdata } = useRegisterDsp();
   const [showPartners, setshowPartners] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
 
@@ -241,22 +236,7 @@ const DADspRegister = () => {
               yesFn={goToAnotherPage}
               submitFn={registerDsp}
             >
-              <div className="d-flex flex-column mt-2">
-                <DataGridHeader
-                  title={`Partners (${rows.filter((item) => item.status !== 6).length})`}
-                  addButton={'Add Partner'}
-                  addBtnClick={AddPartnerClick}
-                  otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}
-                />
-                {showPartners && (
-                  <CustomDatagrid
-                    rows={rows}
-                    columns={dspPartnersCols}
-                    pagination={true}
-                    rowHeight={40}
-                  />
-                )}
-              </div>
+            
               <CFormCheck
                 name="isTermsAccepted"
                 checked={dspRegData.isTermsAccepted}
