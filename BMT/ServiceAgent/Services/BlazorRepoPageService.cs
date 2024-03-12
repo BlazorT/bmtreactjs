@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using com.blazor.bmt.core.baseentity;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
+using com.blazor.bmt.core;
 
 namespace Blazor.Web.UI.Services
 {
@@ -301,7 +302,7 @@ namespace Blazor.Web.UI.Services
                                             UserStatus = Convert.ToInt32(usr["UserStatus"]),
                                             AlreadyLoginStatus = Convert.ToInt32(usr["AlreadyLoginStatus"]),
                                             LoginMachineIp = "" + usr["MachineIP"],
-                                            UserRole = "" + usr["UserRole"],
+                                            UserRole = "" + usr["UserRole"],                                            
                                             RoleId = Convert.ToInt32(usr["RoleID"])
                                         };
 
