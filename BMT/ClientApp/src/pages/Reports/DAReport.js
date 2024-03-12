@@ -30,7 +30,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'DA Report',
+    (item) => item.name === 'Users Report',
   );
   const generatePdf = async () => {
     const body = {
@@ -51,7 +51,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId.toString(),
+    orgId: user.orgId,
     keyword: '',
     status: '0',
     createdAt: dayjs().utc().startOf('month').format(),
@@ -81,18 +81,23 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
   const getDAuserList = async (filters) => {
     const fetchBody = {
       id: 0,
-      roleId: 3,
+      roleId: 0,
       userId: '',
-      dspid: user.dspId.toString(),
+      orgId: user.orgId,
       userRole: '',
       email: '',
+      userCode: '',
+      firstName: '',
       lastName: '',
       password: '',
       primaryContact: '',
       userName: '',
       performance: '',
       violations: 0,
-      licenseExpiryDate: moment().utc().startOf('year').format(),
+      status: 0,
+      genderId: 0,
+      rowVer: 0,
+      //licenseExpiryDate: moment().utc().startOf('year').format(),
       createdAt: moment().utc().subtract(1, 'year').format(),
       lastUpdatedAt: moment().utc().format(),
       ...filters,
@@ -106,16 +111,19 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
+        console.log(res, 'res');
+
         if (res.status) {
-          const mappedArray = res.data.data.map((data) => ({
+          const mappedArray = res.data.map((data) => ({
             id: data.id,
             // roleId: data.roleId,
             // userId: data.userId,
             // dspid: user.dspId.toString(),
             userRole: data.userRole,
             userName: data.userName,
+            orgName: data.orgName,
             performance: data.performance,
-            primaryContact: data.primaryContact,
+            contact: data.primaryContact,
             violations: data.violations,
             status: globalutil.statuses().find((item) => item.id === data.status)
               ? globalutil.statuses().find((item) => item.id === data.status).name
@@ -154,7 +162,20 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
     {
-      field: 'primaryContact',
+      field: 'orgName',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Organization',
+      flex: 1,
+      minWidth: 120,
+      editable: false,
+      sortable: false,
+      filterable: true,
+     // align: 'center',
+     // headerAlign: 'center',
+      disableColumnMenu: false,
+    },
+    {
+      field: 'contact',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Contact',
       flex: 1,
@@ -163,30 +184,8 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
 
-    {
-      field: 'performance',
-      headerClassName: 'custom-header-data-grid',
-      headerName: 'Performance',
-      flex: 1,
-      minWidth: 120,
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-    },
-    {
-      field: 'violations',
-      headerClassName: 'custom-header-data-grid',
-      headerName: 'Violations',
-      flex: 1,
-      minWidth: 120,
-      editable: false,
-      sortable: false,
-      filterable: true,
-      align: 'center',
-      headerAlign: 'center',
-      disableColumnMenu: false,
-    },
+    
+    
     {
       field: 'status',
       headerClassName: 'custom-header-data-grid',
@@ -198,19 +197,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
       disableColumnMenu: false,
     },
-    {
-      field: 'licenseExpiryDate',
-      headerClassName: 'custom-header-data-grid',
-      headerName: 'Licence Expiry ',
-      flex: 1,
-      minWidth: 100,
-      editable: false,
-      filterable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      type: 'timestamp',
-      //   renderCell: (params) => <EditFeildMapping value={params} />,
-    },
+    
     {
       field: 'createdAt',
       headerClassName: 'custom-header-data-grid',

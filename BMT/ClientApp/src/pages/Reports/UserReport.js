@@ -89,13 +89,18 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       orgId: user.orgId,
       userRole: '',
       email: '',
+      userCode: '',
+      firstName: '',
       lastName: '',
       password: '',
       primaryContact: '',
       userName: '',
       performance: '',
       violations: 0,
-      licenseExpiryDate: moment().utc().startOf('year').format(),
+      status: 0,
+      genderId: 0,
+      rowVer: 0,
+     //licenseExpiryDate: moment().utc().startOf('year').format(),
       createdAt: moment().utc().subtract(1, 'year').format(),
       lastUpdatedAt: moment().utc().format(),
       ...filters,
@@ -112,15 +117,16 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       (res) => {
         console.log(res,'user responce');
         if (res.status === true) {
-          const mappedArray = res.data.data.map((data) => ({
+          const mappedArray = res.data.map((data) => ({
             id: data.id,
-            //roleId: data.roleId,
+            roleId: data.roleId,
+           // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
             //userId: data.userId,
             //dspid: user.dspId.toString(),
-            userRole: data.userRole,
+            //userRole: data.userRole,
             userName: data.userName,
             status: data.status,
-            primaryContact: data.primaryContact,
+            contact: data.contact,
             email: data.email,
             createdAt: formatDate(data.createdAt)
               ? formatDate(data.createdAt)
@@ -157,7 +163,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
     {
-      field: 'userRole',
+      field: 'roleId',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Role',
       flex: 1,
@@ -166,7 +172,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
     {
-      field: 'primaryContact',
+      field: 'contact',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Contact',
       flex: 1,
@@ -178,8 +184,8 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       field: 'email',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Email',
-      flex: 1,
-      width: 100,
+     // flex: 1,
+      width: 190,
       editable: false,
       filterable: true,
     },
