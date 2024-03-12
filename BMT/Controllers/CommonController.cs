@@ -10,6 +10,7 @@ using com.blazor.bmt.application.model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.UI.Interfaces;
+using com.blazor.bmt.core;
 
 namespace com.blazor.bmt.controllers
 {
@@ -223,8 +224,9 @@ namespace com.blazor.bmt.controllers
                         lookUps.Intervals = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.INTERVAL_TYPES).ToList();
                         lookUps.alerts = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.ALERT_LEVELS).ToList();
                         lookUps.notifications = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
+                        lookUps.notifications = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.NOTIFICATION_TYPE).ToList();
                         // lookUps.no = lst.Where(x => x.LVType == (int)UTIL.LOOKUP_TYPES.PACKAGE).ToList();
-
+                        lookUps.userroles = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.USER_ROLES).ToList(); 
                         lookUps.packages = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.PACKAGE).ToList();
                         lookUps.Currencies = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.CURRENCIES).ToList();
                         //lookUps.Countries = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.COUNTRIES).ToList();

@@ -279,7 +279,9 @@ namespace com.blazor.bmt.util
         [Description("Countries")]
         COUNTRIES = 9,
         [Description("Post Types")]
-        POST_TYPES = 10
+        POST_TYPES = 10,
+        [Description("USER_ROLES")]
+        USER_ROLES = 22
     }
     public enum STATUS_TYPE
     {

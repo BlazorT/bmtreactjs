@@ -14,7 +14,7 @@
         public List<GlobalLookUpViewModel> menus { get; set; } = new List<GlobalLookUpViewModel>();
       
         public List<GlobalLookUpViewModel> substatuses { get; set; } = new List<GlobalLookUpViewModel>();
-        public List<GlobalLookUpViewModel> ownerships { get; set; } = new List<GlobalLookUpViewModel>();
+       
         public List<GlobalLookUpViewModel> userroles { get; set; } = new List<GlobalLookUpViewModel>();
 
         public List<GlobalLookUpViewModel> networks { get; set; } = new List<GlobalLookUpViewModel>();
