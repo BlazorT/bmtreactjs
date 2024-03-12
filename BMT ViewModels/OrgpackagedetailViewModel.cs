@@ -19,8 +19,6 @@ public partial class OrgpackagedetailViewModel
 
     public string? ApikeySecret { get; set; }
 
-    public string? APIKeySecret { get; set; }
-
     public string? Custom2 { get; set; }
 
     public string? Custom1 { get; set; }
@@ -38,7 +36,7 @@ public partial class OrgpackagedetailViewModel
     public int NetworkId { get; set; }
 
     public int? PurchasedQouta { get; set; }
-
+    public int? port { get; set; }
     public string? AutoReplyContent { get; set; }
 
     public int? ReplyMediaContentId { get; set; }
@@ -70,10 +68,8 @@ public partial class OrgpackagedetailViewModel
 
     public string? BusinessId { get; set; }
 
-    public string? Apiuri { get; set; }
-    public string APIURI { get; set; }
-    public string? Apikey { get; set; }
-    public string? APIKey { get; set; }
+    public string? Apiuri { get; set; }   
+    public string? Apikey { get; set; }   
     public string? WebUrl { get; set; }
     public double? UnitPriceInclTax { get; set; }
     public short? CategoryId { get; set; }

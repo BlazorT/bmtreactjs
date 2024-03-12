@@ -4,7 +4,6 @@ import { CCol, CContainer, CRow } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
 import { formValidator } from 'src/helpers/formValidator';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-
 import { useSelector } from 'react-redux';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
@@ -38,18 +37,19 @@ import globalutil from '../../util/globalutil';
 const NetworkInputs = (prop) => {
   const { header, networkId, setNetworkList, networkList } = prop
   const dispatch = useDispatch();
-
-  const [networkState, setSetNetworkState] = useState({
+  const user = useSelector((state) => state.user);
+  const [networkState, SetNetworkState] = useState({
     id:0,
-    orgId:0,
+    orgId: user.orgId,
     name: '',
    // attachment: '',
    // excelAttachment: '',
     buisnessId: '',
     url: "",
-    aPIURI: "",
+    apiuri: "",
     sender: "",
-    //serverEmail: "",
+    port:0,
+    apikey: "",
     password: "",
     autoReplyAllowed: 1,
     autoReplyContent: "",
@@ -58,7 +58,9 @@ const NetworkInputs = (prop) => {
     virtualAccount: 0,
     networkId: networkId,
     rowVer: 0,
-    status: 0,
+    status: 1,
+    createBy: user.Id,
+    lastUpdatedBy: user.Id,
     startTime: moment().utc().format(),
     finishTime: moment().utc().format(),
     createdAt: moment().utc().startOf('month').format(),
@@ -75,19 +77,38 @@ const NetworkInputs = (prop) => {
     fetchData: createNetworkSetting,
   } = useFetch();
   const handleNetworkSetting = (e, label) => {
+   // console.log("Label", label); 
     if (label == 'startTime' || label == 'finishTime') {
-      setSetNetworkState((prev) => ({
+     // alert(label);
+      SetNetworkState((prev) => ({
         ...prev,
         [label]: e,
       }));
     } else {
+      //// || name == 'unitId' || name == 'port') && value !=='')
+      const { name, value, type, checked } = e.target
+      if (type == 'checkbox') {
+       // alert(type);
+        SetNetworkState((prev) => ({
+          ...prev,
+          [name]:  checked ,
+        }));
+      } else if (type == "number" && value !== '')
+      {
+      // alert(name);
+        SetNetworkState((prev) => ({
+          ...prev,
+          [name]: parseInt(value),
+        }));
+      } else {
+       // alert(type);
+        SetNetworkState((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
 
-      const { name, value, type,checked } = e.target
-    setSetNetworkState((prev) => ({
-      ...prev,
-      [name]:type=='checkbox'?checked: value,
-    }));
-    }
+    }//else {
   }
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
@@ -115,7 +136,7 @@ const NetworkInputs = (prop) => {
         isOpen: false,
       }),
     );
-    setSetNetworkState([]);
+    SetNetworkState([]);
   };
 
   const onNoConfirm = () => {
@@ -127,7 +148,7 @@ const NetworkInputs = (prop) => {
   };
 
   const onSave = () => {
-    alert('onsave');
+    //alert('onsave');
     const form = document.querySelector('.service-integration-form');
     formValidator();
     if (form.checkValidity()) {
@@ -138,15 +159,16 @@ const NetworkInputs = (prop) => {
    // setIsLoading(createNetworkSettingLoading.current);
   }
   const onSubmit = async () => {
-    alert(JSON.stringify(networkList));
+   // alert(JSON.stringify(networkList));
     if (networkList.length > 0) {
-      await createNetworkSetting('/Organiaztion/addupdatenetworksettings', {
+     alert(JSON.stringify(networkList));
+      await createNetworkSetting('/Organization/addupdatenetworksettings', {
         method: 'POST',
         body: JSON.stringify(networkList),
       });
 
     }
-    console.log(createNetworkSettingRes);
+    //console.log(createNetworkSettingRes);
     if (createNetworkSettingRes.current?.status === true) {
       dispatch(
         updateToast({
@@ -195,7 +217,7 @@ const NetworkInputs = (prop) => {
           className="form-control item"
           isRequired={false}
           title="recipients name "
-        // message="Enter Buisness Name"
+          // message="Enter Buisness Name" ApikeySecret
         />
       </CCol>
 
@@ -279,11 +301,11 @@ const NetworkInputs = (prop) => {
           <CustomInput
             label="Key"
             icon={cilUser}
-            value={networkState.aPIKeySecret}
+            value={networkState.apiKeySecret}
             onChange={handleNetworkSetting}
             type="text"
-            id="aPIKeySecret"
-            name="aPIKeySecret"
+              id="apikeySecret"
+              name="apikeySecret" 
             placeholder="API Key Secret"
             className="form-control item"
             isRequired={false}
@@ -295,11 +317,11 @@ const NetworkInputs = (prop) => {
           <CustomInput
             label="API Url"
             icon={cilUser}
-            value={networkState.aPIURI}
+            value={networkState.apiuri}
             onChange={handleNetworkSetting}
             type="text"
-            id="aPIURI"
-            name="aPIURI"
+              id="apiuri"
+              name="apiuri"
             placeholder="API url"
             className="form-control item"
             isRequired={false}
@@ -330,9 +352,9 @@ const NetworkInputs = (prop) => {
             icon={cilUser}
             value={networkState.unitId}
             onChange={handleNetworkSetting}
-            type="text"
+              type="number"
             id="unitId"
-            name="unitId"
+              name="unitId" 
             placeholder="unit id"
             className="form-control item"
             isRequired={false}
@@ -350,7 +372,7 @@ const NetworkInputs = (prop) => {
             icon={cilUser}
             value={networkState.purchasedQouta}
             onChange={handleNetworkSetting}
-            type="text"
+            type="number"
             id="purchasedQouta"
             name="purchasedQouta"
             placeholder="purchased qouta"
@@ -398,17 +420,17 @@ const NetworkInputs = (prop) => {
 
         <CCol className="" md={6}>
           <CustomInput
-            label="Port URI"
+            label="Port"
             icon={cilUser}
-            value={networkState.portUri}
+                  value={networkState.port}
             onChange={handleNetworkSetting}
-            type="text"
-            id="portUri"
-            name="portUri"
-            placeholder="Port URI"
+                  type="number"
+            id="port"
+                  name="port"
+            placeholder="Port"
             className="form-control item"
             isRequired={false}
-            title="Port URI "
+            title="Port ex. 9003 "
           // message="Enter Buisness Name"
           />
         </CCol>

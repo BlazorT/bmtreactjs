@@ -718,9 +718,9 @@ namespace Blazor.Web.UI.Services
                                 pkg.networkDesc = "" + (reader["networkDesc"]);
                                 pkg.VirtualAccount = Convert.ToInt16(reader["VirtualAccount"]);  
                                 pkg.UnitId = Convert.ToInt32(reader["UnitId"]);
-                                pkg.APIKeySecret = "" + (reader["APIKeySecret"]);
-                                pkg.APIKey = "" + (reader["APIKey"]);
-                                pkg.APIURI = "" + (reader["APIURI"]);
+                                pkg.ApikeySecret = "" + (reader["APIKeySecret"]);
+                                pkg.Apikey = "" + (reader["APIKey"]);
+                                pkg.Apiuri = "" + (reader["APIURI"]);
                                 pkg.FinishTime = Convert.ToDateTime(reader["FinishTime"]);
                                 organizations.Add(pkg);
                             }

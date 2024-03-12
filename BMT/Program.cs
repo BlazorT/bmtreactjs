@@ -38,6 +38,8 @@ services.AddScoped(typeof(IUsersRepository), typeof(UsersRepository));
 services.AddScoped(typeof(IOnlineUsersRepository), typeof(OnlineUsersRepository));
 services.AddScoped(typeof(INotificationsRepository), typeof(NotificationsRepository));
 services.AddScoped(typeof(IMediaContentRepository), typeof(MediaContentRepository));
+
+services.AddScoped(typeof(IGlobalNetworkDetailsRepository), typeof(GlobalNetworkDetailsRepository));
 //services.AddScoped(typeof(IInventoryRepository), typeof(InventoryRepository));
 // Repositry
 services.AddScoped<IOrganizationRepository, OrganizationRepository>();
@@ -51,6 +53,7 @@ services.AddScoped<IConfigurationsRepository, ConfigurationsRepository>();
 services.AddScoped<ICitiesRepository, CitiesRepository>();
 //services.AddScoped<IIntegrationRepository, IntegrationRepository>();
 services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+services.AddScoped<IGlobalNetworkDetailService, GlobalNetworkDetailService>();
 //services.AddScoped<IVehiclesInspectionRepository, VehiclesInspectionRepository>();
 //services.AddScoped<IInspectionReportRepository, InspectionReportRepository>();
 //services.AddScoped<IInspectionItemsRepository, InspectionItemsRepository>();

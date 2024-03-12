@@ -17,7 +17,7 @@ public partial class Orgpackagedetail : EntityTransaction
     public int? TargetAudienceId { get; set; }
 
     public string? Password { get; set; }
-
+    public int? port { get; set; }
     public string? ApikeySecret { get; set; }
 
     public string? Custom2 { get; set; }

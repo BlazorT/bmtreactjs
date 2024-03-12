@@ -77,7 +77,7 @@ const SingleDispatchment = () => {
   const [networkSettingData, setNetworkSettingData] = useState(initialData);
   const handleSubmit = (e) => {
    // console.log(e);
-    //e.preventDefault();
+    e.preventDefault();
   };
   //const onSave = async () => {
   //  const form = document.querySelector('.service-integration-form');
@@ -176,7 +176,7 @@ const SingleDispatchment = () => {
   const handleNetworkSetting = (event) => {
     const { name, value, type, checked } = event.target;
     const fieldValue = type === 'checkbox' ? checked : value;
-
+    alert(fieldValue);
     setNetworkSettingData((prevData) => ({
       ...prevData,
       [name]: fieldValue,
