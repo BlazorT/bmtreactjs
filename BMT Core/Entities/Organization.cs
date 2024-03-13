@@ -39,6 +39,7 @@ public partial class Organization : Entity
     public int RowVer { get; set; }
     public int? CreatedBy { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DateTime? LastUpdatedAt { get; set; }
     public int? LastUpdatedBy { get; set; }   
     public DateTime? ExpiryTime { get; set; }
 }

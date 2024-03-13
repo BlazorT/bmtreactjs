@@ -25,6 +25,7 @@ namespace com.blazor.bmt
             CreateMap<AuditLogModel, AuditLogViewModel>();
             CreateMap<NotificationModel, NotificationViewModel>();          
             CreateMap<ConfigurationsViewModel, ConfigurationModel>();
+            CreateMap<OrganizationViewModel, OrganizationModel>();
             CreateMap<AppLogViewModel, ApplogModel>();
             CreateMap<AuditLogViewModel, AuditLogModel>();
             CreateMap<UserViewModel, UserModel>();           
