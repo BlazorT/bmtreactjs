@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.UI.Interfaces;
 using com.blazor.bmt.core;
+using Blazor.Web.Application.Interfaces;
 
 namespace com.blazor.bmt.controllers
 {
@@ -23,39 +24,31 @@ namespace com.blazor.bmt.controllers
         private readonly ILogger<CommonController> _logger;
         private readonly IAppLogPageService _appLogPageService;
         private readonly IConfigurationsService _configurationsService;
-        private readonly IStatesService _stateService;
-       // private readonly IIntegrationPageService _integrationPageService;
-       // private readonly IOnlineUsersService _onlineUsersService;
-        private readonly INotificationPageService _notificationPageService;
-       // private readonly IBlazorUtilPageService _blazorUtilPageService;
-       // private readonly IShiftsService _shiftsService;
-        private readonly IBlazorRepoPageService _blazorRepoPageService;
-       // private readonly IBasicConfigurationsService _basicconfigurationsService;
-
+       private readonly IStatesService _stateService;
+        private readonly ICitiesService _citiesService; 
+        private readonly INotificationPageService _notificationPageService;  
+        private readonly IBlazorRepoPageService _blazorRepoPageService;      
         private readonly IBlazorUtilPageService _blazorUtilPageService;
 
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IStatesService stateService, ICitiesService citiesService, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
             // this.dbContext = new _bmtContext();
-            _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
-           // _shiftsService = shiftsService ?? throw new ArgumentNullException(nameof(shiftsService));
+             _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
+            _citiesService = citiesService ?? throw new ArgumentNullException(nameof(citiesService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
            // _basicconfigurationsService = basicconfigurationsService ?? throw new ArgumentNullException(nameof(basicconfigurationsService));
             _configurationsService = configurationsService ?? throw new ArgumentNullException(nameof(configurationsService));
           //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
-          _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));
-            //_integrationPageService = integrationPageService ?? throw new ArgumentNullException(nameof(integrationPageService));
-
+          _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));          
             _blazorUtilPageService = blazorUtilPageService ?? throw new ArgumentNullException(nameof(blazorUtilPageService));
-
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             // applicationPath = _hostingEnvironment.ContentRootPath;
@@ -88,6 +81,29 @@ namespace com.blazor.bmt.controllers
                   //  _cache.Set("" + this.User.Identity.Name + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
            
         }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
+        [HttpGet("cities")]
+        [HttpPost("cities")]
+        [Route("cities")]
+        public async Task<ActionResult> GetCities()
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+                blazorApiResponse.status = true;
+                blazorApiResponse.data= await _citiesService.GetCitiesList("");
+            }
             catch (Exception ex)
             {
                 blazorApiResponse.status = false;

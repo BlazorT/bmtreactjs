@@ -40,7 +40,7 @@ services.AddScoped(typeof(INotificationsRepository), typeof(NotificationsReposit
 services.AddScoped(typeof(IMediaContentRepository), typeof(MediaContentRepository));
 
 services.AddScoped(typeof(IGlobalNetworkDetailsRepository), typeof(GlobalNetworkDetailsRepository));
-//services.AddScoped(typeof(IInventoryRepository), typeof(InventoryRepository));
+
 // Repositry
 services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 services.AddScoped<IAddressRepository, AddressRepository>();

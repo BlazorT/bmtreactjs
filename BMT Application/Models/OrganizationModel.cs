@@ -8,7 +8,6 @@ namespace com.blazor.bmt.application.model;
 public partial class OrganizationModel : BaseModel
 {
     // public int Id { get; set; }
-
     public string? Name { get; set; }
 
     public string? Description { get; set; }
@@ -36,16 +35,10 @@ public partial class OrganizationModel : BaseModel
     public int? CityId { get; set; }
 
     public int Status { get; set; }
-
-    //public int? CreatedBy { get; set; }
-
-    //public DateTime CreatedAt { get; set; }
-
-    //public int? LastUpdatedBy { get; set; }
+    
+    public int RowVer { get; set; }  
 
     public DateTime? ExpiryTime { get; set; }
 
-   // public DateTime? LastUpdatedAt { get; set; }
-
-    public int RowVer { get; set; }
+   
 }
