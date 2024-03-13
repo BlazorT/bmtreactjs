@@ -12,19 +12,19 @@ import { countries } from 'src/constants/countries';
 import { useFetchProducts } from 'src/hooks/api/useFetchProducts';
 import globalutil from 'src/util/globalutil';
 
-const Products: React.FC = () => {
+const Products = () => {
   useEffect(() => {
     getProducts();
   }, []);
 
-  const pageRoles = useSelector((state: any) => state.navItems.pageRoles).find(
-    (item: any) => item.name === 'Products',
+  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
+    (item) => item.name === 'Products',
   );
 
   const [showAddProductModal, setShowAddProductModal] = useState(false);
 
-  const [products, setProducts] = useState<any>([]);
-  const [productRows, setProductRows] = useState<any[]>([]);
+  const [products, setProducts] = useState([]);
+  const [productRows, setProductRows] = useState([]);
 
   const { data, loading, fetchProducts } = useFetchProducts();
 

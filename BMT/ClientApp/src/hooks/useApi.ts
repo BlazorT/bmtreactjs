@@ -20,7 +20,7 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
  // alert(url);
   const showToast = useShowToast();
 
-  const postData = async (postData: ApiPostDataType<T>) => {
+  const postData = async (postData?: ApiPostDataType<T>) => {
     try {
       setLoading(true);
 
@@ -41,6 +41,7 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
       if (!response.ok) {
         showToast(`API error: ${response.statusText}`);
       }
+      
 
       const responseData = await response.json();
       setData(responseData);

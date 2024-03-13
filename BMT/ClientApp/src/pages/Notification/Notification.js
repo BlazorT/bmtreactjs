@@ -3,16 +3,18 @@ import CIcon from '@coreui/icons-react';
 import Visibility from '@mui/icons-material/Visibility';
 import Reply from '@mui/icons-material/Reply';
 import { cilUser, cilFlagAlt, cilChevronBottom, cilCalendarCheck } from '@coreui/icons';
-import { CCard, CCardHeader } from '@coreui/react';
+import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import globalutil from 'src/util/globalutil';
 import Tooltip from '@mui/material/Tooltip';
+import { CFormCheck } from '@coreui/react';
 
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import NotificationModal from 'src/components/Modals/NotificationModal';
 import NotificationInfoModal from 'src/components/Modals/NotificationInfoModal';
+import AppContainer from '../../components/UI/AppContainer';
 
 const Notification = () => {
   const [showStock, setShowStock] = useState(false);
@@ -172,110 +174,26 @@ const Notification = () => {
   return (
     <div className="job-application-form">
       <form onSubmit={handleSubmit}>
-        <div>
-          <CCard style={{ background: '#0A3153' }} className="mt-2">
-            <CCardHeader className="dashboard-stock-header dashboard-drop">
-              <div className="pointer" onClick={toggleStock}>
-                Advance Search
-              </div>
-              <CIcon className="stock-toggle-icon" onClick={toggleStock} icon={cilChevronBottom} />
-            </CCardHeader>
-            {showStock == true ? (
-              <div className="show-stock">
-                <div className="mb-0  dashboard-table padLeftRight">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <CustomInput
-                        label="Keyword"
-                        
-                       
-                        icon={cilUser}
-                        type="text"
-                        id="keyword"
-                        name="keyword"
-                        placeholder="sender name, title, status "
-                        className="form-control item"
-                        isRequired={false}
-                        title='Search using by sender name, title, status '
-                      // message="Enter Buisness Name"
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <CustomSelectInput
-                        label="Notification Status"
-                        icon={cilFlagAlt}
-                        id="status"
-                        options={globalutil.commonstatuses()}
-                        className="form-control item form-select"
-                        disableOption='Select Status'
-                        name="status"
-                        title='Search notification status '
-                       
-                      />
-                    </div>
-                  </div>
+        <AppContainer>
+          <CRow>
+            <CCol md="4">
+              <ul className="inlinedisplay">
+                <li className="divCircle">
+                  <CIcon className="BlazorIcon pdngleft" icon={cilFlagAlt} />
+                </li>
+                <li className='network-checkbox-animate'>
+                  <CFormCheck
+                    className=""
+                    id="flexNotificationChecked"
+                    label="Whatsapp"
+                    defaultChecked
+                  />
+                </li>
+              </ul>
+            </CCol>
+          </CRow>
 
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="text-end mt-2">
-                        <button title="Click for searching notification data" type="button" className="btn_Default m-2 sales-btn-style">
-                          Search
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </CCard>
-          <div className="bg_Div mt-2 d-flex flex-column">
-            <DataGridHeader
-              title="Notifications"
-              otherControls={[
-                { icon: cilCalendarCheck, fn: toggleNoticeMdl },
-                { icon: cilChevronBottom, fn: toggleLicence },
-              ]}
-            />
-            {showLicence == true ? (
-              <div className="show-stock">
-                <div className="row pt-2">
-                  <div className="col-md-12 col-xl-12">
-                    <CustomDatagrid
-                      rows={rows}
-                      columns={columns}
-                      rowHeight={50}
-                      pagination={false}
-                      summary={[
-                        {
-                          field: 'new',
-                          aggregates: [{ aggregate: 'sum', caption: 'New' }],
-                        },
-                        {
-                          field: 'read',
-                          aggregates: [{ aggregate: 'sum', caption: 'Read' }],
-                        },
-                        {
-                          field: 'responded',
-                          aggregates: [{ aggregate: 'sum', caption: 'Responded' }],
-                        },
-                      ]}
-                      hiddenCols={{
-                        columnVisibilityModel: {
-                          new: false,
-                          read: false,
-                          responded: false,
-                        },
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-        <NotificationInfoModal isOpen={replyNotiModalOpen} toggle={toggleReplyMdl} isShare={true} />
-        <NotificationInfoModal isOpen={infoModalOpen} toggle={toggleInfoMdl} isShare={false} />
-        <NotificationModal isOpen={noticeModalOpen} toggle={toggleNoticeMdl} />
+        </AppContainer>
       </form>
     </div>
   );

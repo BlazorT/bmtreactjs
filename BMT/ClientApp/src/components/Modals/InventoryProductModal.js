@@ -201,7 +201,7 @@ const InventoryProductModal = (prop) => {
                 icon={cilCode}
                 id="productAssignment"
                 name="productAssignment"
-                options={globalutil.product_assignment_types()}
+                //options={globalutil.product_assignment_types()}
                 isRequired={true}
                 message="Select Product Assignment"
               />
@@ -223,7 +223,7 @@ const InventoryProductModal = (prop) => {
                 icon={cilGraph}
                 id="productFor"
                 name="productFor"
-                options={globalutil.businessentities()}
+                //options={globalutil.businessentities()}
                 isRequired={false}
                 disabled={true}
               />
@@ -251,7 +251,7 @@ const InventoryProductModal = (prop) => {
                 icon={cilGraph}
                 id="category"
                 name="category"
-                options={globalutil.productGroup()}
+                //options={globalutil.productGroup()}
                 isRequired={false}
               />
               <CustomSelectInput
@@ -259,7 +259,7 @@ const InventoryProductModal = (prop) => {
                 icon={cilInfo}
                 id="status"
                 name="status"
-                options={globalutil.commonstatuses()}
+                options={globalutil.statuses()}
                 value={inventoryProductData.status}
                 onChange={handleInvertoryData}
                 isRequired={false}

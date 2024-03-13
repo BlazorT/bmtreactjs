@@ -3365,3 +3365,39 @@ fieldset.legend {
   background: rgb(3 28 52) !important;
   padding:0.5em;
 }
+.inlinedisplay {
+  display: -webkit-inline-box;
+  list-style: none;
+}
+.divCircle {
+  height: 46px;
+  margin-bottom: 10px;
+  width: 46px;
+  border: 1.1px solid #dc3545;
+  background-color: #e7eaec;
+  border-radius: 50%;
+  display: inline-block;
+}
+.pdngleft {
+  padding-left: 10px !important;
+}
+.network-checkbox-animate {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-left:1em;
+  font-family: arial;
+  font-size: 25px;
+}
+  .network-checkbox-animate label {
+    float: left;
+    position: relative;
+    cursor: pointer;
+  }
+    .network-checkbox-animate label input {
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: -1;
+    }

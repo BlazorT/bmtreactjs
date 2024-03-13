@@ -9,8 +9,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Product Name',
-    field: 'productName',
+    headerName: ' Name',
+    field: 'name',
     editable: false,
   },
 
@@ -21,8 +21,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Manufacture',
-    field: 'manufactured',
+    headerName: 'Fee',
+    field: 'fee',
     editable: false,
   },
   {
@@ -32,8 +32,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Product For',
-    field: 'productFor',
+    headerName: 'Early Bird Dis(%)',
+    field: 'earlyBirdDiscount',
     editable: false,
   },
   {
@@ -43,8 +43,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Category',
-    field: 'category',
+    headerName: 'Discount',
+    field: 'discount',
     editable: false,
   },
   {
@@ -54,28 +54,28 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Last Update Time',
-    field: 'lastUpdatedAt',
+    headerName: 'Package in days',
+    field: 'packageInDays',
     editable: false,
   },
-  {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: false,
-    headerName: 'Action',
-    field: 'status',
-    editable: false,
-    renderCell: (params) => (
-      <ProductActionCell
-        value={params}
-        getProducts={getProducts}
-        productData={products.find((item) => item.id === params.row.id)}
-        canUpdate={pageRoles.canUpdate}
-        canDelete={pageRoles.canDelete}
-      />
-    ),
-  },
+  //{
+  //  flex: 1,
+  //  minWidth: 130,
+  //  headerClassName: 'custom-header-data-grid',
+  //  filterable: true,
+  //  sortable: true,
+  //  disableColumnMenu: false,
+  //  headerName: 'Action',
+  //  field: 'status',
+  //  editable: false,
+  //  renderCell: (params) => (
+  //    <ProductActionCell
+  //      value={params}
+  //      getProducts={getProducts}
+  //      productData={products.find((item) => item.id === params.row.id)}
+  //      canUpdate={pageRoles.canUpdate}
+  //      canDelete={pageRoles.canDelete}
+  //    />
+  //  ),
+  //},
 ];
