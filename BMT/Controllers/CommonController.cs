@@ -114,31 +114,31 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        [HttpGet("basicconfigurations")]
-        [HttpPost("basicconfigurations")]
-        [Route("basicconfigurations")]
-        //public async Task<ActionResult> loadBasicConfigurations()
-        //{
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-        //    try
-        //    {
-        //         //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
-        //            blazorApiResponse.status = true;
-        //            blazorApiResponse.data = await _basicconfigurationsService.GetListByNameAsync("");
-              
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        blazorApiResponse.status = false;
-        //        blazorApiResponse.errorCode = "408";
-        //        blazorApiResponse.message = ex.Message;
-        //        _logger.LogError(ex.StackTrace);
-        //    }
-        //    return Ok(blazorApiResponse);
-        //    // .ToArray();
-        //}
-       // [HttpGet("submitconfigurations")]
+        [HttpGet("PackagesList")]
+        [HttpPost("PackagesList")]
+        [Route("PackagesList")]
+        public async Task<ActionResult> GetpackagesList()
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+                blazorApiResponse.status = true;
+                blazorApiResponse.data = await _pac.GetListByNameAsync("");
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
+        // [HttpGet("submitconfigurations")]
         [HttpPost("submitconfigurations")]
         [Route("submitconfigurations")]
         public async Task<ActionResult> submitConfigurations([FromBody] ConfigrationsMergedViewModel cvm)

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Blazor.Web.Application.Interfaces;
+using Blazor.Web.Core.Repositories;
 using Blazor.Web.UI.Interfaces;
 using Blazor.Web.UI.Services;
 using com.blazor.bmt;
@@ -54,7 +55,8 @@ services.AddScoped<ICitiesRepository, CitiesRepository>();
 //services.AddScoped<IIntegrationRepository, IntegrationRepository>();
 services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 services.AddScoped<IGlobalNetworkDetailService, GlobalNetworkDetailService>();
-//services.AddScoped<IVehiclesInspectionRepository, VehiclesInspectionRepository>();
+services.AddScoped<IBundlingPackageRepository, BundlingPackageRepository>();
+services.AddScoped<IPackageRepository, PackageRepository>();
 //services.AddScoped<IInspectionReportRepository, InspectionReportRepository>();
 //services.AddScoped<IInspectionItemsRepository, InspectionItemsRepository>();
 //services.AddScoped<IWorkflowFieldRepository, WorkflowFieldRepository>();
@@ -84,6 +86,8 @@ services.AddScoped<IUsersService, UsersService>();
 services.AddScoped<IAppLogService, AppLogService>();
 services.AddScoped<IAuditLogService, AuditLogService>();
 services.AddScoped<ICompaignService, CompaignService>();
+
+services.AddScoped<IPackageService, PackagesService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();
@@ -98,6 +102,7 @@ services.AddScoped<IBlazorUtilPageService, BlazorUtilPageService>();
 services.AddScoped<IOrgPageService, OrgPageService>();
 //services.AddScoped(typeof(IInspectionReportPageService), typeof(InspectionReportPageService));
 services.AddScoped(typeof(IMediaContentPageService), typeof(MediaContentPageService));
+//services.AddScoped(typeof(IPack), typeof(MediaContentPageService));
 
 services.AddScoped<IAuthorizationHandler, RolesAuthorizationHandler>();
 services.AddDbContext<com.blazor.bmt.infrastructure._bmtContext>(options => options.UseMySQL(BlazorConstant.CONNECTION_STRING).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);  //Cannot find UseMysql*

@@ -400,7 +400,7 @@ namespace com.blazor.bmt.controllers
                     dvm.CreatedBy = dvm.LastUpdatedBy;
                     dvm.RowVer = 1;
                     dvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    dvm.LastUpdatedBy = dvm.LastUpdatedBy;
+                    //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
                     blazorApiResponse.data = await _orgPageService.Create(dvm);
                 }
                 else

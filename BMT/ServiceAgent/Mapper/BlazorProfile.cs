@@ -12,7 +12,8 @@ namespace com.blazor.bmt
             CreateMap<StateModel, StatesViewModel>();
            
             CreateMap<CountryModel, CountryViewModel>();
-            //CreateMap<CategoryModel, CategoryViewModel>();
+          CreateMap<BundlingpackagedetailModel, Bundlingpackagedetail>();
+            CreateMap<PackageModel, Package>();
             CreateMap<CityModel, CityViewModel>();
             CreateMap<CompaignModel, CompaignsViewModel>();
             CreateMap<CompaignnetworkModel, CompaignNetworkViewModel>();
@@ -30,6 +31,8 @@ namespace com.blazor.bmt
             CreateMap<AuditLogViewModel, AuditLogModel>();
             CreateMap<UserViewModel, UserModel>();           
             CreateMap<MediacontentModel, MediacontentViewModel>();
+            CreateMap<BundlingpackagedetailModel, BundlingpackagedetailViewModel>();
+            CreateMap<PackageModel, PackageViewModel>();
             CreateMap<MediacontentViewModel, MediacontentModel>();
            // CreateMap<DspViewModel, DspModel>();
         }
@@ -56,7 +59,9 @@ namespace com.blazor.bmt
             CreateMap<Compaignnetwork, CompaignnetworkModel>().ReverseMap();
             CreateMap<Compaignexecutionschedule, CompaignexecutionscheduleModel>();
             CreateMap<Compaignscheduleday, CompaignscheduledayModel>();
-            //CreateMap<Vehicle, AutoSellPurchaseRequestModel>().ReverseMap();
+           CreateMap<Bundlingpackagedetail, BundlingpackagedetailModel>().ReverseMap();
+            CreateMap<Package, PackageModel>().ReverseMap();
+
             CreateMap<Mediacontent, MediacontentModel>().ReverseMap();
             CreateMap<Notification, NotificationModel>().ReverseMap();                    
 
