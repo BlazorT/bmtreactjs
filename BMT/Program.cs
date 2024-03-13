@@ -100,6 +100,7 @@ services.AddScoped<INotificationPageService, NotificationPageService>();
 services.AddScoped<IBlazorUtilPageService, BlazorUtilPageService>();
 
 services.AddScoped<IOrgPageService, OrgPageService>();
+services.AddScoped<IBundlingPackageService, BundlingPackagesService>();
 //services.AddScoped(typeof(IInspectionReportPageService), typeof(InspectionReportPageService));
 services.AddScoped(typeof(IMediaContentPageService), typeof(MediaContentPageService));
 //services.AddScoped(typeof(IPack), typeof(MediaContentPageService));
