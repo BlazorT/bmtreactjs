@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import moment from 'moment';
 import { cilChevronBottom } from '@coreui/icons';
+import globalutil from 'src/util/globalutil';
 
 import { getBusinessTypeById } from 'src/constants/buisnessType';
 import { getCountryById, getStateById } from 'src/constants/countries_and_states';
@@ -17,19 +18,19 @@ import { getDADspsListCols } from 'src/configs/ColumnsConfig/daDspsListCols';
 import { getDaDspsFiltersFields } from 'src/configs/FiltersConfig/daDspsFilterConfig';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 
-import { useFetchDsps } from 'src/hooks/api/useFetchDsps';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import AppContainer from 'src/components/UI/AppContainer';
 
-const DADspsList = () => {
+const OrgList = () => {
   useEffect(() => {
-    fetchDspList();
+    fetchOrgList();
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'DSP List',
+    (item) => item.name === 'Organizations',
   );
   const navigate = useNavigate();
-  const { getDsps } = useFetchDsps();
+  const { getOrgs } = useFetchOrgs();
 
   const [filters, setFilters] = useState({
     keyword: '',
@@ -39,8 +40,8 @@ const DADspsList = () => {
     createdAt: moment().utc().startOf('year').format(),
   });
   const [showAdvSearch, setshowAdvSearch] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [dspsList, setDspsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [orgsList, setOrgsList] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 880);
   const [rows, setRows] = useState([]);
 
@@ -52,7 +53,7 @@ const DADspsList = () => {
       createdAt: filters.createdAt === '' ? null : filters.createdAt,
     };
 
-    fetchDspList(filterBody);
+    fetchOrgList(filterBody);
   };
 
   const changeFilter = (e, date) => {
@@ -70,23 +71,26 @@ const DADspsList = () => {
     }
   };
 
-  const fetchDspList = async (filter) => {
-    const dspData = await getDsps(filter);
+  const fetchOrgList = async (filter) => {
+    const orgData = await getOrgs(filter);
 
-    setDspsList(dspData);
-    const mappedArray = dspData.map((data, index) => ({
-      sr: index + 1,
+    setOrgsList(orgData);
+    console.log(orgData);
+      const mappedArray = orgData.map((data) => ({
       id: data.id,
-      firstName: data.firstName !== null ? data.name : ' ' + data.name,
-      contact: data.contact,
-      country: data.stateId && getCountryById(data.stateId),
-      state: data.stateId && getStateById(data.stateId),
-      businessType: data.businessTypeId ? getBusinessTypeById(data.businessTypeId) : '',
-      partners: data.partnersCount,
-      status: data.status,
-      lastUpdatedAt: data.lastUpdatedAt,
-      fleet: data.fleet,
+      name: data.name,
+      cityId: data.cityId,
+      compaignsCount: data.compaignsCount,
+      currencyName: data.currencyName,
+      state: data.stateId,
+      createdAt: data.createdAt,
+      expiryTime: data.expiryTime,
+      status: globalutil.statuses().find((item) => item.id === data.status)
+        ? globalutil.statuses().find((item) => item.id === data.status).name
+        : '',
+      //status: data.status,
     }));
+    console.log(mappedArray);
     setRows(mappedArray);
     setIsLoading(false);
   };
@@ -103,10 +107,10 @@ const DADspsList = () => {
       country: 1,
       createdAt: moment().utc().startOf('year').format(),
     });
-    fetchDspList();
+    fetchOrgList();
   };
 
-  const daDspsListCols = getDADspsListCols(fetchDspList, dspsList, pageRoles);
+  const daDspsListCols = getDADspsListCols(fetchOrgList, orgsList, pageRoles);
   const daDspsFiltersFields = getDaDspsFiltersFields(filters, changeFilter);
 
   return (
@@ -134,9 +138,9 @@ const DADspsList = () => {
           </AppContainer>
           <AppContainer>
             <DataGridHeader
-              title="DSPS List"
-              addButton={pageRoles.canAdd === 1 ? 'DSPS' : ''}
-              addBtnClick={() => navigate('/dspRegister')}
+              title="Organization List"
+              addButton={pageRoles.canAdd === 1 ? 'Org' : ''}
+              addBtnClick={() => navigate('/applyForm')}
             />
             <CustomDatagrid
               rows={rows}
@@ -163,4 +167,4 @@ const DADspsList = () => {
   );
 };
 
-export default DADspsList;
+export default OrgList;

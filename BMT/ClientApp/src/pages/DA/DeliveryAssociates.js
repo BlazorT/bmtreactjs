@@ -150,8 +150,8 @@ const DeliveryAssociates = () => {
           <AppContainer>
             <DataGridHeader
               title="Organization Users"
-              addButton={pageRoles.canAdd === 1 ? 'Organization' : ''}
-              addBtnClick={() => navigate('/applyForm')}
+              addButton={pageRoles.canAdd === 1 ? 'Organization User' : ''}
+              addBtnClick={() => navigate('/UserRegister')}
               otherControls={[
               /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
                 { icon: cilChevronBottom, fn: toggleGrid },

@@ -48,7 +48,7 @@ const AuditLogs = () => {
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
     const filterBody = {
-      dspid: user.dspId,
+      orgId: user.orgId,
       keyword: filters.keyword,
       keyValue: filters.keyValue,
       oldValue: filters.oldValue,

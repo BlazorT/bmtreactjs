@@ -19,7 +19,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     ),
   },
   {
-    field: 'firstName',
+    field: 'completeName',
     headerName: 'Name',
     flex: 1,
     minWidth: 80,
@@ -31,7 +31,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     field: 'email',
     headerName: 'Email',
     flex: 1,
-    minWidth: 100,
+    minWidth: 220,
     editable: false,
     filterable: true,
     headerClassName: 'custom-header-data-grid',

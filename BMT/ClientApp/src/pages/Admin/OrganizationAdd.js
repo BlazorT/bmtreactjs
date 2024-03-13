@@ -23,7 +23,7 @@ import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 
-import { useFetchDsps } from 'src/hooks/api/useFetchDsps';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -38,7 +38,7 @@ const OrganizationAdd = () => {
 
   // Hooks and Helper Functions
   const { data, error, loading, checkEmailValidation } = useEmailVerification();
-  const { getDsps } = useFetchDsps();
+  const { getOrgs } = useFetchOrgs();
   const { createUpdateUser } = useUpdateUser();
   const { loading: avatarLoading, uploadAvatar } = useUploadAvatar();
   const { checkUserAvailability } = useUserAvailability();
@@ -48,7 +48,7 @@ const OrganizationAdd = () => {
 
   const [daUserData, setdaUserData] = useState(getInitialUserData(user));
   const [showForm, setshowForm] = useState(true);
-  const [dspList, setdspList] = useState([]);
+  const [orgList, setorgList] = useState([]);
   const [isThisBrandnew, setIsThisBrandnew] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -217,8 +217,8 @@ const OrganizationAdd = () => {
 
   // Fetch DSP list
   const fetchDspList = async () => {
-    const dspData = await getDsps();
-    setdspList(dspData);
+    const orgData = await getOrgs();
+    setorgList(orgData);
     setIsLoading(false);
   };
 
@@ -233,7 +233,7 @@ const OrganizationAdd = () => {
     emailMessage,
     userNameMessage,
     inputRef,
-    dspList,
+    orgList,
     TermsModal,
     onBlur,
   );

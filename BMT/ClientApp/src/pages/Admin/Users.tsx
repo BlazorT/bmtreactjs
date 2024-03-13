@@ -62,20 +62,22 @@ const Users: React.FC = () => {
   const fetching = async (filter?: any) => {
     const usersList = await fetchUsers(0, filter);
     setUsersData(usersList);
-    //formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
+    formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
   };
 
   const formatApiDataAsRows = (apiData: any[]) => {
     const mappedArray: any = apiData.map((data) => ({
       id: data.id,
       picture: data.avatar ? data.avatar : 'Profile-pic.jpg',
-      Name: data.firstName !== null ? data.firstName + ' ' + data.lastName : '',
+      Name: data.completeName,
+      email: data.email,
+      contact: data.contact,
       role: getRoleById(data.roleId) === 0 ? '' : getRoleById(data.roleId),
       regDate: formatDate(data.createdAt),
       lastUpdatedAt: data.lastUpdatedAt,
       status: data.status,
     }));
-    console.log(mappedArray,'users')
+    console.log(mappedArray, 'users');
     setRows(mappedArray);
   };
 

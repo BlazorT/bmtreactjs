@@ -25,7 +25,7 @@ import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 
-import { useFetchDsps } from 'src/hooks/api/useFetchDsps';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -40,7 +40,7 @@ const UserRegister = () => {
 
   // Hooks and Helper Functions
   const { data, error, loading, checkEmailValidation } = useEmailVerification();
-  const { getDsps } = useFetchDsps();
+  const { getOrgs } = useFetchOrgs();
   const { createUpdateUser } = useUpdateUser();
   const { loading: avatarLoading, uploadAvatar } = useUploadAvatar();
   const { checkUserAvailability } = useUserAvailability();
@@ -131,7 +131,7 @@ const UserRegister = () => {
     }
     let userBody = {
       ...daUserData,
-      secondaryContact: daUserData.isWhatsappAsso ? daUserData.primaryContact : '',
+      //secondaryContact: daUserData.isWhatsappAsso ? daUserData.primaryContact : '',
       password: btoa(daUserData.password),
       orgId: parseInt(daUserData.orgId),
       lastUpdatedBy: user.userId,
@@ -168,6 +168,7 @@ const UserRegister = () => {
       }
     } else {
       const res = await createUpdateUser(userBody);
+      console.log({ res });
       if (res.status === true) {
         navigate('/Users');
       }
@@ -219,8 +220,8 @@ const UserRegister = () => {
 
   // Fetch DSP list
   const fetchDspList = async () => {
-    const dspData = await getDsps();
-    setdspList(dspData);
+    const orgData = await getOrgs();
+    setdspList(orgData);
     setIsLoading(false);
   };
 
@@ -255,17 +256,17 @@ const UserRegister = () => {
             {showForm && (
                 <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser} >
                   <CRow className="w-50 align-self-center mt-3 mb-3">
-                    <label htmlFor="completed" className="login_label labelName m-0 text-white mb-2">
+                    <label htmlFor="male" className="login_label labelName m-0 text-white mb-2">
                       Gender
                     </label>
                     <CCol md={6}>
                       <input
                         type="radio"
-                        id="completed"
-                        name="isRequired"
-
+                        id="male"
+                        name="genderId"
+                        onChange={handleUserInput}
+                        checked={daUserData.genderId.toString() === '0'}
                         value={0}
-
                       />
                       <label htmlFor="completed" className="login_label labelName m-0 text-white ">
                         Male
@@ -274,12 +275,13 @@ const UserRegister = () => {
                     <CCol md={6}>
                       <input
                         type="radio"
-                        id="optional"
-                        name="isRequired"
+                        id="female"
+                        name="genderId"
                         value={1}
-
+                        onChange={handleUserInput}
+                        checked={daUserData.genderId.toString() === '1'}
                       />
-                      <label htmlFor="optional" className="login_label labelName m-0 text-white ">
+                      <label htmlFor="female" className="login_label labelName m-0 text-white ">
                         FeMale
                       </label>
                     </CCol>

@@ -27,7 +27,7 @@ import {
 import validateEmail from 'src/helpers/validateEmail';
 import Loading from 'src/components/UI/Loading';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
-import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
+import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
 import Form from 'src/components/UI/Form';
 import AppContainer from 'src/components/UI/AppContainer';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -92,7 +92,7 @@ const DAApplyForm = () => {
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
 
-  const { createUpdateUser } = useUpdateUser();
+  const { createUpdateOrg } = useUpdateOrg();
 
   const { checkUserAvailability } = useUserAvailability();
 
@@ -166,14 +166,13 @@ const DAApplyForm = () => {
     if (form.checkValidity()) {
       const daBody = {
         ...daApplyFormData,
-        secondaryContact: daApplyFormData.isWhatsAppAsso ? daApplyFormData.primaryContact : '',
-        hasValidDrivingLicense: daApplyFormData.hasValidDrivingLicense ? 1 : 0,
+        id:0,
+        contact: daApplyFormData.contact,
         address: daApplyFormData.mailAddress,
-        ssn: daIdentificationData.ssnNo,
-        IdentityId: daIdentificationData.idNo,
         userName: daApplyFormData.userName ? daApplyFormData.userName : daApplyFormData.email,
         password: daApplyFormData.password ? daApplyFormData.password : generateRandomPassword(12),
         roleId: 3,
+        status: 0,
         orgId: daApplyFormData.orgId,
         lastUpdatedBy: daApplyFormData.orgId,
         rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
@@ -201,14 +200,14 @@ const DAApplyForm = () => {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
 
-          const res = await createUpdateUser({ ...daBody, avatar: avatarPath });
+          const res = await createUpdateOrg({ ...daBody, avatar: avatarPath });
           console.log(res);
           if (res.status === true) {
             await uploadDaAttachments(res.data.id);
           }
         }
       } else {
-        const res = await createUpdateUser(daBody);
+        const res = await createUpdateOrg(daBody);
         console.log({ res });
         if (res.status === true) {
           await uploadDaAttachments(res.data.id);
