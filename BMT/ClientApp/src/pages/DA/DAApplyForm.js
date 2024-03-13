@@ -169,18 +169,16 @@ const DAApplyForm = () => {
         id:0,
         contact: daApplyFormData.contact,
         address: daApplyFormData.mailAddress,
-        userName: daApplyFormData.userName ? daApplyFormData.userName : daApplyFormData.email,
-        password: daApplyFormData.password ? daApplyFormData.password : generateRandomPassword(12),
-        roleId: 3,
-        status: 0,
-        orgId: daApplyFormData.orgId,
-        lastUpdatedBy: daApplyFormData.orgId,
+       // status: 0,
+       // orgId: daApplyFormData.orgId,
+       // lastUpdatedBy: moment().utc().format(),
         rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
-        createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
-        createdAt: daApplyFormData.createdAt,
+       // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
+        createdAt: moment().utc().format(),
         lastUpdatedAt: moment().utc().format(),
-        remarks: 'created da',
+        remarks: 'created org',
       };
+      console.log(daBody);
       // Upload & Submit
       const fUpload = document.getElementById('fileAvatar');
       if (fUpload.files !== null && fUpload.files.length > 0) {
@@ -272,7 +270,7 @@ const DAApplyForm = () => {
       console.log({ attachmentsRes });
       if (attachmentsRes.status === true) {
         if (user.userId !== '') {
-          navigate('/Delivery');
+          navigate('/DspsList');
         } else {
           navigate('/');
         }
@@ -282,7 +280,7 @@ const DAApplyForm = () => {
       }
     } else {
       if (user.userId !== '') {
-        navigate('/Delivery');
+        navigate('/DspsList');
       } else {
         navigate('/');
       }
@@ -308,7 +306,7 @@ const DAApplyForm = () => {
     if (user.userId === '') {
       navigate('/');
     } else {
-      navigate('/Delivery');
+      navigate('/DspsList');
     }
   };
 

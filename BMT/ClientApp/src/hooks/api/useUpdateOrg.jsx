@@ -12,7 +12,7 @@ export const useUpdateOrg = () => {
       fetchData('/BlazorApi/adupdateorg', { method: 'POST', body: JSON.stringify(body) }, (res) => {
         resolve(res);
         if (res.status) {
-       // alert(JSON.stringify(res));
+        console.log(res,'submitres');
           //showToast(res.message);
           showToast(res.message);
          // uploadimageData();

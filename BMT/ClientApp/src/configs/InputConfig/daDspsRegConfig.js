@@ -202,5 +202,6 @@ export const getInitialDspData = (user) => ({
   businessTypeId: '',
   isTermsAccepted: false,
   createdBy: user.userId,
+  lastUpdatedBy: user.userId,
   createdAt: moment().utc().format(),
 });

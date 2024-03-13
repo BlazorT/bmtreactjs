@@ -27,6 +27,8 @@ export const useFetchOrgs = () => {
       lastUpdatedAt: filters
         ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : moment().utc().format(),
+      createdBy:0,
+      lastUpdatedBy:0,
       ...filters,
     };
     
