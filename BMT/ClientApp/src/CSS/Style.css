@@ -3379,6 +3379,7 @@ fieldset.legend {
   display: inline-block;
 }
 .pdngleft {
+    padding-top:6px;
   padding-left: 10px !important;
 }
 .network-checkbox-animate {

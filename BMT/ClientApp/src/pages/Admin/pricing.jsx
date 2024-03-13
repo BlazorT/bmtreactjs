@@ -7,9 +7,9 @@ import InventoryProductModal from 'src/components/Modals/InventoryProductModal';
 
 import AppContainer from 'src/components/UI/AppContainer';
 import Loading from 'src/components/UI/Loading';
-import { getProductsCols } from 'src/configs/ColumnsConfig/productsCols';
+import { getPricingCols } from 'src/configs/ColumnsConfig/pricingCols';
 import { countries } from 'src/constants/countries';
-import { useFetchProducts } from 'src/hooks/api/useFetchProducts';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 import globalutil from 'src/util/globalutil';
 
 const Products = () => {
@@ -24,35 +24,36 @@ const Products = () => {
   const [showAddProductModal, setShowAddProductModal] = useState(false);
 
   const [products, setProducts] = useState([]);
-  const [productRows, setProductRows] = useState([]);
+  const [pricingRows, setPricingRows] = useState([]);
 
-  const { data, loading, fetchProducts } = useFetchProducts();
+  const { data, loading, fetchPricing } = useFetchPricing();
 
   const toggleAddProductModal = () => {
     setShowAddProductModal(!showAddProductModal);
   };
 
   const getProducts = async () => {
-    const productsList = await fetchProducts();
+    const pricingList = await fetchPricing();
 
-    const mappedArray = productsList.map((data) => ({
+    const mappedArray = pricingList.map((data) => ({
       id: data.id,
       //name: `${data.name} ,${data.shortCode}`,
       name: data.name,
-      fee: data.fee,
-      earlyBirdDiscount: data.earlyBirdDiscount,
+      unitName: data.unitName,
+      unitPrice: data.unitPrice,
       discount: data.discount,
-      packageInDays: data.packageInDays,
+      freeAllowed: data.freeAllowed,
       //category:
       //  globalutil.productGroup().find((item: any) => item.id === data.categoryId)?.name || null,
+      startTime: data.startTime,
       lastUpdatedAt: data.lastUpdatedAt,
     }));
 
-    setProducts(productsList);
-    setProductRows(mappedArray);
+    setProducts(pricingList);
+    setPricingRows(mappedArray);
   };
 
-  const productsCols = getProductsCols(pageRoles, getProducts, products);
+  const pricingCols = getPricingCols(pageRoles, getProducts, products);
 
   return (
     <AppContainer>
@@ -61,8 +62,8 @@ const Products = () => {
         addBtnClick={toggleAddProductModal}
       />
       <CustomDatagrid
-        rows={productRows}
-        columns={productsCols}
+        rows={pricingRows}
+        columns={pricingCols}
         pagination={true}
         loading={loading || !data}
         rowHeight={50}

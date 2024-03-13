@@ -6,6 +6,7 @@ const ApplyForm = React.lazy(() => import('./pages/DA/DAApplyForm'));
 const AddDA = React.lazy(() => import('./pages/DA/AddDA'));
 const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
 const Products = React.lazy(() => import('./pages/Admin/Products'));
+const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
 const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
@@ -107,6 +108,7 @@ export const rolesRoutes = [
   { path: '/WorkFlow', name: 'WorkFlow', element: WorkFlow },
   { path: '/Notification', name: 'Notification', element: Notification },
   { path: '/Products', name: 'Products', element: Products },
+  { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   // { path: '/Expression', name: 'Expression', element: Expression },

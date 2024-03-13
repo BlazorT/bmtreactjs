@@ -178,7 +178,7 @@ const DSPRolesModal = (prop) => {
       method: 'POST',
       body: JSON.stringify(body),
     });
-
+    console.log(rolesRes);
     if (rolesRes?.current?.status === true) {
       dispatch(
         updateToast({
