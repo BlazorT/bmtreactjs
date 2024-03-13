@@ -15,7 +15,7 @@ const context = [
   "/RosterPlan",
   "/Dispatchment",
   "/DA" ,
-  "/Log","/Organization"
+  "/Log", "/Organization", "/Admin"
 ];
 
 const onError = (err, req, resp, target) => {
