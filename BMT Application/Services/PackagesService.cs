@@ -48,7 +48,7 @@ namespace com.blazor.bmt.application.services
         {
             //await ValidateEntityIfExist(userModel);
 
-            var edit = await _packageRepository.GetByIdAsync(model.Id);
+            var edit = await _packageRepository.GetPackageListByIdAsync(model.id);
             if (edit == null)
                 throw new ApplicationException($"Entity could not be loaded.");
 

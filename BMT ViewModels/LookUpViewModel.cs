@@ -16,5 +16,6 @@
     {
         public int Id { get; set; }
         public int Status { get; set; }
-}
+        public int? CreatedBy { get; set; }
+    }
 }

@@ -48,7 +48,7 @@ namespace com.blazor.bmt.application.services
         {
             //await ValidateEntityIfExist(userModel);
 
-            var edit = await _BundlingPackageRepository.GetByIdAsync(Convert.ToInt64(model.id));
+            var edit = await _BundlingPackageRepository.GetBundlingPackageByIdAsync(Convert.ToInt64(model.Id));
             if (edit == null)
                 throw new ApplicationException($"Entity could not be loaded.");
 

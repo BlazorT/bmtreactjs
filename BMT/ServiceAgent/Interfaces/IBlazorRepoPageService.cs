@@ -1,4 +1,5 @@
-﻿using com.blazor.bmt.application.model;
+﻿using Blazor.Web.ViewModels;
+using com.blazor.bmt.application.model;
 using com.blazor.bmt.viewmodels;
 namespace Blazor.Web.UI.Interfaces
 {
@@ -17,7 +18,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<Configration>> LoadOrgConfigurationsData(int OrgId);
         Task<BlazorResponseViewModel> SocialMediaCreateLogin(UserViewModel model);
         Task<IEnumerable<BundlingpackagedetailViewModel>> LoadCustomBundlingPackagesData(int networks);
-        Task<BlazorResponseViewModel> UpdateNetworksData(List<networkidvalues> lst, int UserId);
+        Task<BlazorApiResponse> UpdateNetworksData(List<networkidvalues> lst, int UserId);
         Task<BlazorResponseViewModel> AddUpdateNetworkSettingsFormData(List<OrgpackagedetailViewModel> lst, int UserId);
         Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignsViewModel model);
         Task<IEnumerable<MenuViewModel>> loadRoleMenus(int roleid);

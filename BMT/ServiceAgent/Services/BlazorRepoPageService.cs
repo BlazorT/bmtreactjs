@@ -12,6 +12,7 @@ using System;
 using com.blazor.bmt.core.baseentity;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using com.blazor.bmt.core;
+using Blazor.Web.ViewModels;
 
 namespace Blazor.Web.UI.Services
 {
@@ -1175,9 +1176,9 @@ namespace Blazor.Web.UI.Services
             return response;
 
         }
-        public async Task<BlazorResponseViewModel> UpdateNetworksData(List<networkidvalues> lst, int UserId)
+        public async Task<BlazorApiResponse> UpdateNetworksData(List<networkidvalues> lst, int UserId)
         {
-            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            BlazorApiResponse response = new BlazorApiResponse();
             try
             {
                 string NetworkJSON = string.Empty;

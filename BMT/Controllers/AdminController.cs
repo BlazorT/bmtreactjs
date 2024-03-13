@@ -18,6 +18,7 @@ using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
 using com.blazor.bmt.application.model;
+using com.blazor.bmt.core;
 namespace com.blazor.bmt.controllers
 {
     [ApiController]
@@ -144,8 +145,8 @@ namespace com.blazor.bmt.controllers
             }
             return Ok(blazorApiResponse);
         }
-        [HttpPost("updatepackage")]
-        [Route("updatepackage")]
+        [HttpPost("updatebundlingdetail")]
+        [Route("updatebundlingdetail")]
         public async Task<ActionResult> updateBundlingPackage(BundlingpackagedetailViewModel bpackage)
 
         {
@@ -194,8 +195,36 @@ namespace com.blazor.bmt.controllers
                 blazorApiResponse.message = string.Format(BlazorConstant.UPDATE_FAILED, (bpackage.Name), (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
 
             }
-            return Ok(blazorApiResponse); ;
+            return Ok(blazorApiResponse); 
         }
 
+        [HttpPost("updatenetworsbulk")]
+        [Route("updatenetworsbulk")]
+        public async Task<ActionResult> UpdateNetworksBulk([FromBody] List<networkidvalues> mdls)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                var response =  await _blazorRepoPageService.UpdateNetworksData(mdls, Convert.ToInt32(mdls.FirstOrDefault().CreatedBy));
+                blazorApiResponse.data = response.data;
+                blazorApiResponse.status = true;
+                if (mdls.Any())
+                    blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (mdls.Count), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
+                else
+                    blazorApiResponse.message = string.Format(BlazorConstant.INSERTED_FAILED, (mdls.Count), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
+
+           
+                //  BlazorResponseViewModel.status = true;
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.message = string.Format(BlazorConstant.UPDATE_FAILED, "Networks Settings", (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
+
+            }
+            return Ok(blazorApiResponse);
+
+}
     }
 }
