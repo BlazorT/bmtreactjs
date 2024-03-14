@@ -20,7 +20,7 @@ import globalutil from 'src/util/globalutil';
 import { getDaFiltersFields } from 'src/configs/FiltersConfig/daFilterConfig';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
 
-import { useFetchOrganization } from 'src/hooks/api/useFetchOrganization';
+import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import AppContainer from 'src/components/UI/AppContainer';
 
 const campaignslisting = () => {
@@ -30,17 +30,17 @@ const campaignslisting = () => {
 
   useEffect(() => {
     
-    getOrgsList();
+    getCampaignsList();
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Organization Users',
+    (item) => item.name === 'Compaigns',
   );
   const navigate = useNavigate();
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
-  const [orgData, setOrgData] = useState([]);
+  const [campaignData, setCampaignData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
@@ -53,27 +53,17 @@ const campaignslisting = () => {
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
   const [rows, setRows] = useState([]);
-
-  const { data, loading, fetchOrganization: getUserbyRole } = useFetchOrganization();
-
-  const getOrgsList = async (filter) => {
-    const usersList = await getUserbyRole(3, filter);
-
-     console.log({ usersList });
-    setOrgData(usersList);
-
-    const mappedArray = usersList.map((data) => ({
+  const { data, loading, fetchOrganization: getUserbyRole } = useFetchCampaigns();
+  const getCampaignsList = async (filter) => {
+    const campaignsList = await getUserbyRole(filter);
+    console.log({ campaignsList });
+    setCampaignData(campaignsList);
+    const mappedArray = campaignsList.map((data) => ({
       id: data.id,
       name: data.name,
-      cityId: data.cityId,
-      compaignsCount: data.compaignsCount,
-      currencyName: data.currencyName,
-      state: data.stateId,
-      createdAt: data.createdAt,
-      expiryTime: data.expiryTime,
-      status: globalutil.statuses().find((item) => item.id === data.status)
-        ? globalutil.statuses().find((item) => item.id === data.status).name
-        : '',
+      orgName: data.orgName,
+      startTime: data.startTime,
+      finishTime: data.finishTime,
       //status: data.status,
     }));
     console.log(mappedArray, 'org');
@@ -109,7 +99,7 @@ const campaignslisting = () => {
   };
 
   const handleReset = () => {
-    getOrgsList();
+    getCampaignsList();
     setFilters({
       name: '',
       state: '',
@@ -120,7 +110,7 @@ const campaignslisting = () => {
   };
 
   const orgFilterFields = getDaFiltersFields(filters, changeFilter);
-  const campaignslistingCols = getcampaignslistingCols(getOrgsList, orgData, pageRoles);
+  const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {
     return <Loading />;
@@ -140,7 +130,7 @@ const campaignslisting = () => {
               <CustomFilters
                 filters={filters}
                 changeFilter={changeFilter}
-                fetching={getOrgsList}
+                fetching={getCampaignsList}
                 handleReset={handleReset}
                 filterFields={orgFilterFields}
               />
@@ -149,9 +139,9 @@ const campaignslisting = () => {
 
           <AppContainer>
             <DataGridHeader
-              title="Organization Users"
-              addButton={pageRoles.canAdd === 1 ? 'Organization User' : ''}
-              addBtnClick={() => navigate('/UserRegister')}
+              title="Campaigns Listing"
+              addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
+              addBtnClick={() => navigate('/campaignadd')}
               otherControls={[
               /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
                 { icon: cilChevronBottom, fn: toggleGrid },

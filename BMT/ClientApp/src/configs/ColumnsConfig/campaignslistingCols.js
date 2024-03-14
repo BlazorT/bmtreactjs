@@ -4,7 +4,7 @@ import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
 export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
   {
     field: 'name',
-    headerName: 'Organization Name',
+    headerName: 'Campaign Name',
     flex: 1,
     minWidth: 160,
     editable: false,
@@ -14,8 +14,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'cityId',
-    headerName: 'City',
+    field: 'orgName',
+    headerName: 'Organization Name',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -24,21 +24,11 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
+ 
+ 
   {
-    field: 'compaignsCount',
-    headerName: 'Campaigns # ',
-    flex: 1,
-    minWidth: 60,
-    // Width: 100,
-    editable: false,
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
-  },
-  {
-    field: 'currencyName',
-    headerName: 'Currency',
+    field: 'startTime',
+    headerName: 'Start Time',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -49,20 +39,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'createdAt',
-    headerName: 'Register Date',
-    flex: 1,
-    minWidth: 70,
-    // Width: 80,
-    editable: false,
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: true,
-    headerClassName: 'custom-header-data-grid',
-  },
-  {
-    field: 'expiryTime',
-    headerName: 'Expiry Time',
+    field: 'finishTime',
+    headerName: 'End Time',
     flex: 1,
     minWidth: 120,
     editable: false,
