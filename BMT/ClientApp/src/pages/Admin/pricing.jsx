@@ -3,14 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import InventoryProductModal from 'src/components/Modals/InventoryProductModal';
-
+import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import AppContainer from 'src/components/UI/AppContainer';
-import Loading from 'src/components/UI/Loading';
 import { getPricingCols } from 'src/configs/ColumnsConfig/pricingCols';
-import { countries } from 'src/constants/countries';
 import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
-import globalutil from 'src/util/globalutil';
 
 const Products = () => {
   useEffect(() => {
@@ -45,7 +41,7 @@ const Products = () => {
       freeAllowed: data.freeAllowed,
       //category:
       //  globalutil.productGroup().find((item: any) => item.id === data.categoryId)?.name || null,
-      startTime: data.startTime,
+      startTime: formatDate(data.startTime),
       lastUpdatedAt: data.lastUpdatedAt,
     }));
 

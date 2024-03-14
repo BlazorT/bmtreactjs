@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CIcon from '@coreui/icons-react';
 import Visibility from '@mui/icons-material/Visibility';
 import Sms from '@mui/icons-material/Sms';
@@ -19,7 +19,7 @@ import Button from 'src/components/InputsComponent/Button';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -31,63 +31,81 @@ import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Notification = (toggle) => {
+  const user = useSelector((state)=>state.user)
   const [isLoading, setIsLoading] = useState(true);
   const showConfirmation = useShowConfirmation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [notificationData, setNotificationData] = useState();
-
+  const [networks, setNetworks] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    const T = []
+    globalutil.networks().map((tab, index) => T.push(tab.name))
+    setNetworks(T)
+  }, [])
+
   const {
-    response: createServiceRes,
-    loading: createServiceLoading,
-    error: createServiceError,
-    fetchData: createService,
+    response: createNotificationRes,
+    loading: createNotificationLoading,
+    error: createNotificationError,
+    fetchData: createNotification,
   } = useFetch();
+  const initialData = {
+    id: 0,
+    Snapchat: false,
+    Whatsapp: false,
+    Facebook: false,
+    Linkedin: false,
+    Instagaram: false,
+    Twitter: false,
+    Tiktock: false,
+    Sms: false,
+    Email: false,
+   // name: '',
+   // code: '',
+   // desc: '',
+   // lVType: 0,
+   // SortOrder: 0,
+    status: 0,
+    createdBy: 0,
+  };
+
+  const [notificationData, setNotificationData] = useState(initialData);
+  const [networkBody,setNetworkBody]=useState([])
   const onSave = async () => {
-    const form = document.querySelector('.notification-setting');
-   // formValidator();
-   // if (form.checkValidity()) {
-      const notification = {
-        id: notificationData.id,
-        networkId: notificationData.networkId,
-        createdAt: moment().utc().format(),
-        lastUpdatedAt: moment().utc().format(),
-      };
-
-      setIsLoading(createServiceLoading.current);
-      await createService('/Admin/updatenetworsbulk', {
+    console.log({networkBody,user})
+    setIsLoading(createNotificationLoading.current);
+    await createNotification('/Admin/updatenetworsbulk', {
         method: 'POST',
-        body: JSON.stringify(notification),
+      body: JSON.stringify(networkBody),
       });
-
-      if (createServiceRes.current?.status === true) {
+    console.log(createNotificationRes);
+    if (createNotificationRes.current?.status === true) {
         dispatch(
           updateToast({
             isToastOpen: true,
-            toastMessage: createServiceRes.current.message,
+            toastMessage: createNotificationRes.current.message,
             toastVariant: 'success',
           }),
         );
         navigate('/Notification');
        // getServices();
         //setNotificationData(initialData);
-        toggle();
+       // toggle();
       } else {
         dispatch(
           updateToast({
             isToastOpen: true,
-            toastMessage: createServiceRes.current?.message,
+            toastMessage: createNotificationRes.current?.message,
             toastVariant: 'error',
             //  `${JSON.stringify(createUserRes.current.message)}`,
           }),
         );
-
-        setIsLoading(createServiceLoading.current);
-     // }
-    }
+ setIsLoading(createNotificationLoading.current);
+      }
+   
   };
 
   const onCancel = () => {
@@ -111,6 +129,43 @@ const Notification = (toggle) => {
       isOpen: false,
     });
   };
+  const handleNotificationSetting = (e,network) => {
+    const { name, value, type, checked } = e.target
+    setNotificationData((prev) => ({
+      ...prev,
+      [name]:checked,
+    }));
+    
+    // Assuming `setNetworkBody` is your state setter function and `networkBody` is your state variable
+    setNetworkBody((prev) => {
+      // Find if the network with the same id exists in the previous state
+      const existingIndex = prev.findIndex(item => item.id === network.id);
+
+      if (existingIndex !== -1) {
+        // If network with the same id exists, update its status
+        const updatedNetworkBody = [...prev];
+        updatedNetworkBody[existingIndex] = { id: network.id, status: checked ? 1 : 0, createdBy: user.userId };
+        return updatedNetworkBody;
+      } else {
+        // If network with the same id doesn't exist, append it to the array
+        return [...prev, { id: network.id, status: checked ? 1 : 0 ,createdBy:user.userId}];
+      }
+    });
+
+    
+  }
+
+  const icons = {
+    Tiktock: Email,
+    Snapchat: Email,
+    Facebook: Facebook,
+    Sms: Sms,
+    Linkedin: LinkedIn,
+    Twitter: Twitter,
+    Instagram:Instagram,
+    Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
+    Email: Email // Assuming Email is your component for Email icon
+  };
 
   return (
     <div className="notification-setting">
@@ -122,145 +177,33 @@ const Notification = (toggle) => {
             filterDisable={false}
           />
         </AppContainer>
-          <CRow>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-              <li className="divCircle">
-                <Sms className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexNotificationChecked"
-                    label="SMS"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-              <li className="divCircle">
-                <WhatsApp className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                 
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexwhtsNotificationChecked"
-                    label="WHATSAPP"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                <Email className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexEmailNotificationChecked"
-                  label="EMAIL"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-              <li className="divCircle">
-                <Twitter className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexTwiNotificationChecked"
-                    label="TWITTER"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                <Facebook className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexFbNotificationChecked"
-                  label="FACEBOOK"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                <Instagram className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexInsNotificationChecked"
-                  label="INSTAGRAM"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                <LinkedIn className="BlazorIcon pdngleft" fontSize="large" color="success" />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexLinNotificationChecked"
-                    label="LINKEDIN"
-                    defaultChecked
-                  />
-                </li>
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                  <CIcon className="BlazorIcon pdngleft" icon={cilFlagAlt} />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexTikNotificationChecked"
-                  label="TIKTOCK"
-                    defaultChecked
-                  />
-                </li>
-
-              </ul>
-            </CCol>
-            <CCol md="4">
-              <ul className="inlinedisplay">
-                <li className="divCircle">
-                  <CIcon className="BlazorIcon pdngleft" icon={cilFlagAlt} />
-                </li>
-                <li className='network-checkbox-animate'>
-                  <CFormCheck
-                    className=""
-                    id="flexSnapNotificationChecked"
-                    label="SNAPCHAT"
-                    defaultChecked
-                  />
-                </li>
-
-              </ul>
-            </CCol>
+        <CRow>
+          {globalutil.networks().map((network, index) => {
+            const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+            // Assuming WhatsApp and Email are your icon components
+            const IconComponent = icons[IconName];
+           //console.log({ IconName })
+           return (
+              <CCol md={4} key={index}>
+                <ul className="inlinedisplay">
+                  <li className="divCircle">
+                   <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
+                  </li>
+                  <li className='network-checkbox-animate'>
+                    <CFormCheck
+                      className=""
+                      id={IconName}
+                      name={IconName}
+                     label={network.name}
+                     checked={notificationData[IconName]}
+                      onChange={(e)=>handleNotificationSetting(e,network)}
+                    />
+                  </li>
+                </ul>
+              </CCol>
+            )
+          }) }
+            
         
           </CRow>
         <React.Fragment>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import moment from 'moment';
+import useFetch from 'src/hooks/useFetch';
 
 import { CFormCheck } from '@coreui/react';
 import { cilChevronBottom } from '@coreui/icons';
@@ -42,7 +43,7 @@ const DAApplyForm = () => {
   );
   const user = useSelector((state) => state.user);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (pageRoles.canAdd === 0) {
@@ -154,7 +155,53 @@ const DAApplyForm = () => {
   const toggleOther = () => {
     setShowOther((prev) => !prev);
   };
+  const {
+    response: GetCityRes,
+    loading: CityLoading,
+    error: createCityError,
+    fetchData: GetCity,
+  } = useFetch();
+  useEffect(() => {
+    getCityList();
+  }, []);
+  const getCityList = async () => {
+    
+    await GetCity(
+      '/Common/cities',
+      {
+        method: 'POST',
+       // body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+        console.log(res, 'city');
+        if (res.status === true) {
+          //const mappedArray = res.data.map((data, index) => ({
+          //  id: data.id,
+          //  userId: data.userId,
+          //  dspid: user.dspId.toString(),
+          //  logDesc: data.logDesc,
+          //  entityName: data.entityName,
+          //  menuId: data.menuId,
+          //  machineIp: data.machineIp,
+          //  actionType: data.actionType,
+          //  logTime: formatDateTime(data.logTime),
+          //}));
 
+         // setRows(mappedArray);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+       /*   setRows([]);*/
+        }
+        setIsLoading(CityLoading.current);
+      },
+    );
+  };
   const submitDA = async () => {
     formValidator();
     const form = document.querySelector('.apply-da-form');
@@ -337,15 +384,16 @@ const DAApplyForm = () => {
     emailMessage,
     pageRoles.canAdd,
     onBlur,
+    GetCityRes?.current?.data ? GetCityRes.current.data:[]
   );
 
   const daAppllySsnInputs = getDaAppllySsnInputs(daIdentificationData, handleDAIdentification);
   const daAppllyIDInputs = getDaAppllyIDInputs(daIdentificationData, handleDAIdentification);
   const daAppllyBirthInputs = getDaAppllyBirthInputs(daIdentificationData, handleDAIdentification);
 
-  if (isLoading) {
+  /*if (isLoading) {
     return <Loading />;
-  }
+  }*/
   return (
     <React.Fragment>
       <AppContainer>

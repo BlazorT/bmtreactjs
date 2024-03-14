@@ -9,12 +9,14 @@ const Products = React.lazy(() => import('./pages/Admin/Products'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
+const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
 const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
 const WorkFlow = React.lazy(() => import('./pages/Workflow/WorkFlowList'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
 const DeliveryAssociates = React.lazy(() => import('./pages/DA/DeliveryAssociates'));
+const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
 const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
@@ -122,6 +124,7 @@ export const rolesRoutes = [
   },
   { path: '/DAReport', name: 'UserReport', element: DAReport },
   { path: '/Delivery', name: 'Delivery', element: DeliveryAssociates },
+  { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
   { path: '/waves', name: 'waves', element: waves },
   { path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   { path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
@@ -138,6 +141,7 @@ export const rolesRoutes = [
 export const routes = [
   { path: '/home', exact: true, name: 'Home' },
   { path: '/fleet-dashboard', name: 'FleetDashboard', element: FleetDashboard },
+  { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/dspRegister', name: 'DspRegister', element: DADspRegister },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/print', name: 'Print', element: Print },

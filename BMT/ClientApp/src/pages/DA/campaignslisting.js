@@ -18,13 +18,12 @@ import { formatDate } from 'src/helpers/formatDate';
 import globalutil from 'src/util/globalutil';
 
 import { getDaFiltersFields } from 'src/configs/FiltersConfig/daFilterConfig';
-import { getdaAssociatesCols } from 'src/configs/ColumnsConfig/daAssociatesCols';
-import { formatDateTime } from 'src/helpers/formatDate';
+import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
 
 import { useFetchOrganization } from 'src/hooks/api/useFetchOrganization';
 import AppContainer from 'src/components/UI/AppContainer';
 
-const DeliveryAssociates = () => {
+const campaignslisting = () => {
   dayjs.extend(utc);
 
   const [networkTabs,setNetworkTabs]=useState([])
@@ -70,8 +69,8 @@ const DeliveryAssociates = () => {
       compaignsCount: data.compaignsCount,
       currencyName: data.currencyName,
       state: data.stateId,
-      createdAt: formatDate(data.createdAt),
-      expiryTime: formatDateTime(data.expiryTime),
+      createdAt: data.createdAt,
+      expiryTime: data.expiryTime,
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
         : '',
@@ -121,7 +120,7 @@ const DeliveryAssociates = () => {
   };
 
   const orgFilterFields = getDaFiltersFields(filters, changeFilter);
-  const daAssociatesCols = getdaAssociatesCols(getOrgsList, orgData, pageRoles);
+  const campaignslistingCols = getcampaignslistingCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {
     return <Loading />;
@@ -161,7 +160,7 @@ const DeliveryAssociates = () => {
             {showDaGrid && (
               <CustomDatagrid
                 rows={rows}
-                columns={daAssociatesCols}
+                columns={campaignslistingCols}
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
@@ -191,4 +190,4 @@ const DeliveryAssociates = () => {
   );
 };
 
-export default DeliveryAssociates;
+export default campaignslisting;

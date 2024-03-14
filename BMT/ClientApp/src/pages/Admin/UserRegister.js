@@ -18,12 +18,15 @@ import Form from 'src/components/UI/Form';
 import AppContainer from 'src/components/UI/AppContainer';
 
 // Hooks and Helpers
+import useFetch from 'src/hooks/useFetch';
+
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
 import { setUserData } from 'src/redux/user/userSlice';
 import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { updateToast } from 'src/redux/toast/toastSlice';
 
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
@@ -224,7 +227,53 @@ const UserRegister = () => {
     setdspList(orgData);
     setIsLoading(false);
   };
+  const {
+    response: GetCityRes,
+    loading: CityLoading,
+    error: createCityError,
+    fetchData: GetCity,
+  } = useFetch();
+  useEffect(() => {
+    getCityList();
+  }, []);
+  const getCityList = async () => {
 
+    await GetCity(
+      '/Common/cities',
+      {
+        method: 'POST',
+        // body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+        console.log(res, 'city');
+        if (res.status === true) {
+          //const mappedArray = res.data.map((data, index) => ({
+          //  id: data.id,
+          //  userId: data.userId,
+          //  dspid: user.dspId.toString(),
+          //  logDesc: data.logDesc,
+          //  entityName: data.entityName,
+          //  menuId: data.menuId,
+          //  machineIp: data.machineIp,
+          //  actionType: data.actionType,
+          //  logTime: formatDateTime(data.logTime),
+          //}));
+
+          // setRows(mappedArray);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(CityLoading.current);
+      },
+    );
+  };
   // Define user input fields
   const userInputFields = getUserInputFields(
     daUserData,
@@ -239,13 +288,15 @@ const UserRegister = () => {
     dspList,
     TermsModal,
     onBlur,
+    GetCityRes?.current?.data ? GetCityRes.current.data : []
+
   );
 
   return (
     <React.Fragment>
-      {isLoading ? (
-        <Loading />
-      ) : (
+      {/*{isLoading ? (*/}
+      {/*  <Loading />*/}
+      {/*) : (*/}
         <AppContainer>
           <DataGridHeader
             title="Advance Search"
@@ -317,7 +368,7 @@ const UserRegister = () => {
           />
           <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
         </AppContainer>
-      )}
+     {/* )}*/}
     </React.Fragment>
   );
 };

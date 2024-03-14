@@ -29,6 +29,7 @@ export const getUserInputFields = (
   dspsListRes,
   TermsModal,
   onBlur,
+  cityList
 ) => [
   {
     component: ImagePicker,
@@ -199,12 +200,8 @@ export const getUserInputFields = (
     isRequired: false,
     disableOption: daUserData.country === '' ? 'Select Country First' : 'Select City',
     message: 'Please select your city',
-    options:
-      daUserData.country === ''
-        ? []
-        : daUserData.country == 1
-        ? globalutil.states().slice(0, 50)
-        : globalutil.states().slice(50),
+    options: cityList
+     
   },
   {
     component: CustomSelectInput,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 
 import moment from 'moment';
 import { cilChevronBottom } from '@coreui/icons';
@@ -83,8 +84,8 @@ const OrgList = () => {
       compaignsCount: data.compaignsCount,
       currencyName: data.currencyName,
       state: data.stateId,
-      createdAt: data.createdAt,
-      expiryTime: data.expiryTime,
+      createdAt: formatDate(data.createdAt) ,
+      expiryTime: formatDateTime(data.expiryTime),
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
         : '',

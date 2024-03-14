@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
 
-export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
+export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
   {
     field: 'name',
     headerName: 'Organization Name',
@@ -64,7 +64,7 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     field: 'expiryTime',
     headerName: 'Expiry Time',
     flex: 1,
-    minWidth: 170,
+    minWidth: 120,
     editable: false,
     filterable: true,
     sortable: true,
@@ -73,7 +73,7 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     hideable: false,
     headerClassName: 'custom-header-data-grid',
   },
-
+ 
   {
     field: 'imageUrl',
     headerName: 'Action',
@@ -88,8 +88,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     renderCell: (params) => (
       <DaActionCell
         value={params}
-        fetching={orgsList}
-        user={orgsList.filter((item) => item.id === params.row.id)}
+        fetching={getDasList}
+        user={daRes.filter((item) => item.id === params.row.id)}
         canUpdate={pageRoles.canUpdate}
         canDelete={pageRoles.canDelete}
       />

@@ -69,7 +69,7 @@ const Users: React.FC = () => {
     const mappedArray: any = apiData.map((data) => ({
       id: data.id,
       picture: data.avatar ? data.avatar : 'Profile-pic.jpg',
-      Name: data.completeName,
+      completeName: data.completeName,
       email: data.email,
       contact: data.contact,
       role: getRoleById(data.roleId) === 0 ? '' : getRoleById(data.roleId),
