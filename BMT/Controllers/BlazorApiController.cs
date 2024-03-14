@@ -397,7 +397,8 @@ namespace com.blazor.bmt.controllers
                 if (dvm != null && dvm.Id <= 0)
                 {
                     dvm.CreatedAt = GlobalUTIL.CurrentDateTime;
-                    dvm.CreatedBy = dvm.LastUpdatedBy;
+                    dvm.CreatedBy = (dvm.LastUpdatedBy==null || dvm.LastUpdatedBy==0)?GlobalBasicConfigurationsViewModel.DefaultPublicUserId: dvm.LastUpdatedBy;
+                    dvm.LastUpdatedBy = (dvm.LastUpdatedBy == null || dvm.LastUpdatedBy == 0) ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : dvm.LastUpdatedBy;
                     dvm.RowVer = 1;
                     dvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                     //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
@@ -406,7 +407,7 @@ namespace com.blazor.bmt.controllers
                 else
                 {
                     dvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    dvm.LastUpdatedBy = dvm.LastUpdatedBy;
+                    dvm.LastUpdatedBy = dvm.CreatedBy = (dvm.LastUpdatedBy == null || dvm.LastUpdatedBy == 0) ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : dvm.LastUpdatedBy;  
                     await _orgPageService.Update(dvm);
                     blazorApiResponse.data = dvm;
                 }

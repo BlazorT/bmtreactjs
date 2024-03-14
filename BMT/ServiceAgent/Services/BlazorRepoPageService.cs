@@ -658,7 +658,8 @@ namespace Blazor.Web.UI.Services
                                 org.CityName = Convert.ToString(reader["CityName"]);
                                 org.Contact = ""+ reader["Contact"];
                                 org.UserName = "" + reader["userName"];  
-                                org.CreatedBy = Convert.ToInt32(reader["CreatedBy"]);                         
+                                org.CreatedBy = Convert.ToInt32(reader["CreatedBy"]);
+                                org.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);
                                 org.ExpiryTime = Convert.ToDateTime(reader["ExpiryTime"]);
                                 org.LastUpdatedAt = Convert.ToDateTime(reader["LastUpdatedAt"]);
                                 organizations.Add(org);

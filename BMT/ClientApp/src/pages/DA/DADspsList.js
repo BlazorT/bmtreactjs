@@ -75,7 +75,7 @@ const OrgList = () => {
     const orgData = await getOrgs(filter);
 
     setOrgsList(orgData);
-    console.log(orgData);
+   // console.log(orgData);
       const mappedArray = orgData.map((data) => ({
       id: data.id,
       name: data.name,
@@ -139,7 +139,7 @@ const OrgList = () => {
           <AppContainer>
             <DataGridHeader
               title="Organization List"
-              addButton={pageRoles.canAdd === 1 ? 'Org' : ''}
+              addButton={pageRoles.canAdd === 1 ? 'New Organization' : ''}
               addBtnClick={() => navigate('/applyForm')}
             />
             <CustomDatagrid
