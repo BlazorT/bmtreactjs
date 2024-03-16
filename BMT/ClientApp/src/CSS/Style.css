@@ -1,3 +1,12 @@
+
+@font-face {
+  font-family: 'permanentmarker-regular';
+  src: url('../../src/fonts/PermanentMarker-Regular.ttf') format('truetype');
+}
+.signin-text-style {
+  font-family: 'permanentmarker-regular';
+  font-size: 1.1875em;
+}
 .Login-form {
   text-align: center;
 }
@@ -2333,10 +2342,10 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .LoginCardOverlayImg2ndView {
   /* height: 33%;*/
   /* height: 33%; */
-  margin-top: 2.438em;
-  width: 78%;
+  margin-top: 1.438em;
+  width: 82%;
   text-align: center;
-  margin-left: 11%;
+  margin-left: 9%;
   /* margin-top: 17px;
   width: 90%;
   text-align: center;*/

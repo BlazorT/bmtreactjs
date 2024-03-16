@@ -169,6 +169,7 @@ const DispatchmentReport = ({ reportField, fetchInspection, value }) => {
     const body = {
       id: rows[0].id,
     };
+
     const reportRows = makeGroupingRows(rows);
     const doc = getDispatchmentPdf(reportRows, reportField);
     doc.output('dataurlnewwindow');

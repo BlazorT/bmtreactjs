@@ -228,9 +228,10 @@ function SignIn() {
         <div className="col-12 col-md-8 col-lg-6 col-xl-5 LoginCardOverlayImg">
           <div className="LoginCardOverlayImg2ndView">
             <div className="card-body p-3 text-center">
-              <img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />
-              <br />
-              <strong className="signin-text labelName"> BMT Sign in </strong>
+              {/*<img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />*/}
+             {/* <br />*/}
+              <strong className="signin-text-style labelName"> Blazor Media Toolkit </strong>
+              <strong className="signin-text labelName"> BMT </strong>
               <form>
                 <div className="form-outline mb-2 mt-2 text-start">
                   <label htmlFor="" className="login_label mb-1 labelName">
