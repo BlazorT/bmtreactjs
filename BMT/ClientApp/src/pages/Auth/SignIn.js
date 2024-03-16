@@ -230,8 +230,8 @@ function SignIn() {
             <div className="card-body p-3 text-center">
               {/*<img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />*/}
              {/* <br />*/}
-              <strong className="signin-text-style labelName"> Blazor Media Toolkit </strong>
-              <strong className="signin-text labelName"> BMT </strong>
+              <div><strong className="signin-text-style labelName"> Blazor Media Toolkit </strong></div> 
+              <div>  <strong className="signin-text labelName"> BMT </strong></div>
               <form>
                 <div className="form-outline mb-2 mt-2 text-start">
                   <label htmlFor="" className="login_label mb-1 labelName">
