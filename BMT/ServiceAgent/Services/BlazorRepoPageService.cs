@@ -527,7 +527,7 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand()) {
                         //************************  PARAMETERS*******************************//
 
-                        command.CommandText = string.Format("Select [Id] ,[Name],[Description],[CategoryId],[Status],[CreatedBy],[CreatedAt],[LastUpdatedBy],[LastUpdatedAt],[RowVer] from [Networks]  where  0= {0} OR Status= {0} ", status) ;
+                        command.CommandText = string.Format("Select Id ,Name,Description,CategoryId,Status,CreatedBy,CreatedAt,LastUpdatedBy,LastUpdatedAt,RowVer from Networks  where  0= {0} OR Status= {0} ", status) ;
                         command.CommandType = System.Data.CommandType.Text;
                         using (DbDataReader reader = command.ExecuteReader()) {
                             while (reader.Read()) {
