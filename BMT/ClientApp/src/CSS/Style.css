@@ -1678,6 +1678,19 @@ height:600px!important;
     top: 8.5% !important;
     right: 8.5%;
   }
+  .LoginCardOverlayImg2ndView {
+    /* height: 33%; */
+    /* height: 33%; */
+    margin-top: 3.438em!important;
+    width: 79%!important;
+    text-align: center;
+    margin-left: 11%!important;
+    /* margin-left: 5%; */
+    background: rgb(12, 53, 95) !important;
+    /* background: #bbc2c6e8 !important; */
+    /* border-bottom-left-radius: 10px; */
+    border-radius: 10px;
+  }
 }
 @media (min-width: 1200px) and (max-width: 1700px) {
   .carousalImg {
@@ -3411,3 +3424,8 @@ fieldset.legend {
       top: 0;
       z-index: -1;
     }
+.Copyrights-labelName{
+    text-decoration:none;
+    font-size:0.9em;
+    color:white;
+}

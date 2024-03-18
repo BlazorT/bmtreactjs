@@ -40,12 +40,56 @@ const Notification = (toggle) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+  const {
+    response: GetNetworkRes,
+    loading: NetworkLoading,
+    error: createNetworkError,
+    fetchData: GetNetworks,
+  } = useFetch();
   useEffect(() => {
-    const T = []
-    globalutil.networks().map((tab, index) => T.push(tab.name))
-    setNetworks(T)
+    getNetworksList()
   }, [])
+  const getNetworksList = async () => {
 
+    await GetNetworks(
+      '/Admin/networks',
+      {
+        method: 'POST',
+        // body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+        console.log(res, 'networks');
+        if (res.status === true) {
+          //const mappedArray = res.data.map((data, index) => ({
+          //  id: data.id,
+          //  userId: data.userId,
+          //  dspid: user.dspId.toString(),
+          //  logDesc: data.logDesc,
+          //  entityName: data.entityName,
+          //  menuId: data.menuId,
+          //  machineIp: data.machineIp,
+          //  actionType: data.actionType,
+          //  logTime: formatDateTime(data.logTime),
+          //}));
+
+          // setRows(mappedArray);
+          const T = []
+          res.data.map((tab, index) => T.push(tab.name))
+          setNetworks(T)
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(NetworkLoading.current);
+      },
+    );
+  };
   const {
     response: createNotificationRes,
     loading: createNotificationLoading,

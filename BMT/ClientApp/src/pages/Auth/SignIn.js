@@ -231,11 +231,11 @@ function SignIn() {
               {/*<img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />*/}
              {/* <br />*/}
               <div><strong className="signin-text-style labelName"> Blazor Media Toolkit </strong></div> 
-              <div>  <strong className="signin-text labelName"> BMT </strong></div>
+              <div className="pt-2"><strong className="signin-text-style labelName"> BMT </strong></div>
               <form>
                 <div className="form-outline mb-2 mt-2 text-start">
                   <label htmlFor="" className="login_label mb-1 labelName">
-                    User name
+                    User Name
                   </label>
                   <input
                     type="text"
@@ -292,15 +292,15 @@ function SignIn() {
           </div>
           <div className="LoginCardOverlayImg3ndView">
           {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
-            <div className="text-center labelName mt-2">
+            <div className="text-center Copyrights-labelName mt-2">
               © 2020{' '}
-              <a onClick={toggleModal} className="underline labelName">
+              <a onClick={toggleModal} className="underline Copyrights-labelName">
                 Blazor Media Toolkit(BMT).
               </a>
             </div>
-            <p className="pt-1 CardOverlaylbl labelName">
+            <p className="pt-1 Copyrights-labelName">
               {' '}
-               All Rights Reserved
+               all rights reserved
             </p>
           </div>
         </div>
