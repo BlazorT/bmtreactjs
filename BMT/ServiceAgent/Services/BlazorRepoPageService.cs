@@ -527,7 +527,7 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand()) {
                         //************************  PARAMETERS*******************************//
 
-                        command.CommandText = string.Format("Select [Id] ,[Name],[Description],[CategoryId],[Status],[CreatedBy],[CreatedAt],[LastUpdatedBy],[LastUpdatedAt],[RowVer] from [Networks] with(nolock) where  0= {0} OR Status= {0} ", status) ;
+                        command.CommandText = string.Format("Select [Id] ,[Name],[Description],[CategoryId],[Status],[CreatedBy],[CreatedAt],[LastUpdatedBy],[LastUpdatedAt],[RowVer] from [Networks]  where  0= {0} OR Status= {0} ", status) ;
                         command.CommandType = System.Data.CommandType.Text;
                         using (DbDataReader reader = command.ExecuteReader()) {
                             while (reader.Read()) {
@@ -1199,7 +1199,7 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pOrgId = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pOrgId.Value = 0;
                         command.Parameters.Add(pOrgId);
-                        MySqlParameter pNetworksJSON = new MySqlParameter("p_NetworksJSON", SqlDbType.NVarChar);
+                        MySqlParameter pNetworksJSON = new MySqlParameter("p_NetworksJSON", SqlDbType.NText);
                         pNetworksJSON.Value = NetworkJSON;
                         command.Parameters.Add(pNetworksJSON);
                         MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);

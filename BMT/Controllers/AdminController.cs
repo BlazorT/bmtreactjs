@@ -75,6 +75,30 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
+        [HttpGet("networks")]
+        [HttpPost("networks")]
+        [Route("networks")]
+        public async Task<ActionResult> GetNetworksData()
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+                blazorApiResponse.status = true;
+                blazorApiResponse.data = await _blazorRepoPageService.GetNetworkData(0);
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                // _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
         [HttpGet("custombundlingdetails")]
         [HttpPost("custombundlingdetails")]
         [Route("custombundlingdetails")]

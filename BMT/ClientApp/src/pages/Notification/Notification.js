@@ -52,6 +52,7 @@ const Notification = (toggle) => {
     error: createNotificationError,
     fetchData: createNotification,
   } = useFetch();
+  /*
   const initialData = {
     id: 0,
     Snapchat: false,
@@ -62,26 +63,27 @@ const Notification = (toggle) => {
     Twitter: false,
     Tiktock: false,
     Sms: false,
-    Email: false,
-   // name: '',
-   // code: '',
-   // desc: '',
-   // lVType: 0,
-   // SortOrder: 0,
+    Email: false,  
     status: 0,
     createdBy: 0,
   };
+  */
+ // const [notificationData, setNotificationData] = useState([]);
+  //const notificationData = globalutil.networks();
+  //notificationData = globalutil.networks();
+  //alert(JSON.stringify(notificationData));
 
-  const [notificationData, setNotificationData] = useState(initialData);
-  const [networkBody,setNetworkBody]=useState([])
+  var fJSON = globalutil.networks().map((s) => ({ id: s.id, status: s.code == "1" ? 1 : 0, createdBy: user.userId }));  
+  const [networkBody, setNetworkBody] = useState([fJSON][0])
+  //alert(JSON.stringify(networkBody));
   const onSave = async () => {
-    console.log({networkBody,user})
+   // alert(JSON.stringify(networkBody));
     setIsLoading(createNotificationLoading.current);
     await createNotification('/Admin/updatenetworsbulk', {
         method: 'POST',
       body: JSON.stringify(networkBody),
       });
-    console.log(createNotificationRes);
+   // console.log(createNotificationRes);
     if (createNotificationRes.current?.status === true) {
         dispatch(
           updateToast({
@@ -103,7 +105,7 @@ const Notification = (toggle) => {
             //  `${JSON.stringify(createUserRes.current.message)}`,
           }),
         );
- setIsLoading(createNotificationLoading.current);
+         setIsLoading(createNotificationLoading.current);
       }
    
   };
@@ -131,15 +133,35 @@ const Notification = (toggle) => {
   };
   const handleNotificationSetting = (e,network) => {
     const { name, value, type, checked } = e.target
-    setNotificationData((prev) => ({
+   // alert(name + " - " + value);
+    /*
+    setNotificationData((prev) => ([
       ...prev,
-      [name]:checked,
-    }));
-    
+      { id: network.id, name: name, code: (checked ? "1" : "0"), desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder }
+    ]));
+    */
+    /*
+    const nIndex = [...notificationData].findIndex(item => item.id === network.id);
+    //notificationData = [...notificationData, { id: network.id, name: name, code: checked ? "1" : "0", desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder }];
+    //alert(nIndex);
+    notificationData[nIndex] = { id: network.id, name: name, code: checked ? "1" : "0", desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder };
+    //alert(JSON.stringify(notificationData));
     // Assuming `setNetworkBody` is your state setter function and `networkBody` is your state variable
+    */
+
+    //setNetworkBody((prev) => ([
+    //  [...prev],
+    //  { id: network.id, status: checked ? 1 : 0, createdBy: user.userId }
+    //]));
+    /*
+    const existingIndex = networkBody.findIndex(item => item.id === network.id);
+    alert(existingIndex);
+    networkBody[existingIndex] = { id: network.id, status: checked ? 1 : 0, createdBy: user.userId };
+    alert(JSON.stringify(networkBody));
+    */
     setNetworkBody((prev) => {
       // Find if the network with the same id exists in the previous state
-      const existingIndex = prev.findIndex(item => item.id === network.id);
+      const existingIndex = [...prev].findIndex(item => item.id === network.id);
 
       if (existingIndex !== -1) {
         // If network with the same id exists, update its status
@@ -150,9 +172,10 @@ const Notification = (toggle) => {
         // If network with the same id doesn't exist, append it to the array
         return [...prev, { id: network.id, status: checked ? 1 : 0 ,createdBy:user.userId}];
       }
+     
     });
-
-    
+   
+     
   }
 
   const icons = {
@@ -180,7 +203,9 @@ const Notification = (toggle) => {
         <CRow>
           {globalutil.networks().map((network, index) => {
             const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-            // Assuming WhatsApp and Email are your icon components
+           // alert(JSON.stringify(notificationData.filter((ntw) => ntw.id == network.id && ntw.code == "1")));
+            const isChecked = networkBody.filter((ntw) => ntw.id == network.id && ntw.status ==true).length > 0 ? true : false;
+         // alert(isChecked);
             const IconComponent = icons[IconName];
            //console.log({ IconName })
            return (
@@ -191,12 +216,13 @@ const Notification = (toggle) => {
                   </li>
                   <li className='network-checkbox-animate'>
                     <CFormCheck
-                      className=""
-                      id={IconName}
-                      name={IconName}
+                     className=""
+                     id={IconName}
+                     name={IconName}
                      label={network.name}
-                     checked={notificationData[IconName]}
-                      onChange={(e)=>handleNotificationSetting(e,network)}
+                     tag={network.id}
+                     checked={isChecked}
+                     onChange={(e)=>handleNotificationSetting(e,network)}
                     />
                   </li>
                 </ul>
