@@ -67,16 +67,14 @@ const Notification = (toggle) => {
           //  dspid: user.dspId.toString(),
           //  logDesc: data.logDesc,
           //  entityName: data.entityName,
-          //  menuId: data.menuId,
+          //  menuId: da  ta.menuId,
           //  machineIp: data.machineIp,
           //  actionType: data.actionType,
           //  logTime: formatDateTime(data.logTime),
           //}));
 
           // setRows(mappedArray);
-          const T = []
-          res.data.map((tab, index) => T.push(tab.name))
-          setNetworks(T)
+          setNetworks(res.data)
         } else {
           dispatch(
             updateToast({
@@ -118,17 +116,18 @@ const Notification = (toggle) => {
   //notificationData = globalutil.networks();
   //alert(JSON.stringify(notificationData));
 
-  var fJSON = globalutil.networks().map((s) => ({ id: s.id, status: s.code == "1" ? 1 : 0, createdBy: user.userId }));  
-  const [networkBody, setNetworkBody] = useState([fJSON][0])
+  //var fJSON = globalutil.networks().map((s) => ({ id: s.id, status: s.code == "1" ? 1 : 0, createdBy: user.userId }));  
+  const [networkBody, setNetworkBody] = useState([])
   //alert(JSON.stringify(networkBody));
   const onSave = async () => {
+    const body = networks.map((n) => ({id:n.id,status:n.status,createdBy:n.createdBy }))
    // alert(JSON.stringify(networkBody));
     setIsLoading(createNotificationLoading.current);
     await createNotification('/Admin/updatenetworsbulk', {
         method: 'POST',
-      body: JSON.stringify(networkBody),
+      body: JSON.stringify(body),
       });
-   // console.log(createNotificationRes);
+    console.log(body, createNotificationRes);
     if (createNotificationRes.current?.status === true) {
         dispatch(
           updateToast({
@@ -136,8 +135,8 @@ const Notification = (toggle) => {
             toastMessage: createNotificationRes.current.message,
             toastVariant: 'success',
           }),
-        );
-        navigate('/Notification');
+      );
+      getNetworksList()
        // getServices();
         //setNotificationData(initialData);
        // toggle();
@@ -178,49 +177,15 @@ const Notification = (toggle) => {
   };
   const handleNotificationSetting = (e,network) => {
     const { name, value, type, checked } = e.target
-   // alert(name + " - " + value);
-    /*
-    setNotificationData((prev) => ([
-      ...prev,
-      { id: network.id, name: name, code: (checked ? "1" : "0"), desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder }
-    ]));
-    */
-    /*
-    const nIndex = [...notificationData].findIndex(item => item.id === network.id);
-    //notificationData = [...notificationData, { id: network.id, name: name, code: checked ? "1" : "0", desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder }];
-    //alert(nIndex);
-    notificationData[nIndex] = { id: network.id, name: name, code: checked ? "1" : "0", desc: network.desc, lvtype: network.lvtype, sortOrder: network.sortorder };
-    //alert(JSON.stringify(notificationData));
-    // Assuming `setNetworkBody` is your state setter function and `networkBody` is your state variable
-    */
-
-    //setNetworkBody((prev) => ([
-    //  [...prev],
-    //  { id: network.id, status: checked ? 1 : 0, createdBy: user.userId }
-    //]));
-    /*
-    const existingIndex = networkBody.findIndex(item => item.id === network.id);
-    alert(existingIndex);
-    networkBody[existingIndex] = { id: network.id, status: checked ? 1 : 0, createdBy: user.userId };
-    alert(JSON.stringify(networkBody));
-    */
-    setNetworkBody((prev) => {
-      // Find if the network with the same id exists in the previous state
-      const existingIndex = [...prev].findIndex(item => item.id === network.id);
-
-      if (existingIndex !== -1) {
-        // If network with the same id exists, update its status
-        const updatedNetworkBody = [...prev];
-        updatedNetworkBody[existingIndex] = { id: network.id, status: checked ? 1 : 0, createdBy: user.userId };
-        return updatedNetworkBody;
-      } else {
-        // If network with the same id doesn't exist, append it to the array
-        return [...prev, { id: network.id, status: checked ? 1 : 0 ,createdBy:user.userId}];
-      }
-     
+    setNetworks(prevObjects => {
+      return prevObjects.map(obj => {
+        if (obj.id === network.id) {
+          return { ...obj, status: checked?1: 0};
+        } else {
+          return obj;
+        }
+      });
     });
-   
-     
   }
 
   const icons = {
@@ -246,13 +211,9 @@ const Notification = (toggle) => {
           />
         </AppContainer>
         <CRow>
-          {globalutil.networks().map((network, index) => {
+          {networks.length > 0 && networks.map((network, index) => {
             const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-           // alert(JSON.stringify(notificationData.filter((ntw) => ntw.id == network.id && ntw.code == "1")));
-            const isChecked = networkBody.filter((ntw) => ntw.id == network.id && ntw.status ==true).length > 0 ? true : false;
-         // alert(isChecked);
             const IconComponent = icons[IconName];
-           //console.log({ IconName })
            return (
               <CCol md={4} key={index}>
                 <ul className="inlinedisplay">
@@ -266,7 +227,7 @@ const Notification = (toggle) => {
                      name={IconName}
                      label={network.name}
                      tag={network.id}
-                     checked={isChecked}
+                     checked={network.status==1?true:false}
                      onChange={(e)=>handleNotificationSetting(e,network)}
                     />
                   </li>
