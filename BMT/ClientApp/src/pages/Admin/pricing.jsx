@@ -30,12 +30,12 @@ const Products = () => {
 
   const getProducts = async () => {
     const pricingList = await fetchPricing();
-
+   // alert(JSON.stringify(pricingList));
     const mappedArray = pricingList.map((data) => ({
       id: data.id,
       //name: `${data.name} ,${data.shortCode}`,
       name: data.name,
-      unitName: data.unitName,
+      unitName: data.unitName == null || data.unitName.length <= 0 ? " - " : data.unitName,
       unitPrice: data.unitPrice,
       discount: data.discount,
       freeAllowed: data.freeAllowed,
@@ -46,11 +46,12 @@ const Products = () => {
     }));
 
     setProducts(pricingList);
+    //alert(JSON.stringify(mappedArray));
     setPricingRows(mappedArray);
   };
 
   const pricingCols = getPricingCols(pageRoles, getProducts, products);
-
+  //alert(JSON.stringify(pricingRows));
   return (
     <AppContainer>
       <DataGridHeader

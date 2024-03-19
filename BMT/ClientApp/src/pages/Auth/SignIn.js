@@ -105,9 +105,9 @@ function SignIn() {
     await fetchUtils('/Common/lovs');
 
     if (utilRes?.current?.status === true) {
-      console.log(utilRes.current.data,'util');
+     // console.log(utilRes.current.data,'util');
       addGlobalUtils(utilRes.current.data);
-    } else {
+    } /*else {
       dispatch(
         updateToast({
           isToastOpen: true,
@@ -115,13 +115,13 @@ function SignIn() {
           toastVariant: 'error',
         }),
       );
-    }
+    }*/
   };
   const getMenus = async () => {
     const menuBody = {
-      roleId: loginRes.current?.data.roleId.toString(),
+      roleId: loginRes && loginRes.current?.data.roleId.toString()
     };
-    console.log(menuBody, 'menusbody');
+   // console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
    // console.log(menuRes, 'menusRes');
    // console.log(menuRes.current, menuErr);
@@ -150,13 +150,13 @@ function SignIn() {
         `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`,
         { method: 'POST' },
       );
-      console.log(loginRes.current, loginErr);
+     // console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
-        console.log((loginRes),'login');
+       // console.log((loginRes),'login');
         getUtils();
         getMenus();
-        console.log(getMenus(),'menuss');
-        console.log(getUtils(),'utilss');
+       // console.log(getMenus(),'menuss');
+       // console.log(getUtils(),'utilss');
         setModalOpen(true);
         ClickProceed();
         navigate('/dashboard');

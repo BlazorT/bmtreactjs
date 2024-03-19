@@ -2,7 +2,7 @@
 
 public partial class BundlingpackagedetailViewModel 
 {
-    public string unitName;
+    public string? unitName { get; set; }
 
     public long Id { get; set; }
 

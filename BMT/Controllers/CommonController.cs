@@ -193,7 +193,7 @@ namespace com.blazor.bmt.controllers
         public async Task<ActionResult> GetLOVSData()
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
-            _logger.LogInformation("Global LOVs Data Request recieved -" + this.User.Identity.Name + Request.Path);
+          //  _logger.LogInformation("Global LOVs Data Request recieved -" + this.User.Identity.Name + Request.Path);
             GlobalLOVsViewModel lookUps = new GlobalLOVsViewModel();
             //  plist.Add(sdtl);
             BlazorApiResponse response = new BlazorApiResponse();
@@ -231,7 +231,7 @@ namespace com.blazor.bmt.controllers
                         response.message = ex.Message;
                         response.status = false;
                     }
-                    _cache.Set(this.User.Identity.Name + Request.Path + "lov", lookUps.states.Any() ? response.data : null, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SHORT_INTERVAL));
+                    _cache.Set(""+this.User.Identity.Name + Request.Path + "lov", lookUps.states.Any() ? response.data : null, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SHORT_INTERVAL));
                 }
                 else
                 {
