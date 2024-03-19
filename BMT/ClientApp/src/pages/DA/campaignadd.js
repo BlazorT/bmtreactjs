@@ -405,7 +405,10 @@ const campaignadd = () => {
                       />
                     </CCol>
                   </CRow>
-                    <Fieldset legend="Schedule Days:">
+                  <CRow className="mt-2">
+                  <h5>Schedule Days</h5>
+                  <fieldset className="fieldset">
+                    <legend className="legend"></legend> 
                       <CRow className="mt-2 pb-2">
                         <CCol md="3">
                           <CFormCheck
@@ -471,7 +474,8 @@ const campaignadd = () => {
                           />
                         </CCol>
                       </CRow>
-                    </Fieldset>
+                    </fieldset>
+                  </CRow>
                   <CRow >
                     <CustomInput
                       label="Interval Size"
@@ -536,6 +540,27 @@ const campaignadd = () => {
                       />
                     </CCol>
                   </CRow>
+                  <CRow>
+                    <CCol md={4}>
+                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                        Schedule Messages
+                      </label>
+                      <input className="form-control item user-profile-input labelName" value="0" disabled />
+                    </CCol>
+                    <CCol md={4}>
+                      <label htmlFor="" className="labelName profile-user-labels mt-2">
+                        Schedule Budget($)
+                      </label>
+                      <input className="form-control item user-profile-input" value="0" disabled />
+                    </CCol>
+                    <CCol md={4}>
+                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                        Campaign Budget($)
+                      </label>
+                      <input className="form-control item user-profile-input" value="0" disabled />
+                    </CCol>
+                  </CRow>
+                 
                 </AppContainer>
               </React.Fragment>
             )}
