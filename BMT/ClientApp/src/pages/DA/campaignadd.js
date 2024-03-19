@@ -9,9 +9,13 @@ import LinkedIn from '@mui/icons-material/LinkedIn';
 import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
+import { Fieldset } from 'primereact/fieldset';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+import CustomDatePicker from 'src/components/UI/DatePicker';
 
 import moment from 'moment';
-import { cilChevronBottom } from '@coreui/icons';
+import { cilChevronBottom, cilFlagAlt, cilCalendar } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import DAaddPartnerModal from 'src/components/Modals/DAaddPartnerModal';
@@ -25,6 +29,7 @@ import {
 import { CContainer } from '@coreui/react';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
 import globalutil from 'src/util/globalutil';
+import CustomTimePicker from 'src/components/UI/TimePicker';
 
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -438,8 +443,6 @@ const campaignadd = () => {
                     yesFn={goToAnotherPage}
                     submitFn={registerDsp}
                   >
-
-                    
                   </Inputs>
                 </React.Fragment>
               )}
@@ -472,6 +475,7 @@ const campaignadd = () => {
                           id={IconName}
                           name={IconName}
                           label={network.name}
+                          defaultChecked
                          // checked={notificationData[IconName]}
                          // onChange={(e) => handleNotificationSetting(e, network)}
                         />
@@ -516,14 +520,179 @@ const campaignadd = () => {
               />
              
             </AppContainer>
-            {tabs[activeTab] === 'Add Schedules' && (
+            {Scheduletabs[scheduleTab] === 'Add Schedules' && (
               <React.Fragment>
                 <AppContainer>
-                 <h1>ADD</h1>
+                  <CRow>
+                    <CCol md="6">
+                      <CustomSelectInput
+                        label="Interval Types"
+                        icon={cilFlagAlt}
+                        disableOption="Select Interval Types"
+                        id="intervalTypes"
+                        options={globalutil.statuses()}
+                        className="form-control item form-select"
+                        //value={filters.status}
+                        name="intervalTypes"
+                        title=" Select Interval Types "
+                       // onChange={(e) => changeFilter(e)}
+                      />
+                    </CCol>
+                    <CCol md="6" className='mt-3'>
+                      <CFormCheck
+                        label="Is Fixed Time"
+                        name='isFixedTime'
+                        //checked={daUserData.isTermsAccepted}
+                        //onChange={handleUserInput}
+                        className='mt-4 d-flex flex-row justify-content-center'
+                      />
+                    </CCol>
+                  </CRow>
+
+                 
+                  
+                    <Fieldset legend="Schedule Days:">
+                      <CRow className="mt-2 pb-2">
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Sunday"
+                            name='sunday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Monday"
+                            name='Monday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Tuesday"
+                            name='Tuesday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Wednesday"
+                            name='Wednesday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Thursday"
+                            name='Thursday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Friday"
+                            name='Friday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                        <CCol md="3">
+                          <CFormCheck
+                            label="Saturday"
+                            name='Saturday'
+                            //checked={daUserData.isTermsAccepted}
+                            //onChange={handleUserInput}
+                            className='mt-3 d-flex flex-row justify-content-center'
+                          />
+                        </CCol>
+                      </CRow>
+                    </Fieldset>
+                 
+                 
+
+
+                
+                  <CRow >
+                    <CustomInput
+                      label="Interval Size"
+                     // value={filters.keyword}
+                    //  onChange={changeFilter}
+                      icon={cilFlagAlt}
+                      type="number"
+                      id="intervalSize"
+                      name="intervalSize"
+                      placeholder="interval size"
+                      className="form-control item"
+                      isRequired={false}
+                    // message="Enter Buisness Name"
+                    />
+                  </CRow>
+                  <CRow>
+                    <CCol md="6">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date From "
+                        id="createdAt"
+                        name="createdAt"
+                       // value={filters.createdAt}
+                        title=" start date  "
+                       // onChange={(e) => changeFilter(e, 'createdAt')}
+                      />
+                    </CCol>
+                    <CCol md="6">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date To "
+                        id="createdAt"
+                        name="createdAt"
+                       // value={filters.createdAt}
+                        title=" end date "
+                       // onChange={(e) => changeFilter(e, 'createdAt')}
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CCol md="6">
+                      <CustomTimePicker
+                        icon={cilCalendar}
+                        label="Wave Start Time"
+                        id="startTime"
+                        name="startTime"
+                        // onClick={calculateEndTime}
+                        title=" Start Time"
+                      //  value={shiftAddData.startTime}
+                      //  onChange={(e) => handleShiftChange(e, 'startTime')}
+                      //  maxTime={shiftAddData.endTime}
+                      />
+                    </CCol>
+                    <CCol md="6">
+                      <CustomTimePicker
+                        icon={cilCalendar}
+                        label=" End Time"
+                        id="endTime"
+                        name="endTime"
+                      //  value={shiftAddData.endTime}
+                        title=" End Time"
+                       // onChange={(e) => handleShiftChange(e, 'endTime')}
+                      //  minTime={shiftAddData.startTime}
+                      />
+                    </CCol>
+                  </CRow>
                 </AppContainer>
               </React.Fragment>
             )}
-            {tabs[activeTab] === 'Schedules' && (
+            {Scheduletabs[scheduleTab] === 'Schedules' && (
               <React.Fragment>
                 <AppContainer>
                     <React.Fragment>
