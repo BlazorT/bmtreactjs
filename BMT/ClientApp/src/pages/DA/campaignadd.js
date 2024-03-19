@@ -18,13 +18,12 @@ import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-import DAaddPartnerModal from 'src/components/Modals/DAaddPartnerModal';
 import { formValidator } from 'src/helpers/formValidator';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import {
   getCampaignAddConfig,
-  getInitialDspData,
+  getInitialCampaignData,
 } from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
@@ -34,11 +33,9 @@ import CustomTimePicker from 'src/components/UI/TimePicker';
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import { CFormCheck } from '@coreui/react';
-import { getDspPartnersCols } from 'src/configs/ColumnsConfig/dspPartnersCols';
 import Form from 'src/components/UI/Form';
 import { useFetchPartners } from 'src/hooks/api/useFetchPartners';
-import { useRegisterDsp } from 'src/hooks/api/useRegisterDsp';
-import { useCreatePartners } from 'src/hooks/api/useCreatePartners';
+import { useCreateCampaignData } from 'src/hooks/api/useCreateCampaignData';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import validateEmail from 'src/helpers/validateEmail';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -54,28 +51,16 @@ const campaignadd = () => {
   const uploadRef = useRef(null);
   const { uploadAvatar } = useUploadAvatar();
   const { fetchPartners } = useFetchPartners();
-  const { createUpdateDsp } = useRegisterDsp();
-  const { createPartners } = useCreatePartners();
+  const { createUpdateCampaign } = useCreateCampaignData();
   const { data, loading, error, checkEmailValidation } = useEmailVerification();
   const showToast = useShowToast();
 
   useEffect(() => {
-    const state = location.state;
-    formValidator();
-    if (state !== null) {
-      const daDsps = state.user;
-      console.log({ daDsps });
-      const daInititalData = {
-        ...daDsps,
-        isWhatsappAsso: daDsps.whatsApp !== '' ? true : false,
-        country: daDsps.stateId && daDsps.stateId < 54 ? 1 : 2,
-      };
-      setdspRegData(daInititalData);
-      getPartnerList(daDsps.id);
-    }
-  }, [location.state]);
+   
+ 
+  }, []);
 
-  const [dspRegData, setdspRegData] = useState(getInitialDspData(user));
+  const [campaignRegData, setcampaignRegData] = useState(getInitialCampaignData(user));
   const [rows, setRows] = useState([]);
   const [showForm, setshowForm] = useState(true);
   const [addPartnerModalOpen, setModalOpen] = useState(false);
@@ -89,27 +74,9 @@ const campaignadd = () => {
   const tabs = ['Campaign', 'Networks', 'Schedule'];
   const [scheduleTab, setScheduleTab] = useState(0);
   const Scheduletabs = ['Add Schedules', 'Schedules'];
-  const getPartnerList = async (id) => {
-    const partnerList = await fetchPartners(id);
-    const mappedArray = partnerList.map((data, index) => ({
-      uid: data.id,
-      businessName: data.businessName,
-      rowVer: 1,
-      createdAt: data.createdAt,
-      lastUpdatedAt: moment().utc().format(0),
-      fullName: data.fullName,
-      primaryContact: data.primaryContact,
-      dob: data.dob,
-      email: data.email,
-      status: data.status,
-      createdBy: data.createdBy,
-      decisionMakingAuthority: data.decisionMakingAuthority,
-    }));
-    setIsLoading(false);
-    setRows(mappedArray);
-  };
+  
 
-  const registerDsp = async () => {
+  const registerCampaign = async () => {
     const form = document.querySelector('.dsp-reg-form');
     formValidator();
     if (form.checkValidity()) {
@@ -118,7 +85,6 @@ const campaignadd = () => {
       if (fUpload.files !== null && fUpload.files.length > 0) {
         var avatar = fUpload.files[0];
         const formData = new FormData();
-
         formData.append('file', avatar);
         formData.append('id', '0');
         formData.append('name', avatar.name);
@@ -131,93 +97,46 @@ const campaignadd = () => {
         if (uploadAvatarRes.status === true) {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
-          const res = await createUpdateDsp({ ...dspRegData, logoPath: avatarPath });
+          const res = await createUpdateCampaign({ ...campaignRegData, logoPath: avatarPath });
           console.log(res);
           if (res.status) {
             navigate('/DspsList');
           }
         }
       } else {
-        const res = await createUpdateDsp(dspRegData);
+        const res = await createUpdateCampaign(campaignRegData);
         console.log({ res });
-        if (res.status) {
-          if (rows.length > 0) {
-            createPartnerData(res.data.id);
-          } else {
+        if (res.status === true) {
             navigate('/DspsList');
-          }
         }
       }
     }
   };
 
-  const createPartnerData = async (dspIs) => {
-    const updatedRows = rows.map((row) => {
-      const { uid, ...rest } = row;
-      return {
-        ...rest,
-        id: uid,
-        dspid: dspIs,
-        lastUpdatedBy: user.userId,
-      };
-    });
+ 
 
-    await createPartners(updatedRows);
-
-    navigate('/DspsList');
-  };
-
-  const handleDspRegForm = (e, label) => {
-    if (label === 'logoPath') {
-      setdspRegData((prevData) => ({ ...prevData, [label]: e }));
+  const handleCampaignAddForm = (e, label) => {
+    if (label == 'startTime' || label == 'finishTime') {
+      // alert(label);
+      setcampaignRegData((prev) => ({
+        ...prev,
+        [label]: e,
+      }));
+    } 
+    else if (label === 'logoPath') {
+      setcampaignRegData((prevData) => ({ ...prevData, [label]: e }));
     } else {
       const { name, value, type, checked } = e.target;
-
       const updatedValue = type === 'checkbox' ? checked : value;
-
-      setdspRegData((prevData) => ({
+      setcampaignRegData((prevData) => ({
         ...prevData,
         [name]: updatedValue,
       }));
     }
   };
-
-  const onBlur = async () => {
-    const fieldValue = dspRegData.email;
-    if (validateEmail(fieldValue)) {
-      const isValidEmail = await checkEmailValidation(fieldValue);
-
-      if (isValidEmail === 'valid') {
-        //
-      } else if (isValidEmail === 'invalid') {
-        showToast(`${fieldValue} is not a valid email`, 'error');
-        const emailInputElement = document.getElementById('email');
-        setEmailMessage(`${fieldValue} is not a valid email`);
-        emailInputElement.setCustomValidity(`${fieldValue} is not a valid email`);
-      } else {
-        // const emailInputElement = document.getElementById('email');
-        // setEmailMessage(`${fieldValue} can not be verified Api error`);
-        // emailInputElement.setCustomValidity(`${fieldValue} can not verify api error`);
-      }
-    }
-  };
-
-  const AddPartnerClick = () => {
-    toggleAddPartMdl(true);
-  };
-
-  const toggleAddPartMdl = () => {
-    setModalOpen(!addPartnerModalOpen);
-  };
-
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
-
-  const toggleLicence = () => {
-    setshowPartners(!showPartners);
-  };
-
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
@@ -248,13 +167,10 @@ const campaignadd = () => {
       isOpen: false,
     });
   };
-  const dspPartnersCols = getDspPartnersCols(setRows, rows);
   const campaignAddInputs = getCampaignAddConfig(
-    dspRegData,
-    handleDspRegForm,
+    campaignRegData,
+    handleCampaignAddForm,
     TermsModal,
-    emailMessage,
-    onBlur,
   );
   const icons = {
     Tiktock: Email,
@@ -267,83 +183,28 @@ const campaignadd = () => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
-  const [vehDisprows, setVehDispRow] = useState([
+  
+  const [schedulerows, setschedulerows] = useState([
     {
       id: 1,
-      date: '01/16/2024',
-      //vehicleCode: 'Ubl488',
-      //vinCode: '22U88',
-      daName: 'Basedine, 089029',
-      //lastUpdated: '9:45:13',
-      vehicleCount: 0,
-    },
-    //{
-    //  id: 2,
-    //  date: '01/10/2024',
-    //  //vName: 'Toyota Xli',
-    //  quantity: '22',
-    //  daName: 'Asif hussain, 20989029',
-    //  lastUpdated: '9:45:13',
-
-    //},
-    {
-      id: 3,
-      /* date: '01/16/2024',*/
-      vehicleName: 'Honda civic, V45008, Sedan',
-      quantity: '--',
-      // daName: '776389'
-      lastUpdated: '9:45:13',
-      vehicleCount: 5,
-    },
-    {
-      id: 8,
-      /* date: '01/16/2024',*/
-      vehicleName: ' Left Side Miror, 995008',
-      quantity: '9',
-      // daName: 'Zeeshan ahmad',
-      lastUpdated: '9:45:13',
-      vehicleCount: 5,
-    },
-
-    {
-      id: 5,
-      /* date: '01/16/2024',*/
-      // vehicleName: 'Toyota Revo,U878',
-      // vCode: 'UNO2898',
-      daName: 'Geraldine, 837899',
-      // lastUpdated: '9:45:13',
-      vehicleCount: 0,
-    },
-    {
-      id: 6,
-      /* date: '01/16/2024',*/
-      vehicleName: 'Toyota Grandee, Vb9973, Sedan',
-      quantity: '--',
-      //daName: 'Abdul Basit, 2098',
-      lastUpdated: '9:45:13',
-      vehicleCount: 5,
-    },
-    {
-      id: 9,
-      /* date: '01/16/2024',*/
-      vehicleName: 'headphone, Hb9973',
-      quantity: '15',
-      //daName: 'Abdul Basit, 2098',
-      lastUpdated: '9:45:13',
-      vehicleCount: 5,
+      interval: '12',
+      budget: '250',
+      message: '12',
+      days: '2',
+      startTime: '--',
+      finishTime: '--',
     },
   ]);
-  const [vehDispcolumns, setVehDispcolumns] = useState([
+    const [schedulecolumns, setSchedulecolumns] = useState([
     {
-      field: 'date',
+      field: 'interval',
       headerClassName: 'custom-header-data-grid',
       width: 100,
       //   flex: 1,
-      headerName: 'Date',
+      headerName: 'Interval',
       filterable: false,
       sortable: false,
-      renderCell: (params) =>
-        params.row.date && <h6 className="m-0 p-0 fw-bold">{params.row.date}</h6>,
+     
     },
     {
       /* flex: 1,*/
@@ -352,22 +213,21 @@ const campaignadd = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: false,
-      headerName: 'DA',
+      headerName: 'Budget',
       type: 'text',
       align: 'left',
       headerAlign: 'left',
-      field: 'daName',
+      field: 'budget',
       editable: false,
-      renderCell: (params) =>
-        params.row.daName && <strong className="m-0 p-0 ">{params.row.daName}</strong>,
+     
     },
 
     {
-      field: 'vehicleName',
+      field: 'message',
       headerClassName: 'custom-header-data-grid',
       minWidth: 250,
       flex: 1,
-      headerName: 'Assignments',
+      headerName: 'Message',
       editable: false,
       filterable: true,
     },
@@ -379,13 +239,11 @@ const campaignadd = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: false,
-      headerName: 'Quantity',
-      type: 'number',
+      headerName: 'Days',
       align: 'left',
       headerAlign: 'left',
-      field: 'quantity',
+      field: 'days',
       editable: false,
-      renderCell: (params) => !params.row.date && params.row.availableStock,
     },
     {
       /* flex: 1,*/
@@ -394,21 +252,20 @@ const campaignadd = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: false,
-      headerName: ' vehicle Count',
-      type: 'number',
+      headerName: ' Start Time',
       align: 'left',
       headerAlign: 'left',
-      field: 'vehicleCount',
+      field: 'startTime',
       editable: false,
-      renderCell: (params) => !params.row.date && params.row.availableStock,
+      type: 'timestamp',
     },
 
     {
-      field: 'lastUpdated',
+      field: 'finishTime',
       headerClassName: 'custom-header-data-grid',
       minWidth: 130,
       /* flex: 1,*/
-      headerName: 'Disp. Time',
+      headerName: 'End Time',
       sortable: false,
       filterable: false,
       type: 'timestamp',
@@ -441,7 +298,7 @@ const campaignadd = () => {
                   <Inputs
                     inputFields={campaignAddInputs}
                     yesFn={goToAnotherPage}
-                    submitFn={registerDsp}
+                  
                   >
                   </Inputs>
                 </React.Fragment>
@@ -530,35 +387,32 @@ const campaignadd = () => {
                         icon={cilFlagAlt}
                         disableOption="Select Interval Types"
                         id="intervalTypes"
-                        options={globalutil.statuses()}
+                        options={globalutil.intervals()}
                         className="form-control item form-select"
-                        //value={filters.status}
+                        value={campaignRegData.intervalTypeId}
                         name="intervalTypes"
                         title=" Select Interval Types "
-                       // onChange={(e) => changeFilter(e)}
+                        onChange={(e) => handleCampaignAddForm(e)}
                       />
                     </CCol>
                     <CCol md="6" className='mt-3'>
                       <CFormCheck
                         label="Is Fixed Time"
                         name='isFixedTime'
-                        //checked={daUserData.isTermsAccepted}
-                        //onChange={handleUserInput}
+                        //checked={campaignRegData.isTermsAccepted}
+                        //onChange={handleCampaignAddForm}
                         className='mt-4 d-flex flex-row justify-content-center'
                       />
                     </CCol>
                   </CRow>
-
-                 
-                  
                     <Fieldset legend="Schedule Days:">
                       <CRow className="mt-2 pb-2">
                         <CCol md="3">
                           <CFormCheck
                             label="Sunday"
                             name='sunday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                            //checked={campaignRegData.isTermsAccepted}
+                           //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -566,8 +420,8 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Monday"
                             name='Monday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                            //checked={campaignRegData.isTermsAccepted}
+                            //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -575,8 +429,8 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Tuesday"
                             name='Tuesday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                                 //checked={campaignRegData.isTermsAccepted}
+                        //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -584,8 +438,8 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Wednesday"
                             name='Wednesday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                            //checked={campaignRegData.isTermsAccepted}
+                            //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -593,8 +447,8 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Thursday"
                             name='Thursday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                            //checked={campaignRegData.isTermsAccepted}
+                            //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -602,8 +456,8 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Friday"
                             name='Friday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                             //checked={campaignRegData.isTermsAccepted}
+                             //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
@@ -611,27 +465,22 @@ const campaignadd = () => {
                           <CFormCheck
                             label="Saturday"
                             name='Saturday'
-                            //checked={daUserData.isTermsAccepted}
-                            //onChange={handleUserInput}
+                              //checked={campaignRegData.isTermsAccepted}
+                             //onChange={handleCampaignAddForm}
                             className='mt-3 d-flex flex-row justify-content-center'
                           />
                         </CCol>
                       </CRow>
                     </Fieldset>
-                 
-                 
-
-
-                
                   <CRow >
                     <CustomInput
                       label="Interval Size"
-                     // value={filters.keyword}
-                    //  onChange={changeFilter}
+                      value={campaignRegData.interval}
+                      onChange={handleCampaignAddForm}
                       icon={cilFlagAlt}
                       type="number"
-                      id="intervalSize"
-                      name="intervalSize"
+                      id="interval"
+                      name="interval"
                       placeholder="interval size"
                       className="form-control item"
                       isRequired={false}
@@ -643,22 +492,22 @@ const campaignadd = () => {
                       <CustomDatePicker
                         icon={cilCalendar}
                         label="Date From "
-                        id="createdAt"
-                        name="createdAt"
-                       // value={filters.createdAt}
+                        id="startTime"
+                        name="startTime"
+                        value={campaignRegData.startTime}
                         title=" start date  "
-                       // onChange={(e) => changeFilter(e, 'createdAt')}
+                        onChange={(e) => handleCampaignAddForm(e, 'startTime')}
                       />
                     </CCol>
                     <CCol md="6">
                       <CustomDatePicker
                         icon={cilCalendar}
                         label="Date To "
-                        id="createdAt"
-                        name="createdAt"
-                       // value={filters.createdAt}
+                        id="finishTime"
+                        name="finishTime"
                         title=" end date "
-                       // onChange={(e) => changeFilter(e, 'createdAt')}
+                        value={campaignRegData.finishTime}
+                        onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
                       />
                     </CCol>
                   </CRow>
@@ -666,13 +515,12 @@ const campaignadd = () => {
                     <CCol md="6">
                       <CustomTimePicker
                         icon={cilCalendar}
-                        label="Wave Start Time"
+                        label=" Start Time"
                         id="startTime"
                         name="startTime"
-                        // onClick={calculateEndTime}
                         title=" Start Time"
-                      //  value={shiftAddData.startTime}
-                      //  onChange={(e) => handleShiftChange(e, 'startTime')}
+                        value={campaignRegData.startTime}
+                        onChange={(e) => handleCampaignAddForm(e, 'startTime')}
                       //  maxTime={shiftAddData.endTime}
                       />
                     </CCol>
@@ -680,12 +528,11 @@ const campaignadd = () => {
                       <CustomTimePicker
                         icon={cilCalendar}
                         label=" End Time"
-                        id="endTime"
-                        name="endTime"
-                      //  value={shiftAddData.endTime}
+                        id="finishTime"
+                        name="finishTime"
+                        value={campaignRegData.finishTime}
+                        onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
                         title=" End Time"
-                       // onChange={(e) => handleShiftChange(e, 'endTime')}
-                      //  minTime={shiftAddData.startTime}
                       />
                     </CCol>
                   </CRow>
@@ -701,8 +548,8 @@ const campaignadd = () => {
                         <div className="row ">
                           <div className="col-md-12 col-xl-12">
                             <CustomDatagrid
-                              rows={vehDisprows}
-                              columns={vehDispcolumns}
+                              rows={schedulerows}
+                              columns={schedulecolumns}
                               rowHeight={55}
                               pagination={true}
                              // canExport={pageRoles.canExport}
@@ -728,10 +575,17 @@ const campaignadd = () => {
                 </button>
                 <button
                   // onClick={() => onSave()}
-                  type="submit"
+                  type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
                   Save
+                </button>
+                <button
+                  // onClick={() => onSave()}
+                  type="submit"
+                  className="btn btn_Default sales-btn-style m-2"
+                >
+                  Submit
                 </button>
               </div>
             </React.Fragment>

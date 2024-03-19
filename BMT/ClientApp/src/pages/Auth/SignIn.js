@@ -87,7 +87,7 @@ function SignIn() {
     globalutil.setnetworks(data.networks);
     globalutil.setstates(data.states);
     globalutil.setstatuses(data.statuses);
-    globalutil.setIntervals(data.Intervals);
+    globalutil.setintervals(data.intervals);
    // globalutil.setcountries(data.countries);
     globalutil.setcategories(data.categories);
     globalutil.setalerts(data.alerts);

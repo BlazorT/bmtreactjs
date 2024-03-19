@@ -4,19 +4,15 @@ import { useSelector } from 'react-redux';
 import useFetch from '../useFetch';
 import { useShowToast } from '../useShowToast';
 
-export const useRegisterDsp = () => {
+export const useCreateCampaignData = () => {
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
-  const { fetchData: registerDsp } = useFetch();
+  const { fetchData: registerCampaign } = useFetch();
 
-  const createUpdateDsp = async (dspRegData) => {
+  const createUpdateCampaign = async (campaignRegData) => {
     const body = {
-      ...dspRegData,
-      address: dspRegData.surfaceAddress,
-      whatsApp: dspRegData.isWhatsappAsso === true ? dspRegData.contact : '',
-      stateId: parseInt(dspRegData.stateId),
-      businessTypeId: parseInt(dspRegData.businessTypeId),
+      ...campaignRegData,
       lastUpdatedAt: moment().utc().format(),
       lastUpdatedBy: user.userId,
       updatedBy: user.userId,
@@ -24,8 +20,8 @@ export const useRegisterDsp = () => {
     console.log({ body });
 
     return new Promise((resolve) => {
-      registerDsp(
-        '/BlazorApi/adupdatedsp',
+      registerCampaign(
+        '/Compaigns/postCompaignData',
         { method: 'POST', body: JSON.stringify(body) },
         (res) => {
           if (res.status) {
@@ -38,5 +34,5 @@ export const useRegisterDsp = () => {
     });
   };
 
-  return { createUpdateDsp };
+  return { createUpdateCampaign };
 };
