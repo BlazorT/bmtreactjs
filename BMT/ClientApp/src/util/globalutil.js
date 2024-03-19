@@ -21,13 +21,13 @@ export default class globalutil {
   static setstatuses(statuses) {
     localStorage.setItem('statuses', JSON.stringify(statuses));
   }
-  static Intervals() {
-    if (localStorage.getItem('Intervals') !== '' && localStorage.getItem('Intervals') !== null)
-      return JSON.parse(localStorage.getItem('Intervals'));
+  static intervals() {
+    if (localStorage.getItem('intervals') !== '' && localStorage.getItem('intervals') !== null)
+      return JSON.parse(localStorage.getItem('intervals'));
     else return null;
   }
-  static setIntervals(Intervals) {
-    localStorage.setItem('Intervals', JSON.stringify(Intervals));
+  static setintervals(intervals) {
+    localStorage.setItem('intervals', JSON.stringify(intervals));
   }
   //business types
   static notificationtypes() {
