@@ -59,7 +59,7 @@ const Notification = (toggle) => {
         // body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res, 'networks');
+       // console.log(res, 'networks');
         if (res.status === true) {
           //const mappedArray = res.data.map((data, index) => ({
           //  id: data.id,

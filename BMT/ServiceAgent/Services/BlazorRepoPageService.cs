@@ -1199,7 +1199,7 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pOrgId = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pOrgId.Value = 0;
                         command.Parameters.Add(pOrgId);
-                        MySqlParameter pNetworksJSON = new MySqlParameter("p_NetworksJSON", SqlDbType.NText);
+                        MySqlParameter pNetworksJSON = new MySqlParameter("p_NetworksJSON", MySqlDbType.VarChar,4000);
                         pNetworksJSON.Value = NetworkJSON;
                         command.Parameters.Add(pNetworksJSON);
                         MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
