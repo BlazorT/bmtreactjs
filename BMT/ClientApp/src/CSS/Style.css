@@ -3429,3 +3429,33 @@ fieldset.legend {
     font-size:0.9em;
     color:white;
 }
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root{
+    color:white!important;
+}
+.btn-Width{
+    width:90%!important;
+}
+.min-width{
+    min-width:15%!important;
+}
+.txt-color{
+    color:white!important;
+    text-align:center;
+}
+.mg-lft{
+    margin-left:0em;
+}
+.list-group{
+    background-color:transparent!important;
+    color:white!important;
+}
+.margin-left{
+    margin-left:1.5em;
+}
+.fontset {
+  font-weight: 700;
+  font-size: 1em;
+  box-shadow: inset 0 0 5px #ddd9d9;
+  padding: 0.7em;
+
+}

@@ -8,6 +8,13 @@ import Facebook from '@mui/icons-material/Facebook';
 import LinkedIn from '@mui/icons-material/LinkedIn';
 import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import { Table, ListGroup } from 'react-bootstrap';
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 //import { Fieldset } from 'primereact/fieldset';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
@@ -42,6 +49,9 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import AreaSelectModel from 'src/components/Modals/AreaSelectModel';
+import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
+import Button from '../../components/InputsComponent/Button';
 
 const campaignadd = () => {
   // let state;
@@ -63,6 +73,7 @@ const campaignadd = () => {
   const [campaignRegData, setcampaignRegData] = useState(getInitialCampaignData(user));
   const [rows, setRows] = useState([]);
   const [showForm, setshowForm] = useState(true);
+  const [targetAudience, setTargetAudience] = useState(true);
   const [addPartnerModalOpen, setModalOpen] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
@@ -71,6 +82,11 @@ const campaignadd = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
   const [activeTab, setActiveTab] = useState(0);
+  const [cityData, setCityData] = useState([]);
+
+  const [areaSelectModal, setAreaSelectModal] = useState(false);
+  const [addScheduleModel, setAddScheduleModel] = useState(false);
+
   const tabs = ['Campaign', 'Networks', 'Schedule'];
   const [scheduleTab, setScheduleTab] = useState(0);
   const Scheduletabs = ['Add Schedules', 'Schedules'];
@@ -142,6 +158,22 @@ const campaignadd = () => {
   };
   const toggleStock = () => {
     setshowForm((prev) => !prev);
+  };
+  const toggleTargetAud = () => {
+    setTargetAudience((prev) => !prev);
+  };
+  const toggleAreaSelectMdl = () => {
+    setAreaSelectModal((prev) => !prev);
+  };
+  const toggleAddScheduleMdl = () => {
+    setAddScheduleModel((prev) => !prev);
+  };
+
+  const AddAreaClick = () => {
+    toggleAreaSelectMdl(true);
+  };
+  const AddScheduleClick = () => {
+    toggleAddScheduleMdl(true);
   };
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
@@ -281,6 +313,22 @@ const campaignadd = () => {
   if (isLoading) {
     return <Loading />;
   }
+  const handleDelete = (index) => {
+    setCityData(cityData.filter((item, i) => i !== index));
+  };
+  const [targetUser, setTargetUser] = useState('');
+  const [targetUserData, setTargetUserData] = useState([]);
+  const handleAdd = () => {
+    if (targetUser !== '') {
+      setTargetUserData([...targetUserData, targetUser]);
+      setTargetUser('');
+    }
+  };
+  const handleDeleteuser = (index) => {
+    const newCountries = [...targetUserData];
+    newCountries.splice(index, 1);
+    setTargetUserData(newCountries);
+  };
   return (
     <Form name="dsp-reg-form">
       <FleetDashboardTabs
@@ -306,7 +354,164 @@ const campaignadd = () => {
                     yesFn={goToAnotherPage}
                   
                   >
+                    <div className="row">
+                      <div className="col-md-6 mt-4">
+                        <CFormCheck
+                          className=""
+                          id="flexNotificationChecked"
+                          label="Generate Auto Leads"
+                          defaultChecked
+                        
+                        />
+                      </div>
+               
+                      <div className="col-md-6 mt-2">
+                        <FormControl>
+                          <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Status</FormLabel>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel value="Active" control={<Radio />} label="Active" />
+                            <FormControlLabel value="Paused" control={<Radio />} label="Paused" />
+                            <FormControlLabel value="Cancel" control={<Radio />} label="Cancel" />
+
+                          </RadioGroup>
+                        </FormControl>
+                      </div>
+                    </div>
+                    <AppContainer>
+                      <DataGridHeader
+                        title="Target Audience"
+                        otherControls={[{ icon: cilChevronBottom, fn: toggleTargetAud }]}
+                        filterDisable={true}
+                      />
+                    </AppContainer>
+                      {targetAudience && (
+                        <React.Fragment>
+                        
+                          <CRow>
+                            <CCol md="12">
+                              <CustomInput
+                                label="File"
+                                icon={cilFlagAlt}
+                                type="file"
+                                id="custom"
+                                className="form-control item"
+                                value={campaignRegData.custom}
+                                name="custom"
+                                onChange={(e) => handleCampaignAddForm(e)}
+                              />
+                            </CCol>
+                          <CCol md="6 " className="mt-4">
+                            <button
+                              onClick={() => AddAreaClick()}
+                              type="button"
+                              className="btn btn_Default sales-btn-style m-2 btn-Width"
+                            >
+                              Area Select
+                            </button>
+                          </CCol>
+                          <CCol md="6">
+                            <CustomInput
+                              label="Area"
+                              icon={cilFlagAlt}
+                              type="text"
+                              id="custom"
+                              placeholder="Area Select"
+                              className="form-control item"
+                              value={campaignRegData.area}
+                              name="area"
+                              onChange={(e) => handleCampaignAddForm(e)}
+                            />
+                          </CCol>
+                          <CRow className="mg-lft mt-2">
+                            <CCol md="12">
+                            <Table striped bordered hover>
+                              <thead>
+                                <tr>
+                                  <th className="txt-color">Country</th>
+                                  <th className="txt-color">City</th>
+                                  <th className="txt-color">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {cityData.map((item, index) => (
+                                  <tr key={index}>
+                                    <td className="txt-color">{item.states}</td>
+                                    <td className="txt-color">{item.city}</td>
+                                    <td className="txt-color">
+                                      <Button title="Delete" value="Delete" variant="danger" onClick={() => handleDelete(index)}>
+                                        Delete
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                              </Table>
+                            </CCol>
+                          </CRow>
+                         
+
+                          <CCol md="12 mt-2">
+                            <textarea
+                              label="Area"
+                              icon={cilFlagAlt}
+                              type="text"
+                              id="description"
+                              placeholder="text area for description"
+                              className="form-control item"
+                              value={campaignRegData.description}
+                              name="description"
+                              onChange={(e) => handleCampaignAddForm(e)}
+                            />
+                          </CCol>
+                          <CCol md="8" className="mt-2">
+                            <CustomInput
+                              label="Target User"
+                              icon={cilFlagAlt}
+                              type="text"
+                              id="targetUser"
+                              placeholder="add target user"
+                              className="form-control item"
+                              value={targetUser}
+                              name="targetUser"
+                              onChange={(e) => setTargetUser(e.target.value)}
+                            />
+                          </CCol>
+                          <CCol md="4" className="mt-3" >
+                            <div className="mt-3">
+                              <button
+                                type="submit"
+                                className="btn btn_Default sales-btn-style m-2"
+                                onClick={handleAdd}
+                              >
+                                Save
+                              </button>
+                            </div>
+                 
+                          </CCol>
+                          <CCol md="12" className="mt-2">
+                            <h4>Target Users</h4>
+                            <ul>
+                              {targetUserData.map((c, index) => (
+                                <ListGroup.Item key={index} className="fontset">
+                                  {c}
+                                  <Button value="Delete" variant="danger" title="Delete" className="float-right margin-left" onClick={() => handleDeleteuser(index)}>
+                                    Delete
+                                  </Button>
+                                </ListGroup.Item>
+                              ))}
+                            </ul>
+                         
+                          </CCol>
+                          </CRow>
+                        </React.Fragment>
+                      )}
+                   
                   </Inputs>
+                 
                 </React.Fragment>
               )}
             </AppContainer>
@@ -375,251 +580,38 @@ const campaignadd = () => {
         {tabs[activeTab] === 'Schedule' && (
           <React.Fragment>
             <AppContainer>
-              <FleetDashboardTabs
-                title="Schedule"
-                fleetTabs={Scheduletabs}
-                activeTab={scheduleTab}
-                handleActiveTab={setScheduleTab}
-              />
-             
-            </AppContainer>
-            {Scheduletabs[scheduleTab] === 'Add Schedules' && (
               <React.Fragment>
                 <AppContainer>
-                  <CRow>
-                    <CCol md="6">
-                      <CustomSelectInput
-                        label="Interval Types"
-                        icon={cilFlagAlt}
-                        disableOption="Select Interval Types"
-                        id="intervalTypes"
-                        options={globalutil.intervals()}
-                        className="form-control item form-select"
-                        value={campaignRegData.intervalTypeId}
-                        name="intervalTypes"
-                        title=" Select Interval Types "
-                        onChange={(e) => handleCampaignAddForm(e)}
-                      />
-                    </CCol>
-                    <CCol md="6" className='mt-3'>
-                      <CFormCheck
-                        label="Is Fixed Time"
-                        name='isFixedTime'
-                        //checked={campaignRegData.isTermsAccepted}
-                        //onChange={handleCampaignAddForm}
-                        className='mt-4 d-flex flex-row justify-content-center'
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mt-2">
-                  <h5>Schedule Days</h5>
-                  <fieldset className="fieldset">
-                    <legend className="legend"></legend> 
-                      <CRow className="mt-2 pb-2">
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Sunday"
-                            name='sunday'
-                            //checked={campaignRegData.isTermsAccepted}
-                           //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
+                  <React.Fragment>
+                    <DataGridHeader
+                      addButton='Schedule'
+                      addBtnClick={AddScheduleClick}
+                      title="Schedules" />
+
+                    <div className="show-stock">
+                      <div className="row ">
+                        <div className="col-md-12 col-xl-12">
+                          <CustomDatagrid
+                            rows={schedulerows}
+                            columns={schedulecolumns}
+                            rowHeight={55}
+                            pagination={true}
+                          // canExport={pageRoles.canExport}
+                          // canPrint={pageRoles.canPrint}
                           />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Monday"
-                            name='Monday'
-                            //checked={campaignRegData.isTermsAccepted}
-                            //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Tuesday"
-                            name='Tuesday'
-                                 //checked={campaignRegData.isTermsAccepted}
-                        //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Wednesday"
-                            name='Wednesday'
-                            //checked={campaignRegData.isTermsAccepted}
-                            //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Thursday"
-                            name='Thursday'
-                            //checked={campaignRegData.isTermsAccepted}
-                            //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Friday"
-                            name='Friday'
-                             //checked={campaignRegData.isTermsAccepted}
-                             //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                        <CCol md="3">
-                          <CFormCheck
-                            label="Saturday"
-                            name='Saturday'
-                              //checked={campaignRegData.isTermsAccepted}
-                             //onChange={handleCampaignAddForm}
-                            className='mt-3 d-flex flex-row justify-content-center'
-                          />
-                        </CCol>
-                      </CRow>
-                    </fieldset>
-                  </CRow>
-                  <CRow >
-                    <CustomInput
-                      label="Interval Size"
-                      value={campaignRegData.interval}
-                      onChange={handleCampaignAddForm}
-                      icon={cilFlagAlt}
-                      type="number"
-                      id="interval"
-                      name="interval"
-                      placeholder="interval size"
-                      className="form-control item"
-                      isRequired={false}
-                    // message="Enter Buisness Name"
-                    />
-                  </CRow>
-                  <CRow>
-                    <CCol md="6">
-                      <CustomDatePicker
-                        icon={cilCalendar}
-                        label="Date From "
-                        id="startTime"
-                        name="startTime"
-                        value={campaignRegData.startTime}
-                        title=" start date  "
-                        onChange={(e) => handleCampaignAddForm(e, 'startTime')}
-                      />
-                    </CCol>
-                    <CCol md="6">
-                      <CustomDatePicker
-                        icon={cilCalendar}
-                        label="Date To "
-                        id="finishTime"
-                        name="finishTime"
-                        title=" end date "
-                        value={campaignRegData.finishTime}
-                        onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow>
-                    <CCol md="6">
-                      <CustomTimePicker
-                        icon={cilCalendar}
-                        label=" Start Time"
-                        id="startTime"
-                        name="startTime"
-                        title=" Start Time"
-                        value={campaignRegData.startTime}
-                        onChange={(e) => handleCampaignAddForm(e, 'startTime')}
-                      //  maxTime={shiftAddData.endTime}
-                      />
-                    </CCol>
-                    <CCol md="6">
-                      <CustomTimePicker
-                        icon={cilCalendar}
-                        label=" End Time"
-                        id="finishTime"
-                        name="finishTime"
-                        value={campaignRegData.finishTime}
-                        onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
-                        title=" End Time"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow>
-                    <CCol md={4}>
-                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                        Schedule Messages
-                      </label>
-                      <input className="form-control item user-profile-input labelName" value="0" disabled />
-                    </CCol>
-                    <CCol md={4}>
-                      <label htmlFor="" className="labelName profile-user-labels mt-2">
-                        Schedule Budget($)
-                      </label>
-                      <input className="form-control item user-profile-input" value="0" disabled />
-                    </CCol>
-                    <CCol md={4}>
-                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                        Campaign Budget($)
-                      </label>
-                      <input className="form-control item user-profile-input" value="0" disabled />
-                    </CCol>
-                  </CRow>
-                 
-                </AppContainer>
-              </React.Fragment>
-            )}
-            {Scheduletabs[scheduleTab] === 'Schedules' && (
-              <React.Fragment>
-                <AppContainer>
-                    <React.Fragment>
-                      <DataGridHeader  title="Schedules" />
-                      <div className="show-stock">
-                        <div className="row ">
-                          <div className="col-md-12 col-xl-12">
-                            <CustomDatagrid
-                              rows={schedulerows}
-                              columns={schedulecolumns}
-                              rowHeight={55}
-                              pagination={true}
-                             // canExport={pageRoles.canExport}
-                             // canPrint={pageRoles.canPrint}
-                            />
-                          </div>
                         </div>
                       </div>
-                     
-                    </React.Fragment>
-                
+                    </div>
+
+                  </React.Fragment>
+
                 </AppContainer>
               </React.Fragment>
-            )}
-            <React.Fragment>
-              <div className="CenterAlign pt-2">
-                <button
-                  onClick={() => onCancel()}
-                  type="button"
-                  className="btn btn_Default m-2 sales-btn-style"
-                >
-                  Cancel
-                </button>
-                <button
-                   onClick={() => onSave()}
-                  type="button"
-                  className="btn btn_Default sales-btn-style m-2"
-                >
-                  Submit
-                </button>
-                <button
-                  onClick={() => submitCompaign()}
-                  type="submit"
-                  className="btn btn_Default sales-btn-style m-2"
-                >
-                  Submit
-                </button>
-              </div>
-            </React.Fragment>
+             
+            </AppContainer>
+           
+            
+         
           </React.Fragment>
         )}
       </CContainer>
@@ -635,7 +627,18 @@ const campaignadd = () => {
       />
 
      
-
+      <AreaSelectModel
+        isOpen={areaSelectModal}
+        toggle={toggleAreaSelectMdl}
+        header="Area Select"
+        setData={setCityData}
+        data={cityData }
+      />
+      <AddScheduleModel
+        isOpen={addScheduleModel}
+        toggle={toggleAddScheduleMdl}
+        header="Add Schedule "
+      />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>
   );

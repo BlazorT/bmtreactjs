@@ -129,17 +129,7 @@ export const getCampaignAddConfig = (
       className: 'form-control item',
       isRequired: false,
     },
-    {
-      component: CFormCheck,
-      label: 'Generate Auto Leads',
-      value: campaignRegData.autoGenerateLeads,
-      onChange: handleCampaignAddForm,
-      icon: cilCalendar,
-      id: 'autoGenerateLeads',
-      name: 'autoGenerateLeads',
-      className: 'mt-2',
-      isRequired: false,
-    },
+    
  
 ];
 export const getInitialCampaignData = (user) => ({
