@@ -42,6 +42,8 @@ const CustomSearch = (prop) => {
               )}`
               : name === 'vehicleName'
                 ? `${option.name}, ${option.numberPlate}`
+                : name === 'organizationName'
+                ? `${option.name}`
           : name === 'fieldName'
           ? `${option.columnName}, ${option.tableName}`
           : `${option.name || option.productName}, ${option.shortCode || option.shortcode}`;

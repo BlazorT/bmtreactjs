@@ -14,9 +14,6 @@ export const useFetchCampaigns = () => {
     const compaignsBody = {
       id: 0,       
       orgId: 0,
-      email: '',
-      name: '',
-      contact: "",
       rowVer: 0,   
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters
@@ -28,7 +25,7 @@ export const useFetchCampaigns = () => {
     };
    // console.log(userBody,'body')
     const res = await postData(compaignsBody);
-   // console.log(( res) );
+    console.log(( res) );
    // alert((res.data.status) );
     if (res && res.status) {
       return res.data;
@@ -36,6 +33,7 @@ export const useFetchCampaigns = () => {
       showToast(res.message, 'error');
       return [];
     }
+    return [];
   };
 
   return { data, error, loading, fetchCompaigns };

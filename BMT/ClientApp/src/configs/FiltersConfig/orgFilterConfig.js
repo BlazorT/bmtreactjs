@@ -8,17 +8,17 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-export const getDaFiltersFields = (filters, changeFilter, orgs) => [
+export const getOrgFiltersFields = (filters, changeFilter, orgs) => [
   {
     component: CustomSearch,
     label: 'Organization',
-    value: filters.keyword,
-   // onChange: setOrg,
+    value: filters.orgName,
+    onChange: changeFilter,
     icon: cilUser,
     type: 'text',
     id: 'organization',
     data: orgs,
-    name: 'organization',
+    name: 'organizationName',
     placeholder: 'organization',
     className: 'form-control item',
     isRequired: false,

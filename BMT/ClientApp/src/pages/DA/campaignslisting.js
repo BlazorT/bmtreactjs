@@ -16,9 +16,12 @@ import CustomFilters from 'src/components/Filters/CustomFilters';
 
 import { formatDate } from 'src/helpers/formatDate';
 import globalutil from 'src/util/globalutil';
+import moment from 'moment';
 
-import { getDaFiltersFields } from 'src/configs/FiltersConfig/daFilterConfig';
+import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
+import { updateToast } from 'src/redux/toast/toastSlice';
+import {  formatDateTime } from 'src/helpers/formatDate';
 
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -42,7 +45,8 @@ const campaignslisting = () => {
   const [showDaGrid, setshowDaGrid] = useState(true);
   const [campaignData, setCampaignData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const dispatch = useDispatch();
+  const [org, setOrg] = useState('');
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
 
   const [filters, setFilters] = useState({
@@ -65,8 +69,8 @@ const campaignslisting = () => {
       id: data.id,
       name: data.name,
       orgName: data.orgName,
-      startTime: data.startTime,
-      finishTime: data.finishTime,
+      startTime: formatDateTime(data.startTime),
+      finishTime: formatDateTime(data.finishTime),
       //status: data.status,
     }));
     //console.log(mappedArray, 'org');
@@ -111,8 +115,74 @@ const campaignslisting = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
+  const {
+    response: GetOrgRes,
+    loading: OrgLoading,
+    error: createCityError,
+    fetchData: GetOrg,
+  } = useFetch();
+  useEffect(() => {
+    getOrgList();
+  }, []);
+  const getOrgList = async (role) => {
+    const orgBody = {
+      id: 0,
+      roleId: role,
+      orgId: 0,
+      email: '',
+      name: '',
+      contact: "",
+      rowVer: 0,
+      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
+      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      // keyword: filters ? filters.keyword : '',
+      createdAt: filters
+        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
+        : moment().subtract(1, 'year').utc().format(),
+      lastUpdatedAt: filters
+        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : moment().utc().format(),
+      createdBy: 0,
+      lastUpdatedBy: 0,
+      ...filters,
+    };
+    await GetOrg(
+      '/BlazorApi/orgsfulldata',
+      {
+        method: 'POST',
+        body: JSON.stringify(orgBody),
+      },
+      (res) => {
+        console.log(res, 'orgs');
+        if (res.status === true) {
+          //const mappedArray = res.data.map((data, index) => ({
+          //  id: data.id,
+          //  userId: data.userId,
+          //  dspid: user.dspId.toString(),
+          //  logDesc: data.logDesc,
+          //  entityName: data.entityName,
+          //  menuId: data.menuId,
+          //  machineIp: data.machineIp,
+          //  actionType: data.actionType,
+          //  logTime: formatDateTime(data.logTime),
+          //}));
 
-  const orgFilterFields = getDaFiltersFields(filters, changeFilter);
+          // setRows(mappedArray);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(OrgLoading.current);
+      },
+    );
+  };
+  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data||[]);
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {
