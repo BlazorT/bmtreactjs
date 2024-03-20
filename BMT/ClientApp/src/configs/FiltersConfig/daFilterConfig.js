@@ -58,6 +58,6 @@ export const getDaFiltersFields = (filters, changeFilter) => [
     disableOption: 'Select Boarding Status',
     options: globalutil.statuses(),
     className: 'form-control item form-select',
-    title: ' DA Status',
+    title: ' Compaign Status',
   },
 ];

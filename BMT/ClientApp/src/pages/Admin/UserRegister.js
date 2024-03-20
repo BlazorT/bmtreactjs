@@ -159,11 +159,11 @@ const UserRegister = () => {
       //   console.log(entry[0], entry[1]);
       // }
       const uploadAvatarRes = await uploadAvatar(formData);
-      console.log({ uploadAvatarRes });
+      //console.log({ uploadAvatarRes });
       if (uploadAvatarRes.status === true) {
         const avatarPath = 'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
         userBody = { ...userBody, avatar: avatarPath };
-        console.log({ userBody, avatarPath });
+        //console.log({ userBody, avatarPath });
         const res = await createUpdateUser(userBody);
         if (res.status === true) {
           navigate('/Users');

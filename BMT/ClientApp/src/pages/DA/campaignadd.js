@@ -9,7 +9,7 @@ import LinkedIn from '@mui/icons-material/LinkedIn';
 import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
-import { Fieldset } from 'primereact/fieldset';
+//import { Fieldset } from 'primereact/fieldset';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
@@ -37,7 +37,7 @@ import Form from 'src/components/UI/Form';
 import { useFetchPartners } from 'src/hooks/api/useFetchPartners';
 import { useCreateCampaignData } from 'src/hooks/api/useCreateCampaignData';
 import useEmailVerification from 'src/hooks/useEmailVerification';
-import validateEmail from 'src/helpers/validateEmail';
+//import validateEmail from 'src/helpers/validateEmail';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import Loading from 'src/components/UI/Loading';
@@ -74,15 +74,19 @@ const campaignadd = () => {
   const tabs = ['Campaign', 'Networks', 'Schedule'];
   const [scheduleTab, setScheduleTab] = useState(0);
   const Scheduletabs = ['Add Schedules', 'Schedules'];
-  
+  const onSave = async () => {
+    //alert("Feared");
+    formValidator();
+   // alert(document.querySelector('.dsp-reg-form'));
+  }//onSave
 
-  const registerCampaign = async () => {
+  const submitCompaign = async () => {
     const form = document.querySelector('.dsp-reg-form');
     formValidator();
     if (form.checkValidity()) {
       // Upload & Submit
       const fUpload = document.getElementById('fileAvatar');
-      if (fUpload.files !== null && fUpload.files.length > 0) {
+      if (fUpload!== null && fUpload.files !== null && fUpload.files.length > 0) {
         var avatar = fUpload.files[0];
         const formData = new FormData();
         formData.append('file', avatar);
@@ -98,7 +102,7 @@ const campaignadd = () => {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
           const res = await createUpdateCampaign({ ...campaignRegData, logoPath: avatarPath });
-          console.log(res);
+         // console.log(res);
           if (res.status) {
             navigate('/DspsList');
           }
@@ -116,7 +120,8 @@ const campaignadd = () => {
  
 
   const handleCampaignAddForm = (e, label) => {
-    if (label == 'startTime' || label == 'finishTime') {
+   // alert(label);
+    if (label !== null && (label == 'startTime' || label == 'finishTime')) {
       // alert(label);
       setcampaignRegData((prev) => ({
         ...prev,
@@ -125,12 +130,13 @@ const campaignadd = () => {
     } 
     else if (label === 'logoPath') {
       setcampaignRegData((prevData) => ({ ...prevData, [label]: e }));
-    } else {
+    } else if (e.target !== null && e.target !== 'undefined') {
       const { name, value, type, checked } = e.target;
-      const updatedValue = type === 'checkbox' ? checked : value;
+     // alert(name + " - " + value + " - " + checked)
+      const isChecked = type === 'checkbox' ? checked : value;
       setcampaignRegData((prevData) => ({
         ...prevData,
-        [name]: updatedValue,
+        [name]: isChecked,
       }));
     }
   };
@@ -288,7 +294,7 @@ const campaignadd = () => {
           <React.Fragment>
             <AppContainer>
               <DataGridHeader
-                title="Campaign Basic Information"
+                title="Basic Information"
                 otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
                 filterDisable={true}
               />
@@ -354,8 +360,8 @@ const campaignadd = () => {
                   Cancel
                 </button>
                 <button
-                 // onClick={() => onSave()}
-                  type="submit"
+                  onClick={() => onSave()}
+                  type="Save"
                   className="btn btn_Default sales-btn-style m-2"
                 >
                   Save
@@ -599,14 +605,14 @@ const campaignadd = () => {
                   Cancel
                 </button>
                 <button
-                  // onClick={() => onSave()}
+                   onClick={() => onSave()}
                   type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
-                  Save
+                  Submit
                 </button>
                 <button
-                  // onClick={() => onSave()}
+                  onClick={() => submitCompaign()}
                   type="submit"
                   className="btn btn_Default sales-btn-style m-2"
                 >

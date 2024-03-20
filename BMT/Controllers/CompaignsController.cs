@@ -6,6 +6,7 @@ using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.application.interfaces;
+using com.blazor.bmt.core;
 
 namespace com.blazor.bmt.controllers
 {
@@ -26,103 +27,37 @@ namespace com.blazor.bmt.controllers
        
         public IEnumerable<UserViewModel> dnlist { get; set; } = new List<UserViewModel>();
         // **************************** Users - Students ***************************************************//
-        public async Task<GridResponseViewModel> GetCompaignDataAll([FromQuery] GridSortAndFilterViewModel filterModel, [FromQuery] CompaignsViewModel model)
+        [HttpPost("detailedcompaigns")]
+        [HttpGet("detailedcompaigns")]
+        [Route("detailedcompaigns")]
+        public async Task<ActionResult> GetCompaignDataAll([FromBody] CompaignsViewModel model)
         {
-            string sortBy = filterModel.sord;// HttpContext.Request.Query["sord"];
-            string sortcolumn = filterModel.sidx;  //HttpContext.Request.Query["sidx"];
-            int pageNo = filterModel.page;  //Convert.ToInt32(HttpContext.Request.Query["page"]);
-            int length = filterModel.rows; // Convert.ToInt32(HttpContext.Request.Query["rows"]);
-
-            // MediaContentViewModel mcvm = new MediaContentViewModel();
-            model.CreatedAt = Convert.ToDateTime(model.CreatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime.AddMonths(-2) : model.CreatedAt;  //new DateTime(UTIL.GlobalApp.CurrentDateTime.Year, 1, 1);///;uvm.CreatedAt.Year <= 1900 ? new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1) : uvm.CreatedAt;
-            model.LastUpdatedAt = Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
-            // vm.Status = vm.Status;
-            model.Name = "" + model.Name;
-            int OrgId = this.User == null ? 0 : Convert.ToInt32(this.User.Claims.Where(x => x.Type == "OrgId").FirstOrDefault().Value);
-            model.OrgId = ((model.OrgId <= 0 || model.OrgId == null) ? OrgId : model.OrgId);
-            // var videos = await _blazorRepoPageService.GetBulkVideos(mcvm);
-            // GET DATA
-            var compaignsLst = await _blazorRepoPageService.GetCompaignsData(model);// (int)UTIL.COMMON_STATUS_ALL.ALL, Convert.ToInt32(uvm.OrgId),(int)UTIL.USERROLES.SUPERVISOR, uvm.CompleteName, uvm.Status, uvm.CreatedAt, Convert.ToDateTime(uvm.LastUpdatedAt));
-            // ['sr#', 'Email', 'Name', 'Plans', 'Supervisor','Date of Joining', 'Status', 'Action']
-            // if (sortcolumn.Trim() != string.Empty)
-            {
-                switch (sortcolumn.ToLower())
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });      
+            BlazorApiResponse response = new BlazorApiResponse();
+           
+                try
                 {
-                    case "name":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.Name).ThenByDescending(m => m.Title);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.Name).ThenBy(m => m.Title) ;
-                        break;                  
-                    case "orgName":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.OrgName);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.OrgName);
-                        break;
-                    //case "grade":
-                    //    if (sortBy.ToLower().Contains("desc"))
-                    //        dnlist = dnlist.OrderByDescending(s => s.Grade);
-                    //    else
-                    //        dnlist = dnlist.OrderBy(s => s.Grade);
-                    //    break;
-                    //case "gpa":
-                    //    if (sortBy.ToLower().Contains("desc"))
-                    //        dnlist = dnlist.OrderByDescending(s => s.GPA);
-                    //    else
-                    //        dnlist = dnlist.OrderBy(s => s.GPA);
-                    //    break;
-                    case "startTime":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.StartTime);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.StartTime);
-                        break;
-                    case "finishTime":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.FinishTime);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.FinishTime);
-                        break;
-                    case "networkName":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.NetworkName);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.NetworkName);
-                        break; 
-                    case "totalBudget":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.TotalBudget);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.TotalBudget);
-                        break;  
-                    case "discount":
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.Discount);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.Discount);
-                        break;                   
-                    default:
-                        if (sortBy.ToLower().Contains("desc"))
-                            compaignsLst = compaignsLst.OrderByDescending(s => s.Id);
-                        else
-                            compaignsLst = compaignsLst.OrderBy(s => s.Id);
-                        break;
+                    model.CreatedAt = Convert.ToDateTime(model.CreatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime.AddMonths(-2) : model.CreatedAt;  //new DateTime(UTIL.GlobalApp.CurrentDateTime.Year, 1, 1);///;uvm.CreatedAt.Year <= 1900 ? new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1) : uvm.CreatedAt;
+                    model.LastUpdatedAt = Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
+                    // vm.Status = vm.Status;
+                    model.Name = "" + model.Name;
+                    // int OrgId = this.User == null ? 0 : Convert.ToInt32(this.User.Claims.Where(x => x.Type == "OrgId").FirstOrDefault().Value);
+                    model.OrgId = ((model.OrgId <= 0 || model.OrgId == null) ? 0 : model.OrgId);
+                    // var videos = await _blazorRepoPageService.GetBulkVideos(mcvm);
+                    // GET DATA
+                     response.data = await _blazorRepoPageService.GetCompaignsData(model); ;
+                   // response.data = await _blazorRepoPageService.loadRoleMenus(Convert.ToInt32(filter.roleId));
+                    response.status = true;
                 }
-            }
-          
-            var totalRecordCount = dnlist.ToList().Count;
-            int totalPages = Convert.ToInt32((((float)totalRecordCount) / ((float)length) + 0.5));
-            //avmlist.Skip((pageNo - 1) + length).Take(length).ToList();
-            GridResponseViewModel gridResult = new GridResponseViewModel();
-            // GRID PAGINATION WORK
-            gridResult.page = pageNo;
-            gridResult.records = totalRecordCount;
-            gridResult.total = (int)Math.Ceiling((double)totalRecordCount / length);
-            gridResult.rows = compaignsLst.Skip((pageNo - 1) * length).Take(length).ToList<CompaignsViewModel>();
-            // };
+                catch (Exception ex)
+                {
+                    response.message = ex.Message;
+                    response.status = false;
+                }
 
-            return gridResult;
+           
+            return Ok(response);
+           
         }
         [HttpPost]
         //[ValidateAntiForgeryToken]
@@ -179,44 +114,36 @@ namespace com.blazor.bmt.controllers
             //return BlazorResponseViewModel;
 
         }
-        [HttpPost]
-        [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<BlazorResponseViewModel> postCompaignData([FromBody] CompaignsViewModel model)
+        [HttpPost("submitcompaign")]
+        [HttpGet("submitcompaign")]
+        [Route("submitcompaign")]
+        public async Task<ActionResult> postCompaignData([FromBody] CompaignsViewModel model)
         {
-            BlazorResponseViewModel response = new BlazorResponseViewModel();
-            if (model == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorApiResponse response = new BlazorApiResponse();
             try
             {
-                int UserId = 0;
-                if (this.User != null && this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault() != null)
-                    UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
-                // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
-                model.LastUpdatedBy = model.LastUpdatedBy == null? UserId: model.LastUpdatedBy;
-                model.CreatedBy = model.CreatedBy == null ? UserId : model.CreatedBy;
-                response = await _blazorRepoPageService.postCompaignData(model, UserId);
-
-                response.message = String.Format(BlazorConstant.INSERTED_SUCCESS_API, model.Title, GlobalUTIL.CurrentDateTime.ToString());
-                // response.status = false;
-
+                model.LastUpdatedBy = model.LastUpdatedBy == null ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : model.LastUpdatedBy;
+                model.CreatedBy = model.CreatedBy == null ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : model.CreatedBy; // model.CreatedBy == null ? UserId : model.CreatedBy;
+                response.data = await _blazorRepoPageService.postCompaignData(model, Convert.ToInt32(model.CreatedBy));              
+                response.status = true;
             }
             catch (Exception ex)
             {
-                response.status = false;
                 response.message = ex.Message;
+                response.status = false;
             }
-            return response;
-
+            return Ok(response);
         }
-        [HttpPost]
-        [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<BlazorResponseViewModel> updateCompaign(CompaignsViewModel model)
+       
+        [HttpPost("updatecompaign")]   
+        [Route("updatecompaign")]
+        public async Task<ActionResult> updateCompaign(CompaignsViewModel model)
         {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
             BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
-            {
-                int UserId = 0;
-                if (this.User != null && this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault() != null)
-                    UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
+            {                
                CompaignModel cModel = new CompaignModel { Id = model.Id };
                 // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
                 var ls = await _compaignService.GetCompainListAllFiltersAsync(cModel);
@@ -224,12 +151,12 @@ namespace com.blazor.bmt.controllers
                 {
                     cModel = ls.FirstOrDefault();
                     cModel.Status = model.Status<= 0 ?(int)COMPAIGNS_STATUS.DROPPED: model.Status;
-                    cModel.LastUpdatedBy = UserId;
+                    cModel.LastUpdatedBy = model.LastUpdatedBy;
                     cModel.LastUpdatedAt = System.DateTime.UtcNow;
                     await _compaignService.Update(cModel);
                     response.data = model;
                     response.status = true;
-                    response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, cModel.Name, System.DateTime.UtcNow.ToString());
+                    response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, cModel.Name, GlobalUTIL.CurrentDateTime.ToString());
                 }
                 else {
                     response.message = string.Format(BlazorConstant.UPDATE_FAILED, cModel.Name, "Failed to change status of compaign");
@@ -244,7 +171,7 @@ namespace com.blazor.bmt.controllers
                 response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.Name, ex.Message);
                 //response.message = ex.Message;
             }
-            return response;
+            return Ok(response);
 
         }
 

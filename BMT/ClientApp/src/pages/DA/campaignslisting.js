@@ -46,17 +46,20 @@ const campaignslisting = () => {
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
 
   const [filters, setFilters] = useState({
+    id: 0,
+    orgId: 0,
+    rowVer: 0,
     name: '',
-    state: '',
-    status: '',
+    //state: '',
+    status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
   const [rows, setRows] = useState([]);
-  const { data, loading, fetchOrganization: getUserbyRole } = useFetchCampaigns();
+  const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
   const getCampaignsList = async (filter) => {
-    const campaignsList = await getUserbyRole(filter);
-    console.log({ campaignsList });
+    const campaignsList = await getCompaignsList(filter);
+    //console.log({ campaignsList });
     setCampaignData(campaignsList);
     const mappedArray = campaignsList.map((data) => ({
       id: data.id,
@@ -66,7 +69,7 @@ const campaignslisting = () => {
       finishTime: data.finishTime,
       //status: data.status,
     }));
-    console.log(mappedArray, 'org');
+    //console.log(mappedArray, 'org');
     setRows(mappedArray);
   };
 

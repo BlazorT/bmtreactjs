@@ -8,20 +8,17 @@ export const useFetchCampaigns = () => {
 
   const showToast = useShowToast();
 
-  const { data, error, loading, postData } = useApi('/BlazorApi/orgsfulldata');
+  const { data, error, loading, postData } = useApi('/Compaigns/detailedcompaigns');
 
-  const fetchOrganization = async (role, filters) => {
-    const userBody = {
-      id: 0,
-      roleId: role,     
+  const fetchCompaigns = async (role, filters) => {
+    const compaignsBody = {
+      id: 0,       
       orgId: 0,
       email: '',
       name: '',
       contact: "",
-      rowVer: 0,
-     cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
-     // keyword: filters ? filters.keyword : '',
+      rowVer: 0,   
+      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters
         ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
         : moment().subtract(1, 'year').utc().format(),
@@ -29,17 +26,17 @@ export const useFetchCampaigns = () => {
         ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : moment().utc().format(),
     };
-    console.log(userBody,'body')
-    const res = await postData(userBody);
-    console.log(( res) );
+   // console.log(userBody,'body')
+    const res = await postData(compaignsBody);
+   // console.log(( res) );
    // alert((res.data.status) );
-    if (res.status) {
+    if (res && res.status) {
       return res.data;
-    } else {
+    } else if (res) {
       showToast(res.message, 'error');
       return [];
     }
   };
 
-  return { data, error, loading, fetchOrganization };
+  return { data, error, loading, fetchCompaigns };
 };
