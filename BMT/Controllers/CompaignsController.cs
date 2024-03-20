@@ -10,7 +10,10 @@ using com.blazor.bmt.core;
 
 namespace com.blazor.bmt.controllers
 {
-    public class CompaignsController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    [Produces("application/json")]
+    public class CompaignsController : ControllerBase
     {            
         private readonly IBlazorUtilPageService _utilPageService;
         private readonly ICompaignService _compaignService;
