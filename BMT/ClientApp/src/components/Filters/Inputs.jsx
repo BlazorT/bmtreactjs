@@ -4,7 +4,7 @@ import { CCol, CFormCheck, CRow } from '@coreui/react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import Button from '../InputsComponent/Button';
 
-const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn }) => {
+const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn,submitBtnTitle='Submit' }) => {
   const showConfirmation = useShowConfirmation();
   const confirmationModal = () => {
     showConfirmation({
@@ -59,7 +59,7 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn }) => {
       {isBtn !== false && (
         <CRow className="CenterAlign gap-3">
           <Button title="Cancel" onClick={confirmationModal} />
-          <Button title="Submit" type="submit" onClick={submitFn} />
+          <Button title={submitBtnTitle} type="submit" onClick={submitFn} />
         </CRow>
       )}
     </React.Fragment>

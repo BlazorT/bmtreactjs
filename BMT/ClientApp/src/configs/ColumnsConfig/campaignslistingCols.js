@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
+import CampaignActionCell from 'src/components/DataGridCustomCells/CampaignActionCell';
 
 export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
   {
@@ -64,9 +64,9 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
     renderCell: (params) => (
-      <DaActionCell
+      <CampaignActionCell
         value={params}
-        fetching={getDasList}
+        fetching={daRes}
         user={daRes.filter((item) => item.id === params.row.id)}
         canUpdate={pageRoles.canUpdate}
         canDelete={pageRoles.canDelete}

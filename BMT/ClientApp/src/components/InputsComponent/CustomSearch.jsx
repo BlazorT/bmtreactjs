@@ -42,7 +42,7 @@ const CustomSearch = (prop) => {
               )}`
               : name === 'vehicleName'
                 ? `${option.name}, ${option.numberPlate}`
-                : name === 'organizationName'
+                : name === 'name'
                 ? `${option.name}`
           : name === 'fieldName'
           ? `${option.columnName}, ${option.tableName}`

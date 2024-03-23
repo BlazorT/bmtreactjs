@@ -14,6 +14,7 @@ const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
 const WorkFlow = React.lazy(() => import('./pages/Workflow/WorkFlowList'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
+const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference'));
 const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
 const DeliveryAssociates = React.lazy(() => import('./pages/DA/DeliveryAssociates'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
@@ -113,6 +114,7 @@ export const rolesRoutes = [
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
+  { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   // { path: '/Expression', name: 'Expression', element: Expression },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },

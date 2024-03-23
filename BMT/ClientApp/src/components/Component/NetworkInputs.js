@@ -289,10 +289,10 @@ const NetworkInputs = (prop) => {
             type="text"
             id="buisnessId"
             name="buisnessId"
-            placeholder="SMTP Server"
+            placeholder="Business Id"
             className="form-control item"
             isRequired={false}
-            title="SMTP Server "
+            title="Business Id"
           // message="Enter Buisness Name"
           />
  

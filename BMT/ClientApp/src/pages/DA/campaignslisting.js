@@ -48,7 +48,7 @@ const campaignslisting = () => {
   });
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
-  const getCampaignsList = async (fltrs) => {
+  const getCampaignsList = async (filters) => {
     const campaignsList = await getCompaignsList(filters);  
     setCampaignData(campaignsList);
     const mappedArray = campaignsList.map((data) => ({
@@ -62,19 +62,20 @@ const campaignslisting = () => {
     setRows(mappedArray);
   };
 
-  const changeFilter = (e, date) => {
+  const changeFilter = (event, date) => {
     var colName = date;
     if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [colName]: e,
+        [colName]: event,
       }));
     } else {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = event.target;
       colName = (name == 'networks') ? "networkId" : name; // column name was replaced bc networks is not backend key value
       setFilters((prevData) => ({
         ...prevData,
-        [colName]: value, 
+        [colName]: value,
+
       }));
      // alert(JSON.stringify(filters));
     }
@@ -106,15 +107,15 @@ const campaignslisting = () => {
     //});
   };
   const {
-    response: GetCompaignsRes,
+    response: GetOrgRes,
     loading: OrgLoading,
-    error: createCityError,
+    error: GetOrgError,
     fetchData: GetOrg,
   } = useFetch();
   useEffect(() => {
-    getCompaignsList(filters);
+    getOrganizationLst(filters);
   }, []);
-  const getCompaignsLst = async (compaign) => {
+  const getOrganizationLst = async (compaign) => {
     const compaignBody = {
       id: 0,
       roleId: compaign,
@@ -139,21 +140,21 @@ const campaignslisting = () => {
     await GetOrg(
       '/BlazorApi/orgsfulldata',{ method: 'POST', body: JSON.stringify(compaignBody),},
       (res) => {
-        console.log(res, 'compaigns');
+        console.log(res, 'orgs');
         if (res.status === true) {
-          const mappedArray = res.data.map((data, index) => ({
-            id: data.id,
-            userId: data.userId,
-            dspid: user.dspId.toString(),
-            logDesc: data.logDesc,
-            entityName: data.entityName,
-            menuId: data.menuId,
-            machineIp: data.machineIp,
-            actionType: data.actionType,
-            logTime: formatDateTime(data.logTime),
-          }));
+          //const mappedArray = res.data.map((data, index) => ({
+          //  //id: data.id,
+          //  //userId: data.userId,
+          //  //dspid: user.dspId.toString(),
+          //  //logDesc: data.logDesc,
+          //  //entityName: data.entityName,
+          //  //menuId: data.menuId,
+          //  //machineIp: data.machineIp,
+          //  //actionType: data.actionType,
+          //  //logTime: formatDateTime(data.logTime),
+          //}));
 
-           setRows(mappedArray);
+          // setRows(mappedArray);
         } else {
           dispatch(
             updateToast({
@@ -168,7 +169,7 @@ const campaignslisting = () => {
       },
     );
   };
-  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetCompaignsRes?.current?.data||[]);
+  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data||[]);
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {

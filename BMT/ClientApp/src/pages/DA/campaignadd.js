@@ -22,7 +22,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 
 import moment from 'moment';
-import { cilChevronBottom, cilFlagAlt, cilCalendar } from '@coreui/icons';
+import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import { formValidator } from 'src/helpers/formValidator';
@@ -41,55 +41,40 @@ import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import { CFormCheck } from '@coreui/react';
 import Form from 'src/components/UI/Form';
-import { useFetchPartners } from 'src/hooks/api/useFetchPartners';
 import { useCreateCampaignData } from 'src/hooks/api/useCreateCampaignData';
-import useEmailVerification from 'src/hooks/useEmailVerification';
-//import validateEmail from 'src/helpers/validateEmail';
-import { useShowToast } from 'src/hooks/useShowToast';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import AreaSelectModel from 'src/components/Modals/AreaSelectModel';
+import GoogleMapModel from 'src/components/Modals/GoogleMapModel';
 import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
 import Button from '../../components/InputsComponent/Button';
+import CIcon from '@coreui/icons-react';
 
 const campaignadd = () => {
   // let state;
-  const location = useLocation();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const uploadRef = useRef(null);
   const { uploadAvatar } = useUploadAvatar();
-  const { fetchPartners } = useFetchPartners();
   const { createUpdateCampaign } = useCreateCampaignData();
-  const { data, loading, error, checkEmailValidation } = useEmailVerification();
-  const showToast = useShowToast();
 
-  useEffect(() => {
-   
  
-  }, []);
 
   const [campaignRegData, setcampaignRegData] = useState(getInitialCampaignData(user));
-  const [rows, setRows] = useState([]);
   const [showForm, setshowForm] = useState(true);
-  const [targetAudience, setTargetAudience] = useState(true);
-  const [addPartnerModalOpen, setModalOpen] = useState(false);
+  const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
-  const [showPartners, setshowPartners] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
   const [activeTab, setActiveTab] = useState(0);
   const [cityData, setCityData] = useState([]);
 
   const [areaSelectModal, setAreaSelectModal] = useState(false);
+  const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
   const tabs = ['Campaign', 'Networks', 'Schedule'];
-  const [scheduleTab, setScheduleTab] = useState(0);
-  const Scheduletabs = ['Add Schedules', 'Schedules'];
   const onSave = async () => {
     //alert("Feared");
     formValidator();
@@ -120,14 +105,14 @@ const campaignadd = () => {
           const res = await createUpdateCampaign({ ...campaignRegData, logoPath: avatarPath });
          // console.log(res);
           if (res.status) {
-            navigate('/DspsList');
+            navigate('/campaignslisting');
           }
         }
       } else {
         const res = await createUpdateCampaign(campaignRegData);
         console.log({ res });
         if (res.status === true) {
-            navigate('/DspsList');
+          navigate('/campaignslisting');
         }
       }
     }
@@ -168,7 +153,13 @@ const campaignadd = () => {
   const toggleAddScheduleMdl = () => {
     setAddScheduleModel((prev) => !prev);
   };
+  const toggleGoogleMapMdl = () => {
+    setGoogleMapModel((prev) => !prev);
+  };
 
+  const AddGoogleMapClick = () => {
+    toggleGoogleMapMdl(true);
+  };
   const AddAreaClick = () => {
     toggleAreaSelectMdl(true);
   };
@@ -349,11 +340,13 @@ const campaignadd = () => {
 
               {showForm && (
                 <React.Fragment>
+
                   <Inputs
                     inputFields={campaignAddInputs}
                     yesFn={goToAnotherPage}
-                  
-                  >
+                    submitBtnTitle='Next'
+                    submitFn={()=> setActiveTab(1)}
+                  > 
                     <div className="row">
                       <div className="col-md-6 mt-4">
                         <CFormCheck
@@ -404,7 +397,7 @@ const campaignadd = () => {
                                 onChange={(e) => handleCampaignAddForm(e)}
                               />
                             </CCol>
-                          <CCol md="6 " className="mt-4">
+                          <CCol md="4 " className="mt-4">
                             <button
                               onClick={() => AddAreaClick()}
                               type="button"
@@ -412,6 +405,11 @@ const campaignadd = () => {
                             >
                               Area Select
                             </button>
+
+                          </CCol>
+                          <CCol md="2 " className="mt-4">
+                            <CIcon className="mt-3" onClick={() => AddGoogleMapClick()} icon={cilGlobeAlt} size="xxl" />
+                           
                           </CCol>
                           <CCol md="6">
                             <CustomInput
@@ -558,18 +556,18 @@ const campaignadd = () => {
             <React.Fragment>
               <div className="CenterAlign pt-2">
                 <button
-                  onClick={() => onCancel()}
+                  onClick={() => setActiveTab(0)}
                   type="button"
                   className="btn btn_Default m-2 sales-btn-style"
                 >
-                  Cancel
+                  Back
                 </button>
                 <button
-                  onClick={() => onSave()}
-                  type="Save"
+                  onClick={() => setActiveTab(2)}
+                  type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
-                  Save
+                  Next
                 </button>
               </div>
               {/*  <Button title="Cancel" className="" onClick={() => onCancel()} />*/}
@@ -625,14 +623,17 @@ const campaignadd = () => {
         onYes={goToAnotherPage}
         onNo={confirmationModal}
       />
-
-     
       <AreaSelectModel
         isOpen={areaSelectModal}
         toggle={toggleAreaSelectMdl}
         header="Area Select"
         setData={setCityData}
         data={cityData }
+      />
+      <GoogleMapModel
+        isOpen={googleMapModel}
+        toggle={toggleGoogleMapMdl}
+        header="Area Select"
       />
       <AddScheduleModel
         isOpen={addScheduleModel}
