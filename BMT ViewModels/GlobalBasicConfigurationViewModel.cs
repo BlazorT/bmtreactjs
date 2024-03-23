@@ -7,9 +7,9 @@ namespace com.blazor.bmt.viewmodels
         public static int? Id { get; set; }
         public  static int? DefaultPublicUserId { get; set; }
 
-        public static int? DefaultDspid { get; set; }
+        public static int? DefaultOrgid { get; set; }
 
-        public static string? DefaultDspname { get; set; }
+        public static string? DefaultOrgname { get; set; }
 
         public static string SmtpServer { get; set; } = null!;
 
@@ -27,7 +27,7 @@ namespace com.blazor.bmt.viewmodels
 
         public static string? ProxyUserName { get; set; }
 
-        public static string? DspAdminEmail { get; set; }
+        public static string? OrgAdminEmail { get; set; }
 
         public static string? SmsServiceUser { get; set; }
 

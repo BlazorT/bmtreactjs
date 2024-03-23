@@ -1,12 +1,12 @@
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+//import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 export const getUserbyRole = async (user, role, fetchUsers, dispatch, filters) => {
   const fetchBody = {
     userId: user.userId.toString(),
     roleId: role,
-    dspid: user.dspId,
+    orgId: user.orgId,
     email: '',
     userName: '',
     lastName: '',
@@ -67,7 +67,7 @@ export const updateUser = async (user, newUserData, createUser, dispatch, naviga
     password: btoa(newUserData.password),
     stateId: newUserData.state,
     roleId: newUserData.roleId,
-    dspid: newUserData.dspid,
+    orgid: newUserData.orgId,
     rowVer: newUserData.rowVer || 1,
     lastUpdatedBy: user.userId,
     createdBy: newUserData.createdBy || user.dspId,

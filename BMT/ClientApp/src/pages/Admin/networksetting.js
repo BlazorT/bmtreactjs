@@ -89,7 +89,7 @@ const SingleDispatchment = () => {
   const handleNetworkSetting = (event) => {
     const { name, value, type, checked } = event.target;
     const fieldValue = type === 'checkbox' ? checked : value;
-    alert(fieldValue);
+    //alert(fieldValue);
     setNetworkSettingData((prevData) => ({
       ...prevData,
       [name]: fieldValue,

@@ -36,8 +36,7 @@ namespace com.blazor.bmt.controllers
         public async Task<ActionResult> GetCompaignDataAll([FromBody] CompaignsViewModel model)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });      
-            BlazorApiResponse response = new BlazorApiResponse();
-           
+            BlazorApiResponse response = new BlazorApiResponse();           
                 try
                 {
                     model.CreatedAt = Convert.ToDateTime(model.CreatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime.AddMonths(-2) : model.CreatedAt;  //new DateTime(UTIL.GlobalApp.CurrentDateTime.Year, 1, 1);///;uvm.CreatedAt.Year <= 1900 ? new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1) : uvm.CreatedAt;
@@ -48,7 +47,7 @@ namespace com.blazor.bmt.controllers
                     model.OrgId = ((model.OrgId <= 0 || model.OrgId == null) ? 0 : model.OrgId);
                     // var videos = await _blazorRepoPageService.GetBulkVideos(mcvm);
                     // GET DATA
-                     response.data = await _blazorRepoPageService.GetCompaignsData(model); ;
+                     response.data = await _blazorRepoPageService.GetCompaignsData(model); 
                    // response.data = await _blazorRepoPageService.loadRoleMenus(Convert.ToInt32(filter.roleId));
                     response.status = true;
                 }

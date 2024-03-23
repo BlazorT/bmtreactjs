@@ -4,14 +4,9 @@ using System.Data.Common;
 using System.Data;
 using System.Text.Json;
 using com.blazor.bmt.viewmodels;
-using System.Data.SqlClient;
 using com.blazor.bmt.util;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using com.blazor.bmt.core.baseentity;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
-using com.blazor.bmt.core;
 using Blazor.Web.ViewModels;
 
 namespace Blazor.Web.UI.Services
@@ -296,7 +291,7 @@ namespace Blazor.Web.UI.Services
                                         select new LoginViewModel
                                         {
                                             Id = Convert.ToInt32(usr["ID"]),
-                                            OrgId = Convert.ToInt32(usr["OrgId"]==null?0: usr["OrgId"]),
+                                            OrgId = Convert.ToInt32(usr["OrgId"]==null?GlobalBasicConfigurationsViewModel.DefaultOrgid: usr["OrgId"]),
                                             FullName = "" + usr["FullName"],
                                             Email = "" + usr["Email"],
                                             LoginTime = Convert.ToDateTime(usr["LoginTime"]),
@@ -761,9 +756,9 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pName = new MySqlParameter("p_name", MySqlDbType.VarChar);
                         pName.Value = model.Name;
                         parameters.Add(pName);
-                        //SqlParameter pNetworkId = new MySqlParameter("p_networkId", SqlDbType.Int);
-                        //pNetworkId.Value = model.NetworkId;
-                        //parameters.Add(pNetworkId);
+                        MySqlParameter pNetworkId = new MySqlParameter("p_networkId", MySqlDbType.Int32);
+                        pNetworkId.Value = model.NetworkId;
+                        parameters.Add(pNetworkId);
                         MySqlParameter pFromDate = new MySqlParameter("p_DateFrom", MySqlDbType.DateTime);
                         pFromDate.Value = model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddMonths(-12) : model.CreatedAt;
                         parameters.Add(pFromDate);

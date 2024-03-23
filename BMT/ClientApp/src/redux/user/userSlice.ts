@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type UserState = {
   userId: string;
-  dspId: string;
+  orgId: string;
   roleId: string;
   userInfo: Record<string, unknown>;
   isAuthenticated: boolean;
@@ -10,7 +10,7 @@ type UserState = {
 
 const initialState: UserState = {
   userId: '',
-  dspId: '',
+  orgId: '',
   roleId: '',
   userInfo: {},
   isAuthenticated: false,
@@ -21,14 +21,14 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<UserState>) => {
-      const { userId, dspId, roleId, userInfo, isAuthenticated } = action.payload;
+      const { userId, orgId, roleId, userInfo, isAuthenticated } = action.payload;
 
       // Update only the provided fields, keeping the rest unchanged
       if (userId !== undefined) {
         state.userId = userId;
       }
-      if (dspId !== undefined) {
-        state.dspId = dspId;
+      if (orgId !== undefined) {
+        state.orgId = orgId;
       }
       if (roleId !== undefined) {
         state.roleId = roleId;

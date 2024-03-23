@@ -286,12 +286,8 @@ namespace com.blazor.bmt.util
                             // Notification
                      
                             if (BlazorConstant.SMS_MESSAGE_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())
-                                viewModel.SMS_MESSAGE_TEMPLATE = "" + (dr["value"]);                           
-                            //Email Settings
-                            //// Notification 
-                            /// <summary>
-                            /// 
-                            /// </summary>
+                                viewModel.SMS_MESSAGE_TEMPLATE = "" + (dr["value"]);                          
+                           
                             if (BlazorConstant.ENABLE_EMAIL_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())
                             viewModel.enableEmailNotification = string.IsNullOrWhiteSpace(""+(dr["value"]))?false:Convert.ToBoolean(Convert.ToInt16("" + (dr["value"])));
                             if (BlazorConstant.ENABLE_APP_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())
@@ -301,14 +297,9 @@ namespace com.blazor.bmt.util
                             if (BlazorConstant.INVITATION_EMAIL_SUBJECT.ToLower() == ("" + (dr["key"])).ToLower())
                                 viewModel.invitationEmailSubject = "" + (dr["value"]);                                                     
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
-                            //if (BlazorConstant.DSP_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.DSPPerformanceNotification = "" + (dr["value"]);
-                            //if (BlazorConstant.DA_PERFORMACE_NOTIFICATION.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                            //    viewModel.DAPerformanceNotification = "" + (dr["value"]);
+                                viewModel.AccountDeletedEmailBody = "" + (dr["value"]);                           
                             if (BlazorConstant.SMS_MESSAGE_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.SmsMessageBody = "" + (dr["value"]);
-                          
+                                viewModel.SmsMessageBody = "" + (dr["value"]);                          
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
                             if (BlazorConstant.ACCOUNT_STATUS_CHANGED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
@@ -343,8 +334,8 @@ namespace com.blazor.bmt.util
                                
                                 GlobalBasicConfigurationsViewModel.Id = Convert.ToByte(dr["Id"]);
                                 GlobalBasicConfigurationsViewModel.DefaultPublicUserId = Convert.ToInt32(dr["DefaultPublicUserId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspid = Convert.ToInt32(dr["DefaultOrgId"]);
-                                GlobalBasicConfigurationsViewModel.DefaultDspname = "" + (dr["DefaultOrgName"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
+                                GlobalBasicConfigurationsViewModel.DefaultOrgid = Convert.ToInt32(dr["DefaultOrgId"]);
+                                GlobalBasicConfigurationsViewModel.DefaultOrgname = "" + (dr["DefaultOrgName"]);// Convert.ToInt32(dr["DefaultShowRoomName"]);
                                                                                                                   //SMS
                                 GlobalBasicConfigurationsViewModel.SmsQouta = Convert.ToInt32(dr["sms_qouta"]);
                                 GlobalBasicConfigurationsViewModel.Sslenabled = Convert.ToByte(dr["SSLEnabled"]);
@@ -362,7 +353,7 @@ namespace com.blazor.bmt.util
                                 GlobalBasicConfigurationsViewModel.email_notification_enabled = Convert.ToByte(String.IsNullOrWhiteSpace(""+dr["email_notification_enabled"])?0: dr["email_notification_enabled"]);
                                 //EMAIl
                                 GlobalBasicConfigurationsViewModel.SmtpServer = "" + (dr["SmtpServer"]);
-                                GlobalBasicConfigurationsViewModel.DspAdminEmail = "" + (dr["dsp_admin_email"]);
+                                GlobalBasicConfigurationsViewModel.OrgAdminEmail = "" + (dr["dsp_admin_email"]);
                                 GlobalBasicConfigurationsViewModel.SmtpUser = "" + (dr["SmtpUser"]);
                                 GlobalBasicConfigurationsViewModel.SmtpSenderEmail = "" + (dr["dsp_admin_email"]);
                                 GlobalBasicConfigurationsViewModel.SmtpUserPwd = "" + (dr["SmtpUserPwd"]);

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import CIcon from '@coreui/icons-react';
 import Carousel from 'react-bootstrap/Carousel';
-import moment from 'moment';
+//import moment from 'moment';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
 import CustomSnackbar from 'src/components/UI/CustomSnackbar';
 import { setUserData } from 'src/redux/user/userSlice';
-import { getCountryById } from 'src/constants/countries_and_states';
+//import { getCountryById } from 'src/constants/countries_and_states';
 import { transformData } from 'src/navItem';
 import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
 
@@ -152,7 +152,7 @@ function SignIn() {
       );
      // console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
-       // console.log((loginRes),'login');
+       // console.log((loginRes.current),'login');
         getUtils();
         getMenus();
        // console.log(getMenus(),'menuss');
@@ -180,6 +180,8 @@ function SignIn() {
       setUserData({
         userId: loginRes.current.data.id,
         roleId: loginRes.current.data.roleId,
+        orgId: loginRes.current.data.orgId,
+        userInfo: loginRes.current.data,
         isAuthenticated: true,
       }),
     );
@@ -205,13 +207,13 @@ function SignIn() {
     const usernameCookie = `loggedInUser=${encodeURIComponent(
       userDetail.userName,
     )}; expires=${expirationDate.toUTCString()};path=/`;
-    const storeIdCookie = `storeId=${encodeURIComponent(
-      userDetail.storeId,
+    const orgIdCookie = `orgId=${encodeURIComponent(
+      userDetail.orgId,
     )}; expires=${expirationDate.toUTCString()};path=/`;
 
     // Set the cookies
     document.cookie = usernameCookie;
-    document.cookie = storeIdCookie;
+    document.cookie = orgIdCookie;
     // Set the cookie
   };
   return (

@@ -15,21 +15,21 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [stores, setStores] = useState([]);
   const [userDetail, setuserDetail] = useState({
-    storeName: '',
-    storeId: null,
+    orgName: '',
+    orgId: null,
     userName: '',
     password: '',
   });
   const navigate = useNavigate();
-  const storeRef = useRef(null);
+  const orgRef = useRef(null);
   useEffect(() => {
     // fetchStores();
-    storeRef.current.focus();
+    orgRef.current.focus();
   }, []);
 
   const fetchStores = async () => {
     const data = {
-      storeid: '0',
+      orgId: '0',
       name: '',
       remarks: '',
       id: '0',
@@ -42,7 +42,7 @@ const Login = () => {
           Authorization: `cVQ-h9G7QPCs3ErRdmsGNE:APA91bGlsWbE6ouc9jbIskdJOSF0SqwWq-9HXGGeewcs5ESpH-ryhoKYgcYIx19Iay_geMmufvWNb0M6woPo1jYNvIS0tiGZjXluSDuDbLeHyDeHJJ1ZGL_eq06EVb_0AyfsVeCjHND8`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: null// JSON.stringify(data),
       });
       const jsonData = await response.json();
       if (jsonData.data !== 0) {
@@ -60,14 +60,14 @@ const Login = () => {
     if (event != null) {
       setuserDetail((prevdata) => ({
         ...prevdata,
-        storeName: event.label,
-        storeId: event.value,
+        orgName: event.label,
+        orgId: event.value,
       }));
     } else {
       setuserDetail((prevdata) => ({
         ...prevdata,
-        storeName: '',
-        storeId: null,
+        orgName: '',
+        orgId: 0,
       }));
     }
   };
@@ -85,7 +85,7 @@ const Login = () => {
     event.preventDefault();
     setIsLoading(true);
     var pass = '';
-    if (userDetail.storeId >= 1) {
+    if (userDetail.orgId >= 1) {
       if (userDetail.userName === '' || userDetail.password === '') {
         setErrorMessage('Incorrect Username or Password');
         setIsLoading(false);
@@ -93,7 +93,7 @@ const Login = () => {
       }
       pass = btoa(userDetail.password);
       const Checklogin = {
-        storeid: String(userDetail.storeId),
+        orgId: String(userDetail.orgId),
         loginname: userDetail.userName,
         password: String(pass),
       };
@@ -136,13 +136,13 @@ const Login = () => {
     const usernameCookie = `loggedInUser=${encodeURIComponent(
       userDetail.userName,
     )}; expires=${expirationDate.toUTCString()};path=/`;
-    const storeIdCookie = `storeId=${encodeURIComponent(
-      userDetail.storeId,
+    const orgIdCookie = `orgId=${encodeURIComponent(
+      userDetail.orgId,
     )}; expires=${expirationDate.toUTCString()};path=/`;
 
     // Set the cookies
     document.cookie = usernameCookie;
-    document.cookie = storeIdCookie;
+    document.cookie = orgIdCookie;
     // Set the cookie
   };
   return (
@@ -164,7 +164,7 @@ const Login = () => {
                     <Select
                       style="display:none;"
                       className="text-start"
-                      ref={storeRef}
+                      ref={orgRef}
                       placeholder="Select Store"
                       isSearchable={isSearchable}
                       isClearable={isClearable}

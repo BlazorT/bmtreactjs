@@ -5,34 +5,24 @@ import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import useFetch from 'src/hooks/useFetch';
-
 import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
-
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
 import NotificationModal from 'src/components/Modals/NotificationModal';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-
-import { formatDate } from 'src/helpers/formatDate';
-import globalutil from 'src/util/globalutil';
 import moment from 'moment';
-
 import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import {  formatDateTime } from 'src/helpers/formatDate';
-
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import AppContainer from 'src/components/UI/AppContainer';
 
 const campaignslisting = () => {
   dayjs.extend(utc);
-
-  const [networkTabs,setNetworkTabs]=useState([])
-
-  useEffect(() => {
-    
+  const user = useSelector((state) => state.user)
+  useEffect(() => {    
     getCampaignsList();
   }, []);
 
@@ -40,56 +30,53 @@ const campaignslisting = () => {
     (item) => item.name === 'Compaigns',
   );
   const navigate = useNavigate();
-
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
   const [campaignData, setCampaignData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const [org, setOrg] = useState('');
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
-
   const [filters, setFilters] = useState({
     id: 0,
-    orgId: 0,
+    orgId: user.orgId,
     rowVer: 0,
-    name: '',
-    //state: '',
+    networkId:0,
+    name: '',  
     status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
-  const getCampaignsList = async (filter) => {
-    const campaignsList = await getCompaignsList(filter);
-    //console.log({ campaignsList });
+  const getCampaignsList = async (fltrs) => {
+    const campaignsList = await getCompaignsList(filters);  
     setCampaignData(campaignsList);
     const mappedArray = campaignsList.map((data) => ({
       id: data.id,
       name: data.name,
       orgName: data.orgName,
       startTime: formatDateTime(data.startTime),
-      finishTime: formatDateTime(data.finishTime),
-      //status: data.status,
+      finishTime: formatDateTime(data.finishTime)
     }));
     //console.log(mappedArray, 'org');
     setRows(mappedArray);
   };
 
   const changeFilter = (e, date) => {
+    var colName = date;
     if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: e,
+        [colName]: e,
       }));
     } else {
       const { name, value } = e.target;
-
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
+      colName = (name == 'networks') ? "networkId" : name; // column name was replaced bc networks is not backend key value
+      setFilters((prevData) => ({
+        ...prevData,
+        [colName]: value, 
       }));
+     // alert(JSON.stringify(filters));
     }
   };
 
@@ -107,27 +94,30 @@ const campaignslisting = () => {
 
   const handleReset = () => {
     getCampaignsList();
-    setFilters({
-      name: '',
-      state: '',
-      status: '',
-      createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
-      lastUpdatedAt: dayjs().utc().startOf('day').format(),
-    });
+    //setFilters({
+    //  id: 0,
+    //  orgId: user.orgId,
+    //  rowVer: 0,
+    //  networkId: 0,
+    //  name: '',
+    //  status: 0,
+    //  createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+    //  lastUpdatedAt: dayjs().utc().startOf('day').format()     
+    //});
   };
   const {
-    response: GetOrgRes,
+    response: GetCompaignsRes,
     loading: OrgLoading,
     error: createCityError,
     fetchData: GetOrg,
   } = useFetch();
   useEffect(() => {
-    getOrgList();
+    getCompaignsList(filters);
   }, []);
-  const getOrgList = async (role) => {
-    const orgBody = {
+  const getCompaignsLst = async (compaign) => {
+    const compaignBody = {
       id: 0,
-      roleId: role,
+      roleId: compaign,
       orgId: 0,
       email: '',
       name: '',
@@ -147,27 +137,23 @@ const campaignslisting = () => {
       ...filters,
     };
     await GetOrg(
-      '/BlazorApi/orgsfulldata',
-      {
-        method: 'POST',
-        body: JSON.stringify(orgBody),
-      },
+      '/BlazorApi/orgsfulldata',{ method: 'POST', body: JSON.stringify(compaignBody),},
       (res) => {
-        console.log(res, 'orgs');
+        console.log(res, 'compaigns');
         if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  id: data.id,
-          //  userId: data.userId,
-          //  dspid: user.dspId.toString(),
-          //  logDesc: data.logDesc,
-          //  entityName: data.entityName,
-          //  menuId: data.menuId,
-          //  machineIp: data.machineIp,
-          //  actionType: data.actionType,
-          //  logTime: formatDateTime(data.logTime),
-          //}));
+          const mappedArray = res.data.map((data, index) => ({
+            id: data.id,
+            userId: data.userId,
+            dspid: user.dspId.toString(),
+            logDesc: data.logDesc,
+            entityName: data.entityName,
+            menuId: data.menuId,
+            machineIp: data.machineIp,
+            actionType: data.actionType,
+            logTime: formatDateTime(data.logTime),
+          }));
 
-          // setRows(mappedArray);
+           setRows(mappedArray);
         } else {
           dispatch(
             updateToast({
@@ -182,7 +168,7 @@ const campaignslisting = () => {
       },
     );
   };
-  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data||[]);
+  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetCompaignsRes?.current?.data||[]);
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {
@@ -216,8 +202,7 @@ const campaignslisting = () => {
               title="Campaigns Listing"
               addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
               addBtnClick={() => navigate('/campaignadd')}
-              otherControls={[
-              /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
+              otherControls={[        
                 { icon: cilChevronBottom, fn: toggleGrid },
               ]}
             />
@@ -228,17 +213,11 @@ const campaignslisting = () => {
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
-                sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
-                //summary={[
-                //  {
-                //    field: 'status',
-                //    aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
-                //  },
-                //]}
+                sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}               
                 hiddenCols={{
                   columnVisibilityModel: {
                     status: false,
-                    lastUpdated: false,
+                    lastUpdatedAt: false,
                   },
                 }}
                 canExport={pageRoles.canExport}

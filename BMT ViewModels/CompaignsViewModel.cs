@@ -14,6 +14,7 @@ namespace com.blazor.bmt.viewmodels
         public double? Discount { get; set; }
         public double? TotalBudget { get; set; }
         public int? OrgId { get; set; }
+        public int? NetworkId { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? LastUpdatedBy { get; set; }
