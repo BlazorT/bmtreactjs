@@ -223,7 +223,7 @@ const NetworkInputs = (prop) => {
 
     </CRow>
     <CRow>
-      <CCol className="" md={8}>
+      <CCol className="" md={10}>
         <CustomInput
           label="Email Excel Bulk Upload"
           icon={cilUser}
@@ -239,9 +239,9 @@ const NetworkInputs = (prop) => {
         // message="Enter Buisness Name"
         />
       </CCol>
-      <CCol className="" md={4}>
+      <CCol className="" md={2}>
         <div className="input-group-append mt-4">
-          <button className="btn btn-primary btn-Regular btn-round btn-outline-secondary" type="button" id="EmailbtnImport">Import</button>
+          <input className="importFilebtn" id="upload" type="file" accept="image/*"  />
         </div>
       </CCol>
     </CRow>
@@ -362,10 +362,17 @@ const NetworkInputs = (prop) => {
             message="Enter unit Id"
           />
         </CCol>
-        <CCol className="mt-3" md={6}>
-          <label className="login_label labelName">Status</label>
-          <CFormSwitch />
-        </CCol>
+          <CCol className="mt-4" md={6}>
+            <CFormCheck
+              className=""
+              id="status"
+              label="Status"
+              defaultChecked
+              value={networkState.status}
+              name="status"
+            />
+
+          </CCol>
         <CCol className="" md={6}>
           <CustomInput
             label="Quota"

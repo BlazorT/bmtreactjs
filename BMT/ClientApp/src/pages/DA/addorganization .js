@@ -24,7 +24,7 @@ import {
   getDaAppllySsnInputs,
   getInitialDaData,
   getInitialDaIdentificationData,
-} from 'src/configs/InputConfig/daApplyFormConfig';
+} from 'src/configs/InputConfig/addOrgsConfig';
 import validateEmail from 'src/helpers/validateEmail';
 import Loading from 'src/components/UI/Loading';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
@@ -37,7 +37,7 @@ import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
 import useApi from 'src/hooks/useApi';
 
-const DAApplyForm = () => {
+const addorganization = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'BMT Subscription',
   );
@@ -443,4 +443,4 @@ const DAApplyForm = () => {
   );
 };
 
-export default DAApplyForm;
+export default addorganization;

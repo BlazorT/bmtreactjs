@@ -1,37 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
-import { CFormSwitch } from '@coreui/react';
 import { CCol, CContainer, CRow } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
-import { formValidator } from 'src/helpers/formValidator';
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 
 import { useSelector } from 'react-redux';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 //import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import CustomDatePicker from 'src/components/UI/DatePicker';
-import { CFormCheck } from '@coreui/react';
 import NetworkInput from 'src/components/Component/NetworkInputs';
 import moment from 'moment';
 import {
   cilUser,
-  cilCloudDownload,
-  cilCalendar,
-  cilChevronBottom,
-  cilFlagAlt,
 } from '@coreui/icons';
-import { useShowToast } from 'src/hooks/useShowToast';
-//import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import CustomSearch from 'src/components/InputsComponent/CustomSearch';
-import Loading from 'src/components/UI/Loading';
-//import DaNewAssignment from 'src/components/Component/DaNewAssignment';
-//import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-//import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
-import Button from 'src/components/InputsComponent/Button';
-import LoadingBtn from 'src/components/UI/LoadingBtn';
 import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
@@ -39,24 +19,12 @@ import globalutil from '../../util/globalutil';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
 
 const SingleDispatchment = () => {
-  const user = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState(0);
-  const [networkSelect, setNetworkSelect] = useState(0);
-  const [dataList, setdataList] = useState([]);
   const [tabs,setTabs] =useState( []);
   const dispatch = useDispatch();
   const [networkList,setNetworkList]=useState([])
   const [isLoading, setIsLoading] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [showFilters, setshowFilters] = useState(false);
-  const [showIntegration, setShowIntegration] = useState(false);
-  const {
-    response: createNetworkSettingRes,
-    loading: createNetworkSettingLoading,
-    error: createNetworkSettingError,
-    fetchData: createNetworkSetting,
-  } = useFetch();
-
+  
   useEffect(() => {
     const T = []
     globalutil.networks().map((tab, index) => T.push(tab.name))
@@ -74,32 +42,72 @@ const SingleDispatchment = () => {
     startTime: moment().utc().format(),
     finishTime: moment().utc().format(),
   };
-  const [networkSettingData, setNetworkSettingData] = useState(initialData);
   const handleSubmit = (e) => {
    // console.log(e);
     e.preventDefault();
   };
  
-  const toggleStock = () => {
-    setshowFilters((prev) => !prev);
+ 
+  const {
+    response: GetOrgRes,
+    loading: OrgLoading,
+    error: GetOrgError,
+    fetchData: GetOrg,
+  } = useFetch();
+  useEffect(() => {
+    getOrganizationLst();
+  }, []);
+  const getOrganizationLst = async (compaign) => {
+    const orgBody = {
+      id: 0,
+      roleId: compaign,
+      orgId: 0,
+      email: '',
+      name: '',
+      contact: "",
+      rowVer: 0,
+      cityId:1,
+      status:1,
+      // keyword: filters ? filters.keyword : '',
+      createdAt:  moment().utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: moment().utc().format('YYYY-MM-DD'),
+      createdBy: 0,
+      lastUpdatedBy: 0,
+    };
+    await GetOrg(
+      '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(orgBody), },
+      (res) => {
+        console.log(res, 'orgs');
+        if (res.status === true) {
+          //const mappedArray = res.data.map((data, index) => ({
+          //  //id: data.id,
+          //  //userId: data.userId,
+          //  //dspid: user.dspId.toString(),
+          //  //logDesc: data.logDesc,
+          //  //entityName: data.entityName,
+          //  //menuId: data.menuId,
+          //  //machineIp: data.machineIp,
+          //  //actionType: data.actionType,
+          //  //logTime: formatDateTime(data.logTime),
+          //}));
+
+          // setRows(mappedArray);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(OrgLoading.current);
+      },
+    );
   };
-  const showIntegrationfn = () => {
-    setShowIntegration((prev) => !prev);
-  };
-  const handleNetworkSetting = (event) => {
-    const { name, value, type, checked } = event.target;
-    const fieldValue = type === 'checkbox' ? checked : value;
-    //alert(fieldValue);
-    setNetworkSettingData((prevData) => ({
-      ...prevData,
-      [name]: fieldValue,
-    }));
-  };
-  const handleTabSelectionChange = (event) => {
-   // alert((event));
-    setNetworkSelect(event);
-    //setActiveTab();
-  };
+  const orglist = GetOrgRes?.current?.data || [];
+  console.log(orglist, 'listt');
   return (
     <AppContainer>
       <form
@@ -113,9 +121,11 @@ const SingleDispatchment = () => {
             label="Organization"
             icon={cilUser}
             type="text"
-            id="keyword"
+            value=""
+            id="name"
             placeholder="organization"
-            name="keyword"
+            name="name"
+            data={orglist}
             className="form-control item"
             isRequired={false}
             title="choose image for attachment "
@@ -132,9 +142,7 @@ const SingleDispatchment = () => {
           handleActiveTab={setActiveTab}
       />
       
-      {isLoading ? (
-        <Loading />
-      ) : (
+    
             <CContainer fluid className="m-0 p-0 mt-1">
               {tabs.map((item, index) => <>
                 {activeTab == index && <NetworkInput key={index} header={item} networkId={index + 1} setNetworkList={setNetworkList} networkList={networkList} />}
@@ -142,7 +150,7 @@ const SingleDispatchment = () => {
 
             
         </CContainer>
-        )}
+      
 
       </form>
     </AppContainer>

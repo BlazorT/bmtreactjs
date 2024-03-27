@@ -7,7 +7,6 @@ import '../src/CSS/Style.css';
 import '../src/CSS/Form.css';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
-import DAApplyForm from './pages/DA/DAApplyForm';
 import AddDA from './pages/DA/AddDA';
 
 import { selectToast } from './redux/toast/toastSlice';
@@ -38,7 +37,7 @@ const App = () => {
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route exact path="/daApplyForm" name="DaApplyForm" element={<DAApplyForm />} />
+            {/*<Route exact path="/daApplyForm" name="DaApplyForm" element={<DAApplyForm />} />*/}
             <Route exact path="/AddDA" name="AddDA" element={<AddDA />} />
             <Route
               exact

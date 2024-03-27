@@ -24,7 +24,7 @@ import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchOrganization } from 'src/hooks/api/useFetchOrganization';
 import AppContainer from 'src/components/UI/AppContainer';
 
-const DeliveryAssociates = () => {
+const organizationsusers = () => {
   dayjs.extend(utc);
 
   const [networkTabs,setNetworkTabs]=useState([])
@@ -191,4 +191,4 @@ const DeliveryAssociates = () => {
   );
 };
 
-export default DeliveryAssociates;
+export default organizationsusers;

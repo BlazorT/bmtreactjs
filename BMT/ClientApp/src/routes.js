@@ -2,7 +2,7 @@ import React from 'react';
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
-const ApplyForm = React.lazy(() => import('./pages/DA/DAApplyForm'));
+const addorganization = React.lazy(() => import('./pages/DA/addorganization '));
 const AddDA = React.lazy(() => import('./pages/DA/AddDA'));
 const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
 const Products = React.lazy(() => import('./pages/Admin/Products'));
@@ -16,7 +16,7 @@ const Notification = React.lazy(() => import('./pages/Notification/Notification'
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference'));
 const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
-const DeliveryAssociates = React.lazy(() => import('./pages/DA/DeliveryAssociates'));
+const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
@@ -39,7 +39,7 @@ const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
-const OrganizationAdd = React.lazy(() => import('./pages/Admin/OrganizationAdd'));
+//const addorganization = React.lazy(() => import('./pages/Admin/addorganization '));
 const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'));
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
@@ -100,10 +100,10 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
-  { path: '/OrganizationAdd', name: 'Users', element: OrganizationAdd },
+ // { path: '/addorganization ', name: 'addorganization ', element: addorganization },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
 
-  { path: '/applyForm', name: 'ApplyForm', element: ApplyForm },
+  { path: '/addorganization ', name: 'addorganization ', element: addorganization },
   { path: '/AddDA', name: 'AddDA', element: AddDA },
   { path: '/DADashboard', name: 'DADashboard', element: DADashboard },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
@@ -125,7 +125,7 @@ export const rolesRoutes = [
     element: DailyPerformanceReport,
   },
   { path: '/DAReport', name: 'UserReport', element: DAReport },
-  { path: '/Delivery', name: 'Delivery', element: DeliveryAssociates },
+  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
   { path: '/waves', name: 'waves', element: waves },
   { path: '/rosterReport', name: 'rosterReport', element: rosterReport },
