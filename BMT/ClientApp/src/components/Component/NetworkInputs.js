@@ -153,7 +153,15 @@ const NetworkInputs = (prop) => {
     formValidator();
     if (form.checkValidity()) {
       setNetworkList((prev) => [...prev, networkState])
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage:"Note : To complete network changes, you need to submit finally",
+          toastVariant: 'success',
+        }),
+      );
     }
+
     console.log({ networkList });
    // console.log('test');
    // setIsLoading(createNetworkSettingLoading.current);
@@ -215,9 +223,9 @@ const NetworkInputs = (prop) => {
           id="name"
           name="name"
           className="form-control item"
-          isRequired={false}
+          isRequired={true}
           title="recipients name "
-          // message="Enter Buisness Name" ApikeySecret
+          message="Enter Recipients Name" 
         />
       </CCol>
 
