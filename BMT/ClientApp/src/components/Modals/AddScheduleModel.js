@@ -119,8 +119,8 @@ const AddScheduleModel = (prop) => {
   //});
 
   const handleCampaignAddForm = (e, label) => {
-    if (label === 'startTime' || label === 'endTime') {
-      console.log(e.$d);
+    if (label === 'startTime' || label === 'finishTime') {
+     // console.log(e.$d);
       setCampaignRegData((prev) => ({
         ...prev,
         [label]: e,
@@ -133,8 +133,6 @@ const AddScheduleModel = (prop) => {
         [name]: value,
       }));
     }
-
-   
   };
   const onCancel = () => {
     dispatch(

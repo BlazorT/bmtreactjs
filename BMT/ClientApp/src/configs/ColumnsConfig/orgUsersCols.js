@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
 
-export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
+export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
   {
     field: 'name',
     headerName: 'Organization Name',
@@ -14,8 +14,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'cityId',
-    headerName: 'City',
+    field: 'roleName',
+    headerName: 'Role Name',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -25,8 +25,8 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'compaignsCount',
-    headerName: 'Campaigns # ',
+    field: 'contact',
+    headerName: 'Contact',
     flex: 1,
     minWidth: 60,
     // Width: 100,
@@ -36,21 +36,10 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: false,
     headerClassName: 'custom-header-data-grid',
   },
-  {
-    field: 'currencyName',
-    headerName: 'Currency',
-    flex: 1,
-    minWidth: 70,
-    // Width: 80,
-    editable: false,
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: true,
-    headerClassName: 'custom-header-data-grid',
-  },
+
   {
     field: 'createdAt',
-    headerName: 'Register Date',
+    headerName: 'Registration Time',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -61,18 +50,18 @@ export const getdaAssociatesCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'expiryTime',
-    headerName: 'Expiry Time',
+    field: 'status',
+    headerName: 'Status',
     flex: 1,
-    minWidth: 120,
+    minWidth: 70,
+    // Width: 80,
     editable: false,
     filterable: true,
     sortable: true,
     disableColumnMenu: true,
-    hide: true,
-    hideable: false,
     headerClassName: 'custom-header-data-grid',
   },
+ 
  
   {
     field: 'imageUrl',

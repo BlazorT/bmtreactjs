@@ -208,9 +208,9 @@ const NetworkInputs = (prop) => {
 
 
   return <React.Fragment>
-    <div className="networkTitle mt-2">
-      <h3>{ header}</h3>
-    </div>
+    {/*<div className="networkTitle mt-2">*/}
+    {/*  <h3>{ header}</h3>*/}
+    {/*</div>*/}
     <CRow>
       <CCol className="" md={12}>
         <CustomInput
@@ -297,10 +297,10 @@ const NetworkInputs = (prop) => {
             type="text"
             id="buisnessId"
             name="buisnessId"
-            placeholder="Business Id"
+              placeholder="Business Id e.g(19288)"
             className="form-control item"
             isRequired={false}
-            title="Business Id"
+            title="Business Id e.g(19288)"
           // message="Enter Buisness Name"
           />
  
@@ -314,10 +314,10 @@ const NetworkInputs = (prop) => {
             type="text"
               id="apikeySecret"
               name="apikeySecret" 
-            placeholder="API Key Secret"
+              placeholder="API Key Secret e.g(uk08l00**)"
             className="form-control item"
             isRequired={false}
-            title="API Key Secret "
+            title="API Key Secret e.g(uk08l00**)"
             message="Enter API Key Secret"
           />
         </CCol>
@@ -328,12 +328,12 @@ const NetworkInputs = (prop) => {
             value={networkState.apiuri}
             onChange={handleNetworkSetting}
             type="text"
-              id="apiuri"
-              name="apiuri"
-            placeholder="API url"
+            id="apiuri"
+            name="apiuri"
+              placeholder="API url e.g(https:/api.example.com)"
             className="form-control item"
             isRequired={false}
-            title="API url "
+              title="API url e.g(https:/api.example.com)"
             message="Enter API url"
           />
         </CCol>
@@ -346,10 +346,10 @@ const NetworkInputs = (prop) => {
             type="text"
             id="url"
             name="url"
-            placeholder="url"
+            placeholder="url e.g (https:/api.example.com)"
             className="form-control item"
             isRequired={false}
-            title="url "
+              title="url e.g (https:/api.example.com) "
             message="Enter url"
           />
         </CCol>
@@ -363,10 +363,10 @@ const NetworkInputs = (prop) => {
               type="number"
             id="unitId"
               name="unitId" 
-            placeholder="unit id"
+              placeholder="unit Id e.g (40)"
             className="form-control item"
             isRequired={false}
-            title="unit Id "
+            title="unit Id e.g (40)"
             message="Enter unit Id"
           />
         </CCol>
@@ -390,10 +390,10 @@ const NetworkInputs = (prop) => {
             type="number"
             id="purchasedQouta"
             name="purchasedQouta"
-            placeholder="purchased qouta"
+            placeholder="purchased Qouta e.g (1000)"
             className="form-control item"
             isRequired={false}
-            title="purchased Qouta"
+            title="purchased Qouta e.g (1000 quantity purchased)"
             message="Enter purchased Qouta"
           />
         </CCol>
@@ -578,8 +578,8 @@ const NetworkInputs = (prop) => {
             id="postTypeId"
             name="postTypeId"
             placeholder="post type"
-              className="form-control item"
-              disableOption= 'Select Post Type'
+            className="form-control item"
+            disableOption= 'Select Post Type'
             isRequired={false}
             title="post type "
           // message="Enter Buisness Name"
@@ -590,7 +590,7 @@ const NetworkInputs = (prop) => {
           <CFormCheck
             className=""
             value={networkState.virtualAccount}
-            onChange={handleNetworkSetting}
+           // onChange={handleNetworkSetting}
             id="virtualAccount"
             name="virtualAccount"
             label="Virtual Account"

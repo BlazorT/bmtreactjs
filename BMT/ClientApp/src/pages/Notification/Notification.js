@@ -61,19 +61,7 @@ const Notification = (toggle) => {
       (res) => {
        // console.log(res, 'networks');
         if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  id: data.id,
-          //  userId: data.userId,
-          //  dspid: user.dspId.toString(),
-          //  logDesc: data.logDesc,
-          //  entityName: data.entityName,
-          //  menuId: da  ta.menuId,
-          //  machineIp: data.machineIp,
-          //  actionType: data.actionType,
-          //  logTime: formatDateTime(data.logTime),
-          //}));
-
-          // setRows(mappedArray);
+        
           setNetworks(res.data)
         } else {
           dispatch(
@@ -95,29 +83,8 @@ const Notification = (toggle) => {
     error: createNotificationError,
     fetchData: createNotification,
   } = useFetch();
-  /*
-  const initialData = {
-    id: 0,
-    Snapchat: false,
-    Whatsapp: false,
-    Facebook: false,
-    Linkedin: false,
-    Instagaram: false,
-    Twitter: false,
-    Tiktock: false,
-    Sms: false,
-    Email: false,  
-    status: 0,
-    createdBy: 0,
-  };
-  */
- // const [notificationData, setNotificationData] = useState([]);
-  //const notificationData = globalutil.networks();
-  //notificationData = globalutil.networks();
-  //alert(JSON.stringify(notificationData));
 
-  //var fJSON = globalutil.networks().map((s) => ({ id: s.id, status: s.code == "1" ? 1 : 0, createdBy: user.userId }));  
-  const [networkBody, setNetworkBody] = useState([])
+
   //alert(JSON.stringify(networkBody));
   const onSave = async () => {
     const body = networks.map((n) => ({id:n.id,status:n.status,createdBy:n.createdBy }))

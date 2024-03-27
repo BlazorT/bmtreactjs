@@ -17,11 +17,11 @@ import CustomFilters from 'src/components/Filters/CustomFilters';
 import { formatDate } from 'src/helpers/formatDate';
 import globalutil from 'src/util/globalutil';
 
-import { getDaFiltersFields } from 'src/configs/FiltersConfig/daFilterConfig';
-import { getdaAssociatesCols } from 'src/configs/ColumnsConfig/daAssociatesCols';
+import { getorgUsersFilterFields } from 'src/configs/FiltersConfig/orgUserFilterConfig';
+import { getorgUsersCols } from 'src/configs/ColumnsConfig/orgUsersCols';
 import { formatDateTime } from 'src/helpers/formatDate';
 
-import { useFetchOrganization } from 'src/hooks/api/useFetchOrganization';
+import { useFetchOrgUser } from 'src/hooks/api/useFetchOrgUser';
 import AppContainer from 'src/components/UI/AppContainer';
 
 const organizationsusers = () => {
@@ -55,29 +55,26 @@ const organizationsusers = () => {
   });
   const [rows, setRows] = useState([]);
 
-  const { data, loading, fetchOrganization: getUserbyRole } = useFetchOrganization();
+  const { data, loading, fetchOrganization: getUserbyRole } = useFetchOrgUser();
 
   const getOrgsList = async (filter) => {
-    const usersList = await getUserbyRole(3, filter);
+    const orgUsersList = await getUserbyRole(6, filter);
 
-     console.log({ usersList });
-    setOrgData(usersList);
+    console.log({ orgUsersList });
+    setOrgData(orgUsersList);
 
-    const mappedArray = usersList.map((data) => ({
+    const mappedArray = orgUsersList.map((data) => ({
       id: data.id,
       name: data.name,
-      cityId: data.cityId,
-      compaignsCount: data.compaignsCount,
-      currencyName: data.currencyName,
-      state: data.stateId,
+      roleName: data.roleName,
+      contact: data.contact,
       createdAt: formatDate(data.createdAt),
-      expiryTime: formatDateTime(data.expiryTime),
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
         : '',
       //status: data.status,
     }));
-    console.log(mappedArray, 'org');
+    console.log(mappedArray, 'orgUsersList');
     setRows(mappedArray);
   };
 
@@ -120,8 +117,8 @@ const organizationsusers = () => {
     });
   };
 
-  const orgFilterFields = getDaFiltersFields(filters, changeFilter);
-  const daAssociatesCols = getdaAssociatesCols(getOrgsList, orgData, pageRoles);
+  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter);
+  const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {
     return <Loading />;
@@ -161,7 +158,7 @@ const organizationsusers = () => {
             {showDaGrid && (
               <CustomDatagrid
                 rows={rows}
-                columns={daAssociatesCols}
+                columns={orgUsersCols}
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}

@@ -75,54 +75,17 @@ const campaignadd = () => {
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
   const tabs = ['Campaign', 'Networks', 'Schedule'];
-  const onSave = async () => {
-    //alert("Feared");
-    formValidator();
-   // alert(document.querySelector('.dsp-reg-form'));
-  }//onSave
-
-  const submitCompaign = async () => {
-    const form = document.querySelector('.dsp-reg-form');
-    formValidator();
-    if (form.checkValidity()) {
-      // Upload & Submit
-      const fUpload = document.getElementById('fileAvatar');
-      if (fUpload!== null && fUpload.files !== null && fUpload.files.length > 0) {
-        var avatar = fUpload.files[0];
-        const formData = new FormData();
-        formData.append('file', avatar);
-        formData.append('id', '0');
-        formData.append('name', avatar.name);
-        formData.append('fileName', avatar.name);
-        formData.append('createdBy', user.userId);
-        formData.append('createdAt', moment().utc().format());
-
-        // alert("Upload version before upload");
-        const uploadAvatarRes = await uploadAvatar(formData);
-        if (uploadAvatarRes.status === true) {
-          const avatarPath =
-            'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
-          const res = await createUpdateCampaign({ ...campaignRegData, logoPath: avatarPath });
-         // console.log(res);
-          if (res.status) {
-            navigate('/campaignslisting');
-          }
-        }
-      } else {
-        const res = await createUpdateCampaign(campaignRegData);
-        console.log({ res });
-        if (res.status === true) {
-          navigate('/campaignslisting');
-        }
-      }
-    }
-  };
-
  
-
   const handleCampaignAddForm = (e, label) => {
    // alert(label);
     if (label !== null && (label == 'startTime' || label == 'finishTime')) {
+      // alert(label);
+      setcampaignRegData((prev) => ({
+        ...prev,
+        [label]: e,
+      }));
+    }
+    else if (label !== null && (label == 'startDate' || label == 'endDate')) {
       // alert(label);
       setcampaignRegData((prev) => ({
         ...prev,
@@ -337,10 +300,8 @@ const campaignadd = () => {
                 otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
                 filterDisable={true}
               />
-
               {showForm && (
                 <React.Fragment>
-
                   <Inputs
                     inputFields={campaignAddInputs}
                     yesFn={goToAnotherPage}

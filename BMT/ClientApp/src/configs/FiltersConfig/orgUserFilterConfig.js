@@ -8,7 +8,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-export const getDaFiltersFields = (filters, changeFilter, orgs) => [
+export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
   {
     component: CustomSearch,
     label: 'Organization',
