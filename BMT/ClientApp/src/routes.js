@@ -39,7 +39,6 @@ const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
-//const addorganization = React.lazy(() => import('./pages/Admin/addorganization '));
 const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'));
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
@@ -100,9 +99,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
- // { path: '/addorganization ', name: 'addorganization ', element: addorganization },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
-
   { path: '/addorganization ', name: 'addorganization ', element: addorganization },
   { path: '/AddDA', name: 'AddDA', element: AddDA },
   { path: '/DADashboard', name: 'DADashboard', element: DADashboard },
