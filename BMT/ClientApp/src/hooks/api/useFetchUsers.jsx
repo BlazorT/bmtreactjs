@@ -42,7 +42,7 @@ export const useFetchUsers = () => {
     };
    // console.log(userBody,'body')
     const res = await postData(userBody);
-    // alert(JSON.stringify( res) );
+     console.log( res,'new user' );
     if (res.status) {
       return res.data;
     } else {

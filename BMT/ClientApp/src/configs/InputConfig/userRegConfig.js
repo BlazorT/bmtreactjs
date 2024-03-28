@@ -17,7 +17,7 @@ import ImagePicker from 'src/components/UI/ImagePicker';
 import globalutil from 'src/util/globalutil';
 
 export const getUserInputFields = (
-  daUserData,
+  UserData,
   handleUserInput,
   handleFocus,
   emailReadonly,
@@ -33,14 +33,14 @@ export const getUserInputFields = (
 ) => [
   {
     component: ImagePicker,
-    image: daUserData.avatar,
+    image: UserData.avatar,
     name: 'avatar',
     onChange: (e) => handleUserInput(e, 'avatar'),
   },
   {
     component: CustomInput,
     label: 'First Name',
-    value: daUserData.firstName,
+    value: UserData.firstName,
     onChange: handleUserInput,
     icon: cilUser,
     type: 'text',
@@ -58,7 +58,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Middle Name',
-    value: daUserData.middleName,
+    value: UserData.middleName,
     onChange: handleUserInput,
     icon: cilUser,
     type: 'text',
@@ -74,7 +74,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Last Name',
-    value: daUserData.lastName,
+    value: UserData.lastName,
     onChange: handleUserInput,
     icon: cilUser,
     type: 'text',
@@ -90,7 +90,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Ims',
-    value: daUserData.ims,
+    value: UserData.ims,
     onChange: handleUserInput,
     icon: cilEnvelopeClosed,
     type: 'text',
@@ -104,7 +104,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Email',
-    value: daUserData.email,
+    value: UserData.email,
     onChange: handleUserInput,
     icon: cilUser,
     type: 'text',
@@ -120,7 +120,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Password',
-    value: daUserData.password,
+    value: UserData.password,
     onChange: handleUserInput,
     icon: cilLockLocked,
     type: 'password',
@@ -129,7 +129,7 @@ export const getUserInputFields = (
     placeholder: 'Enter Password',
     className: 'form-control item',
     isRequired: true,
-    readOnly: user.userId === daUserData.id || location.state === null ? false : true,
+    readOnly: user.userId === UserData.id || location.state === null ? false : true,
     // pattern: '.*[A-Z].*',
     message: 'Enter valid password',
   },
@@ -152,7 +152,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Contact',
-    value: daUserData.contact,
+    value: UserData.contact,
     onChange: handleUserInput,
     icon: cilScreenSmartphone,
     type: 'number',
@@ -181,7 +181,7 @@ export const getUserInputFields = (
     id: 'country',
     options: globalutil.states(),
     className: 'form-control item form-select',
-    value: daUserData.country,
+    value: UserData.country,
     name: 'country',
     onChange: (e) => handleUserInput(e),
     isRequired: true,
@@ -194,11 +194,11 @@ export const getUserInputFields = (
     icon: cilFlagAlt,
     id: 'stateId',
     className: 'form-control item form-select',
-    value: daUserData.stateId,
+    value: UserData.stateId,
     name: 'stateId',
     onChange: (e) => handleUserInput(e),
     isRequired: false,
-    disableOption: daUserData.country === '' ? 'Select Country First' : 'Select City',
+    disableOption: UserData.country === '' ? 'Select Country First' : 'Select City',
     message: 'Please select your city',
     options: cityList
      
@@ -210,7 +210,7 @@ export const getUserInputFields = (
     id: 'status',
     options: globalutil.statuses(),
     className: 'form-control item form-select',
-    value: daUserData.status,
+    value: UserData.status,
     name: 'status',
     onChange: (e) => handleUserInput(e),
     isRequired: false,
@@ -226,7 +226,7 @@ export const getUserInputFields = (
       .userroles()
       .filter((role) => role.name !== 'DA' && role.name !== 'Driver Helper'),
     className: 'form-control item form-select',
-    value: daUserData.roleId,
+    value: UserData.roleId,
     name: 'roleId',
     onChange: (e) => handleUserInput(e),
     isRequired: true,
@@ -250,7 +250,7 @@ export const getUserInputFields = (
   {
     component: CustomInput,
     label: 'Mailing Address',
-    value: daUserData.address,
+    value: UserData.address,
     onChange: handleUserInput,
     icon: cilUser,
     type: 'text',

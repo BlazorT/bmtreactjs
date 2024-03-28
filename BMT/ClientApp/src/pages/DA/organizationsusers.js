@@ -68,7 +68,7 @@ const organizationsusers = () => {
       completeName: data.completeName,
       roleName: data.roleName,
       orgName: data.orgName,
-      contact: data.contact === '' ? '---' : data.contact,
+      contact:  data.contact,
       createdAt: formatDate(data.createdAt),
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
