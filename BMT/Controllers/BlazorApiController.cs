@@ -328,7 +328,7 @@ namespace com.blazor.bmt.controllers
                     //uvm.CreatedBy = usr.CreatedBy;
                     uvm.RowVer = usr.RowVer + 1;
                    // uvm.Password=  GlobalUTIL.Encrypt(string.IsNullOrWhiteSpace(uvm.Password) ? uvm.Password:System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String((""+uvm.Password).Trim())), true, BlazorConstant.SECKEY);
-                    await _userPageService.CreateUser(uvm);
+                    await _userPageService.UpdateUser(uvm);
                     blazorApiResponse.data = uvm;
                 }
                 //usr.de = uvm.status;
