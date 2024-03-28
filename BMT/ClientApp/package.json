@@ -52,6 +52,7 @@
     "core-js": "^3.29.0",
     "dayjs": "^1.11.10",
     "force": "^0.0.3",
+    "google-map-react": "^2.2.1",
     "jspdf": "^2.5.1",
     "moment": "^2.29.4",
     "primereact": "^10.5.1",
