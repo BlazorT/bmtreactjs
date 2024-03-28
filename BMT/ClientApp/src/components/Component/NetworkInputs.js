@@ -212,26 +212,23 @@ const NetworkInputs = (prop) => {
     {/*  <h3>{ header}</h3>*/}
     {/*</div>*/}
     <CRow>
-      <CCol className="" md={12}>
+      <CCol className="" md={6}>
         <CustomInput
           label="Recipients"
           icon={cilUser}
           value={networkState.name}
           onChange={handleNetworkSetting}
-          placeholder="input recipients name"
+          placeholder="Input Recipients Name"
           type="text"
           id="name"
           name="name"
           className="form-control item"
           isRequired={true}
-          title="recipients name "
+          title="Input Recipients Name"
           message="Enter Recipients Name" 
         />
       </CCol>
-
-    </CRow>
-    <CRow>
-      <CCol className="" md={10}>
+      <CCol className="" md={6}>
         <CustomInput
           label="Email Excel Bulk Upload"
           icon={cilUser}
@@ -240,18 +237,21 @@ const NetworkInputs = (prop) => {
           type="file"
           id="attachment"
           name="attachment"
-          placeholder="Email excel bulk upload"
+          placeholder="Email Excel Bulk Upload"
           className="form-control item"
           isRequired={false}
-          title="Email excel Bulk Upload "
+          title="Email Excel Bulk Upload"
         // message="Enter Buisness Name"
         />
       </CCol>
-      <CCol className="" md={2}>
-        <div className="input-group-append mt-4">
-          <input className="importFilebtn" id="upload" type="file" accept="image/*"  />
-        </div>
-      </CCol>
+    </CRow>
+    <CRow>
+   
+      {/*<CCol className="" md={2}>*/}
+      {/*  <div className="input-group-append mt-4">*/}
+      {/*    <input className="importFilebtn" id="upload" type="file" accept="image/*"  />*/}
+      {/*  </div>*/}
+      {/*</CCol>*/}
     </CRow>
 
     <AppContainer>
@@ -272,7 +272,7 @@ const NetworkInputs = (prop) => {
             name="excelAttachment"
             className="form-control item"
             isRequired={false}
-            title="choose image for attachment "
+            title="Choose Image For Attachment "
           // message="Enter Buisness Name"
           />
         </CCol>
@@ -297,7 +297,7 @@ const NetworkInputs = (prop) => {
             type="text"
             id="buisnessId"
             name="buisnessId"
-              placeholder="Business Id e.g(19288)"
+            placeholder="Business Id e.g(19288)"
             className="form-control item"
             isRequired={false}
             title="Business Id e.g(19288)"
@@ -330,11 +330,11 @@ const NetworkInputs = (prop) => {
             type="text"
             id="apiuri"
             name="apiuri"
-              placeholder="API url e.g(https:/api.example.com)"
+            placeholder="API Url e.g(https:/api.example.com)"
             className="form-control item"
             isRequired={false}
-              title="API url e.g(https:/api.example.com)"
-            message="Enter API url"
+            title="API Url e.g(https:/api.example.com)"
+            message="Enter API Url"
           />
         </CCol>
         <CCol className="" md={6}>
@@ -346,11 +346,11 @@ const NetworkInputs = (prop) => {
             type="text"
             id="url"
             name="url"
-            placeholder="url e.g (https:/api.example.com)"
+            placeholder="Url e.g (https:/api.example.com)"
             className="form-control item"
             isRequired={false}
-              title="url e.g (https:/api.example.com) "
-            message="Enter url"
+              title="Url e.g (https:/api.example.com) "
+            message="Enter Url"
           />
         </CCol>
        
@@ -360,27 +360,17 @@ const NetworkInputs = (prop) => {
             icon={cilUser}
             value={networkState.unitId}
             onChange={handleNetworkSetting}
-              type="number"
+            type="number"
             id="unitId"
-              name="unitId" 
-              placeholder="unit Id e.g (40)"
+            name="unitId" 
+            placeholder="Enter Unit e.g (40)"
             className="form-control item"
             isRequired={false}
-            title="unit Id e.g (40)"
-            message="Enter unit Id"
+            title="Enter Unit e.g (40)"
+            message="Enter Unit "
           />
         </CCol>
-          <CCol className="mt-4" md={6}>
-            <CFormCheck
-              className=""
-              id="status"
-              label="Status"
-              defaultChecked
-              value={networkState.status}
-              name="status"
-            />
-
-          </CCol>
+      
         <CCol className="" md={6}>
           <CustomInput
             label="Quota"
@@ -390,11 +380,11 @@ const NetworkInputs = (prop) => {
             type="number"
             id="purchasedQouta"
             name="purchasedQouta"
-            placeholder="purchased Qouta e.g (1000)"
+            placeholder="Purchased Qouta e.g (1000)"
             className="form-control item"
             isRequired={false}
-            title="purchased Qouta e.g (1000 quantity purchased)"
-            message="Enter purchased Qouta"
+            title="Purchased Qouta e.g (1000 Quantity Purchased)"
+            message="Enter Purchased Qouta"
           />
         </CCol>
         {networkId == 3 && (
@@ -425,10 +415,10 @@ const NetworkInputs = (prop) => {
             type="text"
             id="popServer"
             name="popServer"
-            placeholder="POP server"
+            placeholder="POP Server"
             className="form-control item"
             isRequired={false}
-            title="POP server"
+            title="POP Server"
           // message="Enter Buisness Name"
           />
         </CCol>
@@ -437,11 +427,11 @@ const NetworkInputs = (prop) => {
           <CustomInput
             label="Port"
             icon={cilUser}
-                  value={networkState.port}
+            value={networkState.port}
             onChange={handleNetworkSetting}
-                  type="number"
+            type="number"
             id="port"
-                  name="port"
+            name="port"
             placeholder="Port"
             className="form-control item"
             isRequired={false}
@@ -526,7 +516,7 @@ const NetworkInputs = (prop) => {
           <CFormCheck
             className=""
             id="autoReplyAllowed"
-            label="Auto reply message"
+            label="Auto Reply Message"
             defaultChecked
             value={networkState.autoReplyAllowed}
             name="autoReplyAllowed"
@@ -535,34 +525,34 @@ const NetworkInputs = (prop) => {
         </CCol>
         <CCol className="" md={3}>
           <CustomInput
-            label="Auto reply message"
+            label="Auto Reply Message"
             icon={cilUser}
             value={networkState.autoReplyContent}
             onChange={handleNetworkSetting}
             type="text"
             id="autoReplyContent"
             name="autoReplyContent"
-            placeholder="auto reply message"
+            placeholder="Auto Reply Message"
             className="form-control item"
             isRequired={false}
-            title="auto reply message "
+            title="Auto Reply Message"
           // message="Enter Buisness Name"
           />
         </CCol>
         <CCol className="" md={6}>
           <CustomSelectInput
-            label="Auto reply Attachment"
+            label="Auto Reply Attachment"
             icon={cilUser}
             value={networkState.replyAttachment}
             onChange={handleNetworkSetting}
             type="text"
             id="replyAttachment"
             name="replyAttachment"
-            placeholder="auto reply attachment"
+            placeholder="Auto Reply Attachment"
             disableOption='Select Auto Reply Attachment'
             className="form-control item"
             isRequired={false}
-            title="auto reply attachment "
+            title="Auto Reply Attachment "
           // message="Enter Buisness Name"
           />
         </CCol>
@@ -577,16 +567,16 @@ const NetworkInputs = (prop) => {
             type="text"
             id="postTypeId"
             name="postTypeId"
-            placeholder="post type"
+            placeholder="Post Type"
             className="form-control item"
             disableOption= 'Select Post Type'
             isRequired={false}
-            title="post type "
+            title="Post Type "
           // message="Enter Buisness Name"
           />
         </CCol>
           
-        <CCol className="mt-4" md={6}>
+        <CCol className="mt-4" md={3}>
           <CFormCheck
             className=""
             value={networkState.virtualAccount}
@@ -596,7 +586,17 @@ const NetworkInputs = (prop) => {
             label="Virtual Account"
             defaultChecked
           />
-        </CCol>
+          </CCol>
+          <CCol className="mt-4" md={3}>
+            <CFormCheck
+              className=""
+              id="status"
+              label="Status"
+              defaultChecked
+              value={networkState.status}
+              name="status"
+            />
+          </CCol>
       </CRow>
       )}
     </AppContainer>
@@ -614,7 +614,7 @@ const NetworkInputs = (prop) => {
         type="submit"
         className="btn btn_Default m-2 sales-btn-style"
       >
-        save
+        Save
       </button>
       <button
         type="submit"

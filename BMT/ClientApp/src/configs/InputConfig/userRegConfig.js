@@ -278,7 +278,7 @@ export const getUserInputFields = (
   //},
 ];
 // Function to get initial user data
-export const getInitialUserData = (user) => ({
+export const getInitialUserData = (user, role) => ({
   id: 0,
   avatar: '',
   firstName: '',
@@ -288,12 +288,12 @@ export const getInitialUserData = (user) => ({
   contact: '',
   orgId: user.orgId,
   genderId: 1,
-  roleId: 1,
+  roleId: role,
   status: 1,
   cityId: 1,
   password: '',
   userName: '',
-  Ims: '',
+  ims: '',
   securityToken: '',      
   userCode: '',
   rowVer: 1,

@@ -9,6 +9,7 @@ export const useToggleUserStatus = () => {
   const updateStatus = async (user, status) => {
     const deleteBody = {
       id: user[0].id,
+      orgId: user[0].orgId === 1 ? 0 : user[0].orgId,
       email: user[0].email,
       lastName: user[0].lastName,
       password: user[0].password,

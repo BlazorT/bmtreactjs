@@ -76,7 +76,6 @@ const UserRegister = () => {
         roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
         password: userData.password ? atob(userData.password) : '',
         country: userData.stateId < 54 ? 1 : 2 ?? '',
-        isWhatsappAsso: userData.secondaryContact ? true : false,
         isTermsAccepted: false,
       });
     }

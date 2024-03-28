@@ -1,12 +1,23 @@
 /* eslint-disable react/react-in-jsx-scope */
-import DaActionCell from 'src/components/DataGridCustomCells/DaActionCell';
+import OrgUserActionCell from 'src/components/DataGridCustomCells/OrgUserActionCell';
 
 export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'name',
+    field: 'completeName',
+    headerName: ' Name',
+    flex: 1,
+    minWidth: 120,
+    editable: false,
+    filterable: true,
+    sortable: true,
+    disableColumnMenu: false,
+    headerClassName: 'custom-header-data-grid',
+  },
+  {
+    field: 'orgName',
     headerName: 'Organization Name',
     flex: 1,
-    minWidth: 160,
+    minWidth: 140,
     editable: false,
     filterable: true,
     sortable: true,
@@ -75,7 +86,7 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
     renderCell: (params) => (
-      <DaActionCell
+      <OrgUserActionCell
         value={params}
         fetching={getDasList}
         user={daRes.filter((item) => item.id === params.row.id)}

@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 
 import {
-  cilBell,
-  cilCalendarCheck,
-  cilCog,
-  cilInfo,
-  cilLibrary,
   cilPencil,
   cilReload,
   cilTrash,
-  cilTruck,
 } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,7 +28,7 @@ import { useSelector } from 'react-redux';
 import Popover from '../UI/Popover';
 import { AppSpeedDial } from '../UI/AppSpeedDial';
 
-const DaActionCell = (prop) => {
+const OrgUserActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -94,7 +88,7 @@ const DaActionCell = (prop) => {
 
   const editUser = () => {
     handleClose();
-    navigate('/applyForm', { state: { id: value.row.id, user: user } });
+    navigate('/UserRegister', { state: { id: value.row.id, user: user } });
   };
   const DADetailInfoModal = () => {
     setDADetailModalOpen((prev) => !prev);
@@ -146,7 +140,7 @@ const DaActionCell = (prop) => {
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
-            <Tooltip title="Re-Activate DA">
+            <Tooltip title="Re-Activate Organization User">
               <CIcon
                 onClick={() => toggleStatus(5)}
                 className="stock-toggle-icon"
@@ -159,7 +153,7 @@ const DaActionCell = (prop) => {
         <CRow>
           {canUpdate === 1 && (
             <CCol>
-              <Tooltip title="Edit DA">
+                <Tooltip title="Edit Organization User">
                 <CIcon
                   onClick={() => editUser(value.row.id)}
                   className="stock-toggle-icon"
@@ -168,19 +162,19 @@ const DaActionCell = (prop) => {
               </Tooltip>
             </CCol>
           )}
-          <CCol>
-            <Tooltip title="DA Actions">
-              <CIcon
-                className="stock-toggle-icon"
-                icon={cilCog}
-                onClick={handleClick}
-                aria-describedby={id}
-              />
-            </Tooltip>
-          </CCol>
+          {/*<CCol>*/}
+          {/*    <Tooltip title="Organization User Actions">*/}
+          {/*    <CIcon*/}
+          {/*      className="stock-toggle-icon"*/}
+          {/*      icon={cilCog}*/}
+          {/*      onClick={handleClick}*/}
+          {/*      aria-describedby={id}*/}
+          {/*    />*/}
+          {/*  </Tooltip>*/}
+          {/*</CCol>*/}
           {canDelete === 1 && (
             <CCol>
-              <Tooltip title="Delete DA">
+              <Tooltip title="Delete Organization User">
                 <CIcon
                   className="stock-toggle-icon"
                   icon={cilTrash}
@@ -193,93 +187,93 @@ const DaActionCell = (prop) => {
             <AppSpeedDial actions={actions} />
           </CCol> */}
 
-          <Popover
-            id={id}
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-            anchorVer="left"
-            anchorHori="left"
-            content={
-              <div className="fade-in-out">
-                <div className="bckgrndTransprnt">
-                  <div className="da-popover bg-dark-color ">
-                    <div className="tab-style">
-                      <CCol>
-                        {/* <span className="fs-6 text-dim">Daily Dispatchments</span> */}
-                        <Tooltip title="Daily Dispatchments">
-                          <CIcon
-                            className="stock-toggle-icon"
-                            icon={cilLibrary}
-                            size="xl"
-                            onClick={() => {
-                              setIsOpen(true);
-                              handleClose();
-                            }}
-                          />
-                          <br></br>
-                          <div className="text-dim">Daily Disp.</div>
-                        </Tooltip>
-                      </CCol>
-                    </div>
-                    <div className="tab-style">
-                      <CCol className="">
-                        <Tooltip title="Dispatchments">
-                          <CIcon
-                            className={`stock-toggle-icon user-select-none ${
-                              loginUser.roleId !== 1 && 'pe-none'
-                            }`}
-                            icon={cilTruck}
-                            size="xl"
-                            onClick={() => {
-                              setIsJustDispMdlOpen(true);
-                              handleClose();
-                            }}
-                          />
-                          <br></br>
-                          <div className="text-dim">Dispatchment</div>
-                        </Tooltip>
-                      </CCol>
-                    </div>
-                    <div className="tab-style">
-                      <CCol>
-                        <Tooltip title="Send Notification">
-                          <CIcon
-                            className="stock-toggle-icon"
-                            icon={cilBell}
-                            size="xl"
-                            onClick={() => {
-                              // setDADetailModalOpen(true);
-                              handleClose();
-                            }}
-                          />
-                          <br></br>
-                          <div className=" text-dim">Notification</div>
-                        </Tooltip>
-                      </CCol>
-                    </div>
-                    <div className="tab-style">
-                      <CCol>
-                        <Tooltip title="See DA detail">
-                          <CIcon
-                            className="stock-toggle-icon"
-                            icon={cilInfo}
-                            size="xl"
-                            onClick={() => {
-                              setDADetailModalOpen(true);
-                              handleClose();
-                            }}
-                          />
-                          <br></br>
-                          <div className=" text-dim">DA Detail</div>
-                        </Tooltip>
-                      </CCol>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
-            open={open}
-          />
+          {/*<Popover*/}
+          {/*  id={id}*/}
+          {/*  anchorEl={anchorEl}*/}
+          {/*  handleClose={handleClose}*/}
+          {/*  anchorVer="left"*/}
+          {/*  anchorHori="left"*/}
+          {/*  content={*/}
+          {/*    <div className="fade-in-out">*/}
+          {/*      <div className="bckgrndTransprnt">*/}
+          {/*        <div className="da-popover bg-dark-color ">*/}
+          {/*          <div className="tab-style">*/}
+          {/*            <CCol>*/}
+          {/*              */}{/* <span className="fs-6 text-dim">Daily Dispatchments</span> */}
+          {/*              <Tooltip title="Daily Dispatchments">*/}
+          {/*                <CIcon*/}
+          {/*                  className="stock-toggle-icon"*/}
+          {/*                  icon={cilLibrary}*/}
+          {/*                  size="xl"*/}
+          {/*                  onClick={() => {*/}
+          {/*                    setIsOpen(true);*/}
+          {/*                    handleClose();*/}
+          {/*                  }}*/}
+          {/*                />*/}
+          {/*                <br></br>*/}
+          {/*                <div className="text-dim">Daily Disp.</div>*/}
+          {/*              </Tooltip>*/}
+          {/*            </CCol>*/}
+          {/*          </div>*/}
+          {/*          <div className="tab-style">*/}
+          {/*            <CCol className="">*/}
+          {/*              <Tooltip title="Dispatchments">*/}
+          {/*                <CIcon*/}
+          {/*                  className={`stock-toggle-icon user-select-none ${*/}
+          {/*                    loginUser.roleId !== 1 && 'pe-none'*/}
+          {/*                  }`}*/}
+          {/*                  icon={cilTruck}*/}
+          {/*                  size="xl"*/}
+          {/*                  onClick={() => {*/}
+          {/*                    setIsJustDispMdlOpen(true);*/}
+          {/*                    handleClose();*/}
+          {/*                  }}*/}
+          {/*                />*/}
+          {/*                <br></br>*/}
+          {/*                <div className="text-dim">Dispatchment</div>*/}
+          {/*              </Tooltip>*/}
+          {/*            </CCol>*/}
+          {/*          </div>*/}
+          {/*          <div className="tab-style">*/}
+          {/*            <CCol>*/}
+          {/*              <Tooltip title="Send Notification">*/}
+          {/*                <CIcon*/}
+          {/*                  className="stock-toggle-icon"*/}
+          {/*                  icon={cilBell}*/}
+          {/*                  size="xl"*/}
+          {/*                  onClick={() => {*/}
+          {/*                    // setDADetailModalOpen(true);*/}
+          {/*                    handleClose();*/}
+          {/*                  }}*/}
+          {/*                />*/}
+          {/*                <br></br>*/}
+          {/*                <div className=" text-dim">Notification</div>*/}
+          {/*              </Tooltip>*/}
+          {/*            </CCol>*/}
+          {/*          </div>*/}
+          {/*          <div className="tab-style">*/}
+          {/*            <CCol>*/}
+          {/*              <Tooltip title="See DA detail">*/}
+          {/*                <CIcon*/}
+          {/*                  className="stock-toggle-icon"*/}
+          {/*                  icon={cilInfo}*/}
+          {/*                  size="xl"*/}
+          {/*                  onClick={() => {*/}
+          {/*                    setDADetailModalOpen(true);*/}
+          {/*                    handleClose();*/}
+          {/*                  }}*/}
+          {/*                />*/}
+          {/*                <br></br>*/}
+          {/*                <div className=" text-dim">DA Detail</div>*/}
+          {/*              </Tooltip>*/}
+          {/*            </CCol>*/}
+          {/*          </div>*/}
+          {/*        </div>*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*  }*/}
+          {/*  open={open}*/}
+          {/*/>*/}
         </CRow>
       )}
 
@@ -301,4 +295,4 @@ const DaActionCell = (prop) => {
     </React.Fragment>
   );
 };
-export default DaActionCell;
+export default OrgUserActionCell;

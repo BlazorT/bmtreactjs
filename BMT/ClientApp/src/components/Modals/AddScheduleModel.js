@@ -118,14 +118,23 @@ const AddScheduleModel = (prop) => {
   //  endTime: dayjs().add(1, 'hour'),
   //});
 
-  const handleCampaignAddForm = (e, label) => {
+  const handleCampaignAddForm = (e, label, date) => {
+    var colName = date;
     if (label === 'startTime' || label === 'finishTime') {
      // console.log(e.$d);
       setCampaignRegData((prev) => ({
         ...prev,
         [label]: e,
       }));
-    } else {
+    }
+    else if (label === 'startDate' || label === 'endDate') {
+      // console.log(e.$d);
+      setCampaignRegData((prev) => ({
+        ...prev,
+        [colName]: e,
+      }));
+    }
+    else {
       const { name, value } = e.target;
       console.log({ name, value });
       setCampaignRegData((prev) => ({
@@ -335,22 +344,22 @@ const AddScheduleModel = (prop) => {
                 <CustomDatePicker
                   icon={cilCalendar}
                   label="Date From "
-                  id="startTime"
-                  name="startTime"
-                  value={campaignRegData.startTime}
-                  title=" start date  "
-                  onChange={(e) => handleCampaignAddForm(e, 'startTime')}
+                  id="startDate"
+                  name="startDate"
+                  value={campaignRegData.startDate}
+                  title="start date"
+                  onChange={(e) => handleCampaignAddForm(e, 'startDate')}
                 />
               </CCol>
               <CCol md="6">
                 <CustomDatePicker
                   icon={cilCalendar}
                   label="Date To "
-                  id="finishTime"
-                  name="finishTime"
-                  title=" end date "
-                  value={campaignRegData.finishTime}
-                  onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
+                  id="endDate"
+                  name="endDate"
+                  title="end date"
+                  value={campaignRegData.endDate}
+                  onChange={(e) => handleCampaignAddForm(e, 'endDate')}
                 />
               </CCol>
             </CRow>
@@ -358,10 +367,10 @@ const AddScheduleModel = (prop) => {
               <CCol md="6">
                 <CustomTimePicker
                   icon={cilCalendar}
-                  label=" Start Time"
+                  label="Start Time"
                   id="startTime"
                   name="startTime"
-                  title=" Start Time"
+                  title="Start Time"
                   value={campaignRegData.startTime}
                   onChange={(e) => handleCampaignAddForm(e, 'startTime')}
                 //  maxTime={shiftAddData.endTime}
@@ -370,7 +379,7 @@ const AddScheduleModel = (prop) => {
               <CCol md="6">
                 <CustomTimePicker
                   icon={cilCalendar}
-                  label=" End Time"
+                  label="End Time"
                   id="finishTime"
                   name="finishTime"
                   value={campaignRegData.finishTime}

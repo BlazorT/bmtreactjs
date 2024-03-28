@@ -55,7 +55,7 @@ const organizationsusers = () => {
   });
   const [rows, setRows] = useState([]);
 
-  const { data, loading, fetchOrganization: getUserbyRole } = useFetchOrgUser();
+  const { data, loading, fetchUsers: getUserbyRole } = useFetchOrgUser();
 
   const getOrgsList = async (filter) => {
     const orgUsersList = await getUserbyRole(6, filter);
@@ -65,9 +65,10 @@ const organizationsusers = () => {
 
     const mappedArray = orgUsersList.map((data) => ({
       id: data.id,
-      name: data.name,
+      completeName: data.completeName,
       roleName: data.roleName,
-      contact: data.contact,
+      orgName: data.orgName,
+      contact: data.contact === '' ? '---' : data.contact,
       createdAt: formatDate(data.createdAt),
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name

@@ -85,7 +85,7 @@ const campaignadd = () => {
         [label]: e,
       }));
     }
-    else if (label !== null && (label == 'startDate' || label == 'endDate')) {
+    else if (label !== null && (label == 'Campaign Start Date' || label == 'Campaign End Date')) {
       // alert(label);
       setcampaignRegData((prev) => ({
         ...prev,

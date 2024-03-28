@@ -62,14 +62,21 @@ const campaignslisting = () => {
     setRows(mappedArray);
   };
 
-  const changeFilter = (event, date) => {
+  const changeFilter = (event, date,label) => {
     var colName = date;
     if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [colName]: event,
       }));
-    } else {
+    }
+    else if (label === 'name') {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [colName]: event,
+      }));
+    }
+    else {
       const { name, value, type, checked } = event.target;
       colName = (name == 'networks') ? "networkId" : name; // column name was replaced bc networks is not backend key value
       setFilters((prevData) => ({

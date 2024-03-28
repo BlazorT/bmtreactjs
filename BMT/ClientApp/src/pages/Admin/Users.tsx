@@ -71,7 +71,7 @@ const Users: React.FC = () => {
       picture: data.avatar ? data.avatar : 'Profile-pic.jpg',
       completeName: data.completeName,
       email: data.email,
-      contact: data.contact,
+      contact: data.contact === '' ? '---' : data.contact,
       role: getRoleById(data.roleId) === 0 ? '' : getRoleById(data.roleId),
       regDate: formatDate(data.createdAt),
       lastUpdatedAt: data.lastUpdatedAt,

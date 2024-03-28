@@ -7,7 +7,7 @@ export const useUpdateUser = () => {
   const showToast = useShowToast();
   const { fetchData } = useFetch();
   const createUpdateUser = async (body) => {
-  //  alert(JSON.stringify(body));
+   console.log(JSON.stringify(body));
     return new Promise((resolve) => {
       fetchData('/BlazorApi/updateuser', { method: 'POST', body: JSON.stringify(body) }, (res) => {
         resolve(res);
