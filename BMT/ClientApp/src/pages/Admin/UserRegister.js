@@ -306,7 +306,8 @@ const UserRegister = () => {
       {/*) : (*/}
         <AppContainer>
           <DataGridHeader
-            title="Advance Search"
+          title="Advance Information"
+          onClick={toggleForm}
             otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
             filterDisable={true}
           />

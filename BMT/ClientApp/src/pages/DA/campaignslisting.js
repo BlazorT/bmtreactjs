@@ -189,6 +189,7 @@ const campaignslisting = () => {
           <AppContainer>
             <DataGridHeader
               title="Advance Search"
+              onClick={toggleFilters }
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
             />
@@ -208,6 +209,7 @@ const campaignslisting = () => {
           <AppContainer>
             <DataGridHeader
               title="Campaigns Listing"
+              onClick={toggleGrid}
               addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
               addBtnClick={() => navigate('/campaignadd')}
               otherControls={[        

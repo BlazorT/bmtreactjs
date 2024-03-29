@@ -108,6 +108,7 @@ const Users: React.FC = () => {
       <AppContainer>
         <DataGridHeader
           title="Advance Search"
+          onClick={toggleStock}
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}
         />
@@ -123,6 +124,7 @@ const Users: React.FC = () => {
       <AppContainer>
         <DataGridHeader
           title="BMT Users"
+          onClick={toggleLicence}
           addButton={pageRoles.canAdd === 1 ? 'User' : ''}
           addBtnClick={pageRoles.canAdd === 1 ? () => navigate('/UserRegister') : undefined}
           otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}

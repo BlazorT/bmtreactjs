@@ -27,10 +27,8 @@ import AppContainer from 'src/components/UI/AppContainer';
 const organizationsusers = () => {
   dayjs.extend(utc);
 
-  const [networkTabs,setNetworkTabs]=useState([])
 
   useEffect(() => {
-    
     getOrgsList();
   }, []);
 
@@ -131,6 +129,7 @@ const organizationsusers = () => {
           <AppContainer>
             <DataGridHeader
               title="Advance Search"
+              onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
             />
@@ -151,6 +150,7 @@ const organizationsusers = () => {
               title="Organization Users"
               addButton={pageRoles.canAdd === 1 ? 'Organization User' : ''}
               addBtnClick={() => navigate('/UserRegister')}
+              onClick={toggleGrid}
               otherControls={[
               /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
                 { icon: cilChevronBottom, fn: toggleGrid },

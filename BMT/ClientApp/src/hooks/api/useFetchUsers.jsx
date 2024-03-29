@@ -7,9 +7,7 @@ import useApi from '../useApi';
 
 export const useFetchUsers = () => {
   const user = useSelector((state) => state.user);
-
   const showToast = useShowToast();
-
   const { data, error, loading, postData } = useApi('/BlazorApi/users');
 
   const fetchUsers = async (role, filters) => {
