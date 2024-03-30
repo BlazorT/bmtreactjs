@@ -515,7 +515,7 @@ const NetworkInputs = (prop) => {
 
           />
         </CCol>
-        <CCol className="mt-4" md={3}>
+        <CCol className="mg-topset" md={3}>
           <CFormCheck
             className=""
             id="autoReplyAllowed"
@@ -579,7 +579,7 @@ const NetworkInputs = (prop) => {
           />
         </CCol>
           
-        <CCol className="mt-4" md={3}>
+          <CCol className="mg-topset" md={3}>
           <CFormCheck
             className=""
             value={networkState.virtualAccount}
@@ -590,7 +590,7 @@ const NetworkInputs = (prop) => {
             defaultChecked
           />
           </CCol>
-          <CCol className="mt-4" md={3}>
+          <CCol className="mg-topset" md={3}>
             <CFormCheck
               className=""
               id="status"
