@@ -22,6 +22,7 @@ interface DataGridHeaderProps {
   addSecBtnClick?: () => void;
   filterDisable?: boolean;
   exportFn?: () => void;
+  onClick?: () => void;
   addBtnContent?: ReactNode;
   popOverId?: string;
   actionCell?: ReactNode;
@@ -42,12 +43,13 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
   popOverId,
   actionCell,
   actions,
+  onClick
 }) => {
   return (
     <div className="d-flex flex-column w-100">
       <CRow className="w-100 p-0 align-self-center">
         <CCol className="d-flex justify-content-start align-items-center p-0">
-          <div className="pointer">{title}</div>
+          <div className="pointer" onClick={onClick}>{title}</div>
         </CCol>
         <CCol className="d-flex justify-content-end align-items-center gap-3 p-0">
           {actionCell && actionCell}

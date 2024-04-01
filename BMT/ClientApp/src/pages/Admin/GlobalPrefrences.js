@@ -114,7 +114,7 @@ const GlobalPrefrences = () => {
       id:'',
       roleId: '',
       userId: '',
-      dspId: user.dspId.toString(),
+      dspId: user.dspId,
       dajObApplyProcessUpdated: prefrenceTempleteData.dajObApplyProcessUpdated,
       name: prefrenceTempleteData.name,
       description: '',

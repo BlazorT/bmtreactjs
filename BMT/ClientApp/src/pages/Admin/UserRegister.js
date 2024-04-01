@@ -4,11 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CCol, CRow } from '@coreui/react';
 import { CFormCheck } from '@coreui/react';
+import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
 
 // Icons
 import { cilChevronBottom } from '@coreui/icons';
 
 // Custom Components
+
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
 import Loading from 'src/components/UI/Loading';
@@ -51,7 +57,7 @@ const UserRegister = () => {
   const showToast = useShowToast();
   const inputRef = useRef(null);
 
-  const [daUserData, setdaUserData] = useState(getInitialUserData(user));
+  const [UserData, setUserData] = useState(getInitialUserData(user));
   const [showForm, setshowForm] = useState(true);
   const [dspList, setdspList] = useState([]);
   const [isThisBrandnew, setIsThisBrandnew] = useState(true);
@@ -71,12 +77,14 @@ const UserRegister = () => {
     if (state !== null) {
       const userData = state.user[0];
       console.log({ userData });
-      setdaUserData({
+      setUserData({
         ...userData,
         roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
         password: userData.password ? atob(userData.password) : '',
         country: userData.stateId < 54 ? 1 : 2 ?? '',
         isTermsAccepted: false,
+        contact: userData.contact,
+        genderId: userData.genderId
       });
     }
   }, [location.state]);
@@ -84,38 +92,38 @@ const UserRegister = () => {
   // Handle user input changes
   const handleUserInput = async (e, label) => {
     if (label === 'avatar') {
-      setdaUserData((prevData) => ({ ...prevData, [label]: e }));
+      setUserData((prevData) => ({ ...prevData, [label]: e }));
     } else {
       const { name, value, type, checked } = e.target;
       const fieldValue = type === 'checkbox' ? checked : value;
 
       if (name === 'userName') {
-        checkUserAvailability('', fieldValue, daUserData.id, setEmailMessage, setUserNameMessage);
+        checkUserAvailability('', fieldValue, UserData.id, setEmailMessage, setUserNameMessage);
       }
 
-      if (name === 'roleId' && user.userId === daUserData.id) {
+      if (name === 'roleId' && user.userId === UserData.id) {
         dispatch(setUserData({ roleId: parseInt(fieldValue) }));
       }
       setEmailMessage('Enter Valid Email Address');
       setUserNameMessage('Enter Valid User Name');
-      setdaUserData((prevData) => ({ ...prevData, [name]: fieldValue }));
+      setUserData((prevData) => ({ ...prevData, [name]: fieldValue }));
     }
   };
 
   const onBlur = async () => {
-    const fieldValue = daUserData.email;
+    const fieldValue = UserData.email;
     if (validateEmail(fieldValue)) {
       const isValidEmail = await checkEmailValidation(fieldValue);
 
       if (isValidEmail === 'valid') {
-        checkUserAvailability(fieldValue, '', daUserData.id, setEmailMessage, setUserNameMessage);
+        checkUserAvailability(fieldValue, '', UserData.id, setEmailMessage, setUserNameMessage);
       } else if (isValidEmail === 'invalid') {
         showToast(`${fieldValue} is not a valid email`, 'error');
         const emailInputElement = document.getElementById('email');
         setEmailMessage(`${fieldValue} is not a valid email`);
         emailInputElement.setCustomValidity(`${fieldValue} is not a valid email`);
       } else {
-        checkUserAvailability(fieldValue, '', daUserData.id, setEmailMessage, setUserNameMessage);
+        checkUserAvailability(fieldValue, '', UserData.id, setEmailMessage, setUserNameMessage);
       }
     }
   };
@@ -124,7 +132,7 @@ const UserRegister = () => {
   const addUser = async () => {
     formValidator();
     const form = document.querySelector('.da-user-form');
-    if (daUserData.email === '') {
+    if (UserData.email === '') {
       setEmailReadonly(false);
       return;
     }
@@ -132,10 +140,10 @@ const UserRegister = () => {
       return;
     }
     let userBody = {
-      ...daUserData,
+      ...UserData,
       //secondaryContact: daUserData.isWhatsappAsso ? daUserData.primaryContact : '',
-      password: btoa(daUserData.password),
-      orgId: parseInt(daUserData.orgId),
+      password: btoa(UserData.password),
+      orgId: parseInt(UserData.orgId),
       lastUpdatedBy: user.userId,
       lastUpdatedAt: moment().utc().format(),
       remarks: 'created user',
@@ -275,7 +283,7 @@ const UserRegister = () => {
   };
   // Define user input fields
   const userInputFields = getUserInputFields(
-    daUserData,
+    UserData,
     handleUserInput,
     handleFocus,
     emailReadonly,
@@ -298,47 +306,48 @@ const UserRegister = () => {
       {/*) : (*/}
         <AppContainer>
           <DataGridHeader
-            title="Advance Search"
+          title="Advance Information"
+          onClick={toggleForm}
             otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
             filterDisable={true}
           />
           <Form name="da-user-form">
             {showForm && (
                 <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser} >
-                  <CRow className="w-50 align-self-center mt-3 mb-3">
-                    <label htmlFor="male" className="login_label labelName m-0 text-white mb-2">
-                      Gender
-                    </label>
-                    <CCol md={6}>
-                      <input
-                        type="radio"
+              <CRow className="w-50 align-self-center mt-2 mb-3">
+                <CCol md="6">
+                <FormControl>
+                  <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                     // value="Male"
+                        control={<Radio />}
                         id="male"
                         name="genderId"
-                        onChange={handleUserInput}
-                        checked={daUserData.genderId.toString() === '0'}
-                        value={0}
-                      />
-                      <label htmlFor="completed" className="login_label labelName m-0 text-white ">
-                        Male
-                      </label>
-                    </CCol>
-                    <CCol md={6}>
-                      <input
-                        type="radio"
+                      onChange={handleUserInput}
+                      checked={UserData.genderId.toString() === '0'}
+                      value={0}
+                      label="Male" />
+                    <FormControlLabel
+                     // value="Female"
+                        control={<Radio />}
                         id="female"
                         name="genderId"
-                        value={1}
-                        onChange={handleUserInput}
-                        checked={daUserData.genderId.toString() === '1'}
-                      />
-                      <label htmlFor="female" className="login_label labelName m-0 text-white ">
-                        FeMale
-                      </label>
-                    </CCol>
+                      value={1}
+                      onChange={handleUserInput}
+                      checked={UserData.genderId.toString() === '1'}
+                      label="Female" />
+                  </RadioGroup>
+                </FormControl>
+                </CCol>
                   </CRow>
                   <CFormCheck
                     name="isTermsAccepted"
-                    checked={daUserData.isTermsAccepted}
+                    checked={UserData.isTermsAccepted}
                     onChange={handleUserInput}
                     className="d-flex flex-row justify-content-center"
                     id="isTermsAccepted"

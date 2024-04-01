@@ -7,9 +7,7 @@ import useApi from '../useApi';
 
 export const useFetchUsers = () => {
   const user = useSelector((state) => state.user);
-
   const showToast = useShowToast();
-
   const { data, error, loading, postData } = useApi('/BlazorApi/users');
 
   const fetchUsers = async (role, filters) => {
@@ -42,7 +40,7 @@ export const useFetchUsers = () => {
     };
    // console.log(userBody,'body')
     const res = await postData(userBody);
-    // alert(JSON.stringify( res) );
+     console.log( res,'new user' );
     if (res.status) {
       return res.data;
     } else {

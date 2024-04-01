@@ -167,7 +167,7 @@ const NetworkInputs = (prop) => {
    // setIsLoading(createNetworkSettingLoading.current);
   }
   const onSubmit = async () => {
-   // alert(JSON.stringify(networkList));
+    alert(JSON.stringify(networkList));
     if (networkList.length > 0) {
      //alert(JSON.stringify(networkList));
       await createNetworkSetting('/Organization/addupdatenetworksettings', {
@@ -176,7 +176,7 @@ const NetworkInputs = (prop) => {
       });
 
     }
-    //console.log(createNetworkSettingRes);
+    console.log(createNetworkSettingRes);
     if (createNetworkSettingRes.current?.status === true) {
       dispatch(
         updateToast({
@@ -257,6 +257,8 @@ const NetworkInputs = (prop) => {
     <AppContainer>
     <DataGridHeader
       title="Message Template"
+        onClick={toggleStock}
+
       otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
       filterDisable={true}
     />
@@ -282,7 +284,8 @@ const NetworkInputs = (prop) => {
     </AppContainer>
     <AppContainer>
     <DataGridHeader
-      title="Integration Setting"
+        title="Integration Setting"
+        onClick={showIntegrationfn}
       otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
       filterDisable={true}
     />
@@ -512,7 +515,7 @@ const NetworkInputs = (prop) => {
 
           />
         </CCol>
-        <CCol className="mt-4" md={3}>
+        <CCol className="mg-topset" md={3}>
           <CFormCheck
             className=""
             id="autoReplyAllowed"
@@ -576,7 +579,7 @@ const NetworkInputs = (prop) => {
           />
         </CCol>
           
-        <CCol className="mt-4" md={3}>
+          <CCol className="mg-topset" md={3}>
           <CFormCheck
             className=""
             value={networkState.virtualAccount}
@@ -587,7 +590,7 @@ const NetworkInputs = (prop) => {
             defaultChecked
           />
           </CCol>
-          <CCol className="mt-4" md={3}>
+          <CCol className="mg-topset" md={3}>
             <CFormCheck
               className=""
               id="status"

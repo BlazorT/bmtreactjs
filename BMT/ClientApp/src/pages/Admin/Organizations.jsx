@@ -6,19 +6,12 @@ import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import moment from 'moment';
 import { cilChevronBottom } from '@coreui/icons';
 import globalutil from 'src/util/globalutil';
-
-import { getBusinessTypeById } from 'src/constants/buisnessType';
-import { getCountryById, getStateById } from 'src/constants/countries_and_states';
-
 import Loading from 'src/components/UI/Loading';
-
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-
 import { getDADspsListCols } from 'src/configs/ColumnsConfig/daDspsListCols';
 import { getDaDspsFiltersFields } from 'src/configs/FiltersConfig/daDspsFilterConfig';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import AppContainer from 'src/components/UI/AppContainer';
 
@@ -122,7 +115,8 @@ const OrgList = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Advance Search"
+                title="Advance Search"
+                onClick={toggleStock}
               otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
               filterDisable={true}
             />

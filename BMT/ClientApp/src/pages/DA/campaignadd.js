@@ -297,6 +297,7 @@ const campaignadd = () => {
             <AppContainer>
               <DataGridHeader
                 title="Basic Information"
+                onClick={toggleStock}
                 otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
                 filterDisable={true}
               />
@@ -338,6 +339,7 @@ const campaignadd = () => {
                     <AppContainer>
                       <DataGridHeader
                         title="Target Audience"
+                        onClick={toggleTargetAud}
                         otherControls={[{ icon: cilChevronBottom, fn: toggleTargetAud }]}
                         filterDisable={true}
                       />

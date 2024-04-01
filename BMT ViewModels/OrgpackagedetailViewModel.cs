@@ -26,7 +26,7 @@ public partial class OrgpackagedetailViewModel
     public string? Sender { get; set; }
 
     public int? UnitId { get; set; }
-
+    
     public int? VirtualAccount { get; set; }
 
     public string? Url { get; set; }

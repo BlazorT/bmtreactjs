@@ -71,13 +71,13 @@ const Users: React.FC = () => {
       picture: data.avatar ? data.avatar : 'Profile-pic.jpg',
       completeName: data.completeName,
       email: data.email,
-      contact: data.contact === '' ? '---' : data.contact,
+      contact: data.contact,
       role: getRoleById(data.roleId) === 0 ? '' : getRoleById(data.roleId),
       regDate: formatDate(data.createdAt),
       lastUpdatedAt: data.lastUpdatedAt,
       status: data.status,
     }));
-    console.log(mappedArray, 'users');
+   // console.log(mappedArray, 'users');
     setRows(mappedArray);
   };
 
@@ -108,6 +108,7 @@ const Users: React.FC = () => {
       <AppContainer>
         <DataGridHeader
           title="Advance Search"
+          onClick={toggleStock}
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}
         />
@@ -123,6 +124,7 @@ const Users: React.FC = () => {
       <AppContainer>
         <DataGridHeader
           title="BMT Users"
+          onClick={toggleLicence}
           addButton={pageRoles.canAdd === 1 ? 'User' : ''}
           addBtnClick={pageRoles.canAdd === 1 ? () => navigate('/UserRegister') : undefined}
           otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}

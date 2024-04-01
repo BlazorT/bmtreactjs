@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { CCol, CContainer, CRow } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
+import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
 import { useSelector } from 'react-redux';
 import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
@@ -25,17 +26,49 @@ const SingleDispatchment = () => {
   const [networkList,setNetworkList]=useState([])
   const [isLoading, setIsLoading] = useState(false);
   
-  useEffect(() => {
-    const T = []
-    globalutil.networks().map((tab, index) => T.push(tab.name))
-    setTabs(T)
-  },[])
   const handleSubmit = (e) => {
    // console.log(e);
     e.preventDefault();
   };
  
  
+  const {
+    response: GetNetworkRes,
+    loading: NetworkLoading,
+    error: createNetworkError,
+    fetchData: GetNetworks,
+  } = useFetch();
+  useEffect(() => {
+    getNetworksList()
+  }, [])
+  const getNetworksList = async () => {
+
+    await GetNetworks(
+      '/Admin/networks',
+      {
+        method: 'POST',
+        // body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+         console.log(res, 'networks');
+        if (res.status === true) {
+          const T=[]
+          res.data.map((tab, index) => T.push(tab.name))
+          setTabs(T)
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(NetworkLoading.current);
+      },
+    );
+  };
   const {
     response: GetOrgRes,
     loading: OrgLoading,
@@ -57,7 +90,7 @@ const SingleDispatchment = () => {
       cityId:1,
       status:1,
       // keyword: filters ? filters.keyword : '',
-      createdAt:  moment().utc().format('YYYY-MM-DD'),
+      createdAt: moment().subtract(1, 'year').utc().format(),
       lastUpdatedAt: moment().utc().format('YYYY-MM-DD'),
       createdBy: 0,
       lastUpdatedBy: 0,
@@ -71,7 +104,7 @@ const SingleDispatchment = () => {
     );
   };
   const orglist = GetOrgRes?.current?.data || [];
-  console.log(orglist, 'listt');
+  console.log(orglist, 'org listt');
   return (
     <AppContainer>
       <form
@@ -81,12 +114,13 @@ const SingleDispatchment = () => {
       >
       <CRow>
         <CCol className="" md={12}>
-          <CustomInput
+            <CustomSearch
             label="Organization"
             icon={cilUser}
             type="text"
-            value=""
+           // value={ }
             id="name"
+           // onChange={handleNetworkSetting}
             placeholder="Organization"
             name="name"
             data={orglist}
