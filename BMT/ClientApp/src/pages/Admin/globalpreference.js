@@ -78,24 +78,6 @@ const globalpreference = () => {
         onSubmit={handleSubmit}
         noValidate
       >
-      <CRow>
-        <CCol className="" md={12}>
-          <CustomInput
-            label="Organization"
-            icon={cilUser}
-            type="text"
-            id="keyword"
-            placeholder="organization"
-            name="keyword"
-            className="form-control item"
-            isRequired={false}
-            title="choose image for attachment "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-
-      </CRow>
-
       <FleetDashboardTabs
         title="Networks"
         fleetTabs={tabs}
@@ -103,7 +85,6 @@ const globalpreference = () => {
           handleActiveTab={setActiveTab}
       />
       
-     
             <CContainer fluid className="m-0 p-0 mt-1">
               {tabs.map((item, index) => <>
                 {activeTab == index && <NetworkInput key={index} header={item} networkId={index + 1} setNetworkList={setNetworkList} networkList={networkList} />}

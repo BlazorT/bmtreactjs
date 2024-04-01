@@ -120,7 +120,7 @@ const SingleDispatchment = () => {
             type="text"
            // value={ }
             id="name"
-           // onChange={handleNetworkSetting}
+            onChange={(e, name) => console.log({e,name})}
             placeholder="Organization"
             name="name"
             data={orglist}
