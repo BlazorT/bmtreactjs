@@ -34,12 +34,12 @@ const Logs = () => {
     applyFilters();
   }, []);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId.toString(),
+    dspid: user.dspId,
     keyword: '',
     businessEntityId: '',
     menuId: '',
@@ -73,7 +73,7 @@ const Logs = () => {
     const fetchBody = {
       id: 0,
       userId: 0,
-      dspid: user.dspId.toString(),
+      dspid: user.dspId,
       logDesc: '',
       menuId: 0,
       actionType: 0,
