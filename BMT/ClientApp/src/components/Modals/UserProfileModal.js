@@ -31,7 +31,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
       value: user.userInfo.userName,
     },
     {
-      label: 'Full name',
+      label: 'Full Name',
       value: user.userInfo.fullName,
     },
     {
@@ -39,7 +39,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
       value: user.userInfo.email,
     },
     {
-      label: 'Date of joining',
+      label: 'Date Of Joining',
       value: formatDate(user.userInfo.doj),
     },
     {
@@ -109,7 +109,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
           <CCol md={9} className="text-left align-self-center">
             <h4 className="profile-user-name">{user.userInfo.fullName}</h4>
             <p className="profile-user-email">{user.userInfo.email}</p>
-            <p className="profile-user-email">{user.userInfo.id}</p>
+            <p className="profile-user-email">{"0000"+user.userInfo.id}</p>
             <p className="profile-user-role">{user.userInfo.userRole}</p>
           </CCol>
         </CRow>

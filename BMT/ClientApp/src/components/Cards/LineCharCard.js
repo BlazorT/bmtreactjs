@@ -1,95 +1,43 @@
 import { CCard, CCardBody, CCol, CRow } from '@coreui/react';
-import { LineChart } from '@mui/x-charts';
-import React from 'react';
-import { CChart } from '@coreui/react-chartjs'
+import React, { useEffect, useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,Legend } from 'recharts';
 const LineCharCard = (prop) => {
-  const { attributesStatus2, attributesStatus3 } = prop;
-  const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const xLabels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'April',
-    'May',
-    'June',
-    'July',
-  ];
+ 
+  const data = [
+    { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
+    { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
+    { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
+    { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
+    { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
+    { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
+    { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
+  ]; const [hiddenLines, setHiddenLines] = useState([]);
+
+  const handleLegendClick = (entry) => {
+    const { dataKey } = entry;
+
+    if (hiddenLines.includes(dataKey)) {
+      setHiddenLines(hiddenLines.filter(line => line !== dataKey));
+    } else {
+      setHiddenLines([...hiddenLines, dataKey]);
+    }
+  };
   return (
     <CCard className="dashboard-card-body" textColor="white">
       <CCardBody>
         <CRow className="mt-2 pb-2">
-      
             <CCol className="mb-3 basic-drop-shadow" md={12}>
-              {/*<p className="DAdashboard-performance-title">{item.title}</p>*/}
-              {/*<p className="dashboard-light-text ">{item.status}</p>*/}
-              {/*<p className="dashboard-light-text ">{item.heading}</p>*/}
-              {/*<p className="dashboard-light-text ">{item.heading2}</p>*/}
-            <LineChart
-              width={1650}
-              height={600}
-              series={[
-                { data: pData, label: 'Notifications' },
-                { data: uData, label: 'Funds' },
-              ]}
-              xAxis={[{ scaleType: 'point', data: xLabels }]}
-            />
-            {/*<CChart*/}
-            {/*  type="line"*/}
-            {/*  data={{*/}
-            {/*    labels: ["January", "February", "March", "April", "May", "June", "July"],*/}
-            {/*    datasets: [*/}
-            {/*      {*/}
-            {/*        label: "Notifications",*/}
-            {/*        backgroundColor: "rgba(220, 220, 220, 0.2)",*/}
-            {/*        borderColor: "rgba(220, 220, 220, 1)",*/}
-            {/*        pointBackgroundColor: "rgba(220, 220, 220, 1)",*/}
-            {/*        pointBorderColor: "#fff",*/}
-            {/*        color:"#f7fafd",*/}
-            {/*        data: [40, 20, 12, 39, 10, 40, 39, 80, 40]*/}
-            {/*      },*/}
-            {/*      {*/}
-            {/*        label: "Funds",*/}
-            {/*        backgroundColor: "rgba(151, 187, 205, 0.2)",*/}
-            {/*        borderColor: "rgba(151, 187, 205, 1)",*/}
-            {/*        pointBackgroundColor: "rgba(151, 187, 205, 1)",*/}
-            {/*        pointBorderColor: "#fff",*/}
-            {/*        color: "#f7fafd",*/}
-            {/*        data: [50, 12, 28, 29, 7, 25, 12, 70, 60]*/}
-            {/*      },*/}
-            {/*    ],*/}
-            {/*  }}*/}
-            {/*  options={{*/}
-            {/*    plugins: {*/}
-            {/*      legend: {*/}
-            {/*        labels: {*/}
-            {/*          color: "rgba(151, 187, 205, 0.2)",*/}
-            {/*        }*/}
-            {/*      }*/}
-            {/*    },*/}
-            {/*    scales: {*/}
-            {/*      x: {*/}
-            {/*        grid: {*/}
-            {/*          color:"#f7fafd",*/}
-            {/*        },*/}
-            {/*        ticks: {*/}
-            {/*          color: "#f7fafd",*/}
-            {/*        },*/}
-            {/*      },*/}
-            {/*      y: {*/}
-            {/*        grid: {*/}
-            {/*          color: "#f7fafd",*/}
-            {/*        },*/}
-            {/*        ticks: {*/}
-            {/*          color: "#f7fafd",*/}
-            {/*        },*/}
-            {/*      },*/}
-            {/*    },*/}
-            {/*  }}*/}
-            {/*/>*/}
+              <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={data}>
+                <Legend wrapperStyle={{ color: '#ffffff' }} onClick={handleLegendClick} />
+                <XAxis dataKey="name" tick={{ fill: '#ffffff' }} />
+                <YAxis tick={{ fill: '#ffffff' }} />
+                <Line type="monotone" dataKey="uv" stroke="#8884d8" dot={{ fill: '#ffffff' }} name="Notifications" hide={hiddenLines.includes('uv')} />
+                <Line type="monotone" dataKey="pv" stroke="#82ca9d" dot={{ fill: '#ffffff' }} name="Funds" hide={hiddenLines.includes('pv')} />
+                <Tooltip contentStyle={{ backgroundColor: '#0d3d6f', border: 'none', borderRadius: '8px', color:'#ffffff' }} />
+              </LineChart>
+              </ResponsiveContainer>
             </CCol>
-        
-         
         </CRow>
       </CCardBody>
     </CCard>

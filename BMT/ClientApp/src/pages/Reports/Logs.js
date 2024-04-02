@@ -251,7 +251,7 @@ const Logs = () => {
                     icon={cilFlagAlt}
                     id="menuId"
                     disableOption="Select Business Entity"
-                    options={globalutil.businessentities()}
+                   // options={globalutil.businessentities()}
                     className="form-control item form-select"
                     value={filters.menuId}
                     name="menuId"
