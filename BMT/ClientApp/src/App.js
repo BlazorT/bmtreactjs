@@ -37,7 +37,7 @@ const App = () => {
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route exact path="/addorganization" name="addorganization" element={<addorganization />} />
+           {/* <Route exact path="/addorganization" name="addorganization" element={<addorganization />} />*/}
             <Route exact path="/AddDA" name="AddDA" element={<AddDA />} />
             <Route
               exact

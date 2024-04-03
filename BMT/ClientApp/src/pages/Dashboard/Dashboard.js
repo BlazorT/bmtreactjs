@@ -133,7 +133,7 @@ const Dashboard = (prop) => {
   return (
       <>
    
-        <div className="">
+        
           <div className="p-w-md m-t-sm">
             <div className="row white">
               <div className="col-sm-4">
@@ -141,12 +141,12 @@ const Dashboard = (prop) => {
                   <div className="col-6">
                     <h4 className="m-b-xs">Notifications (Month)</h4>
                     <h1 className="no-margins" id="lblPlanCurrentMonth"></h1>
-                    <div className="font-bold text-navy" ><span id="lblPlanCurrentMonthPerc">25% </span>&nbsp;<i className="fa fa-bolt"></i></div>
+                    <div className="font-bold text-navy" ><span id="lblPlanCurrentMonthPerc">25 % </span>&nbsp;<i className="fa fa-bolt"></i></div>
                   </div>
                   <div className="col-6">
                     <h4 className="m-b-xs">Funds (Month)</h4>
                     <h1 className="no-margins" id="lblFundsCurrentMonth"></h1>
-                    <div className="font-bold text-navy"><span id="lblFundsCurrentMonthPerc">20% </span>&nbsp;<i className="fa fa-bolt"></i></div>
+                    <div className="font-bold text-navy"><span id="lblFundsCurrentMonthPerc">20 % </span>&nbsp;<i className="fa fa-bolt"></i></div>
                   </div>
                 </div>
               </div>
@@ -170,12 +170,12 @@ const Dashboard = (prop) => {
                   <div className="col-6">
                     <h4 className="m-b-xs">Notifications (Year)</h4>
                     <h1 className="no-margins" id="lblPlanCurrentYear"></h1>
-                    <div className="font-bold text-navy">100% <i className="fa fa-bolt"></i></div>
+                    <div className="font-bold text-navy">100 % <i className="fa fa-bolt"></i></div>
                   </div>
                   <div className="col-6">
                     <h4 className="m-b-xs">Funds (Year)</h4>
                     <h1 className="no-margins" id="lblFundsCurrentYear"></h1>
-                    <div className="font-bold text-navy">100% <i className="fa fa-bolt"></i></div>
+                    <div className="font-bold text-navy">100 % <i className="fa fa-bolt"></i></div>
                   </div>
                 </div>
               </div>
@@ -192,7 +192,7 @@ const Dashboard = (prop) => {
             </div>
           </div>
     
-      </div>
+     
       <AppContainer>
       <DataGridHeader
           title="Last 12 Month Funds Data"

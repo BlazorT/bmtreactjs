@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-
+import { CListGroup, CListGroupItem } from '@coreui/react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 import { CContainer, CHeader, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
 import { cilBell, cilEnvelopeOpen, cilAccountLogout, cilList, cilMenu } from '@coreui/icons';
-
+import { CPopover } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import useFetch from 'src/hooks/useFetch';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
@@ -97,7 +97,84 @@ const AppHeader = () => {
       }),
     );
   };
+  const popoverContent = (
+    <div>
+      <CListGroup>
+        <CListGroupItem as="a" href="#">
+          <div className="row d-flex w-100 justify-content-between">
+            <div className="col-md-3">
+              <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
+            </div>
 
+            <div className="col-md-9">
+              <div className="row">
+              <div className="col-md-8">
+              <h5 className="mb-1">Ahmad Raza</h5>
+                </div>
+                <div className="col-md-4">
+                  <small className="text-time">3 days ago</small>
+
+              </div>
+              </div>
+              <p className="mb-1">
+                Donec id elit non mi porta gravida at eget metus.
+              </p>
+            </div>
+          </div>
+         
+
+        </CListGroupItem>
+        <CListGroupItem as="a" href="#">
+          <div className="row d-flex w-100 justify-content-between">
+            <div className="col-md-3">
+              <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
+            </div>
+
+            <div className="col-md-9">
+              <div className="row">
+                <div className="col-md-8">
+                  <h5 className="mb-1">Almas Arshad</h5>
+                </div>
+                <div className="col-md-4">
+                  <small className="text-time">3 days ago</small>
+
+                </div>
+              </div>
+              <p className="mb-1">
+                Donec id elit non mi porta gravida at eget metus.
+              </p>
+            </div>
+          </div>
+
+
+        </CListGroupItem>
+        <CListGroupItem as="a" href="#">
+          <div className="row d-flex w-100 justify-content-between">
+            <div className="col-md-3">
+              <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
+            </div>
+
+            <div className="col-md-9">
+              <div className="row">
+                <div className="col-md-8">
+                  <h5 className="mb-1">Abu Bakar</h5>
+                </div>
+                <div className="col-md-4">
+                  <small className="text-time">3 days ago</small>
+
+                </div>
+              </div>
+              <p className="mb-1">
+                Donec id elit non mi porta gravida at eget metus.
+              </p>
+            </div>
+          </div>
+
+
+        </CListGroupItem>
+      </CListGroup>
+    </div>
+  );
   return (
     <CHeader position="sticky" className="bg-body-color">
       <CContainer fluid>
@@ -107,7 +184,14 @@ const AppHeader = () => {
         <CHeaderNav>
           <CNavItem>
             <CNavLink>
-              <CIcon className="labelName" icon={cilBell} size="lg" />
+              <CPopover
+                className="customPopover"
+                title="Notifications"
+                content={popoverContent }
+                placement="bottom"
+              >
+                <CIcon className="labelName" icon={cilBell} size="lg" />
+              </CPopover>
             </CNavLink>
           </CNavItem>
           <CNavItem>

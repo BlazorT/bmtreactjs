@@ -3,9 +3,23 @@
   font-family: 'permanentmarker-regular';
   src: url('../../src/fonts/PermanentMarker-Regular.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'Montserrat-Medium';
+  src: url('../../src/fonts/Montserrat-Medium.ttf') format('truetype');
+}
 .signin-text-style {
   font-family: 'permanentmarker-regular';
   font-size: 1.1875em;
+}
+.text-navy {
+  font-family: 'Montserrat-Medium';
+  font-weight:500;
+  font-size:2.2em;
+}
+text[Attributes Style] {
+  stroke: none;
+  text-anchor: end;
+  fill: white!important;
 }
 .Login-form {
   text-align: center;
@@ -2585,11 +2599,11 @@ input[type='date']::-webkit-calendar-picker-indicator {
   html:not([dir='rtl']) .ms-3 {
     margin-left: 0rem !important;
   }
-
+  
   html:not([dir='rtl']) .header-nav {
     padding-left: 0;
   }
-
+ 
   .progress,
   .progress-stacked {
     margin-bottom: 1rem;
@@ -3478,4 +3492,34 @@ fieldset.legend {
 }
 .mg-topset{
     margin-top:2.5em;
+}
+.customPopover {
+  min-width: 33em !important;
+  background-color: rgb(12 61 111) !important;
+  color:white;
+}
+.popover-body{
+    color:white!important;
+}
+.noti-profile-img {
+  width: 6em;
+  height:6em;
+  border-radius: 50%;
+}
+.list-group-item {
+  background-color: #0e4979 !important;
+  color: white;
+  border: none;
+  border-bottom: 1px solid #ffffff4f;
+  min-width: 30em;
+}
+.text-body-secondary{
+    color:white!important;
+}
+.popover-header {
+  background-color: #2957a4!important;
+}
+.text-time{
+    color:white!important;
+    float:right;
 }
