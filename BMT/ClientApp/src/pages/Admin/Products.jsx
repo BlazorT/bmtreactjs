@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import InventoryProductModal from 'src/components/Modals/InventoryProductModal';
+//import InventoryProductModal from 'src/components/Modals/InventoryProductModal';
 
 import AppContainer from 'src/components/UI/AppContainer';
-import Loading from 'src/components/UI/Loading';
+//import Loading from 'src/components/UI/Loading';
 import { getProductsCols } from 'src/configs/ColumnsConfig/productsCols';
-import { countries } from 'src/constants/countries';
+//import { countries } from 'src/constants/countries';
 import { useFetchProducts } from 'src/hooks/api/useFetchProducts';
-import globalutil from 'src/util/globalutil';
+//import globalutil from 'src/util/globalutil';
 
 const Products = () => {
   useEffect(() => {

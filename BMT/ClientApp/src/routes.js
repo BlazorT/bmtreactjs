@@ -1,10 +1,10 @@
 import React from 'react';
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
-const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
+//const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
 const addorganization = React.lazy(() => import('./pages/DA/addorganization '));
 const AddDA = React.lazy(() => import('./pages/DA/AddDA'));
-const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
+//const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
 const Products = React.lazy(() => import('./pages/Admin/Products'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
@@ -20,8 +20,8 @@ const organizationsusers = React.lazy(() => import('./pages/DA/organizationsuser
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
-const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
-const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
+//const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
+//const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
 const DSPSRoles = React.lazy(() => import('./pages/Admin/DSPSRoles'));
 const WorkFlowTask = React.lazy(() => import('./pages/Workflow/WorkFlowTask'));
 const ServiceIntegrated = React.lazy(() => import('./pages/Fleet/FleetServiceIntegrated'));
@@ -32,9 +32,9 @@ const UserRegister = React.lazy(() => import('./pages/Admin/UserRegister'));
 const GlobalPrefrences = React.lazy(() => import('./pages/Admin/GlobalPrefrences'));
 const Logs = React.lazy(() => import('./pages/Reports/Logs'));
 const UserReport = React.lazy(() => import('./pages/Reports/UserReport'));
-const DailyPerformanceReport = React.lazy(() => import('./pages/Reports/DailyPerformanceReport'));
-const DispatchmentReport = React.lazy(() => import('./pages/Reports/DispatchmentReport'));
-const rosterReport = React.lazy(() => import('./pages/Reports/RosterReport'));
+//const DailyPerformanceReport = React.lazy(() => import('./pages/Reports/DailyPerformanceReport'));
+//const DispatchmentReport = React.lazy(() => import('./pages/Reports/DispatchmentReport'));
+//const rosterReport = React.lazy(() => import('./pages/Reports/RosterReport'));
 const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
@@ -102,7 +102,7 @@ export const rolesRoutes = [
   { path: '/Organizations', name: 'Organizations', element: Organizations },
   { path: '/addorganization ', name: 'addorganization ', element: addorganization },
   { path: '/AddDA', name: 'AddDA', element: AddDA },
-  { path: '/DADashboard', name: 'DADashboard', element: DADashboard },
+  //{ path: '/DADashboard', name: 'DADashboard', element: DADashboard },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
   { path: '/DspsList', name: 'DspsList', element: DADspsList },
   { path: '/WorkFlow', name: 'WorkFlow', element: WorkFlow },
@@ -115,19 +115,19 @@ export const rolesRoutes = [
   // { path: '/Expression', name: 'Expression', element: Expression },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
-  { path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
-  {
-    path: '/DailyPerformanceReport',
-    name: 'DailyPerformanceReport',
-    element: DailyPerformanceReport,
-  },
+  //{ path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
+  //{
+  //  path: '/DailyPerformanceReport',
+  //  name: 'DailyPerformanceReport',
+  //  element: DailyPerformanceReport,
+  //},
   { path: '/DAReport', name: 'UserReport', element: DAReport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
   { path: '/waves', name: 'waves', element: waves },
-  { path: '/rosterReport', name: 'rosterReport', element: rosterReport },
-  { path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
-  { path: '/Schedule', name: 'Schedule', element: DailyRoster },
+  //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
+  //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
+  //{ path: '/Schedule', name: 'Schedule', element: DailyRoster },
   { path: '/DSPSRoles', name: 'DSPSRoles', element: DSPSRoles },
   { path: '/WorkFlowTask', name: 'WorkFlowTask', element: WorkFlowTask },
   { path: '/WorkFlowSubTask', name: 'WorkFlowSubTask', element: WorkFlowSubTask },
@@ -139,7 +139,7 @@ export const rolesRoutes = [
 
 export const routes = [
   { path: '/home', exact: true, name: 'Home' },
-  { path: '/fleet-dashboard', name: 'FleetDashboard', element: FleetDashboard },
+  //{ path: '/fleet-dashboard', name: 'FleetDashboard', element: FleetDashboard },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/dspRegister', name: 'DspRegister', element: DADspRegister },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
@@ -148,14 +148,14 @@ export const routes = [
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
   { path: '/DAReport', name: 'UserReport', element: DAReport },
-  {
-    path: '/DailyPerformanceReport',
-    name: 'DailyPerformanceReport',
-    element: DailyPerformanceReport,
-  },
-  { path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
-  { path: '/rosterReport', name: 'rosterReport', element: rosterReport },
-  { path: '/DailyRoster', name: 'DailyRoaster', element: DailyRoster },
+  //{
+  //  path: '/DailyPerformanceReport',
+  //  name: 'DailyPerformanceReport',
+  //  element: DailyPerformanceReport,
+  //},
+  //{ path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
+  //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
+  //{ path: '/DailyRoster', name: 'DailyRoaster', element: DailyRoster },
   { path: '/salerecord', name: 'Sales', element: Salerecord },
   { path: '/new-sale', name: 'New Sale', element: Newsale },
   { path: '/payment-Detail', name: 'Payment Detail', element: PaymentDetail },

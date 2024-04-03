@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { CCollapse } from '@coreui/react';
 
-import FleetDashboardTabs from '../FleetComponents/FleetDashboardTabs';
+import BlazorTabs from '../CustomComponents/BlazorTabs';
 import MatricDeepTabs from './MatricDeepTabs';
 
 const SafetyMatricTab = (prop) => {
   const [safetyActiveTab, setSafetyActiveTab] = useState(0);
   const { isCollapse } = prop;
   const Safetytabs = [
-    'OverView',
-    'FICO',
-    'Distraction',
-    'Following Distance',
-    'Sign/Signal Violations',
+    { id: 1, name: 'OverView' },
+    { id: 2, name: 'FICO' },
+    { id: 3, name: 'Distraction' },
+    { id: 4, name: 'Following Distance' },
+    { id: 5, name: 'Sign/Signal Violations' },
   ];
   return (
     <CCollapse visible={isCollapse} className="mt-3">
       <div className="mb-3">
-        <FleetDashboardTabs
+        <BlazorTabs
           title="DA"
-          fleetTabs={Safetytabs}
+          tab={Safetytabs}
           activeTab={safetyActiveTab}
           handleActiveTab={setSafetyActiveTab}
         />

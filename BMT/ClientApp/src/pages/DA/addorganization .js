@@ -13,10 +13,10 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 
-import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
+//import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
 
 import { formValidator } from 'src/helpers/formValidator';
-import { generateRandomNumbers, generateRandomPassword } from 'src/helpers/generatePassowrd';
+//import { generateRandomNumbers, generateRandomPassword } from 'src/helpers/generatePassowrd';
 import {
   getDaAppllyBirthInputs,
   getDaAppllyIDInputs,

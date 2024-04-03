@@ -3,7 +3,7 @@ import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+//import { GoogleMap, LoadScript } from '@react-google-maps/api';
 const GoogleMapModel = (prop) => {
   const dispatch = useDispatch();
   const { isOpen, toggle } = prop;
@@ -49,16 +49,16 @@ const GoogleMapModel = (prop) => {
       <ModalHeader>Area</ModalHeader>
       <ModalBody className="paddingAllSide">
         <div className="login-form" id="printTermsOfUse">
-          <LoadScript
-            googleMapsApiKey="YOUR_API_KEY"
-          >
-            <GoogleMap
-              mapContainerStyle={mapStyles}
-              zoom={8}
-              center={defaultCenter}
-            >
-            </GoogleMap>
-          </LoadScript>
+          {/*<LoadScript*/}
+          {/*  googleMapsApiKey="YOUR_API_KEY"*/}
+          {/*>*/}
+          {/*  <GoogleMap*/}
+          {/*    mapContainerStyle={mapStyles}*/}
+          {/*    zoom={8}*/}
+          {/*    center={defaultCenter}*/}
+          {/*  >*/}
+          {/*  </GoogleMap>*/}
+          {/*</LoadScript>*/}
           
 
         </div>

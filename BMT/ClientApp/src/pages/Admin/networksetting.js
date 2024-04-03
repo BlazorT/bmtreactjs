@@ -5,10 +5,12 @@ import useFetch from 'src/hooks/useFetch';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
 import { useSelector } from 'react-redux';
-import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+//import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
+//import CustomInput from 'src/components/InputsComponent/CustomInput';
 //import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import NetworkInput from 'src/components/Component/NetworkInputs';
+//import NetworkInput from 'src/components/Component/NetworkInputs';
+import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs';
 import moment from 'moment';
 import {
   cilUser,
@@ -16,11 +18,11 @@ import {
 import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import globalutil from '../../util/globalutil';
+//import globalutil from '../../util/globalutil';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
 
 const SingleDispatchment = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const [tabs,setTabs] =useState( []);
   const dispatch = useDispatch();
   const [networkList,setNetworkList]=useState([])
@@ -50,10 +52,11 @@ const SingleDispatchment = () => {
         // body: JSON.stringify(fetchBody),
       },
       (res) => {
-         console.log(res, 'networks');
+        // console.log(res, 'networks');
         if (res.status === true) {
           const T=[]
-          res.data.map((tab, index) => T.push(tab.name))
+          res.data.map((tab, index) => T.push({ id: tab.id, name: tab.name }));
+          //alert(JSON.stringify(tabs));
           setTabs(T)
         } else {
           dispatch(
@@ -98,13 +101,13 @@ const SingleDispatchment = () => {
     await GetOrg(
       '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(orgBody), },
       (res) => {
-        console.log(res, 'orgs');
+       // console.log(res, 'orgs');
         setIsLoading(OrgLoading.current);
       },
     );
   };
   const orglist = GetOrgRes?.current?.data || [];
-  console.log(orglist, 'org listt');
+  //console.log(orglist, 'org listt');
   return (
     <AppContainer>
       <form
@@ -132,21 +135,19 @@ const SingleDispatchment = () => {
         </CCol>
 
       </CRow>
-
-      <FleetDashboardTabs
+        <BlazorTabs
         title="Networks"
-        fleetTabs={tabs}
+        tabs={tabs}
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
             <CContainer fluid className="m-0 p-0 mt-1">
-              {tabs.map((item, index) => <>
-                {activeTab == index && <NetworkInput key={index} header={item} networkId={index + 1} setNetworkList={setNetworkList} networkList={networkList} />}
+              {tabs.map((tab, index) => <>
+                {activeTab == tab.id && <BlazorNetworkInput key={tab.id} header={tab.name} networkId={tab.id} setNetworkList={setNetworkList} networkList={networkList} />}
               </>)}
         </CContainer>
       </form>
     </AppContainer>
   );
 };
-
 export default SingleDispatchment;

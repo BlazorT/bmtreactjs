@@ -25,8 +25,8 @@ import utc from 'dayjs/plugin/utc';
 import Loading from 'src/components/UI/Loading';
 import { getUserReportPdf } from 'src/helpers/getUserReportPdf';
 
-import FleetInspectionTab from 'src/components/FleetComponents/FleetInspectionTab';
-import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
+//import FleetInspectionTab from 'src/components/FleetComponents/FleetInspectionTab';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 
 const UserReport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
@@ -47,8 +47,8 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   useEffect(() => {
     applyFilters();
   }, []);
-  const [activeTab, setActiveTab] = useState(0);
-  const tabs = ['Users', 'Summary'];
+  const [activeTab, setActiveTab] = useState(1);
+  const tabs = [{ id: 1, name: 'Users' }, { id: 2, name: 'Summary' }];
   const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
 
@@ -56,7 +56,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   const initialFilter = {
     orgId: user.orgId,
     keyword: '',
-    status: '0',
+    status:0,
     createdAt: dayjs().utc().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
@@ -107,7 +107,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       //logTime: moment().utc().startOf('year').format(),
     };
 
-    console.log(JSON.stringify(fetchBody));
+    //console.log(JSON.stringify(fetchBody));
     await GetLog(
       '/Report/dausersreportdata',
       {
@@ -115,7 +115,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res,'user responce');
+        //console.log(res,'user responce');
         if (res.status === true) {
           const mappedArray = res.data.map((data) => ({
             id: data.id,
@@ -243,7 +243,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
           contact: 'Contact',
           email: 'Email',
           status: 'status',
-          createdAt: 'date of joining'
+          createdAt: 'Date Of Joining'
         }
 
       }
@@ -265,7 +265,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       return [rowData];
 
     });
-    console.log({ grouping });
+   // console.log({ grouping });
     return grouping;
   };
 
@@ -291,14 +291,14 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   }
   return (
     <>
-      <FleetDashboardTabs
-        title="DA"
-        fleetTabs={tabs}
+      <BlazorTabs
+        title="Show Room Users"
+        tabs={tabs}
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
-      <CContainer fluid className="mt-4">
-        {tabs[activeTab] === 'Users' && (
+      <CContainer fluid className="mt-4">       
+        {tabs.find(s => s.id === 1).id === activeTab && (
           <div className="">
             <div className="bg_Div mb-2 d-flex flex-column">
               <div className="dashboard-stock-header dashboard-drop">
@@ -426,7 +426,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             </div>
           </div>
         )}
-        {tabs[activeTab] === 'Summary' && <h1>User Summary</h1>}
+        {tabs.find(s => s.id === 2).id === activeTab && <h1>User Summary</h1>}
       </CContainer>
     </>
   );

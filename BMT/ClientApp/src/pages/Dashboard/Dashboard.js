@@ -7,18 +7,18 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 
 
-import DashBoardCard from '../../components/Cards/DashBoardCard';
-import CollapseHeader from 'src/components/DADashboardComponents/CollapseHeader';
+//import DashBoardCard from '../../components/Cards/DashBoardCard';
+//import CollapseHeader from 'src/components/DADashboardComponents/CollapseHeader';
 import { useSelector } from 'react-redux';
 import AppContainer from 'src/components/UI/AppContainer';
 
 const Dashboard = (prop) => {
-  const [operationsVisible, setOperationVisible] = useState(true);
-  const [peopleVisible, setPeopleVisible] = useState(true);
+  //const [operationsVisible, setOperationVisible] = useState(true);
+  //const [peopleVisible, setPeopleVisible] = useState(true);
   const [showFilters, setshowFilters] = useState(false);
 
-  const user = useSelector((state) => state.user);
-  const { title, attributesStatus2, attributesStatus3 } = prop;
+ // const user = useSelector((state) => state.user);
+  //const { title, attributesStatus2, attributesStatus3 } = prop;
   const [vehDisprows, setVehDispRow] = useState([
     {
       id: 1,

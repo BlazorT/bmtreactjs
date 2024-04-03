@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CCol, CRow } from '@coreui/react';
-import { CFormCheck } from '@coreui/react';
+import { CCol, CRow, CFormCheck } from '@coreui/react';
+//import { CFormCheck } from '@coreui/react';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
@@ -17,7 +17,7 @@ import { cilChevronBottom } from '@coreui/icons';
 
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
-import Loading from 'src/components/UI/Loading';
+//import Loading from 'src/components/UI/Loading';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import Form from 'src/components/UI/Form';
@@ -28,7 +28,7 @@ import useFetch from 'src/hooks/useFetch';
 
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
-import { setUserData } from 'src/redux/user/userSlice';
+//import { setUserData } from 'src/redux/user/userSlice';
 import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
@@ -38,7 +38,7 @@ import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
-import Spinner from 'src/components/UI/Spinner';
+//import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 const UserRegister = () => {

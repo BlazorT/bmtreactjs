@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { CCollapse } from '@coreui/react';
-
-import FleetDashboardTabs from '../FleetComponents/FleetDashboardTabs';
+import BlazorTabs from '../CustomComponents/BlazorTabs';
 import MatricDeepTabs from './MatricDeepTabs';
 
 const QualityMatricTab = (prop) => {
   const [qualityActiveTab, setqualityActiveTab] = useState(0);
   const { isCollapse } = prop;
   const Qualitytabs = [
-    'OverView',
-    'Delivery Completion Rate',
-    'Delivery Success Behaviours',
-    'Photo On Delivery',
-    'Customer Delivery Feedback',
+    { id: 1, name: 'OverView' },
+    { id: 2, name: 'Delivery Completion Rate' },
+    { id: 3, name: 'Delivery Success Behaviours' },
+    { id: 4, name: 'Photo On Delivery' },
+    { id: 5, name: 'Customer Delivery Feedback' },
   ];
   return (
     <CCollapse visible={isCollapse} className="mt-3">
       <div className="mb-3">
-        <FleetDashboardTabs
+        <BlazorTabs
           title="DA"
-          fleetTabs={Qualitytabs}
+          tabs={Qualitytabs}
           activeTab={qualityActiveTab}
           handleActiveTab={setqualityActiveTab}
         />

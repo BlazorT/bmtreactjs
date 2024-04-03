@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-
 import { CNavItem, CNav, CNavLink, CContainer, CRow, CCol } from '@coreui/react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const BlazorTabs = (prop) => {
-  const { title, Tabs, handleActiveTab, activeTab, onAddVehicle } = prop;
+  const { title, tabs, handleActiveTab, activeTab, onAddVehicle } = prop;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  //alert("Blazor Tabs " + JSON.stringify(tabs));
   const handleTab = (i) => {
+    //alert(i);
     handleActiveTab(i);
     setAnchorEl(null);
   };
@@ -43,20 +43,20 @@ const BlazorTabs = (prop) => {
               open={open}
               onClose={handleClose}
             >
-              {Tabs.map((option, index) => (
+              {tabs?.map((tab, index) => (
                 <MenuItem
-                  key={index}
-                  selected={activeTab === index}
-                  onClick={() => handleTab(index)}
+                  key={tab.id}
+                  selected={activeTab === tab.id}
+                  onClick={() => handleTab(tab.id)}
                 >
-                  {option}
+                  {tab.name}
                 </MenuItem>
               ))}
             </Menu>
           </div>
           <CNav className="dashboard-links">
-            {Tabs?.map((tab, index) => (
-              <CNavItem key={index}>
+            {tabs?.map((tab, index) => (
+              <CNavItem key={tab.id}>
                 <CNavLink
                   onClick={() => handleTab(tab.id)}
                   active={activeTab === tab.id}

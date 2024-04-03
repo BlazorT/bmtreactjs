@@ -94,17 +94,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTab.js" />
+    <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTabs.js" />
     <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />
     <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />
     <None Remove="ClientApp\src\pages\Admin\addorganization .js" />
     <None Remove="ClientApp\src\pages\Admin\DSPSRoles.js" />
-    <None Remove="ClientApp\src\pages\Dashboard\DADashboard.js" />
+    <None Remove="ClientApp\src\pages\Dashboard\FleetDashboard.js" />
     <None Remove="ClientApp\src\pages\DA\DADspRegister.js" />
+    <None Remove="ClientApp\src\pages\Fleet\FleetServiceIntegrated.js" />
     <None Remove="ClientApp\src\pages\Inventory\InventoryManagement.js" />
     <None Remove="ClientApp\src\pages\Reports\DailyPerformanceReport.js" />
     <None Remove="ClientApp\src\pages\Reports\DispatchmentReport.js" />
-    <None Remove="ClientApp\src\pages\Reports\RosterReport.js" />
-    <None Remove="ClientApp\src\pages\Reports\Stockrecord.jsx" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowFieldMapping.js" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowList.js" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowSubTask.js" />
@@ -125,6 +126,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\pages\Fleet\" />
     <Folder Include="ClientApp\src\views\DSP\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="ServiceAgent\Authentication\" />
