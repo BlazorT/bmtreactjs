@@ -4,17 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import moment from 'moment';
 import useFetch from 'src/hooks/useFetch';
-
 import { CFormCheck } from '@coreui/react';
 import { cilChevronBottom } from '@coreui/icons';
-
 import { updateToast } from 'src/redux/toast/toastSlice';
-
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-
 //import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
-
 import { formValidator } from 'src/helpers/formValidator';
 //import { generateRandomNumbers, generateRandomPassword } from 'src/helpers/generatePassowrd';
 import {
@@ -26,7 +21,7 @@ import {
   getInitialDaIdentificationData,
 } from 'src/configs/InputConfig/addOrgsConfig';
 import validateEmail from 'src/helpers/validateEmail';
-import Loading from 'src/components/UI/Loading';
+//import Loading from 'src/components/UI/Loading';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
 import Form from 'src/components/UI/Form';
@@ -35,11 +30,11 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
-import useApi from 'src/hooks/useApi';
-
+//import useApi from 'src/hooks/useApi';
+//alert('ORG Called')
 const organizationadd = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'BMT Subscription',
+    (item) => (item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
   );
   const user = useSelector((state) => state.user);
 
@@ -50,7 +45,7 @@ const organizationadd = () => {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: `You dont have a privilege to add a DA, please contact admin for access`,
+          toastMessage: `You dont have a privilege of setting up of organization, please contact admin for access`,
           toastVariant: 'warning',
         }),
       );

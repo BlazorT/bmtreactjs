@@ -97,8 +97,7 @@
     <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTab.js" />
     <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTabs.js" />
     <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />
-    <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />
-    <None Remove="ClientApp\src\pages\Admin\addorganization .js" />
+    <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />    
     <None Remove="ClientApp\src\pages\Admin\DSPSRoles.js" />
     <None Remove="ClientApp\src\pages\Dashboard\FleetDashboard.js" />
     <None Remove="ClientApp\src\pages\DA\DADspRegister.js" />

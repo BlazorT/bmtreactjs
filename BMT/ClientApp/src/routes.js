@@ -3,19 +3,19 @@ import React from 'react';
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 //const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
 const organizationadd = React.lazy(() => import('./pages/DA/organizationadd'));
-const AddDA = React.lazy(() => import('./pages/DA/AddDA'));
+/*const AddDA = React.lazy(() => import('./pages/DA/AddDA'));*/
 //const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
-const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
+//const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
 const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
-const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
-const WorkFlow = React.lazy(() => import('./pages/Workflow/WorkFlowList'));
+//const DADspsList = React.lazy(() => import('./pages/DA/DADspsList'));
+//const WorkFlow = React.lazy(() => import('./pages/Workflow/WorkFlowList'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference'));
-const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
+//const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
@@ -23,11 +23,11 @@ const waves = React.lazy(() => import('./pages/DA/Wave'));
 //const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
 //const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
 const DSPSRoles = React.lazy(() => import('./pages/Admin/DSPSRoles'));
-const WorkFlowTask = React.lazy(() => import('./pages/Workflow/WorkFlowTask'));
-const ServiceIntegrated = React.lazy(() => import('./pages/Fleet/FleetServiceIntegrated'));
-const InventoryManagement = React.lazy(() => import('./pages/Inventory/InventoryManagement'));
-const WorkFlowSubTask = React.lazy(() => import('./pages/Workflow/WorkFlowSubTask'));
-const WorkFlowFieldMapping = React.lazy(() => import('./pages/Workflow/WorkFlowFieldMapping'));
+//const WorkFlowTask = React.lazy(() => import('./pages/Workflow/WorkFlowTask'));
+//const ServiceIntegrated = React.lazy(() => import('./pages/Fleet/FleetServiceIntegrated'));
+//const InventoryManagement = React.lazy(() => import('./pages/Inventory/InventoryManagement'));
+//const WorkFlowSubTask = React.lazy(() => import('./pages/Workflow/WorkFlowSubTask'));
+//const WorkFlowFieldMapping = React.lazy(() => import('./pages/Workflow/WorkFlowFieldMapping'));
 const UserRegister = React.lazy(() => import('./pages/Admin/UserRegister'));
 const GlobalPrefrences = React.lazy(() => import('./pages/Admin/GlobalPrefrences'));
 const Logs = React.lazy(() => import('./pages/Reports/Logs'));
@@ -35,7 +35,7 @@ const UserReport = React.lazy(() => import('./pages/Reports/UserReport'));
 //const DailyPerformanceReport = React.lazy(() => import('./pages/Reports/DailyPerformanceReport'));
 //const DispatchmentReport = React.lazy(() => import('./pages/Reports/DispatchmentReport'));
 //const rosterReport = React.lazy(() => import('./pages/Reports/RosterReport'));
-const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
+//const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
@@ -45,12 +45,12 @@ const Typography = React.lazy(() => import('./views/theme/typography/Typography'
 
 // Base
 const Print = React.lazy(() => import('./components/ModalWindow/PrintInvoice'));
-const PaymentDetail = React.lazy(() => import('./views/payments/paymentDetail'));
-const PaymendAdd = React.lazy(() => import('./views/payments/paymentAdd'));
-const PlaceOrder = React.lazy(() => import('./views/salerecord/PlaceOrder'));
-const Salerecord = React.lazy(() => import('./views/salerecord/SaleRecord'));
-const Newsale = React.lazy(() => import('./views/newsale/newsale'));
-const StockRecord = React.lazy(() => import('./pages/Reports/Stockrecord'));
+/*const PaymentDetail = React.lazy(() => import('./views/payments/paymentDetail'));*/
+/*const PaymendAdd = React.lazy(() => import('./views/payments/paymentAdd'));*/
+//const PlaceOrder = React.lazy(() => import('./views/salerecord/PlaceOrder'));
+/*const Salerecord = React.lazy(() => import('./views/salerecord/SaleRecord'));*/
+//const Newsale = React.lazy(() => import('./views/newsale/newsale'));
+//const StockRecord = React.lazy(() => import('./pages/Reports/Stockrecord'));
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'));
 const Breadcrumbs = React.lazy(() => import('./views/base/breadcrumbs/Breadcrumbs'));
 const Cards = React.lazy(() => import('./views/base/cards/Cards'));
@@ -100,16 +100,16 @@ export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
-  { path: '/organizationadd ', name: 'organizationadd  ', element: organizationadd },
-  { path: '/AddDA', name: 'AddDA', element: AddDA },
+  { path: '/organizationadd', name: 'organizationadd', element: organizationadd },
+  //{ path: '/AddDA', name: 'AddDA', element: AddDA },
   //{ path: '/DADashboard', name: 'DADashboard', element: DADashboard },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
-  { path: '/DspsList', name: 'DspsList', element: DADspsList },
-  { path: '/WorkFlow', name: 'WorkFlow', element: WorkFlow },
+  //{ path: '/DspsList', name: 'DspsList', element: DADspsList },
+ // { path: '/WorkFlow', name: 'WorkFlow', element: WorkFlow },
   { path: '/Notification', name: 'Notification', element: Notification },
   { path: '/Packages', name: 'Packages', element: Packages },
   { path: '/pricing', name: 'pricing', element: pricing },
-  { path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
+  //{ path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   // { path: '/Expression', name: 'Expression', element: Expression },
@@ -121,7 +121,7 @@ export const rolesRoutes = [
   //  name: 'DailyPerformanceReport',
   //  element: DailyPerformanceReport,
   //},
-  { path: '/DAReport', name: 'UserReport', element: DAReport },
+  //{ path: '/DAReport', name: 'UserReport', element: DAReport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
   { path: '/waves', name: 'waves', element: waves },
@@ -129,25 +129,26 @@ export const rolesRoutes = [
   //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
   //{ path: '/Schedule', name: 'Schedule', element: DailyRoster },
   { path: '/DSPSRoles', name: 'DSPSRoles', element: DSPSRoles },
-  { path: '/WorkFlowTask', name: 'WorkFlowTask', element: WorkFlowTask },
-  { path: '/WorkFlowSubTask', name: 'WorkFlowSubTask', element: WorkFlowSubTask },
-  { path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
-  { path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
+  //{ path: '/WorkFlowTask', name: 'WorkFlowTask', element: WorkFlowTask },
+  //{ path: '/WorkFlowSubTask', name: 'WorkFlowSubTask', element: WorkFlowSubTask },
+  //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
+  //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
   { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
-  { path: '/stock', name: 'Stock Detail', element: StockRecord },
+  /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/
 ];
 
 export const routes = [
   { path: '/home', exact: true, name: 'Home' },
   //{ path: '/fleet-dashboard', name: 'FleetDashboard', element: FleetDashboard },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
-  { path: '/dspRegister', name: 'DspRegister', element: DADspRegister },
+  { path: '/organizationadd ', name: 'organizationadd', element: organizationadd },
+  //{ path: '/dspRegister', name: 'DspRegister', element: DADspRegister },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/print', name: 'Print', element: Print },
   { path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
-  { path: '/DAReport', name: 'UserReport', element: DAReport },
+  /*{ path: '/DAReport', name: 'UserReport', element: DAReport },*/
   //{
   //  path: '/DailyPerformanceReport',
   //  name: 'DailyPerformanceReport',
@@ -156,11 +157,11 @@ export const routes = [
   //{ path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
   //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   //{ path: '/DailyRoster', name: 'DailyRoaster', element: DailyRoster },
-  { path: '/salerecord', name: 'Sales', element: Salerecord },
-  { path: '/new-sale', name: 'New Sale', element: Newsale },
-  { path: '/payment-Detail', name: 'Payment Detail', element: PaymentDetail },
-  { path: '/add-payment', name: 'Add Payment', element: PaymendAdd },
-  { path: '/addnew', name: 'Order', element: PlaceOrder },
+  //{ path: '/salerecord', name: 'Sales', element: Salerecord },
+  //{ path: '/new-sale', name: 'New Sale', element: Newsale },
+  //{ path: '/payment-Detail', name: 'Payment Detail', element: PaymentDetail },
+  //{ path: '/add-payment', name: 'Add Payment', element: PaymendAdd },
+  //{ path: '/addnew', name: 'Order', element: PlaceOrder },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

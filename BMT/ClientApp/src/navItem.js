@@ -44,7 +44,7 @@ export const transformData = (data) => {
           to: child.actionName,
           items: [],
         }));
-
+        //alert(JSON.stringify(newItem));
         stack.push(...newItem.items.map((child) => ({ parentId: child.id, result: child.items })));
         result.push(newItem);
       }

@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 import useFetch from '../useFetch';
-import useEmailVerification from '../useEmailVerification';
+//import useEmailVerification from '../useEmailVerification';
 import { useShowToast } from '../useShowToast';
 
 export const useUserAvailability = () => {

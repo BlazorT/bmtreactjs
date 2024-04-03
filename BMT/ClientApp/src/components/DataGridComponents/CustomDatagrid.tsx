@@ -8,7 +8,7 @@ import CustomGridToolbar from './CustomGridToolbar';
 
 import { Theme } from '@material-ui/core';
 import { SxProps } from '@mui/material';
-import DatagridSkeleton from './DatagridSkeleton';
+//import DatagridSkeleton from './DatagridSkeleton';
 
 interface CustomDatagridProps {
   rows: any[];

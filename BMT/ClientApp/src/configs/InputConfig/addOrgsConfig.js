@@ -11,14 +11,14 @@ import {
   cilLink,
   cilItalic,
 } from '@coreui/icons';
-import { CFormCheck } from '@coreui/react';
+//import { CFormCheck } from '@coreui/react';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import CustomDatePicker from 'src/components/UI/DatePicker';
+//import CustomDatePicker from 'src/components/UI/DatePicker';
 import ImagePicker from 'src/components/UI/ImagePicker';
-import { generateRandomNumbers } from 'src/helpers/generatePassowrd';
+//import { generateRandomNumbers } from 'src/helpers/generatePassowrd';
 import globalutil from 'src/util/globalutil';
 
 export const getDaAppllyInputs = (
