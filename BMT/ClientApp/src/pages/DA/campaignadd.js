@@ -17,15 +17,15 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 //import { Fieldset } from 'primereact/fieldset';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+//import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomDatePicker from 'src/components/UI/DatePicker';
+//import CustomDatePicker from 'src/components/UI/DatePicker';
 
 import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-import { formValidator } from 'src/helpers/formValidator';
+//import { formValidator } from 'src/helpers/formValidator';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import {
@@ -33,9 +33,9 @@ import {
   getInitialCampaignData,
 } from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
-import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import globalutil from 'src/util/globalutil';
-import CustomTimePicker from 'src/components/UI/TimePicker';
+//import CustomTimePicker from 'src/components/UI/TimePicker';
 
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -74,7 +74,7 @@ const campaignadd = () => {
   const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
-  const tabs = ['Campaign', 'Networks', 'Schedule'];
+  const tabs = [{ id: 1, name: 'Campaign' }, { id: 2, name: 'Networks' }, { id: 3, name: 'Schedule' }];
  
   const handleCampaignAddForm = (e, label) => {
    // alert(label);
@@ -285,14 +285,14 @@ const campaignadd = () => {
   };
   return (
     <Form name="dsp-reg-form">
-      <FleetDashboardTabs
+      <BlazorTabs
         title="camaign"
-        fleetTabs={tabs}
+        tabs={tabs}
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
       <CContainer fluid className="mt-4">
-        {tabs[activeTab] === 'Campaign' && (
+        {tabs[activeTab].name === 'Campaign' && (
           <React.Fragment>
             <AppContainer>
               <DataGridHeader

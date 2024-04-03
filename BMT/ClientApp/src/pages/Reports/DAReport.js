@@ -111,7 +111,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res, 'res');
+        //console.log(res, 'res');
 
         if (res.status) {
           const mappedArray = res.data.map((data) => ({

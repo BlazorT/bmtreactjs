@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { CFormSwitch } from '@coreui/react';
+//import { CFormSwitch } from '@coreui/react';
 import { CCol, CContainer, CRow } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
 import { formValidator } from 'src/helpers/formValidator';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { useSelector } from 'react-redux';
-//import BlazorTabs from '../CustomComponents/BlazorTabs';
+//import BlazorTabs from '../FleetComponents/BlazorTabs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -20,21 +20,21 @@ import {
   cilChevronBottom,
   cilFlagAlt,
 } from '@coreui/icons';
-import { useShowToast } from 'src/hooks/useShowToast';
+//import { useShowToast } from 'src/hooks/useShowToast';
 //import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
 //import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 //import CustomSearch from 'src/components/InputsComponent/CustomSearch';
 //import Loading from 'src/components/UI/Loading';
 //import DaNewAssignment from 'src/components/Component/DaNewAssignment';
 //import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-//import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
-//import Button from 'src/components/InputsComponent/Button';
+import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import Button from 'src/components/InputsComponent/Button';
 //import LoadingBtn from 'src/components/UI/LoadingBtn';
 import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
-const NetworkInputs = (prop) => {
+const BlazorNetworkInputs = (prop) => {
   const { header, networkId, setNetworkList, networkList } = prop
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -156,18 +156,18 @@ const NetworkInputs = (prop) => {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage:"Note : To complete network changes, you need to submit",
+          toastMessage:"Note : To complete network changes, you need to submit finally",
           toastVariant: 'success',
         }),
       );
     }
 
-    console.log({ networkList });
+   // console.log({ networkList });
    // console.log('test');
    // setIsLoading(createNetworkSettingLoading.current);
   }
   const onSubmit = async () => {
-    alert(JSON.stringify(networkList));
+   // alert(JSON.stringify(networkList));
     if (networkList.length > 0) {
      //alert(JSON.stringify(networkList));
       await createNetworkSetting('/Organization/addupdatenetworksettings', {
@@ -176,7 +176,7 @@ const NetworkInputs = (prop) => {
       });
 
     }
-    console.log(createNetworkSettingRes);
+    //console.log(createNetworkSettingRes);
     if (createNetworkSettingRes.current?.status === true) {
       dispatch(
         updateToast({
@@ -631,4 +631,4 @@ const NetworkInputs = (prop) => {
   </React.Fragment>
 }
 
-export default NetworkInputs
+export default BlazorNetworkInputs

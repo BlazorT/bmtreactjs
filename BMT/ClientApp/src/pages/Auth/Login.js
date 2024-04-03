@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -119,7 +118,7 @@ const Login = () => {
         }
       } catch (error) {
         setIsLoading(false);
-        console.error('Error fetching data:', error);
+        //console.error('Error fetching data:', error);
       }
     } else {
       setIsLoading(false);
