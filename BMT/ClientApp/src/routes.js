@@ -2,10 +2,10 @@ import React from 'react';
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 //const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
-const addorganization = React.lazy(() => import('./pages/DA/addorganization '));
+const organizationadd = React.lazy(() => import('./pages/DA/organizationadd'));
 const AddDA = React.lazy(() => import('./pages/DA/AddDA'));
 //const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
-const Products = React.lazy(() => import('./pages/Admin/Products'));
+const Packages = React.lazy(() => import('./pages/Admin/Packages'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
@@ -100,14 +100,14 @@ export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
-  { path: '/addorganization ', name: 'addorganization ', element: addorganization },
+  { path: '/organizationadd ', name: 'organizationadd  ', element: organizationadd },
   { path: '/AddDA', name: 'AddDA', element: AddDA },
   //{ path: '/DADashboard', name: 'DADashboard', element: DADashboard },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
   { path: '/DspsList', name: 'DspsList', element: DADspsList },
   { path: '/WorkFlow', name: 'WorkFlow', element: WorkFlow },
   { path: '/Notification', name: 'Notification', element: Notification },
-  { path: '/Products', name: 'Products', element: Products },
+  { path: '/Packages', name: 'Packages', element: Packages },
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/WorkFlowFieldMapping', name: 'WorkFlowFieldMapping', element: WorkFlowFieldMapping },
   { path: '/networksetting', name: 'networksetting', element: networksetting },

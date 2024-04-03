@@ -37,7 +37,7 @@ import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
 import useApi from 'src/hooks/useApi';
 
-const addorganization = () => {
+const organizationadd = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'BMT Subscription',
   );
@@ -443,4 +443,4 @@ const addorganization = () => {
   );
 };
 
-export default addorganization;
+export default organizationadd;
