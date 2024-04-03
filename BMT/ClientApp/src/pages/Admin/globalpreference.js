@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 const globalpreference = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const [tabs,setTabs] =useState( []);
   const dispatch = useDispatch();
   const [networkList,setNetworkList]=useState([])
@@ -83,8 +83,7 @@ const globalpreference = () => {
         tabs={tabs}
         activeTab={activeTab}
           handleActiveTab={setActiveTab}
-      />
-      
+      />      
             <CContainer fluid className="m-0 p-0 mt-1">
               {tabs.map((tab, index) => <>
                 {activeTab == tab.id && <BlazorNetworkInput key={tab.id} header={tab.name} networkId={tab.id} setNetworkList={setNetworkList} networkList={networkList} />}

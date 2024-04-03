@@ -459,7 +459,7 @@ const GlobalPrefrences = () => {
           {showStock === true ? (
             <div className="show-stock">
               <div className="CenterAlign pt-2 pb-2">
-                <h3>4DSPS Settings</h3>
+                <h3>BMT Settings</h3>
               </div>
 
               <div className="mb-0 dashboard-table padLeftRight">
