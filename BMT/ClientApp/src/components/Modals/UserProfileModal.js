@@ -61,7 +61,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
         status: 1,
       };
       const passRes = await postData(forgotPassword);
-      console.log({ passRes, forgotPassword });
+      //console.log({ passRes, forgotPassword });
 
       if (passRes.status === true) {
         toggle();

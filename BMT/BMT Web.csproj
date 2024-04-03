@@ -101,6 +101,10 @@
     <None Remove="ClientApp\src\pages\Dashboard\DADashboard.js" />
     <None Remove="ClientApp\src\pages\DA\DADspRegister.js" />
     <None Remove="ClientApp\src\pages\Inventory\InventoryManagement.js" />
+    <None Remove="ClientApp\src\pages\Reports\DailyPerformanceReport.js" />
+    <None Remove="ClientApp\src\pages\Reports\DispatchmentReport.js" />
+    <None Remove="ClientApp\src\pages\Reports\RosterReport.js" />
+    <None Remove="ClientApp\src\pages\Reports\Stockrecord.jsx" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowFieldMapping.js" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowList.js" />
     <None Remove="ClientApp\src\pages\Workflow\WorkFlowSubTask.js" />
