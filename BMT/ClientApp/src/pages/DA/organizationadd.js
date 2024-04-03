@@ -34,7 +34,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 //alert('ORG Called')
 const organizationadd = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => (item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
+    (item) => (item.name.toLowerCase() === 'New Organization'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
   );
   const user = useSelector((state) => state.user);
 

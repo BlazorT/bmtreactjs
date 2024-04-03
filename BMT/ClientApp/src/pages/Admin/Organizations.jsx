@@ -135,7 +135,7 @@ const OrgList = () => {
             <DataGridHeader
               title="Organization List"
               addButton={pageRoles.canAdd === 1 ? 'New Organization' : ''}
-              addBtnClick={() => navigate('/addorganization')}
+                addBtnClick={() => navigate('/organizationadd')}
             />
             <CustomDatagrid
               rows={rows}
