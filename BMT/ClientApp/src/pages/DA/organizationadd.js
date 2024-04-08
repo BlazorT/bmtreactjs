@@ -33,19 +33,21 @@ import { useShowToast } from 'src/hooks/useShowToast';
 //import useApi from 'src/hooks/useApi';
 //alert('ORG Called')
 const organizationadd = () => {
+  //document.write(JSON.stringify(useSelector((state) => state.navItems.pageRoles)));
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => (item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
+    (item) => (item.name.toLowerCase() === 'New Organization'.toLowerCase() || item.actionName.toLowerCase() === 'organizationadd'.toLowerCase()),
   );
   const user = useSelector((state) => state.user);
 
   const [isLoading, setIsLoading] = useState(false);
-
+  //alert(JSON.stringify(pageRoles));
   useEffect(() => {
-    if (pageRoles.canAdd === 0) {
+    
+    if (pageRoles==null || pageRoles.canAdd === 0) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: `You dont have a privilege of setting up of organization, please contact admin for access`,
+          toastMessage: `You dont have a rights of setting up of organization, please contact admin for access`,
           toastVariant: 'warning',
         }),
       );
@@ -199,7 +201,7 @@ const organizationadd = () => {
   };
   const submitDA = async () => {
     formValidator();
-    const form = document.querySelector('.apply-da-form');
+    const form = document.querySelector('.apply-org-form');
     if (daApplyFormData.email === '') {
       setEmailReadonly(false);
       return;
@@ -218,9 +220,9 @@ const organizationadd = () => {
        // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
         createdAt: moment().utc().format(),
         lastUpdatedAt: moment().utc().format(),
-        remarks: 'created org',
+        remarks: 'Organization registered successfully',
       };
-      console.log(daBody);
+     //console.log(daBody);
       // Upload & Submit
       const fUpload = document.getElementById('fileAvatar');
       if (fUpload.files !== null && fUpload.files.length > 0) {
@@ -309,10 +311,10 @@ const organizationadd = () => {
 
     if (!isFormDataEmpty(formDataArray)) {
       const attachmentsRes = await uploadAttachments(formDataArray);
-      console.log({ attachmentsRes });
+      //console.log({ attachmentsRes });
       if (attachmentsRes.status === true) {
         if (user.userId !== '') {
-          navigate('/DspsList');
+          navigate('/Organizations');
         } else {
           navigate('/');
         }
@@ -322,7 +324,7 @@ const organizationadd = () => {
       }
     } else {
       if (user.userId !== '') {
-        navigate('/DspsList');
+        navigate('/Organizations');
       } else {
         navigate('/');
       }
@@ -348,7 +350,7 @@ const organizationadd = () => {
     if (user.userId === '') {
       navigate('/');
     } else {
-      navigate('/DspsList');
+      navigate('/Organizations');
     }
   };
 
@@ -399,7 +401,7 @@ const organizationadd = () => {
         />
         {showStock && (
           <React.Fragment>
-            <Form name="apply-da-form">
+            <Form name="apply-org-form">
               <Inputs inputFields={daApplyInputs} yesFn={goToAnotherPage} submitFn={submitDA}>
                 
                 <CFormCheck

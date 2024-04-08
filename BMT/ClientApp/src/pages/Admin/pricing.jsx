@@ -14,7 +14,7 @@ const Products = () => {
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Products',
+    (item) => item.name.toLowerCase() === 'Pricing'.toLowerCase(),
   );
 
   const [showAddProductModal, setShowAddProductModal] = useState(false);
@@ -55,7 +55,7 @@ const Products = () => {
   return (
     <AppContainer>
       <DataGridHeader
-        title="Packages List"
+        title="Network Prices"
         addBtnClick={toggleAddProductModal}
       />
       <CustomDatagrid

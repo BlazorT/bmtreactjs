@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-//import InventoryProductModal from 'src/components/Modals/InventoryProductModal';
-
 import AppContainer from 'src/components/UI/AppContainer';
 //import Loading from 'src/components/UI/Loading';
 import { getProductsCols } from 'src/configs/ColumnsConfig/productsCols';
@@ -12,30 +10,30 @@ import { getProductsCols } from 'src/configs/ColumnsConfig/productsCols';
 import { useFetchProducts } from 'src/hooks/api/useFetchProducts';
 //import globalutil from 'src/util/globalutil';
 
-const Products = () => {
+const Packages = () => {
   useEffect(() => {
-    getProducts();
+    getPackages();
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Packages',
   );
 
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showAddPackageModal, setShowAddPackageModal] = useState(false);
 
-  const [products, setProducts] = useState([]);
-  const [productRows, setProductRows] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [packageRows, setPackageRows] = useState([]);
 
   const { data, loading, fetchProducts } = useFetchProducts();
 
-  const toggleAddProductModal = () => {
-    setShowAddProductModal(!showAddProductModal);
+  const toggleAddPackageModal = () => {
+    setShowAddPackageModal(!showAddPackageModal);
   };
 
-  const getProducts = async () => {
-    const productsList = await fetchProducts();
+  const getPackages = async () => {
+    const packagesList = await fetchProducts();
 
-    const mappedArray = productsList.map((data) => ({
+    const mappedArray = packagesList.map((data) => ({
       id: data.id,
       //name: `${data.name} ,${data.shortCode}`,
       name: data.name,
@@ -48,21 +46,21 @@ const Products = () => {
       lastUpdatedAt: data.lastUpdatedAt,
     }));
 
-    setProducts(productsList);
-    setProductRows(mappedArray);
+    setPackages(packagesList);
+    setPackageRows(mappedArray);
   };
 
-  const productsCols = getProductsCols(pageRoles, getProducts, products);
+  const packagesCols = getProductsCols(pageRoles, getPackages, packages);
 
   return (
     <AppContainer>
       <DataGridHeader
         title="Packages List"
-        addBtnClick={toggleAddProductModal}
+        addBtnClick={toggleAddPackageModal}
       />
       <CustomDatagrid
-        rows={productRows}
-        columns={productsCols}
+        rows={packageRows}
+        columns={packagesCols}
         pagination={true}
         loading={loading || !data}
         rowHeight={50}
@@ -79,4 +77,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Packages;

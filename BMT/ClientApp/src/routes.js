@@ -65,12 +65,10 @@ const Progress = React.lazy(() => import('./views/base/progress/Progress'));
 const Spinners = React.lazy(() => import('./views/base/spinners/Spinners'));
 const Tables = React.lazy(() => import('./views/base/tables/Tables'));
 const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'));
-
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'));
 const ButtonGroups = React.lazy(() => import('./views/buttons/button-groups/ButtonGroups'));
 const Dropdowns = React.lazy(() => import('./views/buttons/dropdowns/Dropdowns'));
-
 //Forms
 const ChecksRadios = React.lazy(() => import('./views/forms/checks-radios/ChecksRadios'));
 const FloatingLabels = React.lazy(() => import('./views/forms/floating-labels/FloatingLabels'));
@@ -80,9 +78,7 @@ const Layout = React.lazy(() => import('./views/forms/layout/Layout'));
 const Range = React.lazy(() => import('./views/forms/range/Range'));
 const Select = React.lazy(() => import('./views/forms/select/Select'));
 const Validation = React.lazy(() => import('./views/forms/validation/Validation'));
-
 const Charts = React.lazy(() => import('./views/charts/Charts'));
-
 // Icons
 const CoreUIIcons = React.lazy(() => import('./views/icons/coreui-icons/CoreUIIcons'));
 const Flags = React.lazy(() => import('./views/icons/flags/Flags'));
