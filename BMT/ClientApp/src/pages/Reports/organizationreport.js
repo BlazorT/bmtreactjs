@@ -26,11 +26,11 @@ import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import utc from 'dayjs/plugin/utc';
 import Loading from 'src/components/UI/Loading';
 
-const DAReport = ({ reportField, fetchInspection, value }) => {
+const organizationreport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Users Report',
+    (item) => item.name === 'Organizations',
   );
   const generatePdf = async () => {
     const body = {
@@ -152,19 +152,19 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
   const [rows, setRows] = useState([]);
 
   const [columns, setColumns] = useState([
-    {
-      field: 'userName',
-      headerClassName: 'custom-header-data-grid',
-      headerName: 'Name',
-      flex: 1,
-      width: 100,
-      editable: false,
-      filterable: true,
-    },
+    //{
+    //  field: 'userName',
+    //  headerClassName: 'custom-header-data-grid',
+    //  headerName: 'Name',
+    //  flex: 1,
+    //  width: 100,
+    //  editable: false,
+    //  filterable: true,
+    //},
     {
       field: 'orgName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Organization',
+      headerName: 'Organization Name',
       flex: 1,
       minWidth: 120,
       editable: false,
@@ -183,7 +183,24 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
       editable: false,
       filterable: true,
     },
-
+    {
+      field: 'strength',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Strength',
+      flex: 1,
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
+    {
+      field: 'package',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Package',
+      flex: 1,
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
     
     
     {
@@ -201,7 +218,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
     {
       field: 'createdAt',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Date of joining ',
+      headerName: 'Valid Till',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -316,8 +333,8 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                     type="text"
                     id="keyword"
                     name="keyword"
-                    title=" using by name, contact "
-                    placeholder=" name, contact, performance"
+                    title=" using by name, contact, strength"
+                    placeholder=" name, contact, strength"
                     className="form-control item"
                     isRequired={false}
                     // message="Enter Buisness Name"
@@ -333,7 +350,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                     className="form-control item form-select"
                     value={filters.status}
                     disableOption="Select Status"
-                    title=" DA Status "
+                    title=" Status "
                     name="status"
                     onChange={(e) => changeFilter(e)}
                   />
@@ -346,7 +363,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                     label="Date From "
                     id="createdAt"
                     name="createdAt"
-                    title=" DA registration date "
+                    title="Org registration date "
                     value={filters.createdAt}
                     onChange={(e) => changeFilter(e, 'createdAt')}
                   />
@@ -358,7 +375,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                     id="lastUpdatedAt"
                     name="lastUpdatedAt"
                     value={filters.lastUpdatedAt}
-                    title=" DA registration date "
+                    title="Org registration date "
                     onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
                   />
                 </div>
@@ -369,7 +386,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
                 <div className="col-md-6">
                   <div className="mt-2">
                     <button
-                      title="Click for searching DA report data"
+                      title="Click for searching Org report data"
                       type="button"
                       onClick={() => applyFilters()}
                       className="btn_Default m-2 sales-btn-style alignLeft"
@@ -384,7 +401,7 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
         ) : null}
       </div>
       <div className="bg_Div mb-2 d-flex flex-column">
-        <DataGridHeader exportFn={() => generatePdf()} title="DA Report" />
+        <DataGridHeader exportFn={() => generatePdf()} title="Org Report" />
         <div className="show-stock">
           <div className="row ">
             <div className="col-md-12 col-xl-12">
@@ -411,16 +428,8 @@ const DAReport = ({ reportField, fetchInspection, value }) => {
           </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col-md-12 col-xl-12 mt-2">
-          <div className="d-flex justify-content-end align-items-center ">
-            <button type="button" className="btn_Default m-2 sales-btn-style">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
+     
     </div>
   );
 };
-export default DAReport;
+export default organizationreport;

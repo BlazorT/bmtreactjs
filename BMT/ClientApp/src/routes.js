@@ -35,7 +35,7 @@ const UserReport = React.lazy(() => import('./pages/Reports/UserReport'));
 //const DailyPerformanceReport = React.lazy(() => import('./pages/Reports/DailyPerformanceReport'));
 //const DispatchmentReport = React.lazy(() => import('./pages/Reports/DispatchmentReport'));
 //const rosterReport = React.lazy(() => import('./pages/Reports/RosterReport'));
-//const DAReport = React.lazy(() => import('./pages/Reports/DAReport'));
+const organizationreport = React.lazy(() => import('./pages/Reports/organizationreport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
@@ -117,7 +117,7 @@ export const rolesRoutes = [
   //  name: 'DailyPerformanceReport',
   //  element: DailyPerformanceReport,
   //},
-  //{ path: '/DAReport', name: 'UserReport', element: DAReport },
+  { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
   { path: '/waves', name: 'waves', element: waves },

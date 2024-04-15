@@ -7,6 +7,8 @@ import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 import { CContainer, CHeader, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
 import { cilBell, cilEnvelopeOpen, cilAccountLogout, cilList, cilMenu } from '@coreui/icons';
 import { CPopover } from '@coreui/react';
+
+import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import CIcon from '@coreui/icons-react';
 import useFetch from 'src/hooks/useFetch';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
@@ -14,8 +16,8 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import { setUserData } from 'src/redux/user/userSlice';
 import Loading from 'src/components/UI/Loading';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
-
-const AppHeader = () => {
+import { CBadge } from '@coreui/react';
+const AppHeader = ( phoneNumber ) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -97,6 +99,11 @@ const AppHeader = () => {
       }),
     );
   };
+  const notificationCount = 3;
+  const handleChatClick = () => {
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=923337069742`;
+    window.open(whatsappUrl, '_blank');
+  };
   const popoverContent = (
     <div>
       <CListGroup>
@@ -175,25 +182,33 @@ const AppHeader = () => {
               <CPopover
                 className="customPopover"
                 title="Notifications"
-                content={popoverContent }
+                content={popoverContent}
                 placement="bottom"
               >
-                <CIcon className="labelName" icon={cilBell} size="lg" />
+                <CIcon className="labelName" icon={cilBell} size="xxl">
+                {/*  {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}*/}
+                </CIcon>
               </CPopover>
+              {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}
+
             </CNavLink>
           </CNavItem>
+          {/*<CNavItem>*/}
+          {/*  <CNavLink>*/}
+          {/*    <CIcon className="labelName" icon={cilList} size="lg" />*/}
+
+          {/*  </CNavLink>*/}
+          {/*</CNavItem>*/}
           <CNavItem>
             <CNavLink>
-              <CIcon className="labelName" icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink>
-              <CIcon className="labelName" icon={cilEnvelopeOpen} size="lg" />
+              <PeopleAlt className="color-set" sx={{ fontSize: 30 }} />
+              {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}
+
+            {/*  <CIcon className="labelName" icon={cilEnvelopeOpen} size="lg" />*/}
             </CNavLink>
           </CNavItem>
           <CNavItem className="d-flex align-items-center ">
-            <CNavLink className="text-white d-flex align-items-center fw-bold ">
+            <CNavLink onClick={handleChatClick} className="text-white d-flex align-items-center fw-bold ">
               {user.userInfo.whatsApp ? user.userInfo.whatsApp : ''} &nbsp;
               <img className="socialMediaIconHeader" src="whatsapp.png" alt="logo" />
             </CNavLink>
