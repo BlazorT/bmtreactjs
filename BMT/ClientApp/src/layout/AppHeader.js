@@ -105,7 +105,6 @@ const AppHeader = () => {
             <div className="col-md-3">
               <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
             </div>
-
             <div className="col-md-9">
               <div className="row">
               <div className="col-md-8">
@@ -113,7 +112,6 @@ const AppHeader = () => {
                 </div>
                 <div className="col-md-4">
                   <small className="text-time">3 days ago</small>
-
               </div>
               </div>
               <p className="mb-1">
@@ -121,15 +119,12 @@ const AppHeader = () => {
               </p>
             </div>
           </div>
-         
-
         </CListGroupItem>
         <CListGroupItem as="a" href="#">
           <div className="row d-flex w-100 justify-content-between">
             <div className="col-md-3">
               <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
             </div>
-
             <div className="col-md-9">
               <div className="row">
                 <div className="col-md-8">
@@ -137,7 +132,6 @@ const AppHeader = () => {
                 </div>
                 <div className="col-md-4">
                   <small className="text-time">3 days ago</small>
-
                 </div>
               </div>
               <p className="mb-1">
@@ -145,15 +139,12 @@ const AppHeader = () => {
               </p>
             </div>
           </div>
-
-
         </CListGroupItem>
         <CListGroupItem as="a" href="#">
           <div className="row d-flex w-100 justify-content-between">
             <div className="col-md-3">
               <img className="noti-profile-img" src={'defaultImg.jpg'} alt="logo" />
             </div>
-
             <div className="col-md-9">
               <div className="row">
                 <div className="col-md-8">
@@ -161,7 +152,6 @@ const AppHeader = () => {
                 </div>
                 <div className="col-md-4">
                   <small className="text-time">3 days ago</small>
-
                 </div>
               </div>
               <p className="mb-1">
@@ -169,8 +159,6 @@ const AppHeader = () => {
               </p>
             </div>
           </div>
-
-
         </CListGroupItem>
       </CListGroup>
     </div>

@@ -35,7 +35,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 const organizationadd = () => {
   //document.write(JSON.stringify(useSelector((state) => state.navItems.pageRoles)));
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => (item.name.toLowerCase() === 'New Organization'.toLowerCase() || item.actionName.toLowerCase() === 'organizationadd'.toLowerCase()),
+    (item) => (item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
   );
   const user = useSelector((state) => state.user);
 
