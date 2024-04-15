@@ -3523,3 +3523,10 @@ fieldset.legend {
     color:white!important;
     float:right;
 }
+.color-set{
+    color:white;
+}
+.fw-bold{
+    cursor:pointer;
+}
+
