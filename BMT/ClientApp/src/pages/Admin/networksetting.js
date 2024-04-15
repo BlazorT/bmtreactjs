@@ -23,6 +23,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 
 const SingleDispatchment = () => {
   const [activeTab, setActiveTab] = useState(1);
+  const [organization, setOrganization] = useState(1);
   const [tabs,setTabs] =useState( []);
   const dispatch = useDispatch();
   const [networkList,setNetworkList]=useState([])
@@ -121,9 +122,9 @@ const SingleDispatchment = () => {
             label="Organization"
             icon={cilUser}
             type="text"
-           // value={ }
+            //se={organization}
             id="name"
-            onChange={(e, name) => console.log({e,name})}
+            onChange={(e,value) => setOrganization(value)}
             placeholder="Organization"
             name="name"
             data={orglist}
