@@ -11,7 +11,7 @@ import {
   cilFlagAlt,
 } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { getDAreportPdf } from 'src/helpers/getDAreportPdf';
+import { getOrgReportPdf } from 'src/helpers/getOrgReportPdf';
 
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
@@ -37,7 +37,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       id: rows[0].id,
     };
     const reportRows = makeGroupingRows(rows);
-   const doc = getDAreportPdf(reportRows, reportField);
+    const doc = getOrgReportPdf(reportRows, reportField);
     doc.output('dataurlnewwindow');
     console.log(reportRows,'repoertdata');
   };
@@ -53,7 +53,8 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
   const initialFilter = {
     orgId: user.orgId,
     name: '',
-    status: '0',
+    keyword: '',
+    status: 0,
     createdAt: dayjs().utc().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
@@ -70,10 +71,10 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     getDAuserList(filterBody);
   };
   const {
-    response: GetDAUserRes,
+    response: GetOrgRes,
     loading: LogLoading,
     error: createServiceError,
-    fetchData: GetDAUser,
+    fetchData: GetOrgs,
   } = useFetch();
   useEffect(() => {
     getDAuserList();
@@ -104,7 +105,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       //logTime: moment().utc().startOf('year').format(),
     };
     //alert(JSON.stringify(fetchBody));
-    await GetDAUser(
+    await GetOrgs(
       '/Report/organizationsreportdata',
       {
         method: 'POST',
@@ -125,13 +126,15 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
             performance: data.performance,
             strength: data.strength,
             contact: data.contact,
+            packageName: data.packageName,
             violations: data.violations,
-            status: globalutil.statuses().find((item) => item.id === data.status)
-              ? globalutil.statuses().find((item) => item.id === data.status).name
-              : '',
+            status: data.status == 0 ? "Active":"In-Active",
+            //status: globalutil.statuses().find((item) => item.id === data.status)
+            //  ? globalutil.statuses().find((item) => item.id === data.status).name
+            //  : '',
             createdAt: formatDate(data.createdAt),
             // lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
-            licenseExpiryDate: formatDate(data.licenseExpiryDate),
+            expiryTime: formatDate(data.expiryTime),
           }));
 
           setRows(mappedArray);
@@ -167,7 +170,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       headerClassName: 'custom-header-data-grid',
       headerName: 'Organization Name',
       flex: 1,
-      minWidth: 120,
+      minWidth: 200,
       editable: false,
       sortable: false,
       filterable: true,
@@ -194,7 +197,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
     },
     {
-      field: 'package',
+      field: 'packageName',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Package',
       flex: 1,
@@ -217,9 +220,9 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     },
     
     {
-      field: 'createdAt',
+      field: 'expiryTime',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Valid Till',
+      headerName: 'Expiry Date',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -262,21 +265,23 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
 
       if (index == 0) {
         mappedObject = {
-          userName: 'name',
-          primaryContact: 'contact',
-          performance: 'performance',
-          status: 'status',
-          createdAt:'date of joining'
+          orgName: 'Organization Name',
+          contact: 'Contact',
+          strength: 'Strength',
+          packageName: 'Package',
+          status: 'Status',
+          expiryTime:'Expiry Date'
         }
 
       }
       else { 
         mappedObject = {
-        userName: field.userName,
-        primaryContact: field.primaryContact,
-        performance: field.performance,
-        status: field.status,
-        createdAt: field.createdAt,
+          orgName: field.orgName,
+          contact: field.contact,
+          strength: field.strength,
+          packageName: field.packageName,
+          status: field.status,
+          expiryTime: field.expiryTime,
       }
       }
       return mappedObject;
@@ -284,7 +289,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
    // const header = ['name', 'contact', 'performance','status','date of joining'];
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.userName, item.primaryContact, item.performance, item.status, item.createdAt];
+      const rowData = [item.orgName, item.contact, item.strength.toString(), item.packageName, item.status.toString(), item.expiryTime];
         return [rowData];
       
     });
@@ -402,7 +407,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
         ) : null}
       </div>
       <div className="bg_Div mb-2 d-flex flex-column">
-        <DataGridHeader exportFn={() => generatePdf()} title="Org Report" />
+        <DataGridHeader exportFn={() => generatePdf()} title="Organization Report" />
         <div className="show-stock">
           <div className="row ">
             <div className="col-md-12 col-xl-12">

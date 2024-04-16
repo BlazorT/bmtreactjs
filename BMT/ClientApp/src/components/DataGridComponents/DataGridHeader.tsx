@@ -4,8 +4,8 @@ import { CCol, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 
 import FilterIconMenu from './FilterIconMenu';
-//import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-//import { Tooltip } from '@mui/material';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import { Tooltip } from '@mui/material';
 
 interface OtherControl {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,15 +80,15 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
               {addSecButton}
             </span>
           )}
-          {/*{exportFn && (*/}
-          {/*  <Tooltip title="Download Report">*/}
-          {/*    <FileDownloadOutlinedIcon*/}
-          {/*      fontSize="medium"*/}
-          {/*      className="stock-toggle-icon"*/}
-          {/*      onClick={exportFn}*/}
-          {/*    />*/}
-          {/*  </Tooltip>*/}
-          {/*)}*/}
+          {exportFn && (
+            <Tooltip title="Download Report">
+              <FileDownloadOutlinedIcon
+                fontSize="medium"
+                className="stock-toggle-icon"
+                onClick={exportFn}
+              />
+            </Tooltip>
+          )}
           {filterDisable ? null : <FilterIconMenu />}
           {otherControls &&
             otherControls.map(({ icon, fn }, index) => (

@@ -109,13 +109,13 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
 
     //console.log(JSON.stringify(fetchBody));
     await GetLog(
-      '/Report/dausersreportdata',
+      '/BlazorApi/users',
       {
         method: 'POST',
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        //console.log(res,'user responce');
+        console.log(res,'user responce');
         if (res.status === true) {
           const mappedArray = res.data.map((data) => ({
             id: data.id,
