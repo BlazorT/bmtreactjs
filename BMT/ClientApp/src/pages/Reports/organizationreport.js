@@ -52,7 +52,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
   const dispatch = useDispatch();
   const initialFilter = {
     orgId: user.orgId,
-    keyword: '',
+    name: '',
     status: '0',
     createdAt: dayjs().utc().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
@@ -60,7 +60,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
     const filterBody = {
-      keyword: filters.keyword,
+      name: filters.name,
       status: filters.status === '' ? 0 : filters.status,
       createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
       lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
@@ -105,13 +105,13 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     };
     //alert(JSON.stringify(fetchBody));
     await GetDAUser(
-      '/Report/dausersreportdata',
+      '/Report/organizationsreportdata',
       {
         method: 'POST',
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        //console.log(res, 'res');
+        console.log(res, 'res');
 
         if (res.status) {
           const mappedArray = res.data.map((data) => ({
@@ -121,9 +121,10 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
             // dspid: user.dspId.toString(),
             userRole: data.userRole,
             userName: data.userName,
-            orgName: data.orgName,
+            orgName: data.name + ", " + data.stateName,
             performance: data.performance,
-            contact: data.primaryContact,
+            strength: data.strength,
+            contact: data.contact,
             violations: data.violations,
             status: globalutil.statuses().find((item) => item.id === data.status)
               ? globalutil.statuses().find((item) => item.id === data.status).name
@@ -327,12 +328,12 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                 <div className="col-md-6">
                   <CustomInput
                     label="Keyword"
-                    value={filters.keyword}
+                    value={filters.name}
                     onChange={changeFilter}
                     icon={cilUser}
                     type="text"
-                    id="keyword"
-                    name="keyword"
+                    id="name"
+                    name="name"
                     title=" using by name, contact, email"
                     placeholder=" name, contact, email"
                     className="form-control item"
