@@ -34,7 +34,7 @@ namespace com.blazor.bmt.controllers
         [HttpPost("organizationsreportdata")]
         [HttpGet("organizationsreportdata")]
         [Route("organizationsreportdata")]
-        public async Task<ActionResult> GetOrganizationsReportData([FromBody] UserViewModel vm)
+        public async Task<ActionResult> GetOrganizationsReportData([FromBody] OrganizationViewModel vm)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
                       
@@ -42,7 +42,7 @@ namespace com.blazor.bmt.controllers
             BlazorApiResponse response = new BlazorApiResponse();
             try
             {
-                        response.data= await _blazorRepoPageService.GetOrganizationUsersListAsync(vm.Id, Convert.ToInt32(vm.OrgId), vm.RoleId, ""+ vm.UserName, vm.Status, vm.CreatedAt, vm.LastUpdatedAt==null? Convert.ToDateTime(vm.LastUpdatedAt):GlobalUTIL.CurrentDateTime);                   
+                        response.data= await _blazorRepoPageService.GetOrganizationListReport(vm.Id,  ""+ vm.Name, vm.Status, vm.CreatedAt, vm.LastUpdatedAt==null? Convert.ToDateTime(vm.LastUpdatedAt):GlobalUTIL.CurrentDateTime);                   
                         response.status = true;
             }
             catch (Exception ex)
