@@ -13,7 +13,7 @@ public partial class OrganizationViewModel
     public string? Address { get; set; }
 
     public string? Contact { get; set; }
-
+    public string? PackageName { get; set; }
     public string? Email { get; set; }
 
     public string? IbanorWireTransferId { get; set; }
