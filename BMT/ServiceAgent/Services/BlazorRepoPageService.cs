@@ -532,7 +532,7 @@ namespace Blazor.Web.UI.Services
                         parameter.Add(pStatus);
                         MySqlParameter pOrgId = new MySqlParameter("p_orgid", MySqlDbType.Int32);
                         pOrgId.Value = OrgId;
-                        parameter.Add(pOrgId);  
+                        parameter.Add(pOrgId);                    
                         MySqlParameter pDateFrom = new MySqlParameter("p_datefrom", MySqlDbType.DateTime);
                         pDateFrom.Value = dtFrom.Year <= 1900 ? new DateTime(GlobalUTIL.CurrentDateTime.Year, 1, 1) : dtFrom;
                         parameter.Add(pDateFrom);
@@ -555,7 +555,9 @@ namespace Blazor.Web.UI.Services
                                 ovm.LogoAvatar = ""+reader["logoavatar"];                             
                                 ovm.Strength = Convert.ToInt32(reader["strength"]);
                                 ovm.StateName = ""+ reader["StateName"];
-                                ovm.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);                                                             
+                                ovm.PackageName = "" + reader["PackageName"];
+                                ovm.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);
+                                ovm.ExpiryTime = Convert.ToDateTime(reader["ExpiryTime"]);
                                 uvm.Add(ovm);
                             }
                             reader.Close();
