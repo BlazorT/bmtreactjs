@@ -333,8 +333,8 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                     type="text"
                     id="keyword"
                     name="keyword"
-                    title=" using by name, contact, strength"
-                    placeholder=" name, contact, strength"
+                    title=" using by name, contact, email"
+                    placeholder=" name, contact, email"
                     className="form-control item"
                     isRequired={false}
                     // message="Enter Buisness Name"
@@ -363,7 +363,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                     label="Date From "
                     id="createdAt"
                     name="createdAt"
-                    title="Org registration date "
+                    title="Registration start date (Greater Than)"
                     value={filters.createdAt}
                     onChange={(e) => changeFilter(e, 'createdAt')}
                   />
@@ -375,7 +375,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                     id="lastUpdatedAt"
                     name="lastUpdatedAt"
                     value={filters.lastUpdatedAt}
-                    title="Org registration date "
+                    title=" Registration end date (Less Than)"
                     onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
                   />
                 </div>
