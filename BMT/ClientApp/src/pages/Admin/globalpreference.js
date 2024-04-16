@@ -18,7 +18,7 @@ const globalpreference = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [tabs,setTabs] =useState( []);
   const dispatch = useDispatch();
-  const [networkList,setNetworkList]=useState([])
+    const [networkList,setNetworkList]=useState([])
   const [isLoading, setIsLoading] = useState(false);
  
 

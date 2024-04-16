@@ -8,6 +8,7 @@ using com.blazor.bmt.util;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Blazor.Web.ViewModels;
+using com.blazor.bmt.core;
 
 namespace Blazor.Web.UI.Services
 {
@@ -466,10 +467,10 @@ namespace Blazor.Web.UI.Services
                             {
                                 UserViewModel uvmi = new UserViewModel();
                                 uvmi.Id = Convert.ToInt32(reader["Id"]);
-                               // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
+                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
                                 uvmi.UserCode = "" + reader["Id"];
                                 uvmi.CompleteName = "" + reader["CompleteName"];
-                                uvmi.OrgId = Convert.ToInt32( reader["OrgId"]);
+                                uvmi.OrgId = Convert.ToInt32(reader["OrgId"]);
                                 // uvmi.SchoolName = "" + reader["SchoolName"];
                                 uvmi.RoleName = "" + reader["RoleName"];
                                 uvmi.FirstName = "" + reader["FirstName"];
@@ -487,17 +488,75 @@ namespace Blazor.Web.UI.Services
                                 //uvmi.CreditCardExpiryDate = Convert.ToDateTime(reader["CreditCardExpiryDate"]);
                                 uvmi.RegistrationTime = Convert.ToDateTime(reader["CreatedAt"]);
                                 uvmi.OrgName = "" + reader["OrgName"];
-                                uvmi.Avatar = ""+reader["Avatar"];
+                                uvmi.Avatar = "" + reader["Avatar"];
                                 //uvmi.ZipPostalCode = "" + reader["ZipPostalCode"];
                                 uvmi.AddressId = Convert.ToInt32(reader["AddressId"]);
-                                uvmi.UserName = ""+ reader["UserName"];                              
+                                uvmi.UserName = "" + reader["UserName"];
                                 uvmi.Contact = "" + reader["PhoneNumber"];
                                 //uvmi.FileUniqueId = "" + reader["FileUniqueId"];
                                 uvmi.LastUpdatedBy = Convert.ToInt32(reader["LastUpdatedBy"]);
                                 uvmi.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);
-                                uvmi.LastUpdatedAt = Convert.ToDateTime(reader["LastUpdatedAt"]);                             
-                                uvmi.StateName = "" + reader["StateName"];                              
+                                uvmi.LastUpdatedAt = Convert.ToDateTime(reader["LastUpdatedAt"]);
+                                uvmi.StateName = "" + reader["StateName"];
                                 uvm.Add(uvmi);
+                            }
+                            reader.Close();
+                        }
+
+                    }
+
+                }// Using
+            }// Try
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return uvm.AsQueryable();
+        }
+        public async Task<IEnumerable<OrganizationViewModel>> GetOrganizationListReport(int OrgId, string keyword,int status, DateTime dtFrom, DateTime dtTo)
+        {
+            List<OrganizationViewModel> uvm = new List<OrganizationViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pkeyword = new MySqlParameter("p_keyword", "" + keyword);
+                        parameter.Add(pkeyword);                     
+                        MySqlParameter pStatus = new MySqlParameter("p_status", MySqlDbType.Int32);
+                        pStatus.Value = status;
+                        parameter.Add(pStatus);
+                        MySqlParameter pOrgId = new MySqlParameter("p_orgid", MySqlDbType.Int32);
+                        pOrgId.Value = OrgId;
+                        parameter.Add(pOrgId);  
+                        MySqlParameter pDateFrom = new MySqlParameter("p_datefrom", MySqlDbType.DateTime);
+                        pDateFrom.Value = dtFrom.Year <= 1900 ? new DateTime(GlobalUTIL.CurrentDateTime.Year, 1, 1) : dtFrom;
+                        parameter.Add(pDateFrom);
+                        MySqlParameter pDateTo = new MySqlParameter("p_dateto", MySqlDbType.DateTime);
+                        pDateTo.Value = dtTo.Year <= 1900 ? GlobalUTIL.CurrentDateTime : dtTo;
+                        parameter.Add(pDateTo);
+                        command.Parameters.AddRange(parameter.ToArray());
+                        command.CommandText = "spGetOrganizationUsersListReport";
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (DbDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                OrganizationViewModel ovm = new OrganizationViewModel();
+                                ovm.Id = Convert.ToInt32(reader["Id"]);
+                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
+                                ovm.Name = "" + reader["Name"];                              
+                                ovm.Email = "" + reader["Email"];
+                                ovm.Contact = "" + reader["Contact"];                              
+                                ovm.LogoAvatar = ""+reader["logoavatar"];                             
+                                ovm.Strength = Convert.ToInt32(reader["strength"]);
+                                ovm.StateName = ""+ reader["StateName"];
+                                ovm.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);                                                             
+                                uvm.Add(ovm);
                             }
                             reader.Close();
                         }

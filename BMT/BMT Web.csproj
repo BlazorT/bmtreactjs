@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
@@ -98,7 +98,8 @@
     <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTabs.js" />
     <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />
     <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />    
-    <None Remove="ClientApp\src\pages\Admin\DSPSRoles.js" />
+    <None Remove="ClientApp\src\pages\Admin\DSPSRoles.js" />    
+    <None Remove="ClientApp\src\pages\Admin\GlobalPrefrences.js" />
     <None Remove="ClientApp\src\pages\Dashboard\FleetDashboard.js" />
     <None Remove="ClientApp\src\pages\DA\DADspRegister.js" />
     <None Remove="ClientApp\src\pages\Fleet\FleetServiceIntegrated.js" />
