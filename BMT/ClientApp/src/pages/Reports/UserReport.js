@@ -239,7 +239,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       if (index == 0) {
         mappedObject = {
           userName: 'name',
-          userRole: 'Role',
+          roleName: 'Role',
           contact: 'Contact',
           email: 'Email',
           status: 'status',
@@ -250,7 +250,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       else {
         mappedObject = {
           userName: field.userName,
-          userRole: field.userRole,
+          roleName: field.roleName,
           contact: field.contact,
           email: field.email,
           status: field.status,
@@ -261,7 +261,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     });
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.userName, item.userRole, item.contact, item.email, item.status.toString(), item.createdAt];
+      const rowData = [item.userName, item.roleName, item.contact, item.email, item.status.toString(), item.createdAt];
       return [rowData];
 
     });

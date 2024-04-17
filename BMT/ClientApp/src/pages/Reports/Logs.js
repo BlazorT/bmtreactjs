@@ -44,7 +44,7 @@ const Logs = () => {
     businessEntityId: '',
     menuId: '',
     status: '0',
-    LogTime: dayjs().utc().startOf('month').format(),
+    LogTime: dayjs().utc().startOf('year').format(),
     LogTimeTo: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
@@ -93,7 +93,7 @@ const Logs = () => {
           const mappedArray = res.data.map((data, index) => ({
             id: data.id,
             userId: data.userId,
-            dspid: user.dspId.toString(),
+            orgId: user.orgId.toString(),
             logDesc: data.logDesc,
             entityName: data.entityName,
             menuId: data.menuId,

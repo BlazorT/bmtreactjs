@@ -124,10 +124,8 @@ export const getOrgReportPdf = (reportRows, reportField) => {
           doc.addPage();
           tableY = 0;
         }
-
         // Set the border color
         doc.setDrawColor(0); // Black border
-
         if (isVehicleSideNotEmpty) {
           doc.setFillColor(headerStyle.fillColor);
           doc.setTextColor(headerStyle.textColor);

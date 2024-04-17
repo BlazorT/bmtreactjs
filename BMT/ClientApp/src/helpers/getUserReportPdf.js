@@ -81,7 +81,7 @@ export const getUserReportPdf = (reportRows, reportField) => {
   let tableY = labelY;
 
   // Set the column widths
-  const columnWidths = [50,35,30,35,30,35];
+  const columnWidths = [40,30,30,50,30,30];
 
   // Set the font size
   const fontSize = 10;

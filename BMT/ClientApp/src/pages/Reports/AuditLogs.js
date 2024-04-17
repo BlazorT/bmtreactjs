@@ -43,7 +43,7 @@ const AuditLogs = () => {
     keyValue: '',
     keyword: '',
     oldValue: '',
-    createdAt: moment().utc().startOf('month').format(),
+    createdAt: moment().utc().startOf('year').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
