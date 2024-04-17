@@ -38,7 +38,7 @@ const AuditLogs = () => {
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId,
+    orgId: user.orgId,
     businessEntityId: '',
     keyValue: '',
     keyword: '',
