@@ -269,7 +269,9 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> paras = new List<MySqlParameter>();
-                        MySqlParameter email = new MySqlParameter("p_email", model.Email);
+                        
+                        MySqlParameter email = new MySqlParameter("p_email", MySqlDbType.VarChar);
+                        email.Value = "" + model.Email;
                         paras.Add(email);
                         MySqlParameter cred = new MySqlParameter("p_password", model.Password);
                         paras.Add(cred);
@@ -286,6 +288,9 @@ namespace Blazor.Web.UI.Services
                         {
 
                             DataTable dt = new DataTable();
+                            
+                            
+                            
                             dt.Load(reader);
 
                             var stats = from usr in dt.AsEnumerable()
