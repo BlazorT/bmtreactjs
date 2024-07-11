@@ -387,7 +387,7 @@ namespace com.blazor.bmt.util
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
-                        MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
+                        MySqlParameter pOrgId = new MySqlParameter("p_OrgId", MySqlDbType.Int32);
                         pOrgId.Value = 1;
                         parameter.Add(pOrgId);                       
                         command.Parameters.AddRange(parameter.ToArray());
