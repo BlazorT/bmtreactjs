@@ -130,6 +130,7 @@ export const rolesRoutes = [
   //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
   //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
   { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
+  { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/
 ];
 
@@ -144,6 +145,13 @@ export const routes = [
   { path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
+  { path: '/pricing', name: 'pricing', element: pricing },
+  { path: '/Packages', name: 'Packages', element: Packages },
+  { path: '/Users', name: 'Users', element: Users },
+  { path: '/Organizations', name: 'Organizations', element: Organizations },
+  { path: '/networksetting', name: 'networksetting', element: networksetting },
+  { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
+  { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/DAReport', name: 'UserReport', element: DAReport },*/
   //{
   //  path: '/DailyPerformanceReport',
