@@ -266,6 +266,7 @@ namespace Blazor.Web.UI.Services
                 using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
                 {
                     connection.Open();
+                    List<LoginViewModel> dList = new List<LoginViewModel>();
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> paras = new List<MySqlParameter>();
@@ -284,31 +285,48 @@ namespace Blazor.Web.UI.Services
                         command.CommandText = "spPerformUserValidaton";
                         command.CommandType = System.Data.CommandType.StoredProcedure;
                         command.Parameters.AddRange(paras.ToArray());                    
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader dr = command.ExecuteReader())
                         {
+                            while (dr.Read())
+                            {
+                                dList.Add(new LoginViewModel
+                                {
 
-                            DataTable dt = new DataTable();
+                                    Id = Convert.ToInt32(dr["ID"]),
+                                    OrgId = Convert.ToInt32(dr["OrgId"] == null ? GlobalBasicConfigurationsViewModel.DefaultOrgid : dr["OrgId"]),
+                                    FullName = "" + dr["FullName"],
+                                    Email = "" + dr["Email"],
+                                    LoginTime = Convert.ToDateTime(dr["LoginTime"]),
+                                    UserStatus = Convert.ToInt32(dr["UserStatus"]),
+                                    AlreadyLoginStatus = Convert.ToInt32(dr["AlreadyLoginStatus"]),
+                                    LoginMachineIp = "" + dr["MachineIP"],
+                                    UserRole = "" + dr["UserRole"],
+                                    RoleId = Convert.ToInt32(dr["RoleID"])
+                                });
+                            }
+
+                            //DataTable dt = new DataTable();
                             
                             
                             
-                            dt.Load(reader);
+                            //dt.Load(reader);
 
-                            var stats = from usr in dt.AsEnumerable()
-                                        select new LoginViewModel
-                                        {
-                                            Id = Convert.ToInt32(usr["ID"]),
-                                            OrgId = Convert.ToInt32(usr["OrgId"]==null?GlobalBasicConfigurationsViewModel.DefaultOrgid: usr["OrgId"]),
-                                            FullName = "" + usr["FullName"],
-                                            Email = "" + usr["Email"],
-                                            LoginTime = Convert.ToDateTime(usr["LoginTime"]),
-                                            UserStatus = Convert.ToInt32(usr["UserStatus"]),
-                                            AlreadyLoginStatus = Convert.ToInt32(usr["AlreadyLoginStatus"]),
-                                            LoginMachineIp = "" + usr["MachineIP"],
-                                            UserRole = "" + usr["UserRole"],                                            
-                                            RoleId = Convert.ToInt32(usr["RoleID"])
-                                        };
+                            //var stats = from usr in dt.AsEnumerable()
+                            //            select new LoginViewModel
+                            //            {
+                            //                Id = Convert.ToInt32(usr["ID"]),
+                            //                OrgId = Convert.ToInt32(usr["OrgId"]==null?GlobalBasicConfigurationsViewModel.DefaultOrgid: usr["OrgId"]),
+                            //                FullName = "" + usr["FullName"],
+                            //                Email = "" + usr["Email"],
+                            //                LoginTime = Convert.ToDateTime(usr["LoginTime"]),
+                            //                UserStatus = Convert.ToInt32(usr["UserStatus"]),
+                            //                AlreadyLoginStatus = Convert.ToInt32(usr["AlreadyLoginStatus"]),
+                            //                LoginMachineIp = "" + usr["MachineIP"],
+                            //                UserRole = "" + usr["UserRole"],                                            
+                            //                RoleId = Convert.ToInt32(usr["RoleID"])
+                            //            };
 
-                            login= stats.FirstOrDefault();
+                            login= dList.FirstOrDefault();
 
 
                         }
