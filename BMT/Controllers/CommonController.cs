@@ -513,8 +513,8 @@ namespace com.blazor.bmt.controllers
                         // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                         _cache.Set("" + lvm.Id, uvm);
 
-                        await _notificationPageService.loggedIn(uvm, ipAddress);
-                        await _appLogPageService.ProcessLoginActivity(lvm.Id, LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
+                       // await _notificationPageService.loggedIn(uvm, ipAddress);
+                       // await _appLogPageService.ProcessLoginActivity(lvm.Id, LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
                         blazorResponseViewModel.data = lvm;
                         blazorResponseViewModel.id = lvm.Id;
                         blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
