@@ -1,13 +1,17 @@
-﻿namespace com.blazor.bmt.viewmodels;
-    public  class AppLogViewModel
-    {
+﻿using System;
+using System.Collections.Generic;
+
+namespace BMT_Web.bmtfolder;
+
+public partial class Applog
+{
     public long Id { get; set; }
 
     public string? MachineIp { get; set; }
 
     public int UserId { get; set; }
 
-    public int? Dspid { get; set; }
+    public int? OrgId { get; set; }
 
     public int? MenuId { get; set; }
 

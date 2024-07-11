@@ -20,7 +20,7 @@ public partial class Mediacontent : EntityTransaction
 
     public string? MetaData { get; set; }
 
-    public int? SourceRefId { get; set; }
+    public Int64? SourceRefId { get; set; }
 
     public string? Description { get; set; }
 
@@ -37,7 +37,8 @@ public partial class Mediacontent : EntityTransaction
     public int? LastUpdatedBy { get; set; }
 
     public DateTime? LastUpdatedAt { get; set; }
-
+    
+        public string? Mediacontentcol { get; set; }
     public string? PosterImage { get; set; }
 
     public int? Status { get; set; }

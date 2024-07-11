@@ -11,9 +11,10 @@ public partial class Organization : Entity
     public string? Name { get; set; }
 
     public string? Description { get; set; }
-
+    public string? FMCToken { get; set; }
+    
     public int? Strength { get; set; }
-
+    public string? WebAddress { get; set; }
     public string? Address { get; set; }
 
     public string? Contact { get; set; }

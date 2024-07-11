@@ -1,15 +1,11 @@
-﻿using Blazor.Web.Application.Models.Base;
-using com.blazor.bmt.core.baseentity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace com.blazor.bmt.application.model;
+namespace BMT_Web.bmtfolder;
 
-public partial class UserModel:BaseModel
+public partial class User
 {
-    //public int Id { get; set; }
-
-   // public int Id { get; set; }
+    public int Id { get; set; }
 
     public string UserCode { get; set; } = null!;
 
@@ -43,15 +39,15 @@ public partial class UserModel:BaseModel
 
     public int Status { get; set; }
 
-    //public int? CreatedBy { get; set; }
+    public int? CreatedBy { get; set; }
 
-    //public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public byte? RegistrationSource { get; set; }
 
-    //public int? LastUpdatedBy { get; set; }
+    public int? LastUpdatedBy { get; set; }
 
-    //public DateTime? LastUpdatedAt { get; set; }
+    public DateTime? LastUpdatedAt { get; set; }
 
     public int RowVer { get; set; }
 

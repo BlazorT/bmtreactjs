@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Eventing.Reader;
-using com.blazor.bmt.core;
-using com.blazor.bmt.util;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace com.blazor.bmt.infrastructure;
-public partial class _bmtContext : DbContext
+namespace BMT_Web.bmtfolder;
+
+public partial class BmtContext : DbContext
 {
-    public _bmtContext()
+    public BmtContext()
     {
     }
 
-    public _bmtContext(DbContextOptions<_bmtContext> options)
+    public BmtContext(DbContextOptions<BmtContext> options)
         : base(options)
     {
-        //this.Configuration.LazyLoadingEnabled = false;
     }
+
     public virtual DbSet<Address> Addresses { get; set; }
 
     public virtual DbSet<Alertlevel> Alertlevels { get; set; }
@@ -33,11 +27,11 @@ public partial class _bmtContext : DbContext
 
     public virtual DbSet<Auditlog> Auditlogs { get; set; }
 
-   // public virtual DbSet<Basicconfiguration> Basicconfigurations { get; set; }
+    public virtual DbSet<Basicconfiguration> Basicconfigurations { get; set; }
 
     public virtual DbSet<Bundlingpackagedetail> Bundlingpackagedetails { get; set; }
 
-   // public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<City> Cities { get; set; }
 
@@ -119,7 +113,7 @@ public partial class _bmtContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL(BlazorConstant.CONNECTION_STRING);
+        => optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;password=User@Blazor;database=bmt");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -213,73 +207,73 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.OldValue).HasMaxLength(500);
         });
 
-        //modelBuilder.Entity<Basicconfiguration>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PRIMARY");
+        modelBuilder.Entity<Basicconfiguration>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-        //    entity.ToTable("basicconfigurations");
+            entity.ToTable("basicconfigurations");
 
-        //    entity.HasIndex(e => e.ProxyUserPwd, "proxy_user_pwd_UNIQUE").IsUnique();
+            entity.HasIndex(e => e.ProxyUserPwd, "proxy_user_pwd_UNIQUE").IsUnique();
 
-        //    entity.Property(e => e.ApiAuthKey).HasMaxLength(200);
-        //    entity.Property(e => e.CreatedAt).HasColumnType("datetime(3)");
-        //    entity.Property(e => e.DefaultOrgName).HasMaxLength(200);
-        //    entity.Property(e => e.DspAdminEmail)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("dsp_admin_email");
-        //    entity.Property(e => e.EmailNotificationEnabled)
-        //        .HasDefaultValueSql("'1'")
-        //        .HasColumnName("email_notification_enabled");
-        //    entity.Property(e => e.FcmSenderId)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("fcmSenderId");
-        //    entity.Property(e => e.FcmServerKey)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("fcmServerKey");
-        //    entity.Property(e => e.GetSmsnotificationsQuery)
-        //        .HasMaxLength(500)
-        //        .HasColumnName("GetSMSNotificationsQuery");
-        //    entity.Property(e => e.InsertSmshistoryQuery)
-        //        .HasMaxLength(500)
-        //        .HasColumnName("InsertSMSHistoryQuery");
-        //    entity.Property(e => e.IsProxyEnabled)
-        //        .HasDefaultValueSql("'1'")
-        //        .HasColumnName("isProxyEnabled");
-        //    entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
-        //    entity.Property(e => e.ProxyServer)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("proxy_server");
-        //    entity.Property(e => e.ProxyUserName)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("proxy_user_name");
-        //    entity.Property(e => e.ProxyUserPwd)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("proxy_user_pwd");
-        //    entity.Property(e => e.SmsNotificationEnabled)
-        //        .HasDefaultValueSql("'1'")
-        //        .HasColumnName("sms_notification_enabled");
-        //    entity.Property(e => e.SmsPassword)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("sms_password");
-        //    entity.Property(e => e.SmsQouta).HasColumnName("sms_qouta");
-        //    entity.Property(e => e.SmsServiceUrl)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("sms_service_url");
-        //    entity.Property(e => e.SmsServiceUser)
-        //        .HasMaxLength(200)
-        //        .HasColumnName("sms_service_user");
-        //    entity.Property(e => e.SmtpSenderEmail).HasMaxLength(45);
-        //    entity.Property(e => e.SmtpServer).HasMaxLength(100);
-        //    entity.Property(e => e.SmtpUser).HasMaxLength(200);
-        //    entity.Property(e => e.SmtpUserPwd).HasMaxLength(200);
-        //    entity.Property(e => e.Smtpport).HasColumnName("SMTPPort");
-        //    entity.Property(e => e.Sslenabled)
-        //        .HasDefaultValueSql("'1'")
-        //        .HasColumnName("SSLEnabled");
-        //    entity.Property(e => e.UpdateSmsnotificationsQuery)
-        //        .HasMaxLength(500)
-        //        .HasColumnName("UpdateSMSNotificationsQuery");
-        //});
+            entity.Property(e => e.ApiAuthKey).HasMaxLength(200);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.DefaultOrgName).HasMaxLength(200);
+            entity.Property(e => e.DspAdminEmail)
+                .HasMaxLength(200)
+                .HasColumnName("dsp_admin_email");
+            entity.Property(e => e.EmailNotificationEnabled)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("email_notification_enabled");
+            entity.Property(e => e.FcmSenderId)
+                .HasMaxLength(200)
+                .HasColumnName("fcmSenderId");
+            entity.Property(e => e.FcmServerKey)
+                .HasMaxLength(200)
+                .HasColumnName("fcmServerKey");
+            entity.Property(e => e.GetSmsnotificationsQuery)
+                .HasMaxLength(500)
+                .HasColumnName("GetSMSNotificationsQuery");
+            entity.Property(e => e.InsertSmshistoryQuery)
+                .HasMaxLength(500)
+                .HasColumnName("InsertSMSHistoryQuery");
+            entity.Property(e => e.IsProxyEnabled)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("isProxyEnabled");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.ProxyServer)
+                .HasMaxLength(200)
+                .HasColumnName("proxy_server");
+            entity.Property(e => e.ProxyUserName)
+                .HasMaxLength(200)
+                .HasColumnName("proxy_user_name");
+            entity.Property(e => e.ProxyUserPwd)
+                .HasMaxLength(200)
+                .HasColumnName("proxy_user_pwd");
+            entity.Property(e => e.SmsNotificationEnabled)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("sms_notification_enabled");
+            entity.Property(e => e.SmsPassword)
+                .HasMaxLength(200)
+                .HasColumnName("sms_password");
+            entity.Property(e => e.SmsQouta).HasColumnName("sms_qouta");
+            entity.Property(e => e.SmsServiceUrl)
+                .HasMaxLength(200)
+                .HasColumnName("sms_service_url");
+            entity.Property(e => e.SmsServiceUser)
+                .HasMaxLength(200)
+                .HasColumnName("sms_service_user");
+            entity.Property(e => e.SmtpSenderEmail).HasMaxLength(45);
+            entity.Property(e => e.SmtpServer).HasMaxLength(100);
+            entity.Property(e => e.SmtpUser).HasMaxLength(200);
+            entity.Property(e => e.SmtpUserPwd).HasMaxLength(200);
+            entity.Property(e => e.Smtpport).HasColumnName("SMTPPort");
+            entity.Property(e => e.Sslenabled)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("SSLEnabled");
+            entity.Property(e => e.UpdateSmsnotificationsQuery)
+                .HasMaxLength(500)
+                .HasColumnName("UpdateSMSNotificationsQuery");
+        });
 
         modelBuilder.Entity<Bundlingpackagedetail>(entity =>
         {
@@ -294,17 +288,17 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.StartTime).HasColumnType("datetime");
         });
 
-        //modelBuilder.Entity<Category>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PRIMARY");
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-        //    entity.ToTable("categories");
+            entity.ToTable("categories");
 
-        //    entity.Property(e => e.Code).HasMaxLength(10);
-        //    entity.Property(e => e.Desc).HasMaxLength(1000);
-        //    entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
-        //    entity.Property(e => e.Name).HasMaxLength(150);
-        //});
+            entity.Property(e => e.Code).HasMaxLength(10);
+            entity.Property(e => e.Desc).HasMaxLength(1000);
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.Name).HasMaxLength(150);
+        });
 
         modelBuilder.Entity<City>(entity =>
         {
@@ -397,7 +391,7 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Key).HasMaxLength(50);
             entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
             entity.Property(e => e.Name).HasMaxLength(50);
-            entity.Property(e => e.RowVer).HasColumnName("ROWVer");
+            entity.Property(e => e.Rowver).HasColumnName("ROWVer");
             entity.Property(e => e.Value).HasMaxLength(500);
         });
 
@@ -641,7 +635,7 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Body).HasMaxLength(3000);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime(3)");
             entity.Property(e => e.Description).HasMaxLength(200);
-            entity.Property(e => e.OrganizationId).HasColumnName("OrganizationId");
+            entity.Property(e => e.Dspid).HasColumnName("DSPId");
             entity.Property(e => e.ExpiryTime).HasColumnType("datetime(3)");
             entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
             entity.Property(e => e.Recipient).HasMaxLength(2000);
@@ -673,10 +667,10 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Subject).HasMaxLength(200);
             entity.Property(e => e.Title).HasMaxLength(200);
 
-            //entity.HasOne(d => d.Notification).WithOne(p => p.Notificationlog)
-            //    .HasForeignKey<Notificationlog>(d => d.NotificationId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK_NotificationId");
+            entity.HasOne(d => d.Notification).WithOne(p => p.Notificationlog)
+                .HasForeignKey<Notificationlog>(d => d.NotificationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_NotificationId");
         });
 
         modelBuilder.Entity<Notificationtype>(entity =>
@@ -725,7 +719,7 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Fb)
                 .HasMaxLength(100)
                 .HasColumnName("FB");
-            entity.Property(e => e.FMCToken)
+            entity.Property(e => e.Fmctoken)
                 .HasMaxLength(1000)
                 .HasColumnName("FMCToken");
             entity.Property(e => e.IbanorWireTransferId)
@@ -784,9 +778,9 @@ public partial class _bmtContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("WebURL");
 
-            //entity.HasOne(d => d.Network).WithMany(p => p.Orgpackagedetails)
-            //    .HasForeignKey(d => d.NetworkId)
-            //    .HasConstraintName("fk_NetworkId");
+            entity.HasOne(d => d.Network).WithMany(p => p.Orgpackagedetails)
+                .HasForeignKey(d => d.NetworkId)
+                .HasConstraintName("fk_NetworkId");
         });
 
         modelBuilder.Entity<Package>(entity =>
@@ -873,10 +867,10 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.ValueTime).HasColumnType("datetime");
             entity.Property(e => e.ZipCode).HasMaxLength(6);
 
-            //entity.HasOne(d => d.Payment).WithMany(p => p.Paymenthistories)
-            //    .HasForeignKey(d => d.PaymentId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK_PaymentHistory_PaymentId");
+            entity.HasOne(d => d.Payment).WithMany(p => p.Paymenthistories)
+                .HasForeignKey(d => d.PaymentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PaymentHistory_PaymentId");
         });
 
         modelBuilder.Entity<Paymentmethod>(entity =>
@@ -929,7 +923,7 @@ public partial class _bmtContext : DbContext
             entity.ToTable("roleright");
 
             entity.Property(e => e.CreatedAt).HasColumnType("datetime(3)");
-           // entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
             entity.Property(e => e.RowVer).HasDefaultValueSql("'1'");
         });
 

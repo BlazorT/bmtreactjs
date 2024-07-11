@@ -21,6 +21,9 @@ public partial class Menu:Entity
     public int SortOrder { get; set; }
 
     public sbyte IsVisible { get; set; }
+    public string? Badge { get; set; }
+    public string? Tag { get; set; }
+    public string? Title { get; set; }
 
     public int? LastUpdatedBy { get; set; }
 

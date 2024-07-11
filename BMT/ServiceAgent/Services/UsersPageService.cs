@@ -64,7 +64,7 @@ namespace Blazor.Web.UI.Services
             var urs = await _usersAppService.GetUsersByDspAndRole((int)userRole, orgId);
             var urslist = urs.Where(x => x.OrgId == (orgId <= 0 ? x.OrgId : orgId)).ToList().Select(user => new EnumViewModel
             {
-                id = user.Id,
+                id = user.id,
                 name = user.FirstName + " " + user.MiddleName + " " + user.LastName
 
             }).ToList();
@@ -78,7 +78,7 @@ namespace Blazor.Web.UI.Services
             var urs = await _usersAppService.GetUsersByDspAndRole((int)userRole, 0);
             var urslist = urs.ToList().Select(user => new EnumViewModel           
             {
-                id = user.Id,
+                id = user.id,
                 name = user.FirstName + " " + user.MiddleName + " " + user.LastName
 
             }).ToList();
@@ -92,7 +92,7 @@ namespace Blazor.Web.UI.Services
             var sbr = await _usersAppService.GetUsersByDspAndRole((int)USERROLES.PUBLIC_USER,0);
             var sbrlist = sbr.ToList().Select(subscriber => new EnumViewModel
             {
-                id = subscriber.Id,
+                id = subscriber.id,
                 name = subscriber.FirstName + " " + subscriber.MiddleName + " " + subscriber.LastName
 
             }).ToList();

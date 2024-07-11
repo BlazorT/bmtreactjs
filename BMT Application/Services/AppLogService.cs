@@ -78,7 +78,7 @@ namespace com.blazor.bmt.application.services
         {
            // ValidateEntityIfNotExist(AppLogModel);
             
-            var editAddress = await _appLogRepository.GetAppLogByIDAsync(AppLogModel.id);
+            var editAddress = await _appLogRepository.GetAppLogByIDAsync(AppLogModel.Id);
             if (editAddress == null)
                 throw new ApplicationException($"Entity could not be loaded.");
 
@@ -91,7 +91,7 @@ namespace com.blazor.bmt.application.services
         public async Task Delete(ApplogModel AppLogModel)
         {
            // ValidateProductIfNotExist(AppLogModel);
-            var deletedProduct = await _appLogRepository.GetAppLogByIDAsync(AppLogModel.id);
+            var deletedProduct = await _appLogRepository.GetAppLogByIDAsync(AppLogModel.Id);
             if (deletedProduct == null)
                 throw new ApplicationException($"Entity could not be loaded.");
 

@@ -12,7 +12,7 @@ public partial class MediacontentModel:BaseModelTransactions
     public int? CompaignId { get; set; }
 
     public string ContentCode { get; set; } = null!;
-
+    public string? Mediacontentcol { get; set; }
     public string? Title { get; set; }
 
     public string? EpisodeNo { get; set; }

@@ -5,13 +5,15 @@ using System.Collections.Generic;
 
 namespace com.blazor.bmt.application.model;
 
-public partial class ApplogModel : BaseModelTransactions
+public partial class ApplogModel //: BaseModelTransactions
 {
-    //public long Id { get; set; }
+    public long Id { get; set; }
 
     public string? MachineIp { get; set; }
 
     public int UserId { get; set; }
+
+    public int? OrgId { get; set; }
 
     public int? MenuId { get; set; }
 
@@ -20,4 +22,6 @@ public partial class ApplogModel : BaseModelTransactions
     public byte? ActionType { get; set; }
 
     public DateTime? LogTime { get; set; }
+
+    public string? Synccode { get; set; }
 }

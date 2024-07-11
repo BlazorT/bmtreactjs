@@ -11,7 +11,7 @@ public partial class OrganizationModel : BaseModel
     public string? Name { get; set; }
 
     public string? Description { get; set; }
-
+    public string? FMCToken { get; set; }
     public int? Strength { get; set; }
 
     public string? Address { get; set; }
@@ -31,7 +31,7 @@ public partial class OrganizationModel : BaseModel
     public string? Instagram { get; set; }
 
     public int? CurrencyId { get; set; }
-
+    public string? WebAddress { get; set; }
     public int? CityId { get; set; }
 
     public int Status { get; set; }
