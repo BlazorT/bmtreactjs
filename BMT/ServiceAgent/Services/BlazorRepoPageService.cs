@@ -571,7 +571,7 @@ namespace Blazor.Web.UI.Services
                             {
                                 OrganizationViewModel ovm = new OrganizationViewModel();
                                 ovm.Id = Convert.ToInt32(reader["Id"]);
-                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
+                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]); Name, Email, Contact logoavatar, strength, StateName, PackageName, CreatedAt, ExpiryTime
                                 ovm.Name = "" + reader["Name"];                              
                                 ovm.Email = "" + reader["Email"];
                                 ovm.Contact = "" + reader["Contact"];                              
@@ -1415,19 +1415,19 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
-                        MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
+                        MySqlParameter pId = new MySqlParameter("p_id", MySqlDbType.Int64);
                         pId.Value = model.Id;
                         parameter.Add(pId);
 
-                        MySqlParameter pRemarks = new MySqlParameter("p_Remarks", SqlDbType.NVarChar);
+                        MySqlParameter pRemarks = new MySqlParameter("p_Remarks", MySqlDbType.VarChar);
                         pRemarks.Value = "" + model.Remarks;
                         parameter.Add(pRemarks);
 
-                        MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
+                        MySqlParameter pStatus = new MySqlParameter("p_status", MySqlDbType.Int32);
                         pStatus.Value = model.Status;
                         parameter.Add(pStatus);
 
-                        MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
+                        MySqlParameter pUserId = new MySqlParameter("p_UserId", MySqlDbType.Int32);
                         pUserId.Value = model.LastUpdatedBy;
                         parameter.Add(pUserId);
 
