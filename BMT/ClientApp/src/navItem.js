@@ -22,7 +22,7 @@ export const transformData = (data) => {
 
     for (const item of filteredItems) {
       const children = data
-        .filter((child) => child.parentId === item.id && child.canView === 1)
+        .filter((child) => child.parentId === item.id)
         .sort((a, b) => a.id - b.id);
 
       const newItem = {

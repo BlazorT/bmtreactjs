@@ -111,6 +111,7 @@ export const rolesRoutes = [
   // { path: '/Expression', name: 'Expression', element: Expression },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
+  { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   //{ path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
   //{
   //  path: '/DailyPerformanceReport',
@@ -120,6 +121,7 @@ export const rolesRoutes = [
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
+  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/waves', name: 'waves', element: waves },
   //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
@@ -130,6 +132,7 @@ export const rolesRoutes = [
   //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
   //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
   { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
+  { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/
 ];
 
@@ -143,6 +146,19 @@ export const routes = [
   { path: '/print', name: 'Print', element: Print },
   { path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
+  { path: '/UserReport', name: 'UserReport', element: UserReport },
+  { path: '/pricing', name: 'pricing', element: pricing },
+  { path: '/Packages', name: 'Packages', element: Packages },
+  { path: '/Users', name: 'Users', element: Users },
+  { path: '/Organizations', name: 'Organizations', element: Organizations },
+  { path: '/networksetting', name: 'networksetting', element: networksetting },
+  { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
+  { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
+  { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
+  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
+  { path: '/Logs', name: 'Logs', element: Logs },
+  { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
+  { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
   /*{ path: '/DAReport', name: 'UserReport', element: DAReport },*/
   //{

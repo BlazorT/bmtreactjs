@@ -33,7 +33,7 @@ const organizationsusers = () => {
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Organization Users',
+    (item) => item.name === 'Organizations Users',
   );
   const navigate = useNavigate();
 

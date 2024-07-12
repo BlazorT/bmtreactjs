@@ -121,10 +121,10 @@ function SignIn() {
     const menuBody = {
       roleId: loginRes && loginRes.current?.data.roleId.toString()
     };
-   // console.log(menuBody, 'menusbody');
+    console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
-   // console.log(menuRes, 'menusRes');
-   // console.log(menuRes.current, menuErr);
+    console.log(menuRes, 'menusRes');
+    console.log(menuRes.current, menuErr);
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));
