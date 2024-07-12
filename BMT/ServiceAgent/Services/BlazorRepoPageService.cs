@@ -571,7 +571,7 @@ namespace Blazor.Web.UI.Services
                             {
                                 OrganizationViewModel ovm = new OrganizationViewModel();
                                 ovm.Id = Convert.ToInt32(reader["Id"]);
-                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
+                                // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]); Name, Email, Contact logoavatar, strength, StateName, PackageName, CreatedAt, ExpiryTime
                                 ovm.Name = "" + reader["Name"];                              
                                 ovm.Email = "" + reader["Email"];
                                 ovm.Contact = "" + reader["Contact"];                              
