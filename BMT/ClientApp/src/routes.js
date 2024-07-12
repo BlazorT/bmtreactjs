@@ -111,6 +111,7 @@ export const rolesRoutes = [
   // { path: '/Expression', name: 'Expression', element: Expression },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
+  { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   //{ path: '/DispatchmentReport', name: 'DispatchmentReport', element: DispatchmentReport },
   //{
   //  path: '/DailyPerformanceReport',
@@ -120,6 +121,7 @@ export const rolesRoutes = [
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
+  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/waves', name: 'waves', element: waves },
   //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
@@ -152,6 +154,12 @@ export const routes = [
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
+  { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
+  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
+  { path: '/Logs', name: 'Logs', element: Logs },
+  { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
+  { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
+  { path: '/UserReport', name: 'UserReport', element: UserReport },
   /*{ path: '/DAReport', name: 'UserReport', element: DAReport },*/
   //{
   //  path: '/DailyPerformanceReport',
