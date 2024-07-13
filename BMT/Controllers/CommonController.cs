@@ -455,7 +455,7 @@ namespace com.blazor.bmt.controllers
                //Int32 UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);// _cache.Remove(this.User.Claims.Where(x=>x.Type== "UserId").FirstOrDefault().Value);               
                await _notificationPageService.loggedOut(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(), id);
                 // Record log out activity              
-                await _appLogPageService.ProcessLoginActivity(id, LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
+                await _appLogPageService.ProcessLoginActivity(id,0, LOGIN_ACTIVITY.LOGGED_OUT, "" + Request.HttpContext.Connection.RemoteIpAddress);
                 blazorResponseViewModel.data = "";
                 blazorResponseViewModel.status = true;
                 _cache.Remove(id);
@@ -513,8 +513,8 @@ namespace com.blazor.bmt.controllers
                         // LoadUserDataForApplicationUser(usrvm); _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                         _cache.Set("" + lvm.Id, uvm);
 
-                       // await _notificationPageService.loggedIn(uvm, ipAddress);
-                       // await _appLogPageService.ProcessLoginActivity(lvm.Id, LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
+                        await _notificationPageService.loggedIn(uvm, ipAddress);
+                        //await _appLogPageService.ProcessLoginActivity(lvm.Id, Convert.ToInt32(lvm.OrgId), LOGIN_ACTIVITY.LOGGED_IN, ipAddress);
                         blazorResponseViewModel.data = lvm;
                         blazorResponseViewModel.id = lvm.Id;
                         blazorResponseViewModel.keyValue = ("" + lvm.RoleId).Trim();
