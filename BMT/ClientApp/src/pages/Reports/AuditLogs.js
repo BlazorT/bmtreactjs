@@ -291,8 +291,8 @@ const AuditLogs = () => {
                 columns={columns}
                 rowHeight={'45'}
                 pagination={true}
-                canExport={pageRoles.canExport}
-                canPrint={pageRoles.canPrint}
+               // canExport={pageRoles.canExport}
+               // canPrint={pageRoles.canPrint}
                 summary={[
                   {
                     field: 'createdAt',

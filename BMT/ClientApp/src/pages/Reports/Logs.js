@@ -314,8 +314,8 @@ const Logs = () => {
                 columns={columns}
                 rowHeight={'normal'}
                 pagination={true}
-                canExport={pageRoles.canExport}
-                canPrint={pageRoles.canPrint}
+              //  canExport={pageRoles.canExport}
+              //  canPrint={pageRoles.canPrint}
                 summary={[
                   {
                     field: 'logTime',
