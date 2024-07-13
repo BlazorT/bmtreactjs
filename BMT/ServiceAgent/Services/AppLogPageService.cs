@@ -51,7 +51,7 @@ namespace Blazor.Web.UI.Services
             var mapped = _mapper.Map<IEnumerable<AppLogViewModel>>(list);
             return mapped;
         }
-        public async Task ProcessLoginActivity(int UserId ,LOGIN_ACTIVITY activity, string remoteMachineIp)
+        public async Task ProcessLoginActivity(int UserId , int OrgId, LOGIN_ACTIVITY activity, string remoteMachineIp)
         {
             try
             {
@@ -62,7 +62,11 @@ namespace Blazor.Web.UI.Services
                 appLogModel.LogDesc = activity== LOGIN_ACTIVITY.LOGGED_OUT?BlazorConstant.LOGGED_OUT_MSG: BlazorConstant.LOGGED_IN_MSG;
                 appLogModel.MachineIp = remoteMachineIp;
                 appLogModel.UserId = UserId;
-             await   _appLogService.Create(appLogModel);
+                appLogModel.OrgId = OrgId;
+                appLogModel.MenuId = 0;
+                appLogModel.Synccode = "0";
+                //appLogModel.UserId = UserId;
+                await   _appLogService.Create(appLogModel);
             }
             catch (Exception ex)
             {
