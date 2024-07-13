@@ -27,7 +27,7 @@ const campaignslisting = () => {
   }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Compaigns',
+    (item) => item.name === 'Campaigns Listing',
   );
   const navigate = useNavigate();
   const [showFilters, setshowFilters] = useState(false);

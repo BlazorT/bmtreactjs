@@ -114,6 +114,7 @@ const getIcon = (iconName) => {
 };
 
 export const mapNavItem = (data) => {
+  console.log(data)
   return data.map((item) => {
     return {
       component: item.component === 'CNavGroup' ? CNavGroup : CNavItem,
