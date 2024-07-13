@@ -28,7 +28,7 @@ export const useFetchCampaigns = () => {
    
    // console.log(userBody,'body')
     const res = await postData(compaignsBody);
-    console.log(( res) );
+    console.log(( res),'campaignData' );
    // alert((res.data.status) );
     if (res && res.status) {
       return res.data;

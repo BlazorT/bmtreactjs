@@ -58,7 +58,7 @@ const campaignslisting = () => {
       startTime: formatDateTime(data.startTime),
       finishTime: formatDateTime(data.finishTime)
     }));
-    //console.log(mappedArray, 'org');
+    console.log(mappedArray, 'org');
     setRows(mappedArray);
   };
 

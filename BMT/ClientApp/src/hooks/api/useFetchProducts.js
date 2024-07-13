@@ -10,7 +10,7 @@ export const useFetchProducts = () => {
   const fetchProducts = async () => {
 
     const res = await postData();
-    console.log({res})
+    console.log({res},'pkg')
     if (res?.status === true) {
       return res?.data;
     } else {

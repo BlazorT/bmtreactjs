@@ -8,11 +8,11 @@ public partial class PackageViewModel
 
     public string? Description { get; set; }
 
-    public double? Fee { get; set; }
+    public float? Fee { get; set; }
 
-    public double? EarlyBirdDiscount { get; set; }
+    public float? EarlyBirdDiscount { get; set; }
 
-    public double? Discount { get; set; }
+    public float? Discount { get; set; }
 
     public int? PackageInDays { get; set; }
 
