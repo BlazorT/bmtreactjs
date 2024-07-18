@@ -105,7 +105,7 @@ function SignIn() {
     await fetchUtils('/Common/lovs');
 
     if (utilRes?.current?.status === true) {
-     // console.log(utilRes.current.data,'util');
+      console.log(utilRes.current.data,'util');
       addGlobalUtils(utilRes.current.data);
     } /*else {
       dispatch(

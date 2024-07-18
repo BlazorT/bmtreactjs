@@ -74,7 +74,7 @@ const campaignadd = () => {
   const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
-  const tabs = [{ id: 1, name: 'Campaign' }, { id: 2, name: 'Networks' }, { id: 3, name: 'Schedule' }];
+  const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
  
   const handleCampaignAddForm = (e, label) => {
    // alert(label);
@@ -136,7 +136,7 @@ const campaignadd = () => {
     setConfirmationModalOpen(!confirmationModalOpen);
   };
   const goToAnotherPage = () => {
-    navigate('/DspsList');
+    navigate('/campaignslisting');
   };
   const onCancel = () => {
     showConfirmation({
@@ -286,13 +286,13 @@ const campaignadd = () => {
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
-        title="camaign"
+        title="campaign"
         tabs={tabs}
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
       <CContainer fluid className="mt-4">
-        {tabs[activeTab].name === 'Campaign' && (
+        {tabs[activeTab] && tabs[activeTab].name === 'Campaign' && (
           <React.Fragment>
             <AppContainer>
               <DataGridHeader
@@ -304,11 +304,11 @@ const campaignadd = () => {
               {showForm && (
                 <React.Fragment>
                   <Inputs
-                    inputFields={campaignAddInputs}
+                    inputFields={ campaignAddInputs }
                     yesFn={goToAnotherPage}
-                    submitBtnTitle='Next'
-                    submitFn={()=> setActiveTab(1)}
-                  > 
+                    submitBtnTitle="Next"
+                    submitFn={() => setActiveTab(1)}
+                  >
                     <div className="row">
                       <div className="col-md-6 mt-4">
                         <CFormCheck
@@ -316,10 +316,8 @@ const campaignadd = () => {
                           id="flexNotificationChecked"
                           label="Generate Auto Leads"
                           defaultChecked
-                        
                         />
                       </div>
-               
                       <div className="col-md-6 mt-2">
                         <FormControl>
                           <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Status</FormLabel>
@@ -331,7 +329,6 @@ const campaignadd = () => {
                             <FormControlLabel value="Active" control={<Radio />} label="Active" />
                             <FormControlLabel value="Paused" control={<Radio />} label="Paused" />
                             <FormControlLabel value="Cancel" control={<Radio />} label="Cancel" />
-
                           </RadioGroup>
                         </FormControl>
                       </div>
@@ -344,35 +341,32 @@ const campaignadd = () => {
                         filterDisable={true}
                       />
                     </AppContainer>
-                      {targetAudience && (
-                        <React.Fragment>
-                        
-                          <CRow>
-                            <CCol md="12">
-                              <CustomInput
-                                label="File"
-                                icon={cilFlagAlt}
-                                type="file"
-                                id="custom"
-                                className="form-control item"
-                                value={campaignRegData.custom}
-                                name="custom"
-                                onChange={(e) => handleCampaignAddForm(e)}
-                              />
-                            </CCol>
-                          <CCol md="4 " className="mt-4">
+                    {targetAudience && (
+                      <React.Fragment>
+                        <CRow>
+                          <CCol md="12">
+                            <CustomInput
+                              label="File"
+                              icon={cilFlagAlt}
+                              type="file"
+                              id="custom"
+                              className="form-control item"
+                              value={campaignRegData.custom}
+                              name="custom"
+                              onChange={handleCampaignAddForm}
+                            />
+                          </CCol>
+                          <CCol md="4" className="mt-4">
                             <button
-                              onClick={() => AddAreaClick()}
+                              onClick={AddAreaClick}
                               type="button"
                               className="btn btn_Default sales-btn-style m-2 btn-Width"
                             >
                               Area Select
                             </button>
-
                           </CCol>
-                          <CCol md="2 " className="mt-4">
-                            <CIcon className="mt-3" onClick={() => AddGoogleMapClick()} icon={cilGlobeAlt} size="xxl" />
-                           
+                          <CCol md="2" className="mt-4">
+                            <CIcon className="mt-3" onClick={AddGoogleMapClick} icon={cilGlobeAlt} size="xxl" />
                           </CCol>
                           <CCol md="6">
                             <CustomInput
@@ -384,37 +378,35 @@ const campaignadd = () => {
                               className="form-control item"
                               value={campaignRegData.area}
                               name="area"
-                              onChange={(e) => handleCampaignAddForm(e)}
+                              onChange={handleCampaignAddForm}
                             />
                           </CCol>
                           <CRow className="mg-lft mt-2">
                             <CCol md="12">
-                            <Table striped bordered hover>
-                              <thead>
-                                <tr>
-                                  <th className="txt-color">Country</th>
-                                  <th className="txt-color">City</th>
-                                  <th className="txt-color">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {cityData.map((item, index) => (
-                                  <tr key={index}>
-                                    <td className="txt-color">{item.states}</td>
-                                    <td className="txt-color">{item.city}</td>
-                                    <td className="txt-color">
-                                      <Button title="Delete" value="Delete" variant="danger" onClick={() => handleDelete(index)}>
-                                        Delete
-                                      </Button>
-                                    </td>
+                              <Table striped bordered hover>
+                                <thead>
+                                  <tr>
+                                    <th className="txt-color">Country</th>
+                                    <th className="txt-color">City</th>
+                                    <th className="txt-color">Action</th>
                                   </tr>
-                                ))}
-                              </tbody>
+                                </thead>
+                                <tbody>
+                                  {cityData.map((item, index) => (
+                                    <tr key={index}>
+                                      <td className="txt-color">{item.states}</td>
+                                      <td className="txt-color">{item.city}</td>
+                                      <td className="txt-color">
+                                        <Button title="Delete" value="Delete" variant="danger" onClick={() => handleDelete(index)}>
+                                          Delete
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
                               </Table>
                             </CCol>
                           </CRow>
-                         
-
                           <CCol md="12 mt-2">
                             <textarea
                               label="Area"
@@ -425,7 +417,7 @@ const campaignadd = () => {
                               className="form-control item"
                               value={campaignRegData.description}
                               name="description"
-                              onChange={(e) => handleCampaignAddForm(e)}
+                              onChange={handleCampaignAddForm}
                             />
                           </CCol>
                           <CCol md="8" className="mt-2">
@@ -441,7 +433,7 @@ const campaignadd = () => {
                               onChange={(e) => setTargetUser(e.target.value)}
                             />
                           </CCol>
-                          <CCol md="4" className="mt-3" >
+                          <CCol md="4" className="mt-3">
                             <div className="mt-3">
                               <button
                                 type="submit"
@@ -451,7 +443,6 @@ const campaignadd = () => {
                                 Save
                               </button>
                             </div>
-                 
                           </CCol>
                           <CCol md="12" className="mt-2">
                             <h4>Target Users</h4>
@@ -465,20 +456,17 @@ const campaignadd = () => {
                                 </ListGroup.Item>
                               ))}
                             </ul>
-                         
                           </CCol>
-                          </CRow>
-                        </React.Fragment>
-                      )}
-                   
+                        </CRow>
+                      </React.Fragment>
+                    )}
                   </Inputs>
-                 
                 </React.Fragment>
               )}
             </AppContainer>
           </React.Fragment>
         )}
-        {tabs[activeTab] === 'Networks' && (
+        {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
           <React.Fragment>
             <AppContainer>
               <DataGridHeader
@@ -489,9 +477,7 @@ const campaignadd = () => {
             <CRow>
               {globalutil.networks().map((network, index) => {
                 const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                // Assuming WhatsApp and Email are your icon components
                 const IconComponent = icons[IconName];
-                //console.log({ IconName })
                 return (
                   <CCol md={4} key={index}>
                     <ul className="inlinedisplay">
@@ -505,16 +491,12 @@ const campaignadd = () => {
                           name={IconName}
                           label={network.name}
                           defaultChecked
-                         // checked={notificationData[IconName]}
-                         // onChange={(e) => handleNotificationSetting(e, network)}
                         />
                       </li>
                     </ul>
                   </CCol>
-                )
+                );
               })}
-
-
             </CRow>
             <React.Fragment>
               <div className="CenterAlign pt-2">
@@ -533,46 +515,36 @@ const campaignadd = () => {
                   Next
                 </button>
               </div>
-              {/*  <Button title="Cancel" className="" onClick={() => onCancel()} />*/}
-              {/*  <Button title="Save" onClick={() => onSave()} />*/}
             </React.Fragment>
           </React.Fragment>
         )}
-        {tabs[activeTab] === 'Schedule' && (
+        {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (
           <React.Fragment>
             <AppContainer>
               <React.Fragment>
                 <AppContainer>
                   <React.Fragment>
                     <DataGridHeader
-                      addButton='Schedule'
+                      addButton="Schedule"
                       addBtnClick={AddScheduleClick}
-                      title="Schedules" />
-
+                      title="Schedules"
+                    />
                     <div className="show-stock">
-                      <div className="row ">
+                      <div className="row">
                         <div className="col-md-12 col-xl-12">
                           <CustomDatagrid
                             rows={schedulerows}
                             columns={schedulecolumns}
                             rowHeight={55}
                             pagination={true}
-                          // canExport={pageRoles.canExport}
-                          // canPrint={pageRoles.canPrint}
                           />
                         </div>
                       </div>
                     </div>
-
                   </React.Fragment>
-
                 </AppContainer>
               </React.Fragment>
-             
             </AppContainer>
-           
-            
-         
           </React.Fragment>
         )}
       </CContainer>

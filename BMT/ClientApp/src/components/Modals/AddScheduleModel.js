@@ -183,6 +183,19 @@ const AddScheduleModel = (prop) => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
+  const [selectedNetworks, setSelectedNetworks] = useState(
+    (globalutil.networks() || []).map(network => network.name)
+  );
+
+  const handleNetworkChange = (networkName) => {
+    setSelectedNetworks((prevSelected) => {
+      if (prevSelected.includes(networkName)) {
+        return prevSelected.filter((name) => name !== networkName);
+      } else {
+        return [...prevSelected, networkName];
+      }
+    });
+  };
   return (
     <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
       <ModalHeader>{header}</ModalHeader>
@@ -199,29 +212,27 @@ const AddScheduleModel = (prop) => {
               <CRow>
                 {globalutil.networks().map((network, index) => {
                   const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                  // Assuming WhatsApp and Email are your icon components
                   const IconComponent = icons[IconName];
+                  const isSelected = selectedNetworks.includes(network.name);
                   //console.log({ IconName })
                   return (
                     <CCol md={4} key={index}>
                       <ul className="inlinedisplay">
                         <li className="divCircle">
-                          <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
+                          {IconComponent && <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />}
                         </li>
                         <li className='network-checkbox-animate'>
                           <CFormCheck
-                            className=""
                             id={IconName}
                             name={IconName}
                             label={network.name}
-                            defaultChecked
-                          // checked={notificationData[IconName]}
-                          // onChange={(e) => handleNotificationSetting(e, network)}
+                            checked={isSelected}
+                            onChange={() => handleNetworkChange(network.name)}
                           />
                         </li>
                       </ul>
                     </CCol>
-                  )
+                  );
                 })}
 
 
