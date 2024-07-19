@@ -305,6 +305,7 @@ namespace com.blazor.bmt.controllers
                     //uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null ? 0 : uvm.HasValidDrivingLicense;
                     uvm.RegistrationSource = uvm.RegistrationSource==null?0: uvm.RegistrationSource;
                     uvm.RowVer = 1;
+                    uvm.UserName= string.IsNullOrWhiteSpace(uvm.UserName) ? uvm.Email.Split("@")[0] : uvm.UserName;
                    // uvm.Token = string.IsNullOrWhiteSpace(uvm.Token) ? ""+(new Random()).NextInt64(100000,99999999) : uvm.Token;
                     uvm.Password=GlobalUTIL.Encrypt(string.IsNullOrWhiteSpace(uvm.Password) ? uvm.Password : System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(("" + uvm.Password).Trim())), true, BlazorConstant.SECKEY);
                     uvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
@@ -323,7 +324,8 @@ namespace com.blazor.bmt.controllers
                     uvm.Fmctoken = usr.Fmctoken;
                    // uvm.Token = string.IsNullOrWhiteSpace(uvm.Token)?usr.Token: uvm.Token;
                     uvm.Password = usr.Password;
-                   // uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null? usr.HasValidDrivingLicense: uvm.HasValidDrivingLicense;
+                    uvm.UserName = string.IsNullOrWhiteSpace(uvm.UserName) ? usr.UserName : uvm.UserName;
+                    // uvm.HasValidDrivingLicense = uvm.HasValidDrivingLicense == null? usr.HasValidDrivingLicense: uvm.HasValidDrivingLicense;
                     uvm.RegistrationSource = usr.RegistrationSource;
                     //uvm.CreatedBy = usr.CreatedBy;
                     uvm.RowVer = usr.RowVer + 1;
