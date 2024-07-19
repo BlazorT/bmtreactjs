@@ -11,16 +11,15 @@ import Spinner from '../UI/Spinner';
 import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-
 const UsersActionCell = (prop) => {
   const { params, fetching, user, canEdit, canDelete } = prop;
   const navigate = useNavigate();
-
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
+  const { loading, updateStatus } = useToggleUserStatus();
 
-  const { data, loading, error, updateStatus } = useToggleUserStatus();
-
+  const [userStatus, setUserStatus] = React.useState(params.row.status);
+  console.log(params.row);
   const editUser = (id) => {
     navigate('/UserRegister', { state: { id: id, user: user } });
   };
@@ -28,18 +27,19 @@ const UsersActionCell = (prop) => {
   const toggleStatus = (status) => {
     showConfirmation({
       header: 'Confirmation!',
-      body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'}  ${
-        user[0].userName
-      }?`,
+      body: `Are you sure you want to ${status === 1 ? 're-activate' : 'delete'} ${user[0].userName}?`,
       isOpen: true,
       onYes: () => onYesToggle(status),
       onNo: () => onNoConfirm(),
     });
   };
+
   const onYesToggle = async (status) => {
     const response = await updateStatus(user, status);
+    console.log(response);
     if (response.status) {
-      showToast(`${user[0].userName} ${status === 1 ? 're activated' : 'deleted'} successfully`);
+      setUserStatus(status);
+      showToast(`${user[0].userName} ${status === 1 ? 're-activated' : 'deleted'} successfully`);
       fetching();
     } else {
       showToast(response.message, 'error');
@@ -48,31 +48,28 @@ const UsersActionCell = (prop) => {
   };
 
   const onNoConfirm = () => {
-    showConfirmation({
-      isOpen: false,
-    });
+    showConfirmation({ isOpen: false });
   };
+
   return (
-    <React.Fragment>
+    <>
       {loading ? (
         <Spinner />
       ) : (
-        <>
-          {params.row.status === 6 ? (
-            <CRow>
-              <CCol>
-                <Tooltip title="Re-Active User">
-                  <CIcon
-                    onClick={() => toggleStatus(5)}
-                    className="stock-toggle-icon"
-                    icon={cilReload}
-                  />
-                </Tooltip>
-              </CCol>
-            </CRow>
+        <CRow>
+          {userStatus === 6 ? (
+            <CCol>
+              <Tooltip title="Re-Activate User">
+                <CIcon
+                  onClick={() => toggleStatus(5)}
+                  className="stock-toggle-icon"
+                  icon={cilReload}
+                />
+              </Tooltip>
+            </CCol>
           ) : (
-            <CRow>
-              {canEdit === 1 && (
+            <>
+             
                 <CCol>
                   <Tooltip title="Edit User">
                     <CIcon
@@ -82,7 +79,7 @@ const UsersActionCell = (prop) => {
                     />
                   </Tooltip>
                 </CCol>
-              )}
+             
               {canDelete === 1 && (
                 <CCol>
                   <Tooltip title="Delete User">
@@ -94,11 +91,11 @@ const UsersActionCell = (prop) => {
                   </Tooltip>
                 </CCol>
               )}
-            </CRow>
+            </>
           )}
-        </>
+        </CRow>
       )}
-    </React.Fragment>
+    </>
   );
 };
 export default UsersActionCell;

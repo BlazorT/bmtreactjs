@@ -96,7 +96,7 @@ export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
-  { path: '/organizationadd', name: 'organizationadd', element: organizationadd },
+ // { path: '/organizationadd', name: 'organizationadd', element: organizationadd },
   //{ path: '/AddDA', name: 'AddDA', element: AddDA },
   //{ path: '/DADashboard', name: 'DADashboard', element: DADashboard },
   { path: '/Logs', name: 'ApplyForm', element: Logs },

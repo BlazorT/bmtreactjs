@@ -9,22 +9,49 @@ export const useToggleUserStatus = () => {
   const updateStatus = async (user, status) => {
     const deleteBody = {
       id: user[0].id,
+      paymentDetailId: user[0].paymentDetailId,
       orgId: user[0].orgId === 1 ? 0 : user[0].orgId,
-      email: user[0].email,
-      lastName: user[0].lastName,
-      password: user[0].password,
-      primaryContact: user[0].primaryContact,
-      userId: user[0].userId,
+      userCode: user[0].userCode,
+      registrationSource: user[0].registrationSource,
+      fmctoken: user[0].fmctoken,
+      cityId: user[0].cityId,
       userName: user[0].userName,
-      lastUpdatedAt: moment().utc().format(),
-      createdAt: user[0].createdAt,
+      securityToken: user[0].securityToken,
+      contact: user[0].contact,
+      firstName: user[0].firstName,
+      middleName: user[0].middleName,
+      lastName: user[0].lastName,
+      nick: user[0].nick,
+      email: user[0].email,
+      password: user[0].password,
+      roleId: user[0].roleId,
+      gpslocation: user[0].gpslocation,
+      ims: user[0].ims,
+      addressId: user[0].addressId,
+      genderId: user[0].genderId,
+      avatar: user[0].avatar,
+      remarks: 'delete confirmation',
+      title: user[0].title,
       status: status,
-      remarks: 'delete confrimation',
+      businessVolume: user[0].businessVolume,
+      dob: user[0].dob,
+      registrationTime: user[0].registrationTime,
+      createdBy: user[0].createdBy,
+      createdAt: user[0].createdAt,
+      lastUpdatedBy: user[0].lastUpdatedBy,
+      lastUpdatedAt: moment().utc().format(),
+      rowVer: user[0].rowVer,
+      cityName: user[0].cityName,
+      completeName: user[0].completeName,
+      roleName: user[0].roleName,
+      orgName: user[0].orgName,
+      stateName: user[0].stateName,
     };
 
     const response = await postData(deleteBody);
     return response;
   };
+
 
   return { data, error, loading, updateStatus };
 };

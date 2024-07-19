@@ -61,6 +61,7 @@ const Users: React.FC = () => {
 
   const fetching = async (filter?: any) => {
     const usersList = await fetchUsers(0, filter);
+    console.log(usersList);
     setUsersData(usersList);
     formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
   };

@@ -12,7 +12,7 @@ export const useUpdateUser = () => {
       fetchData('/BlazorApi/updateuser', { method: 'POST', body: JSON.stringify(body) }, (res) => {
         resolve(res);
         if (res.status) {
-       // alert(JSON.stringify(res));
+        alert(JSON.stringify(res));
           //showToast(res.message);
           showToast(res.message);
          // uploadimageData();
