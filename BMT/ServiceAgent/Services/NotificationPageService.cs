@@ -132,7 +132,17 @@ namespace Blazor.Web.UI.Services
             var mappedViewModel = _mapper.Map<NotificationViewModel>(entityDto);
             return mappedViewModel;
         }
+        public async Task<IEnumerable<NotificationViewModel>> AddUpdateNofications(List<NotificationViewModel> nlst)
+        {
+            var clst = _mapper.Map<IEnumerable<NotificationModel>>(nlst);
+            if (clst == null)
+                throw new Exception($"Entity could not be mapped.");
+            var dlst = await _notificationService.InsertUpdateBulk(clst.ToList());
+            _logger.LogInformation($"Entity successfully added - NotificationPageService");
 
+            var ulst = _mapper.Map<IEnumerable<NotificationViewModel>>(dlst);
+            return ulst;
+        }
         public async Task UpdateNotification(NotificationViewModel notificationViewModel)
         {
             var mapped = _mapper.Map<NotificationModel>(notificationViewModel);

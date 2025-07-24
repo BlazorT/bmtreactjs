@@ -289,9 +289,9 @@ const PrivacyPolicy = (prop) => {
                             Vehicle-share Guidelines and Privacy Policy
                           </strong>
                           <p className="TROUSParagraph">
-                            4DSPS is created in the spirit of peaceful civic engagement. We do not
+                            Blazor Media Toolkit is created in the spirit of peaceful civic engagement. We do not
                             permit the use of bigoted language, anti-government or anti-law
-                            enforcement rhetoric or the provocation of violence of any kind. 4DSPS
+                            enforcement rhetoric or the provocation of violence of any kind. BMT
                             bears no tolerance for objectionable content or abusive users. We
                             reserve the right to not post any vehicle that we deem inappropriate or
                             subversive to the spirit of our platform.
@@ -424,24 +424,24 @@ const PrivacyPolicy = (prop) => {
                           <strong className="TROUSStrong pt-2">Content Integrity</strong>
                           <ul>
                             <p className="TROUSParagraph">
-                              4DSPS expects every vehicle-share to contain authentic stories of
+                              BMT expects every vehicle-share to contain authentic stories of
                               truthfulness and honesty without lies fabrications or exaggerations.
                             </p>
                           </ul>
                           <ul>
                             <p className="TROUSParagraph">
-                              4DSPS is not responsible for stories or details within a story that
+                              BMT is not responsible for stories or details within a story that
                               may turn out to be falsified by the vehicle-share.
                             </p>
                           </ul>
                           <ul>
                             <p className="TROUSParagraph">
-                              4DSPS reserves the right to inquire with family, friends, law
+                              BMT reserves the right to inquire with family, friends, law
                               enforcement and policymakers about the truthfulness of your story
                               including generalizations and / or details pertaining to people,
                               places, things, and situations. We understand that situational
                               evidence is subjective and that there may be numerous views and
-                              opinions about the same incident. If however, 4DSPS discovers that any
+                              opinions about the same incident. If however, BMT discovers that any
                               part of your story is false, your account will be suspended and your
                               vehicle removed permanently.
                             </p>

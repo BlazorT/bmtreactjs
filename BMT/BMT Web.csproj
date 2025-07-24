@@ -98,6 +98,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\Blazorhub.js" />
     <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTab.js" />
     <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTabs.js" />
     <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />

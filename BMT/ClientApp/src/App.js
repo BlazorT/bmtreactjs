@@ -8,7 +8,7 @@ import '../src/CSS/Form.css';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
 import AddDA from './pages/DA/AddDA';
-
+/*import Blazorhub from './Blazorhub';*/
 import { selectToast } from './redux/toast/toastSlice';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));

@@ -11,8 +11,8 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<NotificationModel>> GetNotificationList();
         Task<NotificationModel> GetNotificationById(long logId);
         Task<IEnumerable<NotificationModel>> GetNotificationDetails(NotificationModel AppLogModel);
-        
-        //Task<IEnumerable<NotificationModel>> GetNotificationByUserId(int userId);
+
+        Task<IEnumerable<NotificationModel>> InsertUpdateBulk(List<NotificationModel> nlst);
         Task<IEnumerable<NotificationModel>> GetNotificationBySearchKeyword(string keyword);
         Task<IEnumerable<NotificationModel>> GetNotificationByDateRangeAndStatus(STATUS_NOTIFICATION status, DateTime dtFrom, DateTime dtTo);
         Task<NotificationModel> Create(NotificationModel notificationModel);

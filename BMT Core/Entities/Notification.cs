@@ -16,6 +16,10 @@ public partial class Notification:EntityTransaction
 
     public byte NotificationTypeId { get; set; }
 
+    public string? MessageRefId { get; set; }
+    public int? DeliveryStatus { get; set; }
+
+
     public string? Recipient { get; set; }
 
     public string? SendFrom { get; set; }

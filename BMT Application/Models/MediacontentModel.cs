@@ -20,7 +20,8 @@ public partial class MediacontentModel:BaseModelTransactions
     public string? MetaData { get; set; }
 
     public int? SourceRefId { get; set; }
-
+    public string? MessageRefId { get; set; }
+    public int? DeliveryStatus { get; set; }
     public string? Description { get; set; }
 
     public string? Remarks { get; set; }
@@ -40,6 +41,6 @@ public partial class MediacontentModel:BaseModelTransactions
     public string? PosterImage { get; set; }
 
     public int? Status { get; set; }
-
-   // public int RowVer { get; set; }
+   
+    // public int RowVer { get; set; }
 }

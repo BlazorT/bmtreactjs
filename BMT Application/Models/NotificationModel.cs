@@ -26,7 +26,8 @@ public partial class NotificationModel:BaseModelTransactions
     public string? Subject { get; set; }
 
     public string? Title { get; set; }
-
+    public string? MessageRefId { get; set; }
+    public int? DeliveryStatus { get; set; }
     public string? Description { get; set; }
 
    // public int CreatedBy { get; set; }

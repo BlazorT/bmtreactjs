@@ -17,7 +17,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<OnlineuserModel> loggedIn(UserViewModel usr, string remoteMachineIp);
         Task<OnlineuserModel> loggedOut(string remoteMachineIp, int userId);
         Task<NotificationViewModel> CreateNotification(NotificationViewModel notificationViewModel);
-        
+        Task<IEnumerable<NotificationViewModel>> AddUpdateNofications(List<NotificationViewModel> nlst);
         Task UpdateNotification(NotificationViewModel notificationViewModel);
         Task DeleteNotification(NotificationViewModel notificationViewModel);
     }

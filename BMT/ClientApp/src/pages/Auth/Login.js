@@ -227,6 +227,7 @@ const Login = () => {
                       </a>
                     </p>
                   </div>
+                  
                   <hr className="my-2" />
                   <div className="login-footer">
                     <p className="mb-0">© 2023 BMT All Rights Reserved</p>

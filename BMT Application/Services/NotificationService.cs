@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using com.blazor.bmt.application.interfaces;
@@ -78,7 +79,20 @@ namespace com.blazor.bmt.application.services
             var newMappedEntity = _mapper.Map<NotificationModel>(newEntity);
             return newMappedEntity;
         }
+        public async Task<IEnumerable<NotificationModel>> InsertUpdateBulk(List<NotificationModel> nlst)
+        {
+            // await ValidateEntityIfExist(notificationModel);
 
+            var lst = _mapper.Map<IEnumerable<Notification>>(nlst);
+            if (nlst == null)
+                throw new ApplicationException($"Entity could not be mapped.");
+
+            var newEntity = await _notificationsRepository.InsertUpdateBulk(lst.ToList());
+            _logger.LogInformation($"Entity successfully added - BMTLogService");
+
+            var newMappedEntity = _mapper.Map<IEnumerable<NotificationModel>>(newEntity);
+            return newMappedEntity;
+        }
         public async Task Update(NotificationModel notificationModel)
         {
           //  ValidateEntityIfNotExist(notificationModel);

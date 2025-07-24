@@ -38,6 +38,23 @@ namespace com.blazor.bmt.infrastructure.repositories
             // second way
             // return await GetAllAsync();
         }
+
+        public async Task<IEnumerable<Notification>> InsertUpdateBulk(List<Notification> nlst)
+        {
+            if (nlst.Where(x => x.Id <= 0).Any())
+            {
+                await _dbContext.Notifications.AddRangeAsync(nlst.Where(x => x.Id <= 0));
+                // Save changes to the database (generates MERGE statement)
+                _dbContext.SaveChanges();
+            }
+            if (nlst.Where(x => x.Id > 0).Any())
+            {
+                _dbContext.Notifications.UpdateRange(nlst.Where(x => x.Id > 0));
+                _dbContext.SaveChanges();
+            }
+            return nlst;
+
+        }
         public async Task<IEnumerable<Notification>> GetNotificationsByNameAsync(string keyword)
         {
             // var spec = new PriceWithCategorySpecification(productName);
@@ -68,7 +85,7 @@ namespace com.blazor.bmt.infrastructure.repositories
         public async Task<IEnumerable<Notification>> GetNotificationsAllFiltersAsync(Notification model)
         {
             return await _dbContext.Notifications.AsNoTracking()
-                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrganizationId == (model.OrganizationId == 0 ? x.OrganizationId : model.OrganizationId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
+                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrganizationId == (model.OrganizationId == 0 ? x.OrganizationId : model.OrganizationId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && x.NetworkId==(model.NetworkId==0? x.NetworkId: model.NetworkId) && (string.IsNullOrEmpty(model.MessageRefId) || (""+x.MessageRefId).Contains(model.MessageRefId)))// && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
                 .ToListAsync();
         }
     }

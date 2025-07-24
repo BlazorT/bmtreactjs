@@ -7,7 +7,7 @@ import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 import { CContainer, CHeader, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
 import { cilBell, cilEnvelopeOpen, cilAccountLogout, cilList, cilMenu } from '@coreui/icons';
 import { CPopover } from '@coreui/react';
-
+import Blazorhub from '../Blazorhub';
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import CIcon from '@coreui/icons-react';
 import useFetch from 'src/hooks/useFetch';
@@ -193,6 +193,9 @@ const AppHeader = ( phoneNumber ) => {
 
             </CNavLink>
           </CNavItem>
+          <div>
+            <Blazorhub />
+          </div>
           {/*<CNavItem>*/}
           {/*  <CNavLink>*/}
           {/*    <CIcon className="labelName" icon={cilList} size="lg" />*/}

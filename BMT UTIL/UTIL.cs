@@ -262,8 +262,10 @@ namespace com.blazor.bmt.util
     {
         [Description("Statuses")]
         STATUS = 1,
-        [Description("Alert Levels")]
-        ALERT_LEVELS = 2,
+        //[Description("Alert Levels")]
+        //ALERT_LEVELS = 2,
+        [Description("Delivery Status")]
+        DELIVERYSTATUS = 2,
         [Description("States")]
         STATES = 3,
         [Description("Networks")]

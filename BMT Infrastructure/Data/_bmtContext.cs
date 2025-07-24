@@ -634,7 +634,7 @@ public partial class _bmtContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+           // entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("notification");
 
@@ -650,34 +650,34 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Title).HasMaxLength(200);
         });
 
-        modelBuilder.Entity<Notificationlog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+        //modelBuilder.Entity<Notificationlog>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("notificationlog");
+        //    entity.ToTable("notificationlog");
 
-            entity.HasIndex(e => e.NotificationId, "UC_NotificationId").IsUnique();
+        //    entity.HasIndex(e => e.NotificationId, "UC_NotificationId").IsUnique();
 
-            entity.HasIndex(e => e.NetworkId, "idx_NetworkId");
+        //    entity.HasIndex(e => e.NetworkId, "idx_NetworkId");
 
-            entity.HasIndex(e => e.NotificationId, "idx_NotificationId");
+        //    entity.HasIndex(e => e.NotificationId, "idx_NotificationId");
 
-            entity.Property(e => e.ArchiveTime).HasColumnType("datetime");
-            entity.Property(e => e.Body).HasMaxLength(3000);
-            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.Description).HasMaxLength(200);
-            entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
-            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
-            entity.Property(e => e.Recipient).HasMaxLength(2000);
-            entity.Property(e => e.SendFrom).HasMaxLength(300);
-            entity.Property(e => e.Subject).HasMaxLength(200);
-            entity.Property(e => e.Title).HasMaxLength(200);
+        //    entity.Property(e => e.ArchiveTime).HasColumnType("datetime");
+        //    entity.Property(e => e.Body).HasMaxLength(3000);
+        //    entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+        //    entity.Property(e => e.Description).HasMaxLength(200);
+        //    entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
+        //    entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+        //    entity.Property(e => e.Recipient).HasMaxLength(2000);
+        //    entity.Property(e => e.SendFrom).HasMaxLength(300);
+        //    entity.Property(e => e.Subject).HasMaxLength(200);
+        //    entity.Property(e => e.Title).HasMaxLength(200);
 
-            //entity.HasOne(d => d.Notification).WithOne(p => p.Notificationlog)
-            //    .HasForeignKey<Notificationlog>(d => d.NotificationId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK_NotificationId");
-        });
+        //    //entity.HasOne(d => d.Notification).WithOne(p => p.Notificationlog)
+        //    //    .HasForeignKey<Notificationlog>(d => d.NotificationId)
+        //    //    .OnDelete(DeleteBehavior.ClientSetNull)
+        //    //    .HasConstraintName("FK_NotificationId");
+        //});
 
         modelBuilder.Entity<Notificationtype>(entity =>
         {
