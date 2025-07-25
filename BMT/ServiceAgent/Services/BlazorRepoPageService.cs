@@ -258,6 +258,53 @@ namespace Blazor.Web.UI.Services
             return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
 
         }
+        public async Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsData(CampaignRecipientsViewModel cModel) {
+            List<CampaignRecipientsViewModel> dList = new List<CampaignRecipientsViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pOrgId = new MySqlParameter("@p_OrgId", MySqlDbType.Int32);
+                        pOrgId.Value = cModel.OrgId;
+                        parameter.Add(pOrgId);
+                        MySqlParameter pNetworkId = new MySqlParameter("@p_NetworkId", MySqlDbType.Int32);
+                        pNetworkId.Value = cModel.NetworkId;
+                        parameter.Add(pNetworkId);
+                        command.CommandText = "SELECT `Id`,   `networkId`,  `ContentId`, `SourceId`,  `Desc`, `OrgId`, `CreatedBy`, `CreatedAt`,`LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status` FROM `compaignrecipients` where orgid=@p_OrgId and NetworkId=@p_NetworkId and Status=1; ";
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.Parameters.AddRange(parameter.ToArray());
+
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
+                        {
+                            while (dr.Read())
+                            {
+                                dList.Add(new CampaignRecipientsViewModel
+                                {
+                                    Id = Convert.ToInt64(dr["id"]),
+                                    NetworkId = Convert.ToInt32(dr["networkId"]),
+                                    SourceId = Convert.ToInt32(dr["SourceId"]),
+                                    ContentId = ""+ dr["ContentId"]  ,                                 
+                                    Status = Convert.ToInt32(dr["Status"])                                   
+
+                                });
+                            }
+
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
+        }
         public async Task<LoginViewModel> GetUserVerificationData(UserViewModel model)
         {
             LoginViewModel login = new LoginViewModel();
@@ -1487,12 +1534,15 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id;
                         parameter.Add(pId);
-                        //SqlParameter pstore = new MySqlParameter("p_networkId", SqlDbType.Int);
-                        //pstore.Value = model.NetworkId;
-                        //parameter.Add(pstore);
+                        MySqlParameter pTotalBudget = new MySqlParameter("p_TotalBudget", SqlDbType.Float);
+                        pTotalBudget.Value = model.TotalBudget;
+                        parameter.Add(pTotalBudget);
                         MySqlParameter pmakedetailid = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pmakedetailid.Value = model.OrgId;
                         parameter.Add(pmakedetailid);
+                        MySqlParameter pAutoGenerateLeads = new MySqlParameter("p_AutoGenerateLeads", SqlDbType.Int);
+                        pAutoGenerateLeads.Value = Convert.ToByte(model.AutoGenerateLeads);
+                        parameter.Add(pAutoGenerateLeads);
                         MySqlParameter pDescription = new MySqlParameter("p_Desc", SqlDbType.NVarChar);
                         pDescription.Value = "" + model.Description;
                         parameter.Add(pDescription);

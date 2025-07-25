@@ -78,6 +78,30 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
+        [HttpGet("campaignrecipients")]
+        [HttpPost("campaignrecipients")]
+        [Route("campaignrecipients")]
+        public async Task<ActionResult> GetCampaignRecipientsList([FromBody] CampaignRecipientsViewModel filter)
+        {
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            // List<User> cstrs = new List<User>();
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            try
+            {
+                blazorApiResponse.data = await _blazorRepoPageService.GetCampaignRecipientsData(filter);
+                blazorApiResponse.errorCode = "200";
+                blazorApiResponse.status = true;
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
         [HttpGet]
         [HttpPost]
         [Route("log")]
