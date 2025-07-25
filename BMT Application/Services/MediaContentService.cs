@@ -4,7 +4,6 @@ using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositries;
 using System;
-using com.blazor.bmt.core.interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
