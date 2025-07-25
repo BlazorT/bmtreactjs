@@ -28,10 +28,7 @@ import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal
 //import { formValidator } from 'src/helpers/formValidator';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import {
-  getCampaignAddConfig,
-  getInitialCampaignData,
-} from 'src/configs/InputConfig/campaignAddConfig';
+import {getCampaignAddConfig,getInitialCampaignData,} from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import globalutil from 'src/util/globalutil';
@@ -58,8 +55,6 @@ const campaignadd = () => {
   const { uploadAvatar } = useUploadAvatar();
   const { createUpdateCampaign } = useCreateCampaignData();
 
- 
-
   const [campaignRegData, setcampaignRegData] = useState(getInitialCampaignData(user));
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
@@ -73,37 +68,54 @@ const campaignadd = () => {
   const [areaSelectModal, setAreaSelectModal] = useState(false);
   const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
+ 
+  const [schedulerows, setschedulerows] = useState([]);
+  const allNetworkNames = globalutil.networks().map(n => n.name);
+
+  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames);
 
   const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
  
+
   const handleCampaignAddForm = (e, label) => {
-   // alert(label);
-    if (label !== null && (label == 'startTime' || label == 'finishTime')) {
-      // alert(label);
+    if (label === 'startTime' || label === 'finishTime') {
       setcampaignRegData((prev) => ({
         ...prev,
         [label]: e,
       }));
-    }
-    else if (label !== null && (label == 'Campaign Start Date' || label == 'Campaign End Date')) {
-      // alert(label);
+    } else if (label === 'Campaign Start Date') {
       setcampaignRegData((prev) => ({
         ...prev,
-        [label]: e,
+        startDate: moment(e).format('YYYY-MM-DD HH:mm:ss'), // formatted
       }));
-    } 
-    else if (label === 'logoPath') {
-      setcampaignRegData((prevData) => ({ ...prevData, [label]: e }));
-    } else if (e.target !== null && e.target !== 'undefined') {
-      const { name, value, type, checked } = e.target;
-     // alert(name + " - " + value + " - " + checked)
-      const isChecked = type === 'checkbox' ? checked : value;
+    } else if (label === 'Campaign End Date') {
+      setcampaignRegData((prev) => ({
+        ...prev,
+        endDate: moment(e).format('YYYY-MM-DD HH:mm:ss'), // formatted
+      }));
+    } else if (label === 'logoPath') {
       setcampaignRegData((prevData) => ({
         ...prevData,
-        [name]: isChecked,
+        logoPath: e,
+      }));
+    } else if (e?.target) {
+      const { name, value, type, checked, files } = e.target;
+
+      const inputValue =
+        type === 'checkbox'
+          ? checked
+          : type === 'file'
+            ? files[0]
+            : value;
+
+      setcampaignRegData((prevData) => ({
+        ...prevData,
+        [name]: inputValue,
       }));
     }
   };
+
+
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
@@ -159,11 +171,7 @@ const campaignadd = () => {
       isOpen: false,
     });
   };
-  const campaignAddInputs = getCampaignAddConfig(
-    campaignRegData,
-    handleCampaignAddForm,
-    TermsModal,
-  );
+  const campaignAddInputs = getCampaignAddConfig(campaignRegData,handleCampaignAddForm,TermsModal);
   const icons = {
     Tiktock: Email,
     Snapchat: Email,
@@ -176,94 +184,55 @@ const campaignadd = () => {
     Email: Email // Assuming Email is your component for Email icon
   };
   
-  const [schedulerows, setschedulerows] = useState([
-    {
-      id: 1,
-      interval: '12',
-      budget: '250',
-      message: '12',
-      days: '2',
-      startTime: '--',
-      finishTime: '--',
-    },
-  ]);
-    const [schedulecolumns, setSchedulecolumns] = useState([
-    {
-      field: 'interval',
-      headerClassName: 'custom-header-data-grid',
-      width: 100,
-      //   flex: 1,
-      headerName: 'Interval',
-      filterable: false,
-      sortable: false,
-     
-    },
-    {
-      /* flex: 1,*/
-      minWidth: 130,
-      headerClassName: 'custom-header-data-grid',
-      filterable: false,
-      sortable: false,
-      disableColumnMenu: false,
-      headerName: 'Budget',
-      type: 'text',
-      align: 'left',
-      headerAlign: 'left',
-      field: 'budget',
-      editable: false,
-     
-    },
+  useEffect(() => {
+    const savedData = localStorage.getItem('scheduleData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      console.log("📦 Loaded scheduleData from localStorage:", parsedData);
 
-    {
-      field: 'message',
-      headerClassName: 'custom-header-data-grid',
-      minWidth: 250,
-      flex: 1,
-      headerName: 'Message',
-      editable: false,
-      filterable: true,
-    },
+ 
 
-    {
-      /*flex: 1,*/
-      minWidth: 200,
-      headerClassName: 'custom-header-data-grid',
-      filterable: false,
-      sortable: false,
-      disableColumnMenu: false,
-      headerName: 'Days',
-      align: 'left',
-      headerAlign: 'left',
-      field: 'days',
-      editable: false,
-    },
-    {
-      /* flex: 1,*/
-      minWidth: 150,
-      headerClassName: 'custom-header-data-grid',
-      filterable: false,
-      sortable: false,
-      disableColumnMenu: false,
-      headerName: ' Start Time',
-      align: 'left',
-      headerAlign: 'left',
-      field: 'startTime',
-      editable: false,
-      type: 'timestamp',
-    },
+      const formatted = parsedData.map((item, index) => {
+        const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
+        let parsedDays = [];
+        if (item.Days) {
+          try {
+            parsedDays = JSON.parse(item.Days);
+          } catch (e) {
+            console.error("❌ Failed to parse Days:", item.Days);
+          }
+        }
 
-    {
-      field: 'finishTime',
-      headerClassName: 'custom-header-data-grid',
-      minWidth: 130,
-      /* flex: 1,*/
-      headerName: 'End Time',
-      sortable: false,
-      filterable: false,
-      type: 'timestamp',
-      //renderCell: (params) => !params.row.date && formatTime(params.row.lastUpdated),
-    },
-  ]);
+        return {
+          id: index + 1,
+          interval: item.Interval || '',
+          budget: item.Budget || '',
+          NetworkId: item.NetworkId || '',
+          days: Array.isArray(parsedDays)
+            ? parsedDays.map(d => dayNames[d]).join(', ')
+            : '',
+          startTime: moment(item.StartTime).isValid() ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss") : '',
+          finishTime: moment(item.FinishTime).isValid() ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss") : ''
+        };
+      });
+
+
+      setschedulerows(formatted);
+    } else {
+      console.log("❗ No scheduleData found in localStorage");
+    }
+  }, []);
+
+
+  const schedulecolumns = [
+    { field: 'interval', headerName: 'Interval', width: 100 },
+    { field: 'budget', headerName: 'Budget', minWidth: 130 },
+    { field: 'NetworkId', headerName: 'Network', minWidth: 250, flex: 1 },
+    { field: 'days', headerName: 'Days', minWidth: 200 },
+    { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
+    { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
+  ];
+
   if (isLoading) {
     return <Loading />;
   }
@@ -272,6 +241,7 @@ const campaignadd = () => {
   };
   const [targetUser, setTargetUser] = useState('');
   const [targetUserData, setTargetUserData] = useState([]);
+
   const handleAdd = () => {
     if (targetUser !== '') {
       setTargetUserData([...targetUserData, targetUser]);
@@ -283,6 +253,14 @@ const campaignadd = () => {
     newCountries.splice(index, 1);
     setTargetUserData(newCountries);
   };
+  const handleCheckboxChange = (networkName) => {
+    setSelectedNetworks((prevSelected) =>
+      prevSelected.includes(networkName)
+        ? prevSelected.filter((n) => n !== networkName)
+        : [...prevSelected, networkName]
+    );
+  };
+
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
@@ -312,11 +290,13 @@ const campaignadd = () => {
                     <div className="row">
                       <div className="col-md-6 mt-4">
                         <CFormCheck
-                          className=""
-                          id="flexNotificationChecked"
+                          id="generateAutoLeads"
+                          name="generateAutoLeads"
                           label="Generate Auto Leads"
-                          defaultChecked
+                          checked={campaignRegData.generateAutoLeads}
+                          onChange={handleCampaignAddForm}
                         />
+
                       </div>
                       <div className="col-md-6 mt-2">
                         <FormControl>
@@ -324,12 +304,14 @@ const campaignadd = () => {
                           <RadioGroup
                             row
                             aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
+                            name="status"
+                            onChange={(e) => handleCampaignAddForm(e)}  // ✅ Add this
                           >
-                            <FormControlLabel value="Active" control={<Radio />} label="Active" />
-                            <FormControlLabel value="Paused" control={<Radio />} label="Paused" />
-                            <FormControlLabel value="Cancel" control={<Radio />} label="Cancel" />
+                            <FormControlLabel value="1" control={<Radio />} label="Active" />
+                            <FormControlLabel value="2" control={<Radio />} label="Paused" />
+                            <FormControlLabel value="3" control={<Radio />} label="Cancel" />
                           </RadioGroup>
+
                         </FormControl>
                       </div>
                     </div>
@@ -485,13 +467,16 @@ const campaignadd = () => {
                         <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
                       </li>
                       <li className='network-checkbox-animate'>
+                      
                         <CFormCheck
-                          className=""
                           id={IconName}
                           name={IconName}
                           label={network.name}
+                          checked={selectedNetworks.includes(network.name)}
+                          onChange={() => handleCheckboxChange(network.name)}
                           defaultChecked
                         />
+
                       </li>
                     </ul>
                   </CCol>
@@ -573,6 +558,8 @@ const campaignadd = () => {
       <AddScheduleModel
         isOpen={addScheduleModel}
         toggle={toggleAddScheduleMdl}
+        selectedNetworks={selectedNetworks}
+        campaignRegData={campaignRegData}
         header="Add Schedule "
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />

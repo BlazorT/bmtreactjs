@@ -59,7 +59,7 @@ export const getCampaignAddConfig = (
   {
     component: CustomInput,
     label: 'Video Attachment',
-    value: campaignRegData.attachments,
+   // value: campaignRegData.attachments,
     onChange: handleCampaignAddForm,
     icon: cilEnvelopeClosed,
     type: 'file',
@@ -68,25 +68,12 @@ export const getCampaignAddConfig = (
     className: 'form-control item',
     isRequired: false,
   },
-    {
-      component: CustomSelectInput,
-      label: 'Status',
-      icon: cilInfo,
-      id: 'status',
-      options: globalutil.statuses(),
-      className: 'form-control item form-select',
-      value: campaignRegData.status,
-      name: 'status',
-      onChange: (e) => handleCampaignAddForm(e),
-      isRequired: false,
-      disableOption: 'Select Status',
-      message: 'Please select user status',
-    },
+   
  
     {
       component: CustomInput,
       label: 'Image Attachment',
-      value: campaignRegData.attachments,
+     // value: campaignRegData.attachments,
       onChange: handleCampaignAddForm,
       icon: cilEnvelopeClosed,
       type: 'file',
@@ -98,7 +85,7 @@ export const getCampaignAddConfig = (
     {
       component: CustomInput,
       label: 'Pdf Attachment',
-      value: campaignRegData.attachments,
+     // value: campaignRegData.attachments,
       onChange: handleCampaignAddForm,
       icon: cilEnvelopeClosed,
       type: 'file',
