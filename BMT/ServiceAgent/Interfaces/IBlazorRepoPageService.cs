@@ -25,6 +25,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<BlazorResponseViewModel> AddUpdateRoleRights(List<RolerightViewModel> vLst);
          Task<BlazorResponseViewModel> postCompaignData(CompaignsViewModel model, int UserId);
         Task<IEnumerable<OrganizationViewModel>> GetOrganizationsData(OrganizationViewModel model);
+        Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsData(CampaignRecipientsViewModel cModel);
         Task<IEnumerable<CompaignsViewModel>> GetCompaignsData(CompaignsViewModel model);
         Task<IEnumerable<NetworkViewModel>> GetNetworkData(int status = 1);
     }

@@ -85,7 +85,7 @@ namespace com.blazor.bmt.infrastructure.repositories
         public async Task<IEnumerable<Notification>> GetNotificationsAllFiltersAsync(Notification model)
         {
             return await _dbContext.Notifications.AsNoTracking()
-                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrganizationId == (model.OrganizationId == 0 ? x.OrganizationId : model.OrganizationId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && x.NetworkId==(model.NetworkId==0? x.NetworkId: model.NetworkId) && (string.IsNullOrEmpty(model.MessageRefId) || (""+x.MessageRefId).Contains(model.MessageRefId)))// && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
+                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrganizationId == (model.OrganizationId == 0 ? x.OrganizationId : model.OrganizationId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && x.NetworkId==(model.NetworkId==0? x.NetworkId: model.NetworkId) && (string.IsNullOrEmpty(model.MessageRefId) || (""+x.MessageRefId).Contains(model.MessageRefId)) && (string.IsNullOrEmpty(model.Recipient) || ("" + x.Recipient).Contains(model.Recipient)))// && Convert.ToDateTime(x.CreatedAt) <= (model.CreatedAt.Year<=1900 ? Convert.ToDateTime(x.CreatedAt) : Convert.ToDateTime(model.CreatedAt)))
                 .ToListAsync();
         }
     }
