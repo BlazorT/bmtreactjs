@@ -343,18 +343,7 @@ const campaignadd = () => {
                     {targetAudience && (
                       <React.Fragment>
                         <CRow>
-                          <CCol md="12">
-                            <CustomInput
-                              label="File"
-                              icon={cilFlagAlt}
-                              type="file"
-                              id="custom"
-                              className="form-control item"
-                              value={campaignRegData.custom}
-                              name="custom"
-                              onChange={handleCampaignAddForm}
-                            />
-                          </CCol>
+                        
                           <CCol md="4" className="mt-4">
                             <button
                               onClick={AddAreaClick}
