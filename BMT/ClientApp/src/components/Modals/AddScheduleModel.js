@@ -30,7 +30,7 @@ import { formValidator } from 'src/helpers/formValidator';
 import { createSchedule } from 'src/hooks/api/createSchedule';
 const AddScheduleModel = (prop) => {
 
-  const { header, isOpen, toggle, initialData, selectedNetworks, selectedDays, campaignRegData : submitData } = prop;
+  const { header, isOpen, toggle, initialData, selectedNetworks, selectedDays, setData, data, campaignRegData : submitData } = prop;
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
     TotalSchMessages: 0,
@@ -38,6 +38,81 @@ const AddScheduleModel = (prop) => {
   });
   const { createCampaign } = createSchedule();
   const user = useSelector((state) => state.user);
+  //const calculateBudget = (networks, scheduleJson, jsonRates) => {
+  //  if (!Array.isArray(networks) || !Array.isArray(scheduleJson) || !Array.isArray(jsonRates)) {
+  //    console.warn("Invalid input to calculateBudget");
+  //    return;
+  //  }
+
+  //  let TotalCampBudget = 0;
+  //  let TotalSchMessages = 0;
+
+  //  const networkBudgets = [];
+
+  //  for (const ntwk of networks) {
+  //    const rates = jsonRates.filter(r => r.id === ntwk.NetworkId);
+
+  //    if (rates.length === 0) {
+  //      console.warn(`No rate found for NetworkId: ${ntwk.NetworkId}`);
+  //      continue;
+  //    }
+
+  //    const UnitRate = parseFloat(rates[0].desc);
+  //    if (isNaN(UnitRate)) {
+  //      console.error(`Invalid rate for NetworkId: ${ntwk.NetworkId}`);
+  //      continue;
+  //    }
+
+  //    let sMessageCount = 0;
+  //    let nBudget = 0;
+
+  //    for (const schdl of scheduleJson.filter(s => s.NetworkId === ntwk.NetworkId)) {
+  //      const sDate = new Date(schdl.StartTime);
+  //      const fDate = new Date(schdl.FinishTime);
+
+  //      if (isNaN(sDate) || isNaN(fDate)) {
+  //        console.warn(`Invalid dates in schedule for NetworkId: ${ntwk.NetworkId}`);
+  //        continue;
+  //      }
+
+  //      const diffTime = Math.abs(fDate - sDate);
+  //      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //      const parsedDays = JSON.parse(schdl.Days || '[]');
+  //      const daysSelected = parsedDays.length || 1;
+
+  //      switch (schdl.IntervalTypeId) {
+  //        case 1:
+  //          sMessageCount += diffDays;
+  //          nBudget += diffDays * UnitRate;
+  //          break;
+  //        case 2:
+  //        case 3:
+  //        case 5:
+  //        default:
+  //          sMessageCount += daysSelected * diffDays;
+  //          nBudget += daysSelected * diffDays * UnitRate;
+  //          break;
+  //        case 4:
+  //          // no messages added
+  //          nBudget += daysSelected * diffDays * UnitRate;
+  //          break;
+  //      }
+  //    }
+
+  //    TotalCampBudget += nBudget;
+  //    TotalSchMessages += sMessageCount;
+  //    networkBudgets.push({ NetworkId: ntwk.NetworkId, Budget: nBudget, Messages: sMessageCount });
+  //  }
+
+  //  setBudgetData({
+  //    TotalCampBudget,
+  //    TotalSchBudget: TotalCampBudget,
+  //    TotalSchMessages,
+  //  });
+
+  //  return networkBudgets;
+  //};
+
   const calculateBudget = (networks, selectedDays) => {
     const networkCount = networks.length;
     const dayCount = selectedDays.length;
@@ -74,6 +149,7 @@ const AddScheduleModel = (prop) => {
   });
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
+  const [jsonRates, setJsonRates] = useState([]);
  
   // Effect: select/unselect days based on intervalTypeId
   useEffect(() => {
@@ -125,69 +201,22 @@ const AddScheduleModel = (prop) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-  //const onSave = async () => {
-  //  const form = document.querySelector('.shift-add-form');
-  //  formValidator();
-  //  if (form.checkValidity()) {
-  //    const schedule = {
-  //      id: campaignRegData.id,
-  //      createdBy: user.userId,
-  //      lastUpdatedBy: user.userId,
-  //      createdAt: moment().utc().format(),
-  //      lastUpdatedAt: moment().utc().format(),
-  //    };
-
-  //    setIsLoading(createscheduleLoading.current);
-  //    await createSchedule('/Compaigns/submitcompaign', {
-  //      method: 'POST',
-  //      body: JSON.stringify(schedule),
-  //    });
-  //    console.log({ createscheduleRes });
-  //    if (createscheduleRes.current?.status === true) {
-  //      dispatch(
-  //        updateToast({
-  //          isToastOpen: true,
-  //          toastMessage: createscheduleRes.current.message,
-  //          toastVariant: 'success',
-  //        }),
-  //      );
-  //      navigate('/waves');
-  //      //getShifts();
-  //      setCampaignRegData(initialData);
-  //      toggle();
-  //    } else {
-  //      dispatch(
-  //        updateToast({
-  //          isToastOpen: true,
-  //          toastMessage: createscheduleRes.current?.message,
-  //          toastVariant: 'error',
-  //          //  `${JSON.stringify(createUserRes.current.message)}`,
-  //        }),
-  //      );
-
-  //      setIsLoading(createscheduleLoading.current);
-  //    }
-  //  }
-  //};
-  
+ 
 
   const handleCampaignAddForm = (e, label, date) => {
     var colName = date;
+
     if (label === 'startTime' || label === 'finishTime') {
       setCampaignRegData((prev) => ({
         ...prev,
-        [label]: e ? e.toISOString() : null, // or e.format('HH:mm')
+        [label]: e ? e.format('HH:mm') : null,
       }));
-    }
-
-    else if (label === 'startDate' || label === 'endDate') {
-      // console.log(e.$d);
+    } else if (label === 'startDate' || label === 'endDate') {
       setCampaignRegData((prev) => ({
         ...prev,
         [colName]: e,
       }));
-    }
-    else {
+    } else {
       const { name, value } = e.target;
       console.log({ name, value });
       setCampaignRegData((prev) => ({
@@ -196,6 +225,7 @@ const AddScheduleModel = (prop) => {
       }));
     }
   };
+
   const onCancel = () => {
     dispatch(
       setConfirmation({
@@ -238,6 +268,7 @@ const AddScheduleModel = (prop) => {
   };
 
   const [selected, setSelected] = useState(selectedNetworks); // Initial load
+  const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
 
   useEffect(() => {
 setSelected(selectedNetworks); // Update if prop changes
@@ -287,6 +318,7 @@ setSelected(selectedNetworks); // Update if prop changes
       minute: campaignRegData.finishTime.minute(),
       second: 0,
     });
+
     const selectedNetworkObjects = globalutil.networks()
       .filter(n => selectedNetworks.includes(n.name))
       .map((n) => ({
@@ -296,13 +328,14 @@ setSelected(selectedNetworks); // Update if prop changes
         name: n.name,
         RowVer: 1,
         Status: 1,
-        LastUpdatedBy: 0,
+        LastUpdatedBy: user.userId,
         LastUpdatedAt: new Date(),
         CreatedAt: new Date(),
-        CreatedBy: 0
+        CreatedBy: user.userId
       }));
-    console.log("Selected network objects:", selectedNetworkObjects);
 
+    console.log("Selected network objects:", selectedNetworkObjects);
+    setSelectedNetworkJson(selectedNetworkObjects);
     const schedulePayload = [];
 
     console.log("Step 4: Building schedule payload");
@@ -311,35 +344,41 @@ setSelected(selectedNetworks); // Update if prop changes
         id: 0,
         NetworkId: ntwk.NetworkId,
         CompaignDetailId: 0,
-        StartTime: start.format("YYYY-MM-DD HH:mm:ss"),
-        FinishTime: end.format("YYYY-MM-DD HH:mm:ss"),
+        StartTime: start.toISOString(),         // ✅ ISO format
+        FinishTime: end.toISOString(),         // ✅ ISO format
         Interval: parseFloat(campaignRegData.interval),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
         Status: 1,
-        MessageCount: 0,
+        MessageCount: budgetData.TotalSchMessages,
         CreatedAt: new Date(),
         CreatedBy: 0,
         Days: JSON.stringify(campaignRegData.selectedDays),
-        Budget: 0,
+        Budget: budgetData.TotalSchBudget,
         Qty: 0
       };
       schedulePayload.push(payloadItem);
     }
-
-    console.log("Schedule Payload:", schedulePayload);
-
-
-    console.log("Step 5: Updating state and localStorage");
-    setScheduleJson([...scheduleJson, ...schedulePayload]);
-    localStorage.setItem("scheduleData", JSON.stringify([...scheduleJson, ...schedulePayload]));
-  
-    console.log("Step 6: Updating budget data");
-  
-    console.log("Saved successfully");
+    const updatedSchedule = [...scheduleJson, ...schedulePayload];
+    setScheduleJson(updatedSchedule);
+    setData(updatedSchedule); 
+    showToast('Schedule saved successfully!', 'success');
   };
+  console.log("Networks:", globalutil.networks());
+
+  //useEffect(() => {
+  //  if (selectedNetworkJson.length && scheduleJson.length && jsonRates.length) {
+  //    calculateBudget(selectedNetworkJson, scheduleJson, jsonRates);
+  //  }
+  //}, [selectedNetworkJson, scheduleJson, jsonRates]);
 
   const submitCompaign = async () => {
+    // ✅ Prevent submit if scheduleJson is empty
+    if (!Array.isArray(scheduleJson) || scheduleJson.length === 0) {
+      showToast('Please add at least one schedule before submitting.', 'warning');
+      return;
+    }
+
     const {
       name,
       tag,
@@ -351,17 +390,14 @@ setSelected(selectedNetworks); // Update if prop changes
       status
     } = submitData;
 
-    // ✅ Format start and end datetime safely using moment
     const startDateTime = moment(`${moment(startDate).format("YYYY-MM-DD")} ${moment(startTime).format("HH:mm")}`).toISOString();
     const endDateTime = moment(`${moment(endDate).format("YYYY-MM-DD")} ${moment(finishTime).format("HH:mm")}`).toISOString();
-    const rawSchedule = localStorage.getItem("scheduleData");
-    const parsedSchedule = rawSchedule ? JSON.parse(rawSchedule) : [];
+
     const campaignBody = {
       Id: 0,
       StoreId: 1,
       Name: name,
       Title: name,
-      Description: description,
       HashTags: tag,
       StartTime: startDateTime,
       FinishTime: endDateTime,
@@ -369,11 +405,12 @@ setSelected(selectedNetworks); // Update if prop changes
       CreatedAt: moment().toISOString(),
       RowVer: 1,
       CreatedBy: user.userId,
-      CompaignNetworks: selectedNetworks,
-      CompaignExecutionSchedules: parsedSchedule
+      TotalBudget: budgetData.TotalCampBudget,
+      CompaignNetworks: selectedNetworkJson,
+      CompaignExecutionSchedules: scheduleJson
     };
 
-    console.log("body", campaignBody);
+    console.log("body", JSON.stringify(campaignBody));
 
     try {
       const response = await fetch('/Compaigns/submitcompaign', {
@@ -387,16 +424,17 @@ setSelected(selectedNetworks); // Update if prop changes
       const result = await response.json();
       console.log({ result });
 
-      if (response.ok || result.status === true) {
-        showToast('Campaign submitted successfully!', 'success');
+      if (result.status === true) {
+        showToast(`Campaign "${name}" submitted successfully!`, 'success');
       } else {
-        showToast('Submission failed.', 'error');
+        showToast(result.message || 'Submission failed.', 'error');
       }
     } catch (error) {
       console.error("Error submitting campaign:", error);
       showToast('An error occurred.', 'error');
     }
   };
+
 
 
 

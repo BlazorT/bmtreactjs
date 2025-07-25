@@ -11,7 +11,8 @@ import Instagram from '@mui/icons-material/Instagram';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { Table, ListGroup } from 'react-bootstrap';
-
+import DeleteIcon from '@mui/icons-material/Delete'; // if using MUI
+import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -64,12 +65,13 @@ const campaignadd = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [cityData, setCityData] = useState([]);
+  const [scheduleData, setScheduleData] = useState([]);
 
   const [areaSelectModal, setAreaSelectModal] = useState(false);
   const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
  
-  const [schedulerows, setschedulerows] = useState([]);
+  const [schedulerows, setScheduleRows] = useState([]);
   const allNetworkNames = globalutil.networks().map(n => n.name);
 
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames);
@@ -183,54 +185,67 @@ const campaignadd = () => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
-  
   useEffect(() => {
-    const savedData = localStorage.getItem('scheduleData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      console.log("📦 Loaded scheduleData from localStorage:", parsedData);
-
- 
-
-      const formatted = parsedData.map((item, index) => {
-        const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
-        let parsedDays = [];
-        if (item.Days) {
-          try {
-            parsedDays = JSON.parse(item.Days);
-          } catch (e) {
-            console.error("❌ Failed to parse Days:", item.Days);
-          }
-        }
-
-        return {
-          id: index + 1,
-          interval: item.Interval || '',
-          budget: item.Budget || '',
-          NetworkId: item.NetworkId || '',
-          days: Array.isArray(parsedDays)
-            ? parsedDays.map(d => dayNames[d]).join(', ')
-            : '',
-          startTime: moment(item.StartTime).isValid() ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss") : '',
-          finishTime: moment(item.FinishTime).isValid() ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss") : ''
-        };
-      });
-
-
-      setschedulerows(formatted);
-    } else {
-      console.log("❗ No scheduleData found in localStorage");
+    if (!Array.isArray(scheduleData) || scheduleData.length === 0) {
+      setScheduleRows([]);
+      return;
     }
-  }, []);
 
+    const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
 
+    const formatted = scheduleData.map((item, index) => {
+      let parsedDays = [];
+      if (item.Days) {
+        try {
+          parsedDays = JSON.parse(item.Days);
+        } catch (e) {
+          console.error("❌ Failed to parse Days:", item.Days);
+        }
+      }
+
+      return {
+        id: index + 1,
+        interval: item.Interval ?? '',
+        budget: item.Budget ?? '',
+        NetworkId: item.NetworkId ?? '',
+        days: Array.isArray(parsedDays)
+          ? parsedDays.map(d => dayNames[d]).join(', ')
+          : '',
+        startTime: moment(item.StartTime).isValid()
+          ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
+          : '',
+        finishTime: moment(item.FinishTime).isValid()
+          ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
+          : ''
+      };
+    });
+
+    setScheduleRows(formatted);
+  }, [scheduleData]);
+
+  const handleDeleteRow = (idToDelete) => {
+    const updatedRows = schedulerows.filter(row => row.id !== idToDelete);
+    setScheduleRows(updatedRows);
+  };
   const schedulecolumns = [
     { field: 'interval', headerName: 'Interval', width: 100 },
     { field: 'budget', headerName: 'Budget', minWidth: 130 },
-    { field: 'NetworkId', headerName: 'Network', minWidth: 250, flex: 1 },
-    { field: 'days', headerName: 'Days', minWidth: 200 },
+    { field: 'NetworkId', headerName: 'Network', minWidth: 150, flex: 1 },
+    { field: 'days', headerName: 'Days', minWidth: 250 },
     { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
     { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
+
+    {
+      field: 'action',
+      headerName: 'Action',
+      minWidth: 100,
+      sortable: false,
+      renderCell: (params) => (
+        <IconButton onClick={() => handleDeleteRow(params.row.id)} color="error">
+          <DeleteIcon />
+        </IconButton>
+      )
+    }
   ];
 
   if (isLoading) {
@@ -374,18 +389,25 @@ const campaignadd = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
+                                  {console.log("City Data:", cityData)}
                                   {cityData.map((item, index) => (
                                     <tr key={index}>
                                       <td className="txt-color">{item.states}</td>
                                       <td className="txt-color">{item.city}</td>
                                       <td className="txt-color">
-                                        <Button title="Delete" value="Delete" variant="danger" onClick={() => handleDelete(index)}>
+                                        <Button
+                                          title="Delete"
+                                          value="Delete"
+                                          variant="danger"
+                                          onClick={() => handleDelete(index)}
+                                        >
                                           Delete
                                         </Button>
                                       </td>
                                     </tr>
                                   ))}
                                 </tbody>
+
                               </Table>
                             </CCol>
                           </CRow>
@@ -560,7 +582,10 @@ const campaignadd = () => {
         toggle={toggleAddScheduleMdl}
         selectedNetworks={selectedNetworks}
         campaignRegData={campaignRegData}
+        setData={setScheduleData}
+        data={scheduleData}
         header="Add Schedule "
+
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

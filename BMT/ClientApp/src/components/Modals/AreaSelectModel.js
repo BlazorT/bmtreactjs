@@ -14,7 +14,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
 import useFetch from 'src/hooks/useFetch';
 import moment from 'moment';
-
+import { useShowToast } from 'src/hooks/useShowToast';
 import { Table, Form, Button } from 'react-bootstrap';
 import { getOperatorsForId } from 'src/helpers/getOperatorsForType';
 
@@ -58,7 +58,7 @@ const AreaSelectModel = (prop) => {
       });
     }
   }, [isOpen]);
-
+  const showToast = useShowToast();
   const { fetchData: submitTasksApi } = useFetch();
   const { fetchData: fetchFields } = useFetch();
 
@@ -235,74 +235,80 @@ const AreaSelectModel = (prop) => {
   const [states, setStates] = useState('');
   const [city, setCity] = useState('');
 
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+    e.preventDefault();
+
+    if (!states || !city) {
+      showToast('Please select both State and City.', 'error');
+      return;
+    }
+
     setData([...data, { states, city }]);
     setStates('');
     setCity('');
   };
-  
+
   return (
     <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
       <ModalHeader>{header}</ModalHeader>
       <ModalBody className="paddingAllSide">
-        <form className="needs-validation workflow-task-form" onSubmit={handleSubmit} noValidate>
-          <div className="">
-            <div className=" text-center">
-              <div className="row">
-                <div className="col-md-6">
-                  <CustomSelectInput
-                    label="States"
-                    value={states}
-                    onChange={(e) => setStates(e.target.value)}
-                    icon={cilTask}
-                    options={globalutil.states()}
-                    className="form-control item form-select"
-                    id="states"
-                    name="states"
-                    isRequired={false}
-                    disableOption="Select states "
-                  />
-                </div>
-              
-                <div className="col-md-6">
-                  <CustomSelectInput
-                    label="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    icon={cilTask}
-                    options={citydata}
-                    className="form-control item form-select"
-                    id="city"
-                    name="city"
-                    disableOption="Select City"
-                    isRequired={false}
-                    message="Select City"
-                  />
-                </div>
+        <form className="needs-validation workflow-task-form" onSubmit={handleAdd} noValidate>
+          <div className="text-center">
+            <div className="row">
+              <div className="col-md-6">
+                <CustomSelectInput
+                  label="States"
+                  value={states}
+                  onChange={(e) => setStates(e.target.value)}
+                  icon={cilTask}
+                  options={globalutil.states()}
+                  className="form-control item form-select"
+                  id="states"
+                  name="states"
+                  isRequired={false}
+                  disableOption="Select states"
+                />
               </div>
-             
+
+              <div className="col-md-6">
+                <CustomSelectInput
+                  label="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  icon={cilTask}
+                  options={citydata}
+                  className="form-control item form-select"
+                  id="city"
+                  name="city"
+                  disableOption="Select City"
+                  isRequired={false}
+                  message="Select City"
+                />
+              </div>
             </div>
-            <div className="CenterAlign pt-2">
-              <button
-                onClick={onCancel}
-                type="button"
-                className="btn btn_Default m-2 sales-btn-style"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn_Default sales-btn-style m-2"
-                onClick={handleAdd}
-              >
-                Save
-              </button>
-            </div>
-       
+          </div>
+
+          <div className="CenterAlign pt-2">
+            <button
+              onClick={onCancel}
+              type="button"
+              className="btn btn_Default m-2 sales-btn-style"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="btn btn_Default sales-btn-style m-2"
+          
+            >
+              Add
+            </button>
           </div>
         </form>
       </ModalBody>
     </Modal>
+
   );
 };
 export default AreaSelectModel;
