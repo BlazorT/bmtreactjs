@@ -141,10 +141,10 @@ const AddScheduleModel = (prop) => {
     interval: '',
     intervalTypeId: '',
     isFixedTime: false,
-    startDate: moment().toDate(),     // Default to current date
-    endDate: moment().add(1, 'days').toDate(),  // Default to tomorrow
-    startTime: moment().startOf('day'),   // 00:00:00
-    finishTime: moment().startOf('day'),  // 00:00:00
+    startDate: moment().toDate(),                  // Moment → Date
+    endDate: moment().add(1, 'day').toDate(),      // Moment → Date
+    startTime: dayjs().startOf('day'),            // 00:00:00 (dayjs object)
+    finishTime: dayjs().startOf('day'),           // 00:00:00 (dayjs object)
     selectedDays: []
   });
   const showToast = useShowToast();
@@ -205,7 +205,7 @@ const AddScheduleModel = (prop) => {
 
   const handleCampaignAddForm = (e, label, date) => {
     var colName = date;
-
+    console.log("datee", e, label, date);
     if (label === 'startTime' || label === 'finishTime') {
       setCampaignRegData((prev) => ({
         ...prev,
@@ -288,16 +288,26 @@ setSelected(selectedNetworks); // Update if prop changes
     campaignRegData.startTime,
     campaignRegData.finishTime
   ]);
+  var daysArray = campaignRegData.selectedDays;
+  const buildScheduledDays = (daysArray, userId) => {
+    const now = new Date().toISOString();
+    return daysArray.map(day => ({
+      Id: 0,
+      CompaignScheduleId: 0,
+      DayNumber: day,
+      RowVer: 1,
+      Status: 1,
+      CreatedAt: now,
+      CreatedBy: userId
+    }));
+  };
+
   const onSave = () => {
     console.log("Step 1: Validating input");
     console.log("campaignRegData:", campaignRegData);
     console.log("selectedNetworks:", selectedNetworks);
 
     if (
-      !campaignRegData.startDate ||
-      !campaignRegData.endDate ||
-      !campaignRegData.startTime?.isValid?.() ||
-      !campaignRegData.finishTime?.isValid?.() ||
       !campaignRegData.intervalTypeId ||
       selectedNetworks.length === 0
     ) {
@@ -308,14 +318,14 @@ setSelected(selectedNetworks); // Update if prop changes
 
     console.log("Step 2: Creating start and end times");
     const start = moment(campaignRegData.startDate).set({
-      hour: campaignRegData.startTime.hour(),
-      minute: campaignRegData.startTime.minute(),
+      hour: moment(campaignRegData.startTime).hour(),
+      minute: moment(campaignRegData.startTime).minute(),
       second: 0,
     });
 
     const end = moment(campaignRegData.endDate).set({
-      hour: campaignRegData.finishTime.hour(),
-      minute: campaignRegData.finishTime.minute(),
+      hour: moment(campaignRegData.finishTime).hour(),
+      minute: moment(campaignRegData.finishTime).minute(),
       second: 0,
     });
 
@@ -325,7 +335,6 @@ setSelected(selectedNetworks); // Update if prop changes
         id: 0,
         CompaignId: 0,
         NetworkId: n.id,
-        name: n.name,
         RowVer: 1,
         Status: 1,
         LastUpdatedBy: user.userId,
@@ -336,7 +345,9 @@ setSelected(selectedNetworks); // Update if prop changes
 
     console.log("Selected network objects:", selectedNetworkObjects);
     setSelectedNetworkJson(selectedNetworkObjects);
+
     const schedulePayload = [];
+    const scheduledDays = buildScheduledDays(campaignRegData.selectedDays, user.userId);
 
     console.log("Step 4: Building schedule payload");
     for (let ntwk of selectedNetworkObjects) {
@@ -344,26 +355,28 @@ setSelected(selectedNetworks); // Update if prop changes
         id: 0,
         NetworkId: ntwk.NetworkId,
         CompaignDetailId: 0,
-        StartTime: start.toISOString(),         // ✅ ISO format
-        FinishTime: end.toISOString(),         // ✅ ISO format
+        StartTime: start.toISOString(),
+        FinishTime: end.toISOString(),
         Interval: parseFloat(campaignRegData.interval),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
         Status: 1,
         MessageCount: budgetData.TotalSchMessages,
         CreatedAt: new Date(),
-        CreatedBy: 0,
-        Days: JSON.stringify(campaignRegData.selectedDays),
+        CreatedBy: user.userId,
+        Compaignscheduledays: scheduledDays, // ✅ now an array of objects
         Budget: budgetData.TotalSchBudget,
         Qty: 0
       };
       schedulePayload.push(payloadItem);
     }
+
     const updatedSchedule = [...scheduleJson, ...schedulePayload];
     setScheduleJson(updatedSchedule);
-    setData(updatedSchedule); 
+    setData(updatedSchedule);
     showToast('Schedule saved successfully!', 'success');
   };
+
   console.log("Networks:", globalutil.networks());
 
   //useEffect(() => {
@@ -404,6 +417,7 @@ setSelected(selectedNetworks); // Update if prop changes
       Status: status ? 1 : 0,
       CreatedAt: moment().toISOString(),
       RowVer: 1,
+      Discount:0,
       CreatedBy: user.userId,
       TotalBudget: budgetData.TotalCampBudget,
       CompaignNetworks: selectedNetworkJson,
@@ -551,7 +565,7 @@ setSelected(selectedNetworks); // Update if prop changes
                   label="Date From"
                   id="startDate"
                   name="startDate"
-                  value={campaignRegData.startDate ? dayjs(campaignRegData.startDate) : null}
+                  value={campaignRegData.startDate}
                   title="start date"
                   className="scheduleClass"
                   onChange={(e) => handleCampaignAddForm(e, 'startDate')}
@@ -565,7 +579,7 @@ setSelected(selectedNetworks); // Update if prop changes
                   name="endDate"
                   title="end date"
                   className="scheduleClass"
-                  value={campaignRegData.endDate ? dayjs(campaignRegData.endDate) : null}
+                  value={campaignRegData.endDate}
                   onChange={(e) => handleCampaignAddForm(e, 'endDate')}
                 />
               </CCol>
@@ -579,7 +593,7 @@ setSelected(selectedNetworks); // Update if prop changes
                   name="startTime"
                   title="Start Time"
                   className="scheduleClass"
-                  value={campaignRegData.startTime}
+                  value={campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null}
                   onChange={(e) => handleCampaignAddForm(e, 'startTime')}
                 />
               </CCol>
@@ -590,7 +604,7 @@ setSelected(selectedNetworks); // Update if prop changes
                   id="finishTime"
                   name="finishTime"
                   className="scheduleClass"
-                  value={campaignRegData.finishTime}
+                  value={campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null}
                   onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
                   title=" End Time"
                 />

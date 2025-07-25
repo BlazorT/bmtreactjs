@@ -88,12 +88,12 @@ const campaignadd = () => {
     } else if (label === 'Campaign Start Date') {
       setcampaignRegData((prev) => ({
         ...prev,
-        startDate: moment(e).format('YYYY-MM-DD HH:mm:ss'), // formatted
+        startDate: moment(e).format('YYYY-MM-DD HH:mm:ss'),
       }));
     } else if (label === 'Campaign End Date') {
       setcampaignRegData((prev) => ({
         ...prev,
-        endDate: moment(e).format('YYYY-MM-DD HH:mm:ss'), // formatted
+        endDate: moment(e).format('YYYY-MM-DD HH:mm:ss'),
       }));
     } else if (label === 'logoPath') {
       setcampaignRegData((prevData) => ({
@@ -108,7 +108,9 @@ const campaignadd = () => {
           ? checked
           : type === 'file'
             ? files[0]
-            : value;
+            : name === 'status'
+              ? parseInt(value)       // ✅ convert status to number
+              : value;
 
       setcampaignRegData((prevData) => ({
         ...prevData,
@@ -116,6 +118,7 @@ const campaignadd = () => {
       }));
     }
   };
+
 
 
   const toggleStock = () => {
@@ -185,43 +188,41 @@ const campaignadd = () => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
-  useEffect(() => {
-    if (!Array.isArray(scheduleData) || scheduleData.length === 0) {
-      setScheduleRows([]);
-      return;
+  const formatted = scheduleData.map((item, index) => {
+    const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
+    let parsedDays = [];
+
+    if (Array.isArray(item.Compaignscheduledays)) {
+      // If already an array of objects, extract DayNumber
+      parsedDays = item.Compaignscheduledays.map(d => d.DayNumber);
+    } else if (typeof item.Compaignscheduledays === 'string') {
+      try {
+        const parsed = JSON.parse(item.Compaignscheduledays);
+        parsedDays = Array.isArray(parsed)
+          ? parsed.map(d => (typeof d === 'object' ? d.DayNumber : d))
+          : [];
+      } catch (e) {
+        console.error("❌ Failed to parse Days:", item.Compaignscheduledays);
+      }
     }
 
-    const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
+    return {
+      id: index + 1,
+      interval: item.Interval ?? '',
+      budget: item.Budget ?? '',
+      NetworkId: item.NetworkId ?? '',
+      Compaignscheduledays: parsedDays.length > 0
+        ? parsedDays.map(d => dayNames[d]).join(', ')
+        : '',
+      startTime: moment(item.StartTime).isValid()
+        ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
+        : '',
+      finishTime: moment(item.FinishTime).isValid()
+        ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
+        : ''
+    };
+  });
 
-    const formatted = scheduleData.map((item, index) => {
-      let parsedDays = [];
-      if (item.Days) {
-        try {
-          parsedDays = JSON.parse(item.Days);
-        } catch (e) {
-          console.error("❌ Failed to parse Days:", item.Days);
-        }
-      }
-
-      return {
-        id: index + 1,
-        interval: item.Interval ?? '',
-        budget: item.Budget ?? '',
-        NetworkId: item.NetworkId ?? '',
-        days: Array.isArray(parsedDays)
-          ? parsedDays.map(d => dayNames[d]).join(', ')
-          : '',
-        startTime: moment(item.StartTime).isValid()
-          ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
-          : '',
-        finishTime: moment(item.FinishTime).isValid()
-          ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
-          : ''
-      };
-    });
-
-    setScheduleRows(formatted);
-  }, [scheduleData]);
 
   const handleDeleteRow = (idToDelete) => {
     const updatedRows = schedulerows.filter(row => row.id !== idToDelete);
@@ -231,7 +232,7 @@ const campaignadd = () => {
     { field: 'interval', headerName: 'Interval', width: 100 },
     { field: 'budget', headerName: 'Budget', minWidth: 130 },
     { field: 'NetworkId', headerName: 'Network', minWidth: 150, flex: 1 },
-    { field: 'days', headerName: 'Days', minWidth: 250 },
+    { field: 'Compaignscheduledays', headerName: 'Days', minWidth: 250 },
     { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
     { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
 
@@ -318,14 +319,15 @@ const campaignadd = () => {
                           <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Status</FormLabel>
                           <RadioGroup
                             row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
                             name="status"
-                            onChange={(e) => handleCampaignAddForm(e)}  // ✅ Add this
+                            value={campaignRegData.status} // 👈 number value
+                            onChange={handleCampaignAddForm}
                           >
-                            <FormControlLabel value="1" control={<Radio />} label="Active" />
-                            <FormControlLabel value="2" control={<Radio />} label="Paused" />
-                            <FormControlLabel value="3" control={<Radio />} label="Cancel" />
+                            <FormControlLabel value={1} control={<Radio />} label="Active" />
+                            <FormControlLabel value={2} control={<Radio />} label="Paused" />
+                            <FormControlLabel value={3} control={<Radio />} label="Cancel" />
                           </RadioGroup>
+
 
                         </FormControl>
                       </div>
