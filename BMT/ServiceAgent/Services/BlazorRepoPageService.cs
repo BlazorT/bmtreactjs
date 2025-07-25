@@ -1534,9 +1534,9 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pId = new MySqlParameter("p_id", SqlDbType.Int);
                         pId.Value = model.Id;
                         parameter.Add(pId);
-                        MySqlParameter pTotalBudget = new MySqlParameter("p_TotalBudget", SqlDbType.Float);
-                        pTotalBudget.Value = model.TotalBudget;
-                        parameter.Add(pTotalBudget);
+                        //MySqlParameter pTotalBudget = new MySqlParameter("p_TotalBudget", SqlDbType.Float);
+                        //pTotalBudget.Value = model.TotalBudget;
+                        //parameter.Add(pTotalBudget);
                         MySqlParameter pmakedetailid = new MySqlParameter("p_orgId", SqlDbType.Int);
                         pmakedetailid.Value = model.OrgId;
                         parameter.Add(pmakedetailid);
