@@ -24,7 +24,8 @@ namespace com.blazor.bmt
             CreateMap<ApplogModel, AppLogViewModel>();
             CreateMap<OrganizationModel, OrganizationViewModel>();
             CreateMap<AuditLogModel, AuditLogViewModel>();
-            CreateMap<NotificationModel, NotificationViewModel>();          
+            CreateMap<NotificationModel, NotificationViewModel>();
+            CreateMap<NotificationViewModel, NotificationModel>();
             CreateMap<ConfigurationsViewModel, ConfigurationModel>();
             CreateMap<OrganizationViewModel, OrganizationModel>();
             CreateMap<AppLogViewModel, ApplogModel>();
@@ -35,6 +36,7 @@ namespace com.blazor.bmt
             CreateMap<PackageModel, PackageViewModel>();
             CreateMap<MediacontentViewModel, MediacontentModel>();
             CreateMap<CompaigntemplateViewModel, CompaigntemplateModel>();
+                     
             // CreateMap<DspViewModel, DspModel>();
         }
 
@@ -69,6 +71,7 @@ namespace com.blazor.bmt
             CreateMap<Menu, MenuModel>().ReverseMap();
             CreateMap<Rolemenu, RolemenuModel>().ReverseMap();
             CreateMap<Compaigntemplate, CompaigntemplateModel>().ReverseMap();
+           
             // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }
