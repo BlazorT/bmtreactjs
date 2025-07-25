@@ -19,6 +19,7 @@ const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
+const CampaignNotification = React.lazy(() => import('./pages/DA/campaignNotification'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
 //const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
 //const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
@@ -121,8 +122,9 @@ export const rolesRoutes = [
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
-  { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
+ // { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/waves', name: 'waves', element: waves },
+
   //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
   //{ path: '/Schedule', name: 'Schedule', element: DailyRoster },
@@ -132,6 +134,7 @@ export const rolesRoutes = [
   //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
   //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
   { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
+ // { path: '/campaignNotification', name: 'campaignNotification', element: campaignNotification },
   { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/
 ];
@@ -156,6 +159,7 @@ export const routes = [
   { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
+  { path: '/campaignNotification', name: 'campaignNotification', element: CampaignNotification },
   { path: '/Logs', name: 'Logs', element: Logs },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
