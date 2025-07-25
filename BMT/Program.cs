@@ -57,16 +57,7 @@ services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 services.AddScoped<IGlobalNetworkDetailService, GlobalNetworkDetailService>();
 services.AddScoped<IBundlingPackageRepository, BundlingPackageRepository>();
 services.AddScoped<IPackageRepository, PackageRepository>();
-//services.AddScoped<IInspectionReportRepository, InspectionReportRepository>();
-//services.AddScoped<IInspectionItemsRepository, InspectionItemsRepository>();
-//services.AddScoped<IWorkflowFieldRepository, WorkflowFieldRepository>();
-//services.AddScoped<IWorkflowTasksRepository, WorkflowTasksRepository>();
-//services.AddScoped<IFleetrosterplanRepository, FleetrosterplanRepository>();
-//services.AddScoped<IRosterplanRepository, RosterplanRepository>();
-//services.AddScoped<IDispatchmentRepository, DispatchmentRepository>();
-//services.AddScoped<IDspTablesRepository, DspTablesRepository>();
-//services.AddScoped<IShiftsRepository, ShiftsRepository>();
-// services.AddScoped<IOnlineUsersRepository, OnlineUsersRepository>();
+services.AddScoped<ICampaignTemplateRepository, CampaignTemplateRepository>();
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
 // ServiceLayer
@@ -86,7 +77,7 @@ services.AddScoped<IUsersService, UsersService>();
 services.AddScoped<IAppLogService, AppLogService>();
 services.AddScoped<IAuditLogService, AuditLogService>();
 services.AddScoped<ICompaignService, CompaignService>();
-
+services.AddScoped<ICampaignTemplateService, CampaignTemplateService>();
 services.AddScoped<IPackageService, PackagesService>();
 // Page Service Layer
 

@@ -34,7 +34,7 @@ namespace com.blazor.bmt
             CreateMap<BundlingpackagedetailModel, BundlingpackagedetailViewModel>();
             CreateMap<PackageModel, PackageViewModel>();
             CreateMap<MediacontentViewModel, MediacontentModel>();
-            CreateMap<NotificationViewModel, NotificationModel>();
+            CreateMap<CompaigntemplateViewModel, CompaigntemplateModel>();
             // CreateMap<DspViewModel, DspModel>();
         }
 
@@ -62,14 +62,14 @@ namespace com.blazor.bmt
             CreateMap<Compaignscheduleday, CompaignscheduledayModel>();
            CreateMap<Bundlingpackagedetail, BundlingpackagedetailModel>().ReverseMap();
             CreateMap<Package, PackageModel>().ReverseMap();
-
             CreateMap<Mediacontent, MediacontentModel>().ReverseMap();
             CreateMap<Notification, NotificationModel>().ReverseMap();                    
 
             CreateMap<Auditentity, AuditentityModel>().ReverseMap();
             CreateMap<Menu, MenuModel>().ReverseMap();
             CreateMap<Rolemenu, RolemenuModel>().ReverseMap();
-           // CreateMap<Notification, RolemenuModel>().ReverseMap();
+            CreateMap<Compaigntemplate, CompaigntemplateModel>().ReverseMap();
+            // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }
     }

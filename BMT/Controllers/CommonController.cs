@@ -29,12 +29,12 @@ namespace com.blazor.bmt.controllers
         private readonly INotificationPageService _notificationPageService;  
         private readonly IBlazorRepoPageService _blazorRepoPageService;      
         private readonly IBlazorUtilPageService _blazorUtilPageService;
-
+        private readonly ICampaignTemplateService _campaignTemplateService;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IStatesService stateService, ICitiesService citiesService, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.Extensions.Hosting.IHostingEnvironment hostingEnvironment, ICampaignTemplateService campaignTemplateService, IStatesService stateService, ICitiesService citiesService, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
@@ -42,14 +42,14 @@ namespace com.blazor.bmt.controllers
              _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
             _citiesService = citiesService ?? throw new ArgumentNullException(nameof(citiesService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-           // _basicconfigurationsService = basicconfigurationsService ?? throw new ArgumentNullException(nameof(basicconfigurationsService));
+            _campaignTemplateService = campaignTemplateService ?? throw new ArgumentNullException(nameof(campaignTemplateService));
             _configurationsService = configurationsService ?? throw new ArgumentNullException(nameof(configurationsService));
           //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
           _notificationPageService = notificationPageService ?? throw new ArgumentNullException(nameof(notificationPageService));          
             _blazorUtilPageService = blazorUtilPageService ?? throw new ArgumentNullException(nameof(blazorUtilPageService));
-            _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+           // _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             // applicationPath = _hostingEnvironment.ContentRootPath;
             _logger.LogInformation("Web Api Service Started  at - " + System.DateTime.Now.ToLongTimeString());
@@ -113,7 +113,30 @@ namespace com.blazor.bmt.controllers
             }
             return Ok(blazorApiResponse);
             // .ToArray();
-        }        
+        }
+        [HttpGet("campaigntemplates")]
+        [HttpPost("campaigntemplates")]
+        [Route("campaigntemplates")]
+        public async Task<ActionResult> GetCampaignTemplates([FromBody] WebApiFilters filter)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+                blazorApiResponse.status = true;
+                blazorApiResponse.data = await _campaignTemplateService.GetCampaignTemplatesByNetworkList(Convert.ToInt32(filter.id));
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
         // [HttpGet("submitconfigurations")]
         [HttpPost("submitconfigurations")]
         [Route("submitconfigurations")]
