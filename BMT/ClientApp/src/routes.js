@@ -19,7 +19,7 @@ const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
-const CampaignNotification = React.lazy(() => import('./pages/DA/campaignNotification'));
+const CampaignNotification = React.lazy(() => import('./pages/Reports/campaignNotification'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
 //const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
 //const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
