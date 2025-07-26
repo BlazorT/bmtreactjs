@@ -2,9 +2,9 @@
 
 public partial class CompaignscheduledayViewModel 
 {
-    public long Id { get; set; }
+    public Int64 Id { get; set; }
 
-    public long CompaignScheduleId { get; set; }
+    public Int64 CompaignScheduleId { get; set; }
 
     public int? DayNumber { get; set; }
 
@@ -20,6 +20,6 @@ public partial class CompaignscheduledayViewModel
 
     public int RowVer { get; set; }
 
-    public virtual CompaignexecutionscheduleViewModel CompaignSchedule { get; set; } = null!;
+    //public virtual CompaignexecutionscheduleViewModel? CompaignSchedule { get; set; } = null!;
 }
 

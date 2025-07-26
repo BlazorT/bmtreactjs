@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMT Infrastructure", "BMT I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMT Application", "BMT Application\BMT Application.csproj", "{DC85C960-A500-40B0-A2CF-BD6C0DB1FB41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMT Web", "BMT\BMT Web.csproj", "{A76E0B67-9DDA-4EA2-A15D-1B97BAEB5A6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bmt.web", "BMT\bmt.web.csproj", "{A76E0B67-9DDA-4EA2-A15D-1B97BAEB5A6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

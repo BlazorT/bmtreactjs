@@ -192,17 +192,17 @@ const campaignadd = () => {
     const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
     let parsedDays = [];
 
-    if (Array.isArray(item.Compaignscheduledays)) {
+    if (Array.isArray(item.days)) {
       // If already an array of objects, extract DayNumber
-      parsedDays = item.Compaignscheduledays.map(d => d.DayNumber);
-    } else if (typeof item.Compaignscheduledays === 'string') {
+      parsedDays = item.days.map(d => d.DayNumber);
+    } else if (typeof item.days === 'string') {
       try {
-        const parsed = JSON.parse(item.Compaignscheduledays);
+        const parsed = JSON.parse(item.days);
         parsedDays = Array.isArray(parsed)
           ? parsed.map(d => (typeof d === 'object' ? d.DayNumber : d))
           : [];
       } catch (e) {
-        console.error("❌ Failed to parse Days:", item.Compaignscheduledays);
+        console.error("❌ Failed to parse Days:", item.days);
       }
     }
 
@@ -211,7 +211,7 @@ const campaignadd = () => {
       interval: item.Interval ?? '',
       budget: item.Budget ?? '',
       NetworkId: item.NetworkId ?? '',
-      Compaignscheduledays: parsedDays.length > 0
+      days: parsedDays.length > 0
         ? parsedDays.map(d => dayNames[d]).join(', ')
         : '',
       startTime: moment(item.StartTime).isValid()
@@ -232,7 +232,7 @@ const campaignadd = () => {
     { field: 'interval', headerName: 'Interval', width: 100 },
     { field: 'budget', headerName: 'Budget', minWidth: 130 },
     { field: 'NetworkId', headerName: 'Network', minWidth: 150, flex: 1 },
-    { field: 'Compaignscheduledays', headerName: 'Days', minWidth: 250 },
+    { field: 'days', headerName: 'Days', minWidth: 250 },
     { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
     { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
 
