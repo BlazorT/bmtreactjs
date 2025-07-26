@@ -17,7 +17,7 @@ export const useCreateCampaignData = () => {
       lastUpdatedBy: user.userId,
       updatedBy: user.userId,
     };
-    console.log({ body });
+    console.log("Campaign Data ",{ body });
 
     return new Promise((resolve) => {
       registerCampaign(

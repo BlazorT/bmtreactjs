@@ -2,16 +2,16 @@
 
 public partial class CompaignexecutionscheduleViewModel 
 {
-    public long Id { get; set; }
+    public Int64 Id { get; set; }
 
     public int? NetworkId { get; set; }
 
-    public long CompaignDetailId { get; set; }
+    public Int64 CompaignDetailId { get; set; }
 
     public double? Budget { get; set; }
 
     public int? Interval { get; set; }
-
+   // public string? days { get; set; }
     public int? IntervalTypeId { get; set; }
 
     public long? MessageCount { get; set; }
@@ -32,5 +32,5 @@ public partial class CompaignexecutionscheduleViewModel
 
     public int RowVer { get; set; }
 
-    public virtual ICollection<CompaignscheduledayViewModel> Compaignscheduledays { get; } = new List<CompaignscheduledayViewModel>();
+    public virtual ICollection<CompaignscheduledayViewModel>? days { get; } //= new List<CompaignscheduledayViewModel>();
 }
