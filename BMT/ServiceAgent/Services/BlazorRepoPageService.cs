@@ -258,6 +258,75 @@ namespace Blazor.Web.UI.Services
             return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
 
         }
+        public async Task<IEnumerable<CampaignNotificationViewModel>> GetCampaignNotificationData(CampaignNotificationViewModel cModel)
+        {
+            List<CampaignNotificationViewModel> dList = new List<CampaignNotificationViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter DeliveryStatus = new MySqlParameter("p_DeliveryStatus", MySqlDbType.Int32);
+                        DeliveryStatus.Value = cModel.DeliveryStatus;
+                        parameter.Add(DeliveryStatus);
+                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", MySqlDbType.DateTime);
+                        DateFrom.Value = cModel.CreatedAt;
+                        parameter.Add(DateFrom);
+                        MySqlParameter DateTo = new MySqlParameter("p_DateTo", MySqlDbType.DateTime);
+                        DateTo.Value = cModel.LastUpdatedAt;
+                        parameter.Add(DateTo);
+                        MySqlParameter recipient = new MySqlParameter("p_Recipient", MySqlDbType.DateTime);
+                        recipient.Value = cModel.recipient;
+                        parameter.Add(recipient);
+                        command.CommandText = @"SELECT c.Id,c.Name,c.Description,c.Title,c.Remarks,c.HashTags,c.TotalBudget,c.CreatedAt,c.FinishTime,c.StartTime,c.Status,n.id AS notificationid,n.deliveryStatus,n.Name AS networknameFROM compaigns c
+                    INNER JOIN notification n ON c.id = n.comaignid
+                    LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
+                    WHERE c.OrgId = @p_OrgId;
+                ";
+
+                        command.CommandType = CommandType.Text;
+
+                        command.Parameters.Add(new MySqlParameter("@p_OrgId", MySqlDbType.Int32) { Value = cModel.OrgId });
+                        
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
+                        {
+                            while (await dr.ReadAsync())
+                            {
+                                dList.Add(new CampaignNotificationViewModel
+                                {
+                                    Id = Convert.ToInt64(dr["Id"]),
+                                    Name = dr["Name"]?.ToString(),
+                                    Description = dr["Description"]?.ToString(),
+                                    Title = dr["Title"]?.ToString(),
+                                    Remarks = dr["Remarks"]?.ToString(),
+                                    HashTags = dr["HashTags"]?.ToString(),
+                                    TotalBudget = Convert.ToDouble(dr["TotalBudget"]),
+                                    CreatedAt = Convert.ToDateTime(dr["CreatedAt"]),
+                                    StartTime = Convert.ToDateTime(dr["StartTime"]),
+                                    FinishTime = Convert.ToDateTime(dr["FinishTime"]),
+
+                                    Status = Convert.ToInt32(dr["Status"]),
+                                    NotificationId = Convert.ToInt64(dr["notificationid"]),
+                                    DeliveryStatus = dr["deliveryStatus"]?.ToString(),
+                                    NetworkName = dr["networkname"]?.ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw;
+            }
+
+            return dList.OrderByDescending(x => x.CreatedAt).ToList();
+        }
+
         public async Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsData(CampaignRecipientsViewModel cModel) {
             List<CampaignRecipientsViewModel> dList = new List<CampaignRecipientsViewModel>();
             try
