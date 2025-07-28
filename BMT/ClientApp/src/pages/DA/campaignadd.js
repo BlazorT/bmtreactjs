@@ -76,7 +76,7 @@ const campaignadd = () => {
   const [schedulerows, setScheduleRows] = useState([]);
   const allNetworkNames = globalutil.networks().map(n => n.name);
 
-  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames);
+  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames??[]);
 
   const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
   const [stateList, setStateList] = useState([]);
@@ -198,9 +198,11 @@ const campaignadd = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
   const confirmationModal = () => {
+
     setConfirmationModalOpen(!confirmationModalOpen);
   };
   const goToAnotherPage = () => {
+    setConfirmationModalOpen(false); // close the modal
     navigate('/campaignslisting');
   };
   const onCancel = () => {
@@ -427,18 +429,22 @@ const campaignadd = () => {
                               <Table striped bordered hover>
                                 <thead>
                                   <tr>
-                                    <th className="txt-color">State</th>
-                                    <th className="txt-color">City</th>
-                                    <th className="txt-color">Action</th>
+                                    <th className="txt-color text-center align-middle">State</th>
+                                    <th className="txt-color text-center align-middle">City</th>
+                                    <th className="txt-color text-center align-middle">Action</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   {console.log("City Data:", cityData)}
                                   {cityData.map((item, index) => (
                                     <tr key={index}>
-                                      <td className="txt-color">{getStateName(item.states)}</td>
-                                      <td className="txt-color">{getCityName(item.city)}</td>
-                                      <td className="txt-color">
+                                      <td className="txt-color text-center align-middle">
+                                        {getStateName(item.states)}
+                                      </td>
+                                      <td className="txt-color text-center align-middle">
+                                        {getCityName(item.city)}
+                                      </td>
+                                      <td className="txt-color text-center align-middle">
                                         <Button
                                           title="Delete"
                                           value="Delete"
@@ -451,8 +457,8 @@ const campaignadd = () => {
                                     </tr>
                                   ))}
                                 </tbody>
-
                               </Table>
+
                             </CCol>
                           </CRow>
                           <CCol md="12 mt-2">
@@ -625,6 +631,7 @@ const campaignadd = () => {
         isOpen={addScheduleModel}
         toggle={toggleAddScheduleMdl}
         selectedNetworks={selectedNetworks}
+        setSelected={setSelectedNetworks}
         campaignRegData={campaignRegData}
         setData={setScheduleData}
         data={scheduleData}

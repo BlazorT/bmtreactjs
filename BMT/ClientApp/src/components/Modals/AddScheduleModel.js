@@ -30,7 +30,7 @@ import { formValidator } from 'src/helpers/formValidator';
 import { createSchedule } from 'src/hooks/api/createSchedule';
 const AddScheduleModel = (prop) => {
 
-  const { header, isOpen, toggle, initialData, selectedNetworks, selectedDays, setData, data, campaignRegData : submitData } = prop;
+  const { header, isOpen, toggle, initialData, selectedNetworks, selectedDays, setData, data, selected, setSelected, campaignRegData : submitData } = prop;
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
     TotalSchMessages: 0,
@@ -114,7 +114,9 @@ const AddScheduleModel = (prop) => {
   //};
 
   const calculateBudget = (networks, selectedDays) => {
-    const networkCount = networks.length;
+    console.log(networks)
+    
+    const networkCount = networks?.length??0;
     const dayCount = selectedDays.length;
 
     const scheduleCount = networkCount * (dayCount || 1); // Avoid multiplying by 0
@@ -267,27 +269,28 @@ const AddScheduleModel = (prop) => {
     Email: Email // Assuming Email is your component for Email icon
   };
 
-  const [selected, setSelected] = useState(selectedNetworks); // Initial load
+//  const [selected, setSelected] = useState(selectedNetworks); // Initial load
   const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
 
-  useEffect(() => {
-setSelected(selectedNetworks); // Update if prop changes
-  }, [selectedNetworks]);
   const handleNetworkChange = (networkName) => {
     setSelected((prevSelected) =>
       prevSelected.includes(networkName)
-        ? prevSelected.filter((n) => n !== networkName)
-        : [...prevSelected, networkName]
+        ? prevSelected.filter((n) => n !== networkName) // remove if unchecked
+        : [...prevSelected, networkName] // add if checked
     );
   };
+
   useEffect(() => {
     calculateBudget(selectedNetworks, campaignRegData.selectedDays);
   }, [
+    selectedNetworks,
+    campaignRegData.selectedDays,
     campaignRegData.startDate,
     campaignRegData.endDate,
     campaignRegData.startTime,
     campaignRegData.finishTime
   ]);
+
   //var daysArray = campaignRegData.selectedDays;
   //const buildScheduledDays = (daysArray, userId) => {
   //  const now = new Date().toISOString();
@@ -443,6 +446,7 @@ setSelected(selectedNetworks); // Update if prop changes
 
       if (result.status === true) {
         showToast(`Campaign "${name}" submitted successfully!`, 'success');
+        navigate('/campaignslisting');
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
@@ -483,7 +487,7 @@ setSelected(selectedNetworks); // Update if prop changes
                             id={IconName}
                             name={IconName}
                             label={network.name}
-                            checked={selected.includes(network.name)}
+                            checked={selectedNetworks.includes(network.name)}
                             onChange={() => handleNetworkChange(network.name)}
                           />
                         </li>
