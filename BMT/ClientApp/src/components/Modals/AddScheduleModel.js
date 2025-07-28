@@ -139,7 +139,7 @@ const AddScheduleModel = (prop) => {
   ];
   const [campaignRegData, setCampaignRegData] = useState({
     interval: '',
-    intervalTypeId: '',
+    intervalTypeId: 0,
     isFixedTime: false,
     startDate: moment().toDate(),                  // Moment → Date
     endDate: moment().add(1, 'day').toDate(),      // Moment → Date
@@ -245,7 +245,7 @@ const AddScheduleModel = (prop) => {
         isOpen: false,
       }),
     );
-    setCampaignRegData(initialData);
+  //  setCampaignRegData(initialData);
   };
 
   const onNoConfirm = () => {
