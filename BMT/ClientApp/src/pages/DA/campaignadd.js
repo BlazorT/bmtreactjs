@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Sms from '@mui/icons-material/Sms';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import Email from '@mui/icons-material/Email';
@@ -21,6 +20,8 @@ import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 //import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 //import CustomDatePicker from 'src/components/UI/DatePicker';
+import { updateToast } from 'src/redux/toast/toastSlice';
+import useFetch from 'src/hooks/useFetch';
 
 import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
@@ -48,6 +49,7 @@ import GoogleMapModel from 'src/components/Modals/GoogleMapModel';
 import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
 import Button from '../../components/InputsComponent/Button';
 import CIcon from '@coreui/icons-react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const campaignadd = () => {
   // let state;
@@ -64,7 +66,7 @@ const campaignadd = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [cityData, setCityData] = useState([]);
+ 
   const [scheduleData, setScheduleData] = useState([]);
 
   const [areaSelectModal, setAreaSelectModal] = useState(false);
@@ -77,7 +79,53 @@ const campaignadd = () => {
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames);
 
   const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
- 
+  const [stateList, setStateList] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [cityData, setCityData] = useState([]); // Your table data
+  const {
+    response: GetCityRes,
+    loading: CityLoading,
+    error: createCityError,
+    fetchData: GetCity,
+  } = useFetch();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Get states from util
+    const states = globalutil.states();
+    console.log('State name:', globalutil.states()); // <-- Correct logging
+    setStateList(states);
+
+    // Get cities from API
+    getCityList();
+  }, []);
+
+  const getCityList = async () => {
+    await GetCity('/Common/cities', { method: 'POST' }, (res) => {
+      if (res.status === true) {
+        setCityList(res.data); // cities: [{id, name, stateId}]
+        console.log('City name:', res.data); // <-- Correct logging
+      } else {
+        dispatch(
+          updateToast({
+            isToastOpen: true,
+            toastMessage: res.message,
+            toastVariant: 'error',
+          })
+        );
+      }
+    });
+  };
+  const getStateName = (id) => {
+    const state = stateList.find((s) => s.id == id); // Use `==` or convert types
+    return state ? state.name : id;
+  };
+
+  const getCityName = (id) => {
+    const city = cityList.find((c) => c.id == id);
+    return city ? city.name : id;
+  };
+
+
 
   const handleCampaignAddForm = (e, label) => {
     if (label === 'startTime' || label === 'finishTime') {
@@ -311,10 +359,10 @@ const campaignadd = () => {
                     <div className="row">
                       <div className="col-md-6 mt-4">
                         <CFormCheck
-                          id="generateAutoLeads"
-                          name="generateAutoLeads"
+                          id="autoGenerateLeads"
+                          name="autoGenerateLeads"
                           label="Generate Auto Leads"
-                          checked={campaignRegData.generateAutoLeads}
+                          checked={campaignRegData.autoGenerateLeads}
                           onChange={handleCampaignAddForm}
                         />
 
@@ -379,7 +427,7 @@ const campaignadd = () => {
                               <Table striped bordered hover>
                                 <thead>
                                   <tr>
-                                    <th className="txt-color">Country</th>
+                                    <th className="txt-color">State</th>
                                     <th className="txt-color">City</th>
                                     <th className="txt-color">Action</th>
                                   </tr>
@@ -388,8 +436,8 @@ const campaignadd = () => {
                                   {console.log("City Data:", cityData)}
                                   {cityData.map((item, index) => (
                                     <tr key={index}>
-                                      <td className="txt-color">{item.states}</td>
-                                      <td className="txt-color">{item.city}</td>
+                                      <td className="txt-color">{getStateName(item.states)}</td>
+                                      <td className="txt-color">{getCityName(item.city)}</td>
                                       <td className="txt-color">
                                         <Button
                                           title="Delete"

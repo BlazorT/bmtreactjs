@@ -2,7 +2,7 @@ import React from 'react';
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 //const DADashboard = React.lazy(() => import('./pages/Dashboard/DADashboard'));
-const organizationadd = React.lazy(() => import('./pages/DA/organizationadd'));
+const Organizationadd = React.lazy(() => import('./pages/DA/organizationadd'));
 /*const AddDA = React.lazy(() => import('./pages/DA/AddDA'));*/
 //const FleetDashboard = React.lazy(() => import('./pages/Dashboard/FleetDashboard'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
@@ -143,7 +143,7 @@ export const routes = [
   { path: '/home', exact: true, name: 'Home' },
   //{ path: '/fleet-dashboard', name: 'FleetDashboard', element: FleetDashboard },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
-  { path: '/organizationadd ', name: 'organizationadd', element: organizationadd },
+  { path: '/organizationadd ', name: 'organizationadd', element: Organizationadd },
   //{ path: '/dspRegister', name: 'DspRegister', element: DADspRegister },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/print', name: 'Print', element: Print },
