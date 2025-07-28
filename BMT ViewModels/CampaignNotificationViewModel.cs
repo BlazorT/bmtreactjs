@@ -4,6 +4,12 @@
     {
         public long Id { get; set; }
         public int? OrgId { get; set; }
+        public int? readCount { get; set; }
+        public int? commentsCount { get; set; }
+        public int? clicksCount { get; set; }
+        public int? sharesCount { get; set; }
+        public int? likesCount { get; set; }
+
         public string? Name { get; set; }
         public string? recipient { get; set; }
         public string? Description { get; set; }

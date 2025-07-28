@@ -281,7 +281,7 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter recipient = new MySqlParameter("p_Recipient", MySqlDbType.DateTime);
                         recipient.Value = cModel.recipient;
                         parameter.Add(recipient);
-                        command.CommandText = @"SELECT c.Id,c.Name,c.Description,c.Title,c.Remarks,c.HashTags,c.TotalBudget,c.CreatedAt,c.FinishTime,c.StartTime,c.Status,n.id AS notificationid,n.deliveryStatus,n.Name AS networknameFROM compaigns c
+                        command.CommandText = @"SELECT c.Id,c.Name,c.Description,c.Title,IFNULL(c.readCount,0) readCount,IFNULL(c.commentsCount,0) commentsCount,IFNULL(c.clicksCount,0) clicksCount,IFNULL(c.sharesCount,0) sharesCount, IFNULL(c.likesCount,0) likesCount, c.Remarks,c.HashTags,c.TotalBudget,c.CreatedAt,c.FinishTime,c.StartTime,c.Status,n.id AS notificationid,n.deliveryStatus,n.Name AS networknameFROM compaigns c
                     INNER JOIN notification n ON c.id = n.comaignid
                     LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
                     WHERE c.OrgId = @p_OrgId;
