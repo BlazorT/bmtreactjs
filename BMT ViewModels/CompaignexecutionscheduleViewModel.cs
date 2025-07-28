@@ -10,7 +10,7 @@ public partial class CompaignexecutionscheduleViewModel
 
     public double? Budget { get; set; }
 
-    public int? Interval { get; set; }
+    public int? Intervalval { get; set; }
    // public string? days { get; set; }
     public int? IntervalTypeId { get; set; }
 
