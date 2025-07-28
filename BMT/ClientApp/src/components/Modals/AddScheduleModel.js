@@ -139,7 +139,7 @@ const AddScheduleModel = (prop) => {
   ];
   const [campaignRegData, setCampaignRegData] = useState({
     interval: '',
-    intervalTypeId: '',
+    intervalTypeId: 0,
     isFixedTime: false,
     startDate: moment().toDate(),                  // Moment → Date
     endDate: moment().add(1, 'day').toDate(),      // Moment → Date
@@ -245,7 +245,7 @@ const AddScheduleModel = (prop) => {
         isOpen: false,
       }),
     );
-    setCampaignRegData(initialData);
+  //  setCampaignRegData(initialData);
   };
 
   const onNoConfirm = () => {
@@ -364,7 +364,7 @@ setSelected(selectedNetworks); // Update if prop changes
         MessageCount: budgetData.TotalSchMessages,
         CreatedAt: new Date(),
         CreatedBy: user.userId,
-        days: campaignRegData.selectedDays, // ✅ now an array of objects
+        days: JSON.stringify(campaignRegData.selectedDays), // ✅ now an array of objects
         Budget: budgetData.TotalSchBudget,
         Qty: 0
       };
@@ -391,11 +391,11 @@ setSelected(selectedNetworks); // Update if prop changes
       showToast('Please add at least one schedule before submitting.', 'warning');
       return;
     }
-
+    console.log("submitData",submitData);
     const {
       name,
       tag,
-      description,
+      autoGenerateLeads,
       startDate,
       endDate,
       startTime,
@@ -408,10 +408,13 @@ setSelected(selectedNetworks); // Update if prop changes
 
     const campaignBody = {
       Id: 0,
-      StoreId: 1,
+      orgId: user.userId,
+      StoreId: user.userId,
       Name: name,
+      description: name,
       Title: name,
       HashTags: tag,
+      AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
       StartTime: startDateTime,
       FinishTime: endDateTime,
       Status: status ? 1 : 0,
