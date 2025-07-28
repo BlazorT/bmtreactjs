@@ -13,8 +13,8 @@ public partial class Compaignexecutionschedule : EntityTransaction
     public long CompaignDetailId { get; set; }
 
     public double? Budget { get; set; }
-
-    public int? Interval { get; set; }
+    public string? days { get; set; }
+    public int? Intervalval { get; set; }
 
     public int? IntervalTypeId { get; set; }
 
@@ -36,5 +36,5 @@ public partial class Compaignexecutionschedule : EntityTransaction
 
     public int RowVer { get; set; }
 
-    public virtual ICollection<Compaignscheduleday> Compaignscheduledays { get; } = new List<Compaignscheduleday>();
+    //public virtual ICollection<Compaignscheduleday> Compaignscheduledays { get; } = new List<Compaignscheduleday>();
 }

@@ -14,8 +14,8 @@ public partial class CompaignexecutionscheduleModel : BaseModelTransactions
     public long CompaignDetailId { get; set; }
 
     public double? Budget { get; set; }
-
-    public int? Interval { get; set; }
+    public string? days { get; set; }
+    public int? Intervalval { get; set; }
 
     public int? IntervalTypeId { get; set; }
 

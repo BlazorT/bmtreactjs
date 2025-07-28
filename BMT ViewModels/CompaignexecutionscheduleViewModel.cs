@@ -10,7 +10,7 @@ public partial class CompaignexecutionscheduleViewModel
 
     public double? Budget { get; set; }
 
-    public int? Interval { get; set; }
+    public int? Intervalval { get; set; }
    // public string? days { get; set; }
     public int? IntervalTypeId { get; set; }
 
@@ -31,6 +31,6 @@ public partial class CompaignexecutionscheduleViewModel
     public int Status { get; set; }
 
     public int RowVer { get; set; }
-    public int[]? days { get; set; }
+    public string? days { get; set; }
     //public virtual ICollection<CompaignscheduledayViewModel>? days { get; } //= new List<CompaignscheduledayViewModel>();
 }
