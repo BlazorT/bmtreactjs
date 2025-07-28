@@ -258,7 +258,7 @@ const campaignadd = () => {
 
       return {
         id: index + 1,
-        interval: item.Interval ?? '',
+        interval: item.Intervalval ?? '',
         budget: item.Budget ?? '',
         NetworkId: item.NetworkId ?? '',
         days: parsedDays.length > 0

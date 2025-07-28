@@ -140,13 +140,13 @@ const AddScheduleModel = (prop) => {
     { id: 7, name: 'Saturday' }
   ];
   const [campaignRegData, setCampaignRegData] = useState({
-    interval: '',
+    Intervalval: '',
     intervalTypeId: 0,
     isFixedTime: false,
     startDate: moment().toDate(),                  // Moment → Date
     endDate: moment().add(1, 'day').toDate(),      // Moment → Date
     startTime: dayjs().startOf('day'),            // 00:00:00 (dayjs object)
-    finishTime: dayjs().startOf('day'),           // 00:00:00 (dayjs object)
+    finishTime: dayjs().startOf('day').add(4, 'hour'), // today 01:00:00
     selectedDays: []
   });
   const showToast = useShowToast();
@@ -360,7 +360,7 @@ const AddScheduleModel = (prop) => {
         CompaignDetailId: 0,
         StartTime: start.toISOString(),
         FinishTime: end.toISOString(),
-        Interval: parseFloat(campaignRegData.interval),
+        Intervalval: parseFloat(campaignRegData.intervalval),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
         Status: 1,
@@ -405,6 +405,11 @@ const AddScheduleModel = (prop) => {
       finishTime,
       status
     } = submitData;
+    // ✅ Check if name is empty/null/whitespace
+    if (!name || name.trim() === '') {
+      showToast('Please add a campaign name || Title before submit.', 'warning');
+      return;
+    }
 
     const startDateTime = moment(`${moment(startDate).format("YYYY-MM-DD")} ${moment(startTime).format("HH:mm")}`).toISOString();
     const endDateTime = moment(`${moment(endDate).format("YYYY-MM-DD")} ${moment(finishTime).format("HH:mm")}`).toISOString();
@@ -554,12 +559,12 @@ const AddScheduleModel = (prop) => {
             <CRow >
               <CustomInput
                 label="Interval Size (in seconds)"
-                value={campaignRegData.interval}
+                value={campaignRegData.intervalval}
                 onChange={handleCampaignAddForm}
                 icon={cilFlagAlt}
                 type="number"
-                id="interval"
-                name="interval"
+                id="intervalval"
+                name="intervalval"
                 placeholder="interval size"
                 className="form-control item"
                 isRequired={false}

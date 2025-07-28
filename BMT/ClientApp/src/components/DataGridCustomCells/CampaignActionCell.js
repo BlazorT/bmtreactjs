@@ -65,7 +65,7 @@ const CampaignActionCell = (prop) => {
     showConfirmation({
       header: 'Confirmation!',
       body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'}  ${
-        user[0].userName
+        user[0].name
       }?`,
       isOpen: true,
       onYes: () => onYesToggle(status),
@@ -78,7 +78,7 @@ const CampaignActionCell = (prop) => {
 
     if (response.status) {
       showToast(`${user[0].name} ${status === 1 ? 're activated' : 'deleted'} successfully`);
-      fetching();
+    //  fetching();
     } else {
       showToast(response.message, 'error');
     }
@@ -140,9 +140,9 @@ const CampaignActionCell = (prop) => {
   //     },
   //   },
   // ];
-
   return (
     <React.Fragment>
+
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
@@ -168,16 +168,7 @@ const CampaignActionCell = (prop) => {
               </Tooltip>
             </CCol>
           )}
-          {/*<CCol>*/}
-          {/*    <Tooltip title="Campaign Actions">*/}
-          {/*    <CIcon*/}
-          {/*      className="stock-toggle-icon"*/}
-          {/*      icon={cilCog}*/}
-          {/*      onClick={handleClick}*/}
-          {/*      aria-describedby={id}*/}
-          {/*    />*/}
-          {/*  </Tooltip>*/}
-          {/*</CCol>*/}
+        
           {canDelete === 1 && (
             <CCol>
               <Tooltip title="Delete Campaign">
@@ -189,97 +180,7 @@ const CampaignActionCell = (prop) => {
               </Tooltip>
             </CCol>
           )}
-          {/* <CCol>
-            <AppSpeedDial actions={actions} />
-          </CCol> */}
-
-          {/*<Popover*/}
-          {/*  id={id}*/}
-          {/*  anchorEl={anchorEl}*/}
-          {/*  handleClose={handleClose}*/}
-          {/*  anchorVer="left"*/}
-          {/*  anchorHori="left"*/}
-          {/*  content={*/}
-          {/*    <div className="fade-in-out">*/}
-          {/*      <div className="bckgrndTransprnt">*/}
-          {/*        <div className="da-popover bg-dark-color ">*/}
-          {/*          <div className="tab-style">*/}
-          {/*            <CCol>*/}
-          {/*              */}{/* <span className="fs-6 text-dim">Daily Dispatchments</span> */}
-          {/*              <Tooltip title="Daily Dispatchments">*/}
-          {/*                <CIcon*/}
-          {/*                  className="stock-toggle-icon"*/}
-          {/*                  icon={cilLibrary}*/}
-          {/*                  size="xl"*/}
-          {/*                  onClick={() => {*/}
-          {/*                    setIsOpen(true);*/}
-          {/*                    handleClose();*/}
-          {/*                  }}*/}
-          {/*                />*/}
-          {/*                <br></br>*/}
-          {/*                <div className="text-dim">Daily Disp.</div>*/}
-          {/*              </Tooltip>*/}
-          {/*            </CCol>*/}
-          {/*          </div>*/}
-          {/*          <div className="tab-style">*/}
-          {/*            <CCol className="">*/}
-          {/*              <Tooltip title="Dispatchments">*/}
-          {/*                <CIcon*/}
-          {/*                  className={`stock-toggle-icon user-select-none ${*/}
-          {/*                    loginUser.roleId !== 1 && 'pe-none'*/}
-          {/*                  }`}*/}
-          {/*                  icon={cilTruck}*/}
-          {/*                  size="xl"*/}
-          {/*                  onClick={() => {*/}
-          {/*                    setIsJustDispMdlOpen(true);*/}
-          {/*                    handleClose();*/}
-          {/*                  }}*/}
-          {/*                />*/}
-          {/*                <br></br>*/}
-          {/*                <div className="text-dim">Dispatchment</div>*/}
-          {/*              </Tooltip>*/}
-          {/*            </CCol>*/}
-          {/*          </div>*/}
-          {/*          <div className="tab-style">*/}
-          {/*            <CCol>*/}
-          {/*              <Tooltip title="Send Notification">*/}
-          {/*                <CIcon*/}
-          {/*                  className="stock-toggle-icon"*/}
-          {/*                  icon={cilBell}*/}
-          {/*                  size="xl"*/}
-          {/*                  onClick={() => {*/}
-          {/*                    // setDADetailModalOpen(true);*/}
-          {/*                    handleClose();*/}
-          {/*                  }}*/}
-          {/*                />*/}
-          {/*                <br></br>*/}
-          {/*                <div className=" text-dim">Notification</div>*/}
-          {/*              </Tooltip>*/}
-          {/*            </CCol>*/}
-          {/*          </div>*/}
-          {/*          <div className="tab-style">*/}
-          {/*            <CCol>*/}
-          {/*              <Tooltip title="See DA detail">*/}
-          {/*                <CIcon*/}
-          {/*                  className="stock-toggle-icon"*/}
-          {/*                  icon={cilInfo}*/}
-          {/*                  size="xl"*/}
-          {/*                  onClick={() => {*/}
-          {/*                    setDADetailModalOpen(true);*/}
-          {/*                    handleClose();*/}
-          {/*                  }}*/}
-          {/*                />*/}
-          {/*                <br></br>*/}
-          {/*                <div className=" text-dim">DA Detail</div>*/}
-          {/*              </Tooltip>*/}
-          {/*            </CCol>*/}
-          {/*          </div>*/}
-          {/*        </div>*/}
-          {/*      </div>*/}
-          {/*    </div>*/}
-          {/*  }*/}
-          {/*  open={open}*/}
-          {/*/>*/}
+        
         </CRow>
       )}
 
