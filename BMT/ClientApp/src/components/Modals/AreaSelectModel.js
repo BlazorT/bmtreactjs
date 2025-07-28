@@ -129,7 +129,7 @@ const AreaSelectModel = (prop) => {
         ancestorTaskId: daWorkFlowData.ancestorTask !== '' ? daWorkFlowData.ancestorTask : 0,
         taskTypeId: daWorkFlowData.feildType,
         predesessorTaskId:
-          daWorkFlowData.predecessorTask !== '' ? daWorkFlowData.predecessorTask : 0,
+        daWorkFlowData.predecessorTask !== '' ? daWorkFlowData.predecessorTask : 0,
         initExpression: daWorkFlowData.preCondition,
         completionExpression: daWorkFlowData.postCondition,
         rowVer: 1,
