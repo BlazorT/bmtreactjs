@@ -281,11 +281,38 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter recipient = new MySqlParameter("p_Recipient", MySqlDbType.DateTime);
                         recipient.Value = cModel.recipient;
                         parameter.Add(recipient);
-                        command.CommandText = @"SELECT c.Id,c.Name,c.Description,c.Title,IFNULL(c.readCount,0) readCount,IFNULL(c.commentsCount,0) commentsCount,IFNULL(c.clicksCount,0) clicksCount,IFNULL(c.sharesCount,0) sharesCount, IFNULL(c.likesCount,0) likesCount, c.Remarks,c.HashTags,c.TotalBudget,c.CreatedAt,c.FinishTime,c.StartTime,c.Status,n.id AS notificationid,n.deliveryStatus,n.Name AS networknameFROM compaigns c
-                    INNER JOIN notification n ON c.id = n.comaignid
-                    LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
-                    WHERE c.OrgId = @p_OrgId;
-                ";
+                        command.CommandText = @"
+SELECT 
+    c.Id,
+    c.Name,
+    c.Description,
+    c.Title,
+    IFNULL(c.readCount, 0) AS readCount,
+    IFNULL(c.commentsCount, 0) AS commentsCount,
+    IFNULL(c.clicksCount, 0) AS clicksCount,
+    IFNULL(c.sharesCount, 0) AS sharesCount,
+    IFNULL(c.likesCount, 0) AS likesCount,
+    c.Remarks,
+    c.HashTags,
+    c.TotalBudget,
+    c.CreatedAt,
+    c.FinishTime,
+    c.StartTime,
+    c.Status,
+    n.id AS notificationid,
+    n.deliveryStatus,
+    n.Name AS networkname
+FROM compaigns c
+INNER JOIN notification n ON c.id = n.campaignid
+LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
+WHERE c.OrgId = @p_OrgId
+  AND n.deliveryStatus = @p_DeliveryStatus
+  AND c.CreatedAt >= @p_DateFrom
+  AND c.CreatedAt <= @p_DateTo
+ AND n.Recipient LIKE CONCAT('%', @p_Recipient, '%')
+
+";
+
 
                         command.CommandType = CommandType.Text;
 
@@ -309,6 +336,11 @@ namespace Blazor.Web.UI.Services
                                     FinishTime = Convert.ToDateTime(dr["FinishTime"]),
 
                                     Status = Convert.ToInt32(dr["Status"]),
+                                    readCount = Convert.ToInt32(dr["readCount"]),
+                                    commentsCount = Convert.ToInt32(dr["commentsCount"]),
+                                    clicksCount = Convert.ToInt32(dr["clicksCount"]),
+                                    sharesCount = Convert.ToInt32(dr["sharesCount"]),
+                                    likesCount = Convert.ToInt32(dr["likesCount"]),
                                     NotificationId = Convert.ToInt64(dr["notificationid"]),
                                     DeliveryStatus = dr["deliveryStatus"]?.ToString(),
                                     NetworkName = dr["networkname"]?.ToString()

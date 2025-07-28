@@ -50,6 +50,7 @@ import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
 import Button from '../../components/InputsComponent/Button';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useShowToast } from 'src/hooks/useShowToast';
 
 const campaignadd = () => {
   // let state;
@@ -58,7 +59,7 @@ const campaignadd = () => {
   const { uploadAvatar } = useUploadAvatar();
   const { createUpdateCampaign } = useCreateCampaignData();
 
-  const [campaignRegData, setcampaignRegData] = useState(getInitialCampaignData(user));
+  const [campaignRegData, setCampaignRegData] = useState(getInitialCampaignData(user));
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
@@ -82,6 +83,7 @@ const campaignadd = () => {
   const [stateList, setStateList] = useState([]);
   const [cityList, setCityList] = useState([]);
   const [cityData, setCityData] = useState([]); // Your table data
+  const showToast = useShowToast();
   const {
     response: GetCityRes,
     loading: CityLoading,
@@ -128,44 +130,73 @@ const campaignadd = () => {
 
 
   const handleCampaignAddForm = (e, label) => {
-    if (label === 'startTime' || label === 'finishTime') {
-      setcampaignRegData((prev) => ({
+    if (label === 'video' || label === 'image' || label === 'pdf') {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const type = file.type;
+      const isVideo = label === 'video' && type.startsWith('video/');
+      const isImage = label === 'image' && type.startsWith('image/');
+      const isPDF = label === 'pdf' && type === 'application/pdf';
+
+      if (!(isVideo || isImage || isPDF)) {
+        e.target.value = null;
+        showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
+        return;
+      }
+
+      setCampaignRegData((prev) => ({
+        ...prev,
+        attachments: file,
+      }));
+    }
+
+    else if (label === 'startTime' || label === 'finishTime') {
+      setCampaignRegData((prev) => ({
         ...prev,
         [label]: e,
       }));
-    } else if (label === 'Campaign Start Date') {
-      setcampaignRegData((prev) => ({
+    }
+
+    else if (label === 'Campaign Start Date') {
+      setCampaignRegData((prev) => ({
         ...prev,
-        startDate: moment(e).format('YYYY-MM-DD HH:mm:ss'),
+        startDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
       }));
-    } else if (label === 'Campaign End Date') {
-      setcampaignRegData((prev) => ({
+    }
+
+    else if (label === 'Campaign End Date') {
+      setCampaignRegData((prev) => ({
         ...prev,
-        endDate: moment(e).format('YYYY-MM-DD HH:mm:ss'),
+        endDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
       }));
-    } else if (label === 'logoPath') {
-      setcampaignRegData((prevData) => ({
+    }
+
+    else if (label === 'logoPath') {
+      setCampaignRegData((prevData) => ({
         ...prevData,
         logoPath: e,
       }));
-    } else if (e?.target) {
+    }
+
+    else if (e?.target) {
       const { name, value, type, checked, files } = e.target;
-
       const inputValue =
-        type === 'checkbox'
-          ? checked
-          : type === 'file'
-            ? files[0]
-            : name === 'status'
-              ? parseInt(value)       // ✅ convert status to number
-              : value;
+        type === 'checkbox' ? checked :
+          type === 'file' ? files[0] :
+            name === 'status' ? parseInt(value) : value;
 
-      setcampaignRegData((prevData) => ({
+      setCampaignRegData((prevData) => ({
         ...prevData,
         [name]: inputValue,
       }));
     }
+
+    else {
+      console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
+    }
   };
+
 
 
 

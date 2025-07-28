@@ -206,27 +206,44 @@ const AddScheduleModel = (prop) => {
  
 
   const handleCampaignAddForm = (e, label, date) => {
-    var colName = date;
     console.log("datee", e, label, date);
+
     if (label === 'startTime' || label === 'finishTime') {
+      const newTime = e ? e.format('HH:mm') : null;
+
+      // Convert both times to dayjs objects for comparison
+      const currentStart = dayjs(campaignRegData.startTime, 'HH:mm');
+      const currentFinish = dayjs(campaignRegData.finishTime, 'HH:mm');
+      const newTimeDayjs = dayjs(newTime, 'HH:mm');
+
+      if (label === 'finishTime' && newTimeDayjs.isBefore(currentStart)) {
+        showToast('End time cannot be earlier than start time.', 'error');
+        return;
+      }
+
+      if (label === 'startTime' && currentFinish && newTimeDayjs.isAfter(currentFinish)) {
+        showToast('Start time cannot be later than end time.', 'error');
+        return;
+      }
+
       setCampaignRegData((prev) => ({
         ...prev,
-        [label]: e ? e.format('HH:mm') : null,
+        [label]: newTime,
       }));
     } else if (label === 'startDate' || label === 'endDate') {
       setCampaignRegData((prev) => ({
         ...prev,
-        [colName]: e,
+        [date]: e,
       }));
     } else {
       const { name, value } = e.target;
-      console.log({ name, value });
       setCampaignRegData((prev) => ({
         ...prev,
         [name]: value,
       }));
     }
   };
+
 
   const onCancel = () => {
     dispatch(

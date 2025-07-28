@@ -105,20 +105,19 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           const mappedArray = res.data.map((data) => ({
             id: data.id,
             roleName: data.name,
-            // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
-            //userId: data.userId,
-            //dspid: user.dspId.toString(),
-            //userRole: data.userRole,
             userName: data.userName,
             status: data.status,
             contact: data.contact,
             email: data.email,
-            createdAt: formatDate(data.createdAt)
-              ? formatDate(data.createdAt)
-              : formatDate(data.createdAt),
-            //  lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+            createdAt: formatDate(data.createdAt) || '',
 
+            readCount: data.readCount || 0,
+            commentsCount: data.commentsCount || 0,
+            clicksCount: data.clicksCount || 0,
+            sharesCount: data.sharesCount || 0,
+            likesCount: data.likesCount || 0,
           }));
+
           setRows(mappedArray);
         } else {
           dispatch(
@@ -141,9 +140,9 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     {
       field: 'name',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Campaign Name',
+      headerName: ' Name',
       flex: 1,
-      width: 140,
+      width: 150,
       editable: false,
       filterable: true,
     },
@@ -152,7 +151,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       headerClassName: 'custom-header-data-grid',
       headerName: 'Start Date',
       flex: 1,
-      width: 100,
+      width: 140,
       editable: false,
       filterable: true,
       type: 'timestamp',
@@ -162,7 +161,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       headerClassName: 'custom-header-data-grid',
       headerName: 'Network',
       flex: 1,
-      width: 100,
+      width: 130,
       editable: false,
       filterable: true,
     },
@@ -170,8 +169,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       field: 'send',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Send',
-      // flex: 1,
-      width: 190,
+      width: 100,
       editable: false,
       filterable: true,
     },
@@ -179,8 +177,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       field: 'failed',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Failed',
-      // flex: 1,
-      width: 190,
+      width: 100,
       editable: false,
       filterable: true,
     },
@@ -188,15 +185,52 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       field: 'delivered',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Delivered',
-      // flex: 1,
-      width: 190,
+      width: 100,
       editable: false,
       filterable: true,
     },
-
- 
-
+    {
+      field: 'readCount',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Reads',
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
+    {
+      field: 'commentsCount',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Comments',
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
+    {
+      field: 'clicksCount',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Clicks',
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
+    {
+      field: 'sharesCount',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Shares',
+      width: 100,
+      editable: false,
+      filterable: true,
+    },
+    {
+      field: 'likesCount',
+      headerClassName: 'custom-header-data-grid',
+      headerName: 'Likes',
+      width: 100,
+      editable: false,
+      filterable: true,
+    }
   ]);
+
   const [showStock, setShowStock] = useState(false);
   const makeGroupingRows = (data) => {
     const updatedData = [];
