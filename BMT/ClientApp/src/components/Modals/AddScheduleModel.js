@@ -129,13 +129,13 @@ const AddScheduleModel = (prop) => {
   };
 
   const daysList = [
-    { id: 0, name: 'Sunday' },
-    { id: 1, name: 'Monday' },
-    { id: 2, name: 'Tuesday' },
-    { id: 3, name: 'Wednesday' },
-    { id: 4, name: 'Thursday' },
-    { id: 5, name: 'Friday' },
-    { id: 6, name: 'Saturday' }
+    { id: 1, name: 'Sunday' },
+    { id: 2, name: 'Monday' },
+    { id: 3, name: 'Tuesday' },
+    { id: 4, name: 'Wednesday' },
+    { id: 5, name: 'Thursday' },
+    { id: 6, name: 'Friday' },
+    { id: 7, name: 'Saturday' }
   ];
   const [campaignRegData, setCampaignRegData] = useState({
     interval: '',
@@ -188,7 +188,7 @@ const AddScheduleModel = (prop) => {
     setCampaignRegData((prev) => ({
       ...prev,
       intervalTypeId: newTypeId,
-      selectedDays: newTypeId === 2 ? [0, 1, 2, 3, 4, 5, 6] : [], // auto-select or clear
+      selectedDays: newTypeId === 2 ? [1, 2, 3, 4, 5, 6,7] : [], // auto-select or clear
     }));
   };
 
@@ -288,19 +288,19 @@ setSelected(selectedNetworks); // Update if prop changes
     campaignRegData.startTime,
     campaignRegData.finishTime
   ]);
-  var daysArray = campaignRegData.selectedDays;
-  const buildScheduledDays = (daysArray, userId) => {
-    const now = new Date().toISOString();
-    return daysArray.map(day => ({
-      Id: 0,
-      CompaignScheduleId: 0,
-      DayNumber: day,
-      RowVer: 1,
-      Status: 1,
-      CreatedAt: now,
-      CreatedBy: userId
-    }));
-  };
+  //var daysArray = campaignRegData.selectedDays;
+  //const buildScheduledDays = (daysArray, userId) => {
+  //  const now = new Date().toISOString();
+  //  return daysArray.map(day => ({
+  //    Id: 0,
+  //    CompaignScheduleId: 0,
+  //    DayNumber: day,
+  //    RowVer: 1,
+  //    Status: 1,
+  //    CreatedAt: now,
+  //    CreatedBy: userId
+  //  }));
+  //};
 
   const onSave = () => {
     console.log("Step 1: Validating input");
@@ -347,7 +347,7 @@ setSelected(selectedNetworks); // Update if prop changes
     setSelectedNetworkJson(selectedNetworkObjects);
 
     const schedulePayload = [];
-    const scheduledDays = buildScheduledDays(campaignRegData.selectedDays, user.userId);
+   // const scheduledDays = buildScheduledDays(campaignRegData.selectedDays, user.userId);
 
     console.log("Step 4: Building schedule payload");
     for (let ntwk of selectedNetworkObjects) {
@@ -364,7 +364,7 @@ setSelected(selectedNetworks); // Update if prop changes
         MessageCount: budgetData.TotalSchMessages,
         CreatedAt: new Date(),
         CreatedBy: user.userId,
-        Compaignscheduledays: scheduledDays, // ✅ now an array of objects
+        days: campaignRegData.selectedDays, // ✅ now an array of objects
         Budget: budgetData.TotalSchBudget,
         Qty: 0
       };

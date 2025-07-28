@@ -188,40 +188,45 @@ const campaignadd = () => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
-  const formatted = scheduleData.map((item, index) => {
+
+  useEffect(() => {
     const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
-    let parsedDays = [];
 
-    if (Array.isArray(item.days)) {
-      // If already an array of objects, extract DayNumber
-      parsedDays = item.days.map(d => d.DayNumber);
-    } else if (typeof item.days === 'string') {
-      try {
-        const parsed = JSON.parse(item.days);
-        parsedDays = Array.isArray(parsed)
-          ? parsed.map(d => (typeof d === 'object' ? d.DayNumber : d))
-          : [];
-      } catch (e) {
-        console.error("❌ Failed to parse Days:", item.days);
+    const formatted = scheduleData.map((item, index) => {
+      let parsedDays = [];
+
+      if (Array.isArray(item.days)) {
+        parsedDays = item.days;
+      } else if (typeof item.days === 'string') {
+        try {
+          const parsed = JSON.parse(item.days);
+          parsedDays = Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          console.error("❌ Failed to parse days:", item.days);
+        }
       }
-    }
 
-    return {
-      id: index + 1,
-      interval: item.Interval ?? '',
-      budget: item.Budget ?? '',
-      NetworkId: item.NetworkId ?? '',
-      days: parsedDays.length > 0
-        ? parsedDays.map(d => dayNames[d]).join(', ')
-        : '',
-      startTime: moment(item.StartTime).isValid()
-        ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
-        : '',
-      finishTime: moment(item.FinishTime).isValid()
-        ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
-        : ''
-    };
-  });
+      return {
+        id: index + 1,
+        interval: item.Interval ?? '',
+        budget: item.Budget ?? '',
+        NetworkId: item.NetworkId ?? '',
+        days: parsedDays.length > 0
+          ? parsedDays.map(d => dayNames[d]).join(', ')
+          : '',
+        startTime: moment(item.StartTime).isValid()
+          ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
+          : '',
+        finishTime: moment(item.FinishTime).isValid()
+          ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
+          : ''
+      };
+    });
+
+    setScheduleRows(formatted);
+    console.log("✅ Formatted scheduleData:", formatted);
+  }, [scheduleData]); // <--- Depend on scheduleData only
+
 
 
   const handleDeleteRow = (idToDelete) => {

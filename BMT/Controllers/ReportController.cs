@@ -8,8 +8,9 @@ using Blazor.Web.UI.Interfaces;
 namespace com.blazor.bmt.controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    [Produces("application/json")]
+    //[Route("[controller]")]
+  //  [Route("Report")]
+ //   [Produces("application/json")]
     public class ReportController : ControllerBase
     { //Almas 
         private IMemoryCache _cache;
@@ -55,9 +56,9 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-        [HttpGet("CampaignNotificationReportData")]
-        [HttpPost("CampaignNotificationReportData")]
-        [Route("CampaignNotificationReportData")]
+        [HttpGet("GetCampaignNotificationReportData")]
+        [HttpPost("GetCampaignNotificationReportData")]
+        [Route("GetCampaignNotificationReportData")]
         public async Task<ActionResult> GetCampaignNotificationReportData([FromBody] CampaignNotificationViewModel vm)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) ||
