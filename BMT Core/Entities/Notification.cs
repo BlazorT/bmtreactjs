@@ -1,6 +1,7 @@
 ﻿using com.blazor.bmt.core.baseentity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace com.blazor.bmt.core;
 
@@ -29,7 +30,12 @@ public partial class Notification:EntityTransaction
     public string? Subject { get; set; }
 
     public string? Title { get; set; }
-
+    public int? likesCount { get; set; }
+    public int? sharesCount { get; set; }
+    public int? clicksCount { get; set; }
+    public int? commentsCount { get; set; }
+    public int? readCount { get; set; }
+   
     public string? Description { get; set; }
 
     public int CreatedBy { get; set; }
