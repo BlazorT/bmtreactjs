@@ -55,6 +55,33 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
+        [HttpGet("CampaignNotificationReportData")]
+        [HttpPost("CampaignNotificationReportData")]
+        [Route("CampaignNotificationReportData")]
+        public async Task<ActionResult> GetCampaignNotificationReportData([FromBody] CampaignNotificationViewModel vm)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) ||
+                Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)
+            {
+                return Ok(new BlazorApiResponse{status = false,errorCode = "201",message = "Authorization Failed"});
+            }
+            BlazorApiResponse response = new BlazorApiResponse();
+            try
+            {
+                response.data = await _blazorRepoPageService.GetCampaignNotificationData(vm);
+                response.status = true;
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.errorCode = "408";
+                response.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+
+            return Ok(response);
+        }
+
     }
 
 }
