@@ -31,6 +31,6 @@ public partial class CompaignexecutionscheduleViewModel
     public int Status { get; set; }
 
     public int RowVer { get; set; }
-    public int[]? days { get; set; }
+    public string? days { get; set; }
     //public virtual ICollection<CompaignscheduledayViewModel>? days { get; } //= new List<CompaignscheduledayViewModel>();
 }

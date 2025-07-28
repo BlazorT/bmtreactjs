@@ -1577,20 +1577,20 @@ namespace Blazor.Web.UI.Services
             BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
             {
-                string NetworkDetailsJSON = string.Empty;
-                string NetworkSchedulesJSON = string.Empty;
+                string networks = string.Empty;
+                string campaignschedules = string.Empty;
                 // Networks
                 if (model.CompaignNetworks != null && model.CompaignNetworks.Any())
                 {
                     List<CompaignNetworkViewModel> ls = model.CompaignNetworks.ToList();
                     var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                    NetworkDetailsJSON = JsonSerializer.Serialize<List<CompaignNetworkViewModel>>(ls, options);
+                    networks = JsonSerializer.Serialize<List<CompaignNetworkViewModel>>(ls, options);
                 }
                 if (model.CompaignExecutionSchedules != null && model.CompaignExecutionSchedules.Any())
                 {
                     List<CompaignexecutionscheduleViewModel> cdtl = model.CompaignExecutionSchedules.ToList();
                     var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                    NetworkSchedulesJSON = JsonSerializer.Serialize<List<CompaignexecutionscheduleViewModel>>(cdtl, options);
+                    campaignschedules = JsonSerializer.Serialize<List<CompaignexecutionscheduleViewModel>>(cdtl, options);
                 }
 
                 using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
@@ -1624,8 +1624,8 @@ namespace Blazor.Web.UI.Services
                         MySqlParameter pHashtagt = new MySqlParameter("p_HashTags", SqlDbType.NVarChar);
                         pHashtagt.Value = model.HashTags;
                         parameter.Add(pHashtagt);
-                        MySqlParameter pNetworkJSON = new MySqlParameter("p_networksSchedulesJSON", MySqlDbType.LongText,4000);
-                        pNetworkJSON.Value = NetworkSchedulesJSON;
+                        MySqlParameter pNetworkJSON = new MySqlParameter("p_networks", MySqlDbType.LongText,4000);
+                        pNetworkJSON.Value = networks;
                         parameter.Add(pNetworkJSON);
                         MySqlParameter pTotalBudget = new MySqlParameter("p_TotalBudget", SqlDbType.Float);
                         pTotalBudget.Value = (model.TotalBudget == null ? 0 : model.TotalBudget);//.TotalBudget;
@@ -1634,9 +1634,9 @@ namespace Blazor.Web.UI.Services
                         pDiscount.Value = (model.Discount == null ? 0 : model.Discount);
                         parameter.Add(pDiscount);
                         //@HashTags nvarchar(2000)= '',@startTime DATE = GETDATE, @finishTime DATE = GETutcDATE,@userId int= 0, @status  int= 1
-                        MySqlParameter pCompaignDetails = new MySqlParameter("p_CompaignDetails", MySqlDbType.LongText, 4000);
-                        pCompaignDetails.Value = NetworkDetailsJSON;
-                        parameter.Add(pCompaignDetails);
+                        MySqlParameter pCampaignschedules = new MySqlParameter("p_campaignschedules", MySqlDbType.LongText, 4000);
+                        pCampaignschedules.Value = campaignschedules;
+                        parameter.Add(pCampaignschedules);
                         MySqlParameter pStartTime = new MySqlParameter("p_startTime", SqlDbType.DateTime);
                         pStartTime.Value = (model.StartTime == null ? GlobalUTIL.CurrentDateTime : model.StartTime);
                         parameter.Add(pStartTime);
