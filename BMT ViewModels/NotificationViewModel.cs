@@ -35,7 +35,11 @@ namespace com.blazor.bmt.viewmodels
         public string? Title { get; set; }
 
         public string? Description { get; set; }
-
+        public int? likesCount { get; set; }
+        public int? sharesCount { get; set; }
+        public int? clicksCount { get; set; }
+        public int? commentsCount { get; set; }
+        public int? readCount { get; set; }
         public int CreatedBy { get; set; }
 
         public DateTime ExpiryTime { get; set; }
