@@ -13,7 +13,7 @@ namespace com.blazor.bmt.controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Produces("application/json")]
+    [Produces("applicati]on/json")
     public class OrganizationController : ControllerBase
     { //Almas 
         private IMemoryCache _cache;
