@@ -172,6 +172,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'failed',
@@ -180,6 +181,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'delivered',
@@ -188,6 +190,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'readCount',
@@ -196,6 +199,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'commentsCount',
@@ -204,6 +208,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'clicksCount',
@@ -212,6 +217,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'sharesCount',
@@ -220,6 +226,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     },
     {
       field: 'likesCount',
@@ -228,6 +235,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       width: 100,
       editable: false,
       filterable: true,
+      flex: 1,
     }
   ]);
 

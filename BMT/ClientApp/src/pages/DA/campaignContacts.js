@@ -1,3 +1,4 @@
+// <reference path="../../components/component/downloadcontactstemplate .js" />
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sms from '@mui/icons-material/Sms';
@@ -7,48 +8,20 @@ import Facebook from '@mui/icons-material/Facebook';
 import LinkedIn from '@mui/icons-material/LinkedIn';
 import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import { Table, ListGroup } from 'react-bootstrap';
-import DeleteIcon from '@mui/icons-material/Delete'; // if using MUI
-import IconButton from '@mui/material/IconButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
-//import { Fieldset } from 'primereact/fieldset';
-//import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-//import CustomDatePicker from 'src/components/UI/DatePicker';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import useFetch from 'src/hooks/useFetch';
-
-import moment from 'moment';
-import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
+import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-//import { formValidator } from 'src/helpers/formValidator';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import {getCampaignAddConfig,getInitialCampaignData,} from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
-import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import globalutil from 'src/util/globalutil';
-//import CustomTimePicker from 'src/components/UI/TimePicker';
-
-import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import { CFormCheck } from '@coreui/react';
 import Form from 'src/components/UI/Form';
-import { useCreateCampaignData } from 'src/hooks/api/useCreateCampaignData';
-import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import AreaSelectModel from 'src/components/Modals/AreaSelectModel';
-import GoogleMapModel from 'src/components/Modals/GoogleMapModel';
-import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
-import Button from '../../components/InputsComponent/Button';
-import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
 
@@ -56,174 +29,53 @@ const campaignContacts = () => {
   // let state;
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const { uploadAvatar } = useUploadAvatar();
-  const { createUpdateCampaign } = useCreateCampaignData();
+  
 
-  const [campaignRegData, setCampaignRegData] = useState(getInitialCampaignData(user));
-  const [showForm, setshowForm] = useState(true);
-  const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
  
-  const [scheduleData, setScheduleData] = useState([]);
-
-  const [areaSelectModal, setAreaSelectModal] = useState(false);
-  const [googleMapModel, setGoogleMapModel] = useState(false);
-  const [addScheduleModel, setAddScheduleModel] = useState(false);
- 
-  const [schedulerows, setScheduleRows] = useState([]);
   const allNetworkNames = globalutil.networks().map(n => n.name);
 
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames??[]);
-
-  const [stateList, setStateList] = useState([]);
-  const [cityList, setCityList] = useState([]);
+  const [importedData, setImportedData] = useState({}); // { Twitter: ['abc', 'xyz'], ... }
+  const [selectedFiles, setSelectedFiles] = useState({}); // { Twitter: File }
   const [cityData, setCityData] = useState([]); // Your table data
   const showToast = useShowToast();
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    // Get states from util
-    const states = globalutil.states();
-    console.log('State name:', globalutil.states()); // <-- Correct logging
-    setStateList(states);
+ 
+  const handleCampaignAddContacts = (e, networkId) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    // Get cities from API
-    getCityList();
-  }, []);
+    const allowedTypes = [
+      'text/csv',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ];
+    const fileName = file.name.toLowerCase();
+    const fileExt = fileName.split('.').pop();
+    const allowedExtensions = ['csv', 'xls', 'xlsx'];
 
-  const getCityList = async () => {
-    await GetCity('/Common/cities', { method: 'POST' }, (res) => {
-      if (res.status === true) {
-        setCityList(res.data); // cities: [{id, name, stateId}]
-        console.log('City name:', res.data); // <-- Correct logging
-      } else {
-        dispatch(
-          updateToast({
-            isToastOpen: true,
-            toastMessage: res.message,
-            toastVariant: 'error',
-          })
-        );
-      }
-    });
-  };
-  const getStateName = (id) => {
-    const state = stateList.find((s) => s.id == id); // Use `==` or convert types
-    return state ? state.name : id;
-  };
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidExt = allowedExtensions.includes(fileExt);
 
-  const getCityName = (id) => {
-    const city = cityList.find((c) => c.id == id);
-    return city ? city.name : id;
-  };
-
-
-
-  const handleCampaignAddForm = (e, label) => {
-    if (label === 'video' || label === 'image' || label === 'pdf') {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const type = file.type;
-      const isVideo = label === 'video' && type.startsWith('video/');
-      const isImage = label === 'image' && type.startsWith('image/');
-      const isPDF = label === 'pdf' && type === 'application/pdf';
-
-      if (!(isVideo || isImage || isPDF)) {
-        e.target.value = null;
-        showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
-        return;
-      }
-
-      setCampaignRegData((prev) => ({
-        ...prev,
-        attachments: file,
-      }));
+    if (!isValidType || !isValidExt) {
+      e.target.value = null;
+      showToast('Only CSV or Excel (.csv, .xls, .xlsx) files are allowed.', 'error');
+      return;
     }
 
-    else if (label === 'startTime' || label === 'finishTime') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        [label]: e,
-      }));
-    }
+    showToast(`File "${file.name}" selected successfully.`, 'success');
 
-    else if (label === 'Campaign Start Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        startDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
-    }
-
-    else if (label === 'Campaign End Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        endDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
-    }
-
-    else if (label === 'logoPath') {
-      setCampaignRegData((prevData) => ({
-        ...prevData,
-        logoPath: e,
-      }));
-    }
-
-    else if (e?.target) {
-      const { name, value, type, checked, files } = e.target;
-      const inputValue =
-        type === 'checkbox' ? checked :
-          type === 'file' ? files[0] :
-            name === 'status' ? parseInt(value) : value;
-
-      setCampaignRegData((prevData) => ({
-        ...prevData,
-        [name]: inputValue,
-      }));
-    }
-
-    else {
-      console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
-    }
+    setSelectedFiles(prev => ({
+      ...prev,
+      [networkId]: file
+    }));
   };
+  
 
-
-
-
-  const toggleStock = () => {
-    setshowForm((prev) => !prev);
-  };
-  const toggleTargetAud = () => {
-    setTargetAudience((prev) => !prev);
-  };
-  const toggleAreaSelectMdl = () => {
-    setAreaSelectModal((prev) => !prev);
-  };
-  const toggleAddScheduleMdl = () => {
-    setAddScheduleModel((prev) => !prev);
-  };
-  const toggleGoogleMapMdl = () => {
-    setGoogleMapModel((prev) => !prev);
-  };
-
-  const AddGoogleMapClick = () => {
-    toggleGoogleMapMdl(true);
-  };
-  const AddAreaClick = () => {
-    toggleAreaSelectMdl(true);
-  };
-  const AddScheduleClick = () => {
-    toggleAddScheduleMdl(true);
-  };
+  
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
@@ -233,30 +85,8 @@ const campaignContacts = () => {
   };
   const goToAnotherPage = () => {
     setConfirmationModalOpen(false); // close the modal
-    navigate('/campaignslisting');
+    navigate('/Dashboard');
   };
-  const onCancel = () => {
-    showConfirmation({
-      header: 'Confirmation!',
-      body: 'Are you sure you want to cancel?',
-      isOpen: true,
-      onYes: () => onYesConfirm(),
-      onNo: () => onNoConfirm(),
-    });
-  };
-
-  const onYesConfirm = () => {
-   // toggle();
-    onNoConfirm();
-
-  };
-
-  const onNoConfirm = () => {
-    showConfirmation({
-      isOpen: false,
-    });
-  };
-  const campaignAddInputs = getCampaignAddConfig(campaignRegData,handleCampaignAddForm,TermsModal);
   const icons = {
     Tiktock: Email,
     Snapchat: Email,
@@ -273,26 +103,9 @@ const campaignContacts = () => {
   if (isLoading) {
     return <Loading />;
   }
-  const handleDelete = (index) => {
-    setCityData(cityData.filter((item, i) => i !== index));
-  };
-  const [targetUser, setTargetUser] = useState('');
-  const [targetUserData, setTargetUserData] = useState([]);
-
-  const handleAdd = () => {
-    if (targetUser !== '') {
-      setTargetUserData([...targetUserData, targetUser]);
-      setTargetUser('');
-    }
-  };
-  const handleDeleteuser = (index) => {
-    const newCountries = [...targetUserData];
-    newCountries.splice(index, 1);
-    setTargetUserData(newCountries);
-  };
-  
-//  const [selectedNetworks, setSelectedNetworks] = useState([]);
-  const [recipients, setRecipients] = useState({});
+ 
+  const [recipientInput, setRecipientInput] = useState({});  // current input text
+  const [recipientsList, setRecipientsList] = useState({});  // network-wise array
 
   const handleCheckboxChange = (network) => {
     if (selectedNetworks.includes(network)) {
@@ -302,15 +115,126 @@ const campaignContacts = () => {
     }
   };
 
-  const handleRecipientChange = (network, value) => {
-    setRecipients(prev => ({ ...prev, [network]: value }));
+  const handleInputChange = (network, value) => {
+    setRecipientInput(prev => ({ ...prev, [network]: value }));
+  };
+  const validateRecipient = (network, value) => {
+    if (!value) return false;
+
+    const onlyDigits = /^\d+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const idPattern = /^[a-zA-Z0-9_]+$/;
+
+    const lowerNetwork = network.toLowerCase();
+
+    if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
+      return onlyDigits.test(value) && value.length >= 7;
+    }
+
+    if (lowerNetwork === 'email') {
+      return emailPattern.test(value);
+    }
+
+    return idPattern.test(value);
   };
 
+  const handleKeyDown = (e, network) => {
+    const value = recipientInput[network]?.trim();
+    if (e.key === 'Enter' && value) {
+      e.preventDefault();
+
+      const lowerNetwork = network.toLowerCase();
+      const currentList = recipientsList[network] || [];
+
+      if (!validateRecipient(network, value)) {
+        let label = 'ID';
+        if (lowerNetwork === 'email') label = 'email address';
+        else if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') label = 'contact number (min 7 digits)';
+
+        showToast(`Invalid ${network} format. Please enter a valid ${label}.`, 'error');
+        return;
+      }
+
+      // ❌ Block duplicate in same network only
+      if (currentList.includes(value)) {
+        showToast(`${value} is already added to ${network}.`, 'error');
+        return;
+      }
+
+      // ✅ Add value to current network
+      setRecipientsList(prev => ({
+        ...prev,
+        [network]: [...currentList, value]
+      }));
+
+      // Clear input field
+      setRecipientInput(prev => ({
+        ...prev,
+        [network]: ''
+      }));
+    }
+  };
+
+
+  const handleDeleteRecipient = (network, index) => {
+    const updated = [...recipientsList[network]];
+    updated.splice(index, 1);
+
+    setRecipientsList(prev => ({ ...prev, [network]: updated }));
+
+    // 👇 Hide dropdown if last item removed
+    if (updated.length === 0) {
+      const dropdown = document.getElementById(`recipients-${network}`);
+      if (dropdown) dropdown.style.display = 'none';
+    }
+  };
+  const handleImportClick = async (networkKey, networkId) => {
+    const selectedFile = selectedFiles[networkId];
+    const selectedNetworkId =networkId;
+    console.log('Selected Network ID:', networkId);
+    console.log('Selected File:', selectedFile);
+
+    if (!selectedFile) {
+      showToast('Please select a file first.', 'error');
+      return;
+    }
+    const formData = new FormData();
+    formData.append("files", selectedFile);          // actual File object
+    formData.append("netowrkid", selectedNetworkId); // keep key same as in C#
+
+
+    try {
+      const response = await fetch('/Compaigns/ImportFile', {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
+      }
+      const result = await response.json();
+      console.log('Server Response:', result);
+
+      if (result.status === true && result.data) {
+        setImportedData(prev => ({
+          ...prev,
+          [networkKey]: result.data
+        }));
+        showToast('Contacts imported successfully.', 'success');
+      } else {
+        showToast(result.message || 'Import failed.', 'error');
+      }
+    } catch (err) {
+      console.error('Import error', err);
+      showToast('Error during import.', 'error');
+    }
+  };
   return (
     <Form name="dsp-reg-form">
     
       <CContainer fluid className="mt-4">
-     
+        <DownloadContactsTemplate />
+
           <React.Fragment>
             <AppContainer>
               <DataGridHeader
@@ -318,69 +242,130 @@ const campaignContacts = () => {
                 filterDisable={false}
               />
             </AppContainer>
-          <CRow>
-            {globalutil.networks().map((network, index) => {
-              const networkKey = network.name;
-              const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
-              const IconComponent = icons[IconName];
-              const isChecked = selectedNetworks.includes(networkKey);
+          {globalutil.networks().map((network, index) => {
+            const networkKey = network.name;
+            const networkId = network.id;
+            const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
+            const IconComponent = icons[IconName];
+            const isChecked = selectedNetworks.includes(networkKey);
+            const recipientCount = (recipientsList[networkKey] || []).length;
+            return (
+              <CCol md={12} key={index}>
+                <ul className="inlinedisplay">
+                  <li className="divCircle">
+                    <IconComponent className="BlazorIcon" fontSize="large" color="success" />
+                  </li>
 
-              return (
-                <CCol md={12} key={index}>
-                  <ul className="inlinedisplay">
-                    <li className="divCircle">
-                      <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
+                  <li className='network-checkbox-animate networksListWidth'>
+                    <CFormCheck
+                      id={IconName}
+                      name={IconName}
+                      label={networkKey}
+                      checked={!isChecked}
+                      onChange={() => handleCheckboxChange(networkKey)}
+                    />
+                  </li>
+
+                  <li style={{ position: 'relative' }}>
+                    <CustomInput
+                      disabled={isChecked}
+                      type="text"
+                      value={recipientInput[networkKey] || ''}
+                      placeholder="Enter recipient and press Enter"
+                      onChange={(e) => handleInputChange(networkKey, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, networkKey)}
+                    />
+
+                    {recipientCount > 0 && (
+                      <>
+                        <span
+                          className="recipient-count"
+                          onClick={() => {
+                            const dropdown = document.getElementById(`recipients-${networkKey}`);
+                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                          }}
+                        >
+                          {recipientCount}
+                        </span>
+
+                        <div id={`recipients-${networkKey}`} className="recipient-dropdown">
+                          {(recipientsList[networkKey] || []).map((rec, idx) => (
+                            <div key={idx} className="recipient-tag">
+                              {rec}
+                              <span
+                                className="delete-icon"
+                                onClick={() => handleDeleteRecipient(networkKey, idx)}
+                              >
+                                &times;
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+
+                    <div id={`recipients-${networkKey}`} className="recipient-dropdown">
+                      {(recipientsList[networkKey] || []).map((rec, idx) => (
+                        <div key={idx} className="recipient-tag">
+                          {rec}
+                          <span
+                            className="delete-icon"
+                            onClick={() => handleDeleteRecipient(networkKey, idx)}
+                          >
+                            &times;
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </li>
+
+                  <li>
+                    <CustomInput
+                      type="file"
+                      accept=".csv, .xls, .xlsx"
+                      disabled={isChecked}
+                      onChange={(e) => handleCampaignAddContacts(e, networkId)}
+                    />
+                  </li>
+                  {importedData[networkKey]?.length > 0 && (
+                    <li className="imported-dropdown">
+                      <div className="recipient-dropdown">
+                        {importedData[networkKey].map((item, idx) => (
+                          <div key={idx} className="recipient-tag">
+                            {item}
+                          </div>
+                        ))}
+                      </div>
                     </li>
-                    <li className='network-checkbox-animate'>
-                      <CFormCheck
-                        id={IconName}
-                        name={IconName}
-                        label={networkKey}
-                        checked={isChecked}
-                        onChange={() => handleCheckboxChange(networkKey)}
-                      />
-                    </li>
-                    <li>
-                      <CButton color="secondary" disabled={!isChecked}>Add Recipient</CButton>
-                    </li>
-                    <li>
-                      <CFormInput
-                        disabled={!isChecked}
-                        value={recipients[networkKey] || ''}
-                        placeholder="Enter recipient and press Enter"
-                        onChange={(e) => handleRecipientChange(networkKey, e.target.value)}
-                      />
-                    </li>
-                    <li>
-                      <CFormInput
-                        type="file"
-                        disabled={!isChecked}
-                      />
-                    </li>
-                    <li>
-                      <CButton color="primary" disabled={!isChecked}>Import</CButton>
-                    </li>
-                  </ul>
-                </CCol>
-              );
-            })}
-          </CRow>
+                  )}
+
+                  <li>
+                    <button onClick={() => handleImportClick(networkKey, networkId)} disabled={!selectedFiles[networkId]}>Import</button>
+
+                  </li>
+                </ul>
+              </CCol>
+            );
+          })}
+
 
             <React.Fragment>
               <div className="CenterAlign pt-2">
+              <button
+                onClick={() => setConfirmationModalOpen(true)}
+                type="button"
+                className="btn btn_Default m-2 sales-btn-style"
+              >
+                Cancel
+              </button>
+
                 <button
-                  onClick={() => setActiveTab(0)}
-                  type="button"
-                  className="btn btn_Default m-2 sales-btn-style"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => setActiveTab(2)}
+                //  onClick={() => setActiveTab(2)}
                   type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
-                  Next
+                  Save
                 </button>
               </div>
             </React.Fragment>
@@ -399,29 +384,7 @@ const campaignContacts = () => {
         onYes={goToAnotherPage}
         onNo={confirmationModal}
       />
-      <AreaSelectModel
-        isOpen={areaSelectModal}
-        toggle={toggleAreaSelectMdl}
-        header="Area Select"
-        setData={setCityData}
-        data={cityData }
-      />
-      <GoogleMapModel
-        isOpen={googleMapModel}
-        toggle={toggleGoogleMapMdl}
-        header="Area Select"
-      />
-      <AddScheduleModel
-        isOpen={addScheduleModel}
-        toggle={toggleAddScheduleMdl}
-        selectedNetworks={selectedNetworks}
-        setSelected={setSelectedNetworks}
-        campaignRegData={campaignRegData}
-        setData={setScheduleData}
-        data={scheduleData}
-        header="Add Schedule "
-
-      />
+     
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>
   );

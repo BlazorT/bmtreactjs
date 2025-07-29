@@ -18,6 +18,7 @@ const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference
 //const Expression = React.lazy(() => import('./pages/Other/ExpressionForm'));
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
+const CampaignContacts = React.lazy(() => import('./pages/DA/campaignContacts'));
 const waves = React.lazy(() => import('./pages/DA/Wave'));
 const CampaignNotification = React.lazy(() => import('./pages/Reports/campaignNotification'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
@@ -135,7 +136,7 @@ export const rolesRoutes = [
   //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
   { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
  // { path: '/campaignNotification', name: 'campaignNotification', element: campaignNotification },
-  { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
+  //{ path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/
 ];
 
@@ -157,6 +158,7 @@ export const routes = [
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   { path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
+  { path: '/campaignContacts', name: 'campaignContacts', element: CampaignContacts },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignNotification', name: 'campaignNotification', element: CampaignNotification },
