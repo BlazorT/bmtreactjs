@@ -137,32 +137,32 @@ namespace com.blazor.bmt.controllers
 
             return Ok(response);
         }
-        //[HttpPost]
-        //public async Task<BlazorResponseViewModel> postCompaignContactData([FromBody] List<StoreCompaignContactModel> model)
-        //{
-        //    BlazorResponseViewModel response = new BlazorResponseViewModel();
-        //    if (model == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
-        //    try
-        //    {
-        //        int UserId = 0;
-        //        if (this.User != null && this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault() != null)
-        //            UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
-        //        // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
+        [HttpPost]
+        public async Task<BlazorResponseViewModel> postCompaignContactData([FromBody] List<CompaignrecipientModel> model)
+        {
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            if (model == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
+            try
+            {
+                int UserId = 0;
+                if (this.User != null && this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault() != null)
+                    UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
+                // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
 
-        //        response = await _blazorRepoPageService.postCompaignContactData(model);
+                response = await _blazorRepoPageService.postCompaignContactData(model);
 
-        //        //response.message = String.Format(BlazorConstant.INSERTED_SUCCESS_API, model.Title, UTIL.GlobalUTIL.CurrentDateTime.ToString());
-        //        // response.status = false;
+                //response.message = String.Format(BlazorConstant.INSERTED_SUCCESS_API, model.Title, UTIL.GlobalUTIL.CurrentDateTime.ToString());
+                // response.status = false;
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.status = false;
-        //        response.message = ex.Message;
-        //    }
-        //    return response;
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = ex.Message;
+            }
+            return response;
 
-        //}
+        }
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
