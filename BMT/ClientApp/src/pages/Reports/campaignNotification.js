@@ -77,7 +77,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     response: GeNotiRes,
     loading: NotiLoading,
     error: createServiceError,
-    fetchData: GetNotification,
+    fetchData: GetNotificationReportData,
   } = useFetch();
   useEffect(() => {
     getNotiList();
@@ -92,16 +92,17 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       ...filters,
     };
 
-    alert(JSON.stringify(fetchBody));
-    console.log(JSON.stringify(fetchBody));
-    await GetNotification('/Report/GetCampaignNotificationReportData',
+    //alert(JSON.stringify(fetchBody));
+    console.log("fetchBody",JSON.stringify(fetchBody));
+    await GetNotificationReportData('/Report/GetCampaignNotificationReportData',
       {
         method: 'GET',
-        body: JSON.stringify(fetchBody),
+        body: JSON.stringify(fetchBody)
       },
       (res) => {
-        console.log(res, 'Notification responce');
+        console.log('Notification responce', res);
         if (res.status === true) {
+          alert(JSON.stringify(res));
           const mappedArray = res.data.map((data) => ({
             id: data.id,
             roleName: data.name,

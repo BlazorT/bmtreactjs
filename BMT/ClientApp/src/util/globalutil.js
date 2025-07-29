@@ -120,13 +120,14 @@ export default class globalutil {
 
   static commonstatuses() {
     if (
-      localStorage.getItem('dastacommonstatusestuses') !== '' &&
+      localStorage.getItem('commonstatuses') !== '' &&
       localStorage.getItem('commonstatuses') !== null
     )
       return JSON.parse(localStorage.getItem('commonstatuses'));
     else return null;
   }
   static setcommonstatuses(statuses) {
+    if (statuses !== null && statuses !== undefined)
     localStorage.setItem('commonstatuses', JSON.stringify(statuses));
   }
   //setstatuses
