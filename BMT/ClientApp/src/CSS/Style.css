@@ -101,7 +101,7 @@ text[Attributes Style] {
 
 .recipient-dropdown {
   display: none;
-  position: fixed;
+  position: relative;
   background: #0c355f;
   padding: 5px;
   border: 1px solid #ccc;

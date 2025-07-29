@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Blazor.Web.ViewModels;
 using com.blazor.bmt.core;
+using com.blazor.bmt.application.model;
 
 namespace Blazor.Web.UI.Services
 {
@@ -258,63 +259,63 @@ namespace Blazor.Web.UI.Services
             return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
 
         }
-        //public async Task<BlazorResponseViewModel> postCompaignContactData(List<StoreCompaignContactModel> lst)
-        //{
-        //    BlazorResponseViewModel response = new BlazorResponseViewModel();
-        //    List<StoreCompaignContactModel> ls = new List<StoreCompaignContactModel>();
-        //    try
-        //    {
-        //        string StoreCompaignContactModelJSON = string.Empty;
+        public async Task<BlazorResponseViewModel> postCompaignContactData(List<CompaignrecipientModel> lst)
+        {
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            List<CompaignrecipientModel> ls = new List<CompaignrecipientModel>();
+            try
+            {
+                string StoreCompaignContactModelJSON = string.Empty;
 
-        //        // Networks
-        //        if (lst != null && lst.Any())
-        //        {
-        //            //List<CompaignNetworkViewModel> ls = lst.ToList();
-        //            var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        //            StoreCompaignContactModelJSON = JsonSerializer.Serialize<List<StoreCompaignContactModel>>(lst, options);
-        //        }
+                // Networks
+                if (lst != null && lst.Any())
+                {
+                    //List<CompaignNetworkViewModel> ls = lst.ToList();
+                    var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                    StoreCompaignContactModelJSON = JsonSerializer.Serialize<List<CompaignrecipientModel>>(lst, options);
+                }
 
-        //        using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
-        //        {
-        //            connection.Open();
-        //            using (var command = connection.CreateCommand())
-        //            {
-        //                List<MySqlParameter> parameter = new List<MySqlParameter>();
-        //                MySqlParameter pCompaignContentsJSON = new MySqlParameter("@json", MySqlDbType.LongText, 4000);
-        //                pCompaignContentsJSON.Value = StoreCompaignContactModelJSON;
-        //                parameter.Add(pCompaignContentsJSON);
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("@json", MySqlDbType.LongText, 4000);
+                        pCompaignContentsJSON.Value = StoreCompaignContactModelJSON;
+                        parameter.Add(pCompaignContentsJSON);
 
-        //                command.CommandText = "SpMaintainCompaignContacts";
-        //                command.CommandType = CommandType.StoredProcedure;
-        //                command.Parameters.AddRange(parameter.ToArray());
-        //                //var result = await command.ExecuteReaderAsync();
+                        command.CommandText = "SpMaintainCompaignContacts";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddRange(parameter.ToArray());
+                        //var result = await command.ExecuteReaderAsync();
 
-        //                using (DbDataReader dr = await command.ExecuteReaderAsync())
-        //                {
-        //                    while (dr.Read())
-        //                    {
-        //                        StoreCompaignContactModel contact = new StoreCompaignContactModel();
-        //                        contact.NetworkId = Convert.ToInt32(dr["NetworkId"]);
-        //                        contact.ContentIdStr = "" + dr["ContentId"];
-        //                        contact.NetworkName = "" + dr["Name"];
-        //                        ls.Add(contact);
-        //                    }//while (dr.Read())
-        //                }// using (DbDataReader dr = command.ExecuteReader())
-        //                response.data = ls;
-        //                response.status = true;
-        //                response.message = string.Format("Contacts {0} are saved successfully", ls.Count.ToString());
-        //            }
-        //        }
-        //    }// Try
-        //    catch (Exception ex)
-        //    {
-        //        response.status = false;
-        //        _logger.LogError(ex.StackTrace);
-        //        throw ex;
-        //    }
-        //    return response;
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
+                        {
+                            while (dr.Read())
+                            {
+                                CompaignrecipientModel contact = new CompaignrecipientModel();
+                                contact.NetworkId = Convert.ToInt32(dr["NetworkId"]);
+                                contact.ContentId = "" + dr["ContentId"];
+                              //  contact.NetworkNme = "" + dr["Name"];
+                                ls.Add(contact);
+                            }//while (dr.Read())
+                        }// using (DbDataReader dr = command.ExecuteReader())
+                        response.data = ls;
+                        response.status = true;
+                        response.message = string.Format("Contacts {0} are saved successfully", ls.Count.ToString());
+                    }
+                }
+            }// Try
+            catch (Exception ex)
+            {
+                response.status = false;
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return response;
 
-        //}
+        }
         public async Task<IEnumerable<CampaignNotificationViewModel>> GetCampaignNotificationData(CampaignNotificationViewModel cModel)
         {
             List<CampaignNotificationViewModel> dList = new List<CampaignNotificationViewModel>();

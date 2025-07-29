@@ -229,6 +229,68 @@ const campaignContacts = () => {
       showToast('Error during import.', 'error');
     }
   };
+  const userId = user?.UserId || 0;
+
+  const buildCampaignPayload = (recipientsList) => {
+    const payload = [];
+
+    selectedNetworks.forEach(networkKey => {
+      const networkObj = globalutil.networks().find(n => n.name === networkKey);
+      const networkId = networkObj?.id;
+      const contentList = recipientsList[networkKey] || [];
+
+      if (contentList.length === 0) return;
+
+      payload.push({
+        Id: 0,
+        OrgId: userId,
+        NetworkId: parseInt(networkId),
+        ContentId: contentList,
+        Desc: "",
+        CreatedBy: userId,
+        CreatedAt: new Date(),
+        LastUpdatedAt: new Date(),
+        RowVer: 1
+      });
+    });
+
+    console.log("Final Payload:", payload);
+    return payload;
+  };
+
+
+  const handleSubmitCampaignContacts = async () => {
+    const payload = buildCampaignPayload(recipientsList); // 👈 pass fresh state
+    console.log(JSON.stringify(payload));
+    if (payload.length === 0) {
+      showToast("No contacts to send.", "error");
+      return;
+    }
+
+    try {
+      const response = await fetch('/Compaigns/postCompaignContactData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      console.log('Server response:', result);
+
+      if (result.status) {
+        showToast("Contacts submitted successfully.", "success");
+      } else {
+        showToast(result.message || "Submission failed.", "error");
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      showToast("Error while submitting contacts.", "error");
+    }
+  };
+
+
   return (
     <Form name="dsp-reg-form">
     
@@ -360,13 +422,14 @@ const campaignContacts = () => {
                 Cancel
               </button>
 
-                <button
-                //  onClick={() => setActiveTab(2)}
-                  type="button"
-                  className="btn btn_Default sales-btn-style m-2"
-                >
-                  Save
-                </button>
+              <button
+                onClick={handleSubmitCampaignContacts}
+                type="button"
+                className="btn btn_Default sales-btn-style m-2"
+              >
+                Save
+              </button>
+
               </div>
             </React.Fragment>
           </React.Fragment>
