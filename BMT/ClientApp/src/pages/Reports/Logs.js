@@ -58,7 +58,7 @@ const Logs = () => {
 
     getLogList(filterBody);
 
-    getLogList(filterBody);
+   // getLogList(filterBody);
   };
   const {
     response: GetLogRes,

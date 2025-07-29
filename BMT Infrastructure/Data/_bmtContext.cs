@@ -33,8 +33,8 @@ public partial class _bmtContext : DbContext
 
     public virtual DbSet<Auditlog> Auditlogs { get; set; }
 
-   // public virtual DbSet<Basicconfiguration> Basicconfigurations { get; set; }
-
+    // public virtual DbSet<Basicconfiguration> Basicconfigurations { get; set; }
+    public virtual DbSet<Compaignrecipient> Compaignrecipients { get; set; }
     public virtual DbSet<Bundlingpackagedetail> Bundlingpackagedetails { get; set; }
 
    // public virtual DbSet<Category> Categories { get; set; }
@@ -154,7 +154,20 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
         });
+        modelBuilder.Entity<Compaignrecipient>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
+            entity.ToTable("compaignrecipients");
+
+            entity.Property(e => e.ContentId).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Desc).HasMaxLength(1000);
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.NetworkId).HasColumnName("networkId");
+            entity.Property(e => e.RowVer).HasDefaultValueSql("'1'");
+            entity.Property(e => e.Status).HasDefaultValueSql("'1'");
+        });
         modelBuilder.Entity<Applog>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");

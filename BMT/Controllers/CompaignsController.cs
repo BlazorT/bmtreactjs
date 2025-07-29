@@ -7,6 +7,9 @@ using com.blazor.bmt.util;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.core;
+using Blazor.Web.Application.Interfaces;
+using com.blazor.bmt.application.services;
+
 namespace com.blazor.bmt.controllers
 {
     [ApiController]
@@ -17,11 +20,13 @@ namespace com.blazor.bmt.controllers
     {            
         private readonly IBlazorUtilPageService _utilPageService;
         private readonly ICompaignService _compaignService;
-        private readonly IBlazorRepoPageService _blazorRepoPageService;     
+        private readonly IBlazorRepoPageService _blazorRepoPageService;
+        private readonly ICampaignRecipientService _campaignRecipientService;
         private readonly IMemoryCache _cache;
-        public CompaignsController(IBlazorUtilPageService utilPageService, ICompaignService compaignService, IBlazorRepoPageService blazorRepoPageService,  IMemoryCache cache)
+        public CompaignsController(IBlazorUtilPageService utilPageService, ICampaignRecipientService campaignRecipientService, ICompaignService compaignService, IBlazorRepoPageService blazorRepoPageService,  IMemoryCache cache)
         {
              _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
+            _campaignRecipientService= campaignRecipientService ?? throw new ArgumentNullException(nameof(campaignRecipientService));
             _utilPageService = utilPageService ?? throw new ArgumentNullException(nameof(utilPageService));
             _compaignService = compaignService ?? throw new ArgumentNullException(nameof(compaignService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));           

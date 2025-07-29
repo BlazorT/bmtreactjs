@@ -32,7 +32,7 @@ function useFetch() {
     abortControllerRef.current = abortController;
 
     const fullUrl = `${process.env.REACT_APP_API_BASE_URL || ''}${url}`;
-   // alert(fullUrl);
+    console.log(fullUrl);
 
     try {
       loading.current = true;
@@ -41,11 +41,12 @@ function useFetch() {
         ...customOptions,
         signal: abortController.signal, // Pass the signal to the options
       };
-     // console.log(url, options);
+      //console.log(url, GetNotificationReportData);
+      alert('fetch started' + url);
       const res = await fetch(url, options);
     //  console.log({ res });
       const json = await res.json();
-     // console.log({ json });
+      console.log(json);
       response.current = json;
 
       if (callback && typeof callback === 'function') {

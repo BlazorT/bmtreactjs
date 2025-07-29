@@ -8,7 +8,8 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 const context = [
   "/Common", 
   "/BlazorApi",
-  "/Notifications",  
+  "/Notifications",
+  "/Report", 
   "/Log", "/Organization", "/Admin","/Compaigns"
 ];
 

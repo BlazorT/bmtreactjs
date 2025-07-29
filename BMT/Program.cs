@@ -58,6 +58,7 @@ services.AddScoped<IGlobalNetworkDetailService, GlobalNetworkDetailService>();
 services.AddScoped<IBundlingPackageRepository, BundlingPackageRepository>();
 services.AddScoped<IPackageRepository, PackageRepository>();
 services.AddScoped<ICampaignTemplateRepository, CampaignTemplateRepository>();
+services.AddScoped<ICampaignRecipientsRepository, CampaignRecipientsRepository>();
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
 // ServiceLayer
@@ -79,6 +80,7 @@ services.AddScoped<IAuditLogService, AuditLogService>();
 services.AddScoped<ICompaignService, CompaignService>();
 services.AddScoped<ICampaignTemplateService, CampaignTemplateService>();
 services.AddScoped<IPackageService, PackagesService>();
+services.AddScoped<ICampaignRecipientService, CampaignRecipientService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();
@@ -143,6 +145,7 @@ var mappingConfig = new MapperConfiguration(mc =>
 IMapper mapper = mappingConfig.CreateMapper();
 services.AddSingleton(mapper);
 builder.Services.AddControllersWithViews();
+
 
 // BlazorConstant.VOICE_PATH_WITH_WWWROOT = "" + System.Configuration.ConfigurationManager.AppSettings["BlazorConnectionString"].ToString();// Configuration["ReqestIntervalMinSeconds"];
 List<string> users = builder.Configuration.GetSection("AppSettings:users").Get<List<string>>();
@@ -253,6 +256,7 @@ app.UseRouting();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
+
 
 app.MapFallbackToFile("index.html");
 app.Run();
