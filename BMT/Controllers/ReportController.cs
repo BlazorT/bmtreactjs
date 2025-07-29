@@ -8,9 +8,8 @@ using Blazor.Web.UI.Interfaces;
 namespace com.blazor.bmt.controllers
 {
     [ApiController]
-    //[Route("[controller]")]
-  //  [Route("Report")]
- //   [Produces("application/json")]
+    [Route("[controller]")]
+    [Produces("application/json")]
     public class ReportController : ControllerBase
     { //Almas 
         private IMemoryCache _cache;

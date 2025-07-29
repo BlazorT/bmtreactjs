@@ -68,7 +68,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     };
 
     getDAuserList(filterBody);
-    getDAuserList(filterBody);
+   // getDAuserList(filterBody);
   };
   const {
     response: GetOrgRes,
