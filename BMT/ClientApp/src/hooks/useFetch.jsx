@@ -42,7 +42,7 @@ function useFetch() {
         signal: abortController.signal, // Pass the signal to the options
       };
       //console.log(url, GetNotificationReportData);
-      alert('fetch started' + url);
+     // alert('fetch started' + url);
       const res = await fetch(url, options);
     //  console.log({ res });
       const json = await res.json();

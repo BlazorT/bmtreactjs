@@ -34,7 +34,7 @@ const ImagePicker = (prop) => {
   });
 
   const uploadimageData = async () => {
-    alert('uploadimageData');
+    //alert('uploadimageData');
     const form = new FormData();
     if (selectedImage[0] && logoAvatar) {
       form.append('file', logoAvatar);
