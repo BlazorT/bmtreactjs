@@ -20,6 +20,7 @@ namespace com.blazor.bmt.util
         MOBILE = 2,
         THIRD_Party = 3
     }
+
     public enum COMMON_STATUS
     {
         [Description("Active")]
