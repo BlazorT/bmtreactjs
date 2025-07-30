@@ -131,6 +131,9 @@ const campaignadd = () => {
 
 
   const handleCampaignAddForm = (e, label) => {
+    const now = moment(); // current time
+
+    // ✅ FILE HANDLING
     if (label === 'video' || label === 'image' || label === 'pdf') {
       const file = e.target.files[0];
       if (!file) return;
@@ -150,37 +153,45 @@ const campaignadd = () => {
         ...prev,
         attachments: file,
       }));
+      return;
     }
 
-    else if (label === 'startTime' || label === 'finishTime') {
+    // ✅ DATE FIELD HANDLING (startTime, finishTime, startDate, endDate)
+    const dateLabelsToField = {
+      'Campaign Start Date': 'startDate',
+      'Campaign End Date': 'endDate',
+      startTime: 'startTime',
+      finishTime: 'finishTime',
+    };
+
+    if (label in dateLabelsToField) {
+      const fieldKey = dateLabelsToField[label];
+      const selectedDate = moment(e);
+      const isPast = selectedDate.isBefore(now, 'minute');
+
+      if (isPast) {
+        showToast(`${label} cannot be in the past.`, 'error');
+        return; // ❌ Block update
+      }
+
       setCampaignRegData((prev) => ({
         ...prev,
-        [label]: e,
+        [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
       }));
+      return;
     }
 
-    else if (label === 'Campaign Start Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        startDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
-    }
-
-    else if (label === 'Campaign End Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        endDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
-    }
-
-    else if (label === 'logoPath') {
+    // ✅ LOGO HANDLING
+    if (label === 'logoPath') {
       setCampaignRegData((prevData) => ({
         ...prevData,
         logoPath: e,
       }));
+      return;
     }
 
-    else if (e?.target) {
+    // ✅ GENERIC INPUT HANDLING
+    if (e?.target) {
       const { name, value, type, checked, files } = e.target;
       const inputValue =
         type === 'checkbox' ? checked :
@@ -191,12 +202,14 @@ const campaignadd = () => {
         ...prevData,
         [name]: inputValue,
       }));
+      return;
     }
 
-    else {
-      console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
-    }
+    // ✅ UNHANDLED CASE
+    console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
   };
+
+
 
 
 
@@ -316,12 +329,12 @@ const campaignadd = () => {
     setScheduleRows(updatedRows);
   };
   const schedulecolumns = [
-    { field: 'interval', headerName: 'Interval', width: 100 },
-    { field: 'budget', headerName: 'Budget', minWidth: 130 },
-    { field: 'NetworkId', headerName: 'Network', minWidth: 150, flex: 1 },
-    { field: 'days', headerName: 'Days', minWidth: 250 },
-    { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
-    { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
+    { field: 'interval',flex:1, headerName: 'Interval', width: 100 },
+    { field: 'budget', flex: 1, headerName: 'Budget', minWidth: 130 },
+    { field: 'NetworkId', flex: 1, headerName: 'Network', minWidth: 150,  },
+    { field: 'days', flex: 1, headerName: 'Days', minWidth: 250 },
+    { field: 'startTime', flex: 1, headerName: 'Start Time', minWidth: 150 },
+    { field: 'finishTime', flex: 1, headerName: 'End Time', minWidth: 130 },
 
     {
       field: 'action',
@@ -526,56 +539,7 @@ const campaignadd = () => {
 
                             </CCol>
                           </CRow>
-                          <CCol md="12 mt-2">
-                            <textarea
-                              label="Area"
-                              icon={cilFlagAlt}
-                              type="text"
-                              id="description"
-                              placeholder="text area for description"
-                              className="form-control item"
-                              value={campaignRegData.description}
-                              name="description"
-                              onChange={handleCampaignAddForm}
-                            />
-                          </CCol>
-                          <CCol md="8" className="mt-2">
-                            <CustomInput
-                              label="Target User"
-                              icon={cilFlagAlt}
-                              type="text"
-                              id="targetUser"
-                              placeholder="add target user"
-                              className="form-control item"
-                              value={targetUser}
-                              name="targetUser"
-                              onChange={(e) => setTargetUser(e.target.value)}
-                            />
-                          </CCol>
-                          <CCol md="4" className="mt-3">
-                            <div className="mt-3">
-                              <button
-                                type="submit"
-                                className="btn btn_Default sales-btn-style m-2"
-                                onClick={handleAdd}
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </CCol>
-                          <CCol md="12" className="mt-2">
-                            <h4>Target Users</h4>
-                            <ul>
-                              {targetUserData.map((c, index) => (
-                                <ListGroup.Item key={index} className="fontset">
-                                  {c}
-                                  <Button value="Delete" variant="danger" title="Delete" className="float-right margin-left" onClick={() => handleDeleteuser(index)}>
-                                    Delete
-                                  </Button>
-                                </ListGroup.Item>
-                              ))}
-                            </ul>
-                          </CCol>
+                       
                         </CRow>
                       </React.Fragment>
                     )}

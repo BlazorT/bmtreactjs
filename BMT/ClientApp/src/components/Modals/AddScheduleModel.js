@@ -336,20 +336,6 @@ const AddScheduleModel = (prop) => {
       showToast('All required fields must be filled.', 'error');
       return;
     }
-
-    console.log("Step 2: Creating start and end times");
-    const start = moment(campaignRegData.startDate).set({
-      hour: moment(campaignRegData.startTime).hour(),
-      minute: moment(campaignRegData.startTime).minute(),
-      second: 0,
-    });
-
-    const end = moment(campaignRegData.endDate).set({
-      hour: moment(campaignRegData.finishTime).hour(),
-      minute: moment(campaignRegData.finishTime).minute(),
-      second: 0,
-    });
-
     const selectedNetworkObjects = globalutil.networks()
       .filter(n => selectedNetworks.includes(n.name))
       .map((n) => {
@@ -369,14 +355,22 @@ const AddScheduleModel = (prop) => {
           CreatedBy: user.userId
         };
       });
-
-
     console.log("Selected network objects:", selectedNetworkObjects);
     setSelectedNetworkJson(selectedNetworkObjects);
 
     const schedulePayload = [];
    // const scheduledDays = buildScheduledDays(campaignRegData.selectedDays, user.userId);
+    const start = moment(campaignRegData.startDate).set({
+      hour: moment(campaignRegData.startTime).hour(),
+      minute: moment(campaignRegData.startTime).minute(),
+      second: 0,
+    });
 
+    const end = moment(campaignRegData.endDate).set({
+      hour: moment(campaignRegData.finishTime).hour(),
+      minute: moment(campaignRegData.finishTime).minute(),
+      second: 0,
+    });
     console.log("Step 4: Building schedule payload");
     for (let ntwk of selectedNetworkObjects) {
       const payloadItem = {
