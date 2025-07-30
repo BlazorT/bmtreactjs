@@ -30,12 +30,13 @@ import { formValidator } from 'src/helpers/formValidator';
 import { createSchedule } from 'src/hooks/api/createSchedule';
 const AddScheduleModel = (prop) => {
 
-  const { header, isOpen, toggle, initialData, selectedNetworks, selectedDays, setData, data, selected, setSelected, campaignRegData : submitData } = prop;
+  const { header, isOpen, toggle, initialData, selectedNetworks, selectedPostTypes, selectedDays, setData, data, selected, setSelected, campaignRegData : submitData } = prop;
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
     TotalSchMessages: 0,
     TotalCampBudget: 0,
   });
+  console.log("selectedNetwork", selectedNetworks);
   const { createCampaign } = createSchedule();
   const user = useSelector((state) => state.user);
   //const calculateBudget = (networks, scheduleJson, jsonRates) => {
@@ -351,17 +352,24 @@ const AddScheduleModel = (prop) => {
 
     const selectedNetworkObjects = globalutil.networks()
       .filter(n => selectedNetworks.includes(n.name))
-      .map((n) => ({
-        id: 0,
-        CompaignId: 0,
-        NetworkId: n.id,
-        RowVer: 1,
-        Status: 1,
-        LastUpdatedBy: user.userId,
-        LastUpdatedAt: new Date(),
-        CreatedAt: new Date(),
-        CreatedBy: user.userId
-      }));
+      .map((n) => {
+        const networkName = n.name.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
+        const postTypeIds = selectedPostTypes[networkName] || [];
+        console.log("postTypeIds", postTypeIds);
+        return {
+          id: 0,
+          CompaignId: 0,
+          NetworkId: n.id,
+          posttypejson: JSON.stringify(postTypeIds),
+          RowVer: 1,
+          Status: 1,
+          LastUpdatedBy: user.userId,
+          LastUpdatedAt: new Date(),
+          CreatedAt: new Date(),
+          CreatedBy: user.userId
+        };
+      });
+
 
     console.log("Selected network objects:", selectedNetworkObjects);
     setSelectedNetworkJson(selectedNetworkObjects);
@@ -386,7 +394,6 @@ const AddScheduleModel = (prop) => {
         CreatedBy: user.userId,
         days: JSON.stringify(campaignRegData.selectedDays), // ✅ now an array of objects
         Budget: budgetData.TotalSchBudget,
-        Qty: 0
       };
       schedulePayload.push(payloadItem);
     }
@@ -434,7 +441,6 @@ const AddScheduleModel = (prop) => {
     const campaignBody = {
       Id: 0,
       orgId: user.orgId,
-     // StoreId: user.userId,
       Name: name,
       description: name,
       Title: name,

@@ -78,6 +78,7 @@ const campaignadd = () => {
   const allNetworkNames = globalutil.networks().map(n => n.name);
 
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames??[]);
+  const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
 
   const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
   const [stateList, setStateList] = useState([]);
@@ -356,13 +357,46 @@ const campaignadd = () => {
     setTargetUserData(newCountries);
   };
   const handleCheckboxChange = (networkName) => {
-    setSelectedNetworks((prevSelected) =>
-      prevSelected.includes(networkName)
+    setSelectedNetworks((prevSelected) => {
+      const isSelected = prevSelected.includes(networkName);
+      const updatedNetworks = isSelected
         ? prevSelected.filter((n) => n !== networkName)
-        : [...prevSelected, networkName]
-    );
+        : [...prevSelected, networkName];
+
+      // If network is unchecked, also remove its postTypes
+      if (isSelected) {
+        setSelectedPostTypes((prevPostTypes) => {
+          const updatedPostTypes = { ...prevPostTypes };
+          delete updatedPostTypes[networkName];
+          return updatedPostTypes;
+        });
+      }
+
+      return updatedNetworks;
+    });
   };
 
+  const handlePostTypeToggle = (networkName, postTypeId) => {
+    if (!selectedNetworks.includes(networkName)) {
+      showToast(`Please select the ${networkName} network first.`, 'warning');
+      return;
+    }
+
+    setSelectedPostTypes((prev) => {
+      const prevPostTypes = prev[networkName] || [];
+
+      const updated = prevPostTypes.includes(postTypeId)
+        ? prevPostTypes.filter((id) => id !== postTypeId)
+        : [...prevPostTypes, postTypeId];
+
+      return {
+        ...prev,
+        [networkName]: updated
+      };
+    });
+  };
+
+  console.log("selectedPostTypes", selectedPostTypes);
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
@@ -563,29 +597,57 @@ const campaignadd = () => {
               {globalutil.networks().map((network, index) => {
                 const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
                 const IconComponent = icons[IconName];
+
+                let postTypeIds = [];
+                try {
+                  postTypeIds = JSON.parse(network.desc || "[]");
+                } catch (err) {
+                  console.warn("Invalid desc format in network:", network.desc);
+                }
+
+                const postTypeList = globalutil
+                  .postTypes()
+                  .filter((pt) => postTypeIds.includes(pt.id));
+
                 return (
-                  <CCol md={4} key={index}>
+                  <CCol md={4} key={index} className="mb-4">
                     <ul className="inlinedisplay">
                       <li className="divCircle">
                         <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
                       </li>
-                      <li className='network-checkbox-animate'>
-                      
+                      <li className="network-checkbox-animate">
                         <CFormCheck
                           id={IconName}
                           name={IconName}
                           label={network.name}
                           checked={selectedNetworks.includes(network.name)}
                           onChange={() => handleCheckboxChange(network.name)}
-                          defaultChecked
                         />
-
                       </li>
                     </ul>
+
+                    <div className=" mt-2 displayFlex">
+                      {postTypeList.map((pt) => (
+                        <CFormCheck
+                          key={`${IconName}-${pt.id}`}
+                          id={`${IconName}-${pt.id}`}
+                          name={`${IconName}-${pt.id}`}
+                          label={pt.name}
+                          checked={
+                            selectedPostTypes[network.name]?.includes(pt.id) || false
+                          }
+                          onChange={() => handlePostTypeToggle(network.name, pt.id)}
+                          className="mb-1 form-checksub"
+                        />
+                      ))}
+                    </div>
                   </CCol>
                 );
               })}
+
             </CRow>
+
+
             <React.Fragment>
               <div className="CenterAlign pt-2">
                 <button
@@ -662,6 +724,7 @@ const campaignadd = () => {
         isOpen={addScheduleModel}
         toggle={toggleAddScheduleMdl}
         selectedNetworks={selectedNetworks}
+        selectedPostTypes={selectedPostTypes}
         setSelected={setSelectedNetworks}
         campaignRegData={campaignRegData}
         setData={setScheduleData}
