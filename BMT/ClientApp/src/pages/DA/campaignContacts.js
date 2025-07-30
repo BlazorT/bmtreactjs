@@ -14,7 +14,6 @@ import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadCon
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import {getCampaignAddConfig,getInitialCampaignData,} from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
 import globalutil from 'src/util/globalutil';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -28,6 +27,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 const campaignContacts = () => {
   // let state;
   const user = useSelector((state) => state.user);
+  console.log("user data", user);
   const navigate = useNavigate();
   
 
@@ -201,8 +201,6 @@ const campaignContacts = () => {
     const formData = new FormData();
     formData.append("files", selectedFile);          // actual File object
     formData.append("netowrkid", selectedNetworkId); // keep key same as in C#
-
-
     try {
       const response = await fetch('/Compaigns/ImportFile', {
         method: 'POST',
@@ -229,40 +227,52 @@ const campaignContacts = () => {
       showToast('Error during import.', 'error');
     }
   };
-  const userId = user?.UserId || 0;
+  console.log("Selected Networks:", selectedNetworks);
+  console.log("Recipients List:", recipientsList);
 
-  const buildCampaignPayload = (recipientsList) => {
+  const buildCampaignPayload = () => {
     const payload = [];
 
-    selectedNetworks.forEach(networkKey => {
-      const networkObj = globalutil.networks().find(n => n.name === networkKey);
-      const networkId = networkObj?.id;
-      const contentList = recipientsList[networkKey] || [];
+    const allNetworks = globalutil.networks(); // Cache this once
+    console.log("Recipients List:", recipientsList);
 
-      if (contentList.length === 0) return;
+    Object.keys(recipientsList).forEach((networkKey) => {
+      const networkObj = allNetworks.find(n => n.name === networkKey);
+      if (!networkObj) return;
+
+      const networkId = parseInt(networkObj.id);
+      const manualContacts = recipientsList[networkKey] || [];
+      const importedContacts = importedData[networkKey] || [];
+      const allContacts = [...manualContacts, ...importedContacts];
+
+      if (allContacts.length === 0) {
+        console.log(`No contacts for network ID: ${networkId}`);
+        return;
+      }
 
       payload.push({
         Id: 0,
-        OrgId: userId,
-        NetworkId: parseInt(networkId),
-        ContentId: contentList,
+        OrgId: user.orgId,
+        NetworkId: networkId,
+        ContentId: allContacts,
         Desc: "",
-        CreatedBy: userId,
+        CreatedBy: user.userId,
         CreatedAt: new Date(),
         LastUpdatedAt: new Date(),
         RowVer: 1
       });
     });
-
-    console.log("Final Payload:", payload);
+    console.log("payload", payload);
     return payload;
   };
 
 
   const handleSubmitCampaignContacts = async () => {
-    const payload = buildCampaignPayload(recipientsList); // 👈 pass fresh state
+    const payload = buildCampaignPayload();
     console.log(JSON.stringify(payload));
+
     if (payload.length === 0) {
+
       showToast("No contacts to send.", "error");
       return;
     }
@@ -270,11 +280,13 @@ const campaignContacts = () => {
     try {
       const response = await fetch('/Compaigns/postCompaignContactData', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
+      if (!response.ok) {
+        console.log(response);
+      }
 
       const result = await response.json();
       console.log('Server response:', result);
@@ -289,6 +301,7 @@ const campaignContacts = () => {
       showToast("Error while submitting contacts.", "error");
     }
   };
+
 
 
   return (

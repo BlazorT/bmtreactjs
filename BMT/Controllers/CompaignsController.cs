@@ -138,6 +138,7 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
         }
         [HttpPost]
+        [HttpGet]
         public async Task<BlazorResponseViewModel> postCompaignContactData([FromBody] List<CompaignrecipientModel> model)
         {
             BlazorResponseViewModel response = new BlazorResponseViewModel();

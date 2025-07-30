@@ -433,8 +433,8 @@ const AddScheduleModel = (prop) => {
 
     const campaignBody = {
       Id: 0,
-      orgId: user.userId,
-      StoreId: user.userId,
+      orgId: user.orgId,
+     // StoreId: user.userId,
       Name: name,
       description: name,
       Title: name,
