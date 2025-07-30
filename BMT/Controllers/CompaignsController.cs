@@ -66,10 +66,9 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
            
         }
-        
+
         //   [Route("Users/ImportFile")]
-        [HttpPost]
-        [Route("Compaigns/ImportFile")]
+        [HttpPost("ImportFileData")]
         public IActionResult ImportFile(List<IFormFile> files)
         {
             var contentIdlst = new List<string>();

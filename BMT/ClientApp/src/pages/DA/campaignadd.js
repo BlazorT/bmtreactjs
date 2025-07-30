@@ -130,7 +130,7 @@ const campaignadd = () => {
 
 
 
-  const handleCampaignAddForm = (e, label) => {
+  const handleCampaignAddForm = (e, label, name) => {
     const now = moment(); // current time
 
     // ✅ FILE HANDLING
@@ -156,31 +156,26 @@ const campaignadd = () => {
       return;
     }
 
-    // ✅ DATE FIELD HANDLING (startTime, finishTime, startDate, endDate)
-    const dateLabelsToField = {
-      'Campaign Start Date': 'startDate',
-      'Campaign End Date': 'endDate',
-      startTime: 'startTime',
-      finishTime: 'finishTime',
-    };
+    const fieldKey = name; // e.g., "startTime", "finishTime"
 
-    if (label in dateLabelsToField) {
-      const fieldKey = dateLabelsToField[label];
-      const selectedDate = moment(e);
-      const isPast = selectedDate.isBefore(now, 'minute');
+    if (['startTime', 'finishTime'].includes(fieldKey)) {
+      const selectedDate = moment(e); // ✅ Declare inside the block that uses it
 
-      if (isPast) {
+      if (selectedDate.isBefore(now, 'minute')) {
         showToast(`${label} cannot be in the past.`, 'error');
-        return; // ❌ Block update
+        return;
       }
 
+      // ✅ Update the state
       setCampaignRegData((prev) => ({
         ...prev,
         [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
+        ...(fieldKey === 'startTime' && { startDate: selectedDate.format('YYYY-MM-DD') }),
+        ...(fieldKey === 'finishTime' && { endDate: selectedDate.format('YYYY-MM-DD') }),
       }));
+
       return;
     }
-
     // ✅ LOGO HANDLING
     if (label === 'logoPath') {
       setCampaignRegData((prevData) => ({
@@ -559,7 +554,9 @@ const campaignadd = () => {
             </AppContainer>
             <CRow>
               {globalutil.networks().map((network, index) => {
-                const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                // Fix label casing (e.g., "Facebook")
+                const displayLabel = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                const IconName = displayLabel;
                 const IconComponent = icons[IconName];
 
                 let postTypeIds = [];
@@ -573,6 +570,19 @@ const campaignadd = () => {
                   .postTypes()
                   .filter((pt) => postTypeIds.includes(pt.id));
 
+                const isSelected = selectedNetworks.includes(network.name);
+
+                // Auto-select/deselect single post type
+                if (postTypeList.length === 1) {
+                  const singleTypeId = postTypeList[0].id;
+
+                  if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                    handlePostTypeToggle(network.name, singleTypeId); // select
+                  } else if (!isSelected && selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                    handlePostTypeToggle(network.name, singleTypeId); // unselect
+                  }
+                }
+
                 return (
                   <CCol md={4} key={index} className="mb-4">
                     <ul className="inlinedisplay">
@@ -583,33 +593,35 @@ const campaignadd = () => {
                         <CFormCheck
                           id={IconName}
                           name={IconName}
-                          label={network.name}
-                          checked={selectedNetworks.includes(network.name)}
+                          label={displayLabel} // ✅ Fixed label
+                          checked={isSelected}
                           onChange={() => handleCheckboxChange(network.name)}
                         />
                       </li>
                     </ul>
 
-                    <div className=" mt-2 displayFlex">
-                      {postTypeList.map((pt) => (
-                        <CFormCheck
-                          key={`${IconName}-${pt.id}`}
-                          id={`${IconName}-${pt.id}`}
-                          name={`${IconName}-${pt.id}`}
-                          label={pt.name}
-                          checked={
-                            selectedPostTypes[network.name]?.includes(pt.id) || false
-                          }
-                          onChange={() => handlePostTypeToggle(network.name, pt.id)}
-                          className="mb-1 form-checksub"
-                        />
-                      ))}
+                    <div className="mt-2 displayFlex">
+                      {/* Only show checkboxes if more than one post type */}
+                      {postTypeList.length > 1 &&
+                        postTypeList.map((pt) => (
+                          <CFormCheck
+                            key={`${IconName}-${pt.id}`}
+                            id={`${IconName}-${pt.id}`}
+                            name={`${IconName}-${pt.id}`}
+                            label={pt.name}
+                            checked={
+                              selectedPostTypes[network.name]?.includes(pt.id) || false
+                            }
+                            onChange={() => handlePostTypeToggle(network.name, pt.id)}
+                            className="mb-1 form-checksub"
+                          />
+                        ))}
                     </div>
                   </CCol>
                 );
               })}
-
             </CRow>
+
 
 
             <React.Fragment>
