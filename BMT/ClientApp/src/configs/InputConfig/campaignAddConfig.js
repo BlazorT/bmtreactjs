@@ -105,6 +105,7 @@ export const getCampaignAddConfig = (
       name: 'startTime',
       className: 'form-control item',
       isRequired: false,
+      minDate: new Date(),
     },
     {
       component: CustomDatePicker,
@@ -116,6 +117,7 @@ export const getCampaignAddConfig = (
       name: 'finishTime',
       className: 'form-control item',
       isRequired: false,
+      minDate: new Date(),
     },
     
  
