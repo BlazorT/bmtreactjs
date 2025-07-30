@@ -36,7 +36,7 @@ const AddScheduleModel = (prop) => {
     TotalSchMessages: 0,
     TotalCampBudget: 0,
   });
-  console.log("selectedNetwork", selectedNetworks);
+  //console.log("selectedNetwork", selectedNetworks);
   const { createCampaign } = createSchedule();
   const user = useSelector((state) => state.user);
   //const calculateBudget = (networks, scheduleJson, jsonRates) => {
@@ -354,7 +354,7 @@ const AddScheduleModel = (prop) => {
       .filter(n => selectedNetworks.includes(n.name))
       .map((n) => {
         const networkName = n.name.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
-        const postTypeIds = selectedPostTypes[networkName] || [];
+        const postTypeIds = selectedPostTypes[networkName];// || [];
         console.log("postTypeIds", postTypeIds);
         return {
           id: 0,
@@ -371,7 +371,7 @@ const AddScheduleModel = (prop) => {
       });
 
 
-    console.log("Selected network objects:", selectedNetworkObjects);
+    console.log("Selected network objects:", JSON.stringify(selectedNetworkObjects));
     setSelectedNetworkJson(selectedNetworkObjects);
 
     const schedulePayload = [];
@@ -437,7 +437,7 @@ const AddScheduleModel = (prop) => {
 
     const startDateTime = moment(`${moment(startDate).format("YYYY-MM-DD")} ${moment(startTime).format("HH:mm")}`).toISOString();
     const endDateTime = moment(`${moment(endDate).format("YYYY-MM-DD")} ${moment(finishTime).format("HH:mm")}`).toISOString();
-
+    console.log("Select Networks Data", JSON.stringify(selectedNetworkJson));
     const campaignBody = {
       Id: 0,
       orgId: user.orgId,
@@ -458,10 +458,10 @@ const AddScheduleModel = (prop) => {
       CompaignExecutionSchedules: scheduleJson
     };
 
-    console.log("body", JSON.stringify(campaignBody));
+    console.log("body Data Submitted", JSON.stringify(campaignBody));
 
     try {
-      const response = await fetch('/Compaigns/submitcompaign', {
+      const response = await fetch('/Compaigns/submitmycompaign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
