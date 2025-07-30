@@ -8,6 +8,7 @@ namespace com.blazor.bmt.viewmodels
         public int NetworkId { get; set; }
         public string? Desc { get; set; }
         public string? Code { get; set; }
+        public string? posttypejson { get; set; }
         //public int? CreatedBy { get; set; }
         //public DateTime CreatedAt { get; set; }
         //public int? LastUpdatedBy { get; set; }

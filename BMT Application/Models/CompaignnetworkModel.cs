@@ -14,7 +14,7 @@ public partial class CompaignnetworkModel : BaseModelTransactions
     public int NetworkId { get; set; }
 
     public string? Desc { get; set; }
-
+    public string? posttypejson { get; set; }
     public string? Code { get; set; }
 
     //public int? CreatedBy { get; set; }
