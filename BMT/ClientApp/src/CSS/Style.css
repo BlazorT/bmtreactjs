@@ -87,6 +87,13 @@ text[Attributes Style] {
   white-space: nowrap;
   flex-shrink: 0;
 }
+.displayFlex{
+    display:flex;
+}
+.form-checksub {
+  padding-left: 2.5em !important;
+  display: inline-flex!important;
+}
 .recipient-count {
   background: #007bff;
   color: white;
@@ -3610,6 +3617,10 @@ fieldset.legend {
   border-radius: 50%;
   display: inline-block;
 }
+.displayFlex {
+  display: flex;
+  margin-left: 5em !important;
+}
 .pdngleft {
     padding-top:10px;
   padding-left: 10px !important;
@@ -3618,7 +3629,7 @@ fieldset.legend {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-left:1em;
+ /* padding-left:1em;*/
   font-family: arial;
   font-size: 25px;
 }
