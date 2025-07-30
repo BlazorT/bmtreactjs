@@ -11,7 +11,7 @@ export const createSchedule = () => {
 
 
     return new Promise((resolve) => {
-      fetchData('/Compaigns/submitcompaign', { method: 'POST', body: JSON.stringify(body) }, (res) => {
+      fetchData('/Compaigns/submitmycompaign', { method: 'POST', body: JSON.stringify(body) }, (res) => {
         resolve(res);
         if (res.status) {
           //console.log(res, 'submitres');

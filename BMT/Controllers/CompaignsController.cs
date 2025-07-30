@@ -15,7 +15,7 @@ namespace com.blazor.bmt.controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    [Route("Compaigns")]
+    //[Route("Compaigns")]
     public class CompaignsController : ControllerBase
     {            
         private readonly IBlazorUtilPageService _utilPageService;
@@ -36,8 +36,8 @@ namespace com.blazor.bmt.controllers
         public IEnumerable<UserViewModel> dnlist { get; set; } = new List<UserViewModel>();
         // **************************** Users - Students ***************************************************//
         [HttpPost("detailedcompaigns")]
-        [HttpGet("detailedcompaigns")]
-        [Route("detailedcompaigns")]
+        //[HttpGet("detailedcompaigns")]
+        //[Route("detailedcompaigns")]
         public async Task<ActionResult> GetCompaignDataAll([FromBody] CompaignsViewModel model)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });      
@@ -137,12 +137,12 @@ namespace com.blazor.bmt.controllers
 
             return Ok(response);
         }
-        [HttpPost]
-        [HttpGet]
-        public async Task<BlazorResponseViewModel> postCompaignContactData([FromBody] List<CompaignrecipientModel> model)
+     
+        [HttpPost("postCompaignContactData")]
+        public async Task<BlazorResponseViewModel> PostCompaignContactData([FromBody] List<CompaignrecipientModel> mlst)
         {
             BlazorResponseViewModel response = new BlazorResponseViewModel();
-            if (model == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
+            if (mlst == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
             try
             {
                 int UserId = 0;
@@ -150,7 +150,7 @@ namespace com.blazor.bmt.controllers
                     UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
                 // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
 
-                response = await _blazorRepoPageService.postCompaignContactData(model);
+                response = await _blazorRepoPageService.postCompaignContactData(mlst);
 
                 //response.message = String.Format(BlazorConstant.INSERTED_SUCCESS_API, model.Title, UTIL.GlobalUTIL.CurrentDateTime.ToString());
                 // response.status = false;
@@ -220,10 +220,10 @@ namespace com.blazor.bmt.controllers
             //return BlazorResponseViewModel;
 
         }
-        [HttpPost("submitcompaign")]
-        [HttpGet("submitcompaign")]
-        [Route("submitcompaign")]
-        public async Task<ActionResult> postCompaignData([FromBody] CompaignsViewModel model)
+        [HttpPost("submitmycompaign")]
+        //[HttpGet("submitmycompaign")]
+        //[Route("submitmycompaign")]
+        public async Task<ActionResult> PostMyCompaignData([FromBody] CompaignsViewModel model)
         {
            // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
             BlazorApiResponse response = new BlazorApiResponse();
