@@ -54,7 +54,6 @@ const BlazorNetworkInputs = (prop) => {
     autoReplyAllowed: 1,
     autoReplyContent: "",
     replyAttachment: "",
-    postTypeId: 1,
     virtualAccount: 0,
     networkId: networkId,
     rowVer: 0,
@@ -163,7 +162,7 @@ const BlazorNetworkInputs = (prop) => {
       );
     }
 
-   // console.log({ networkList });
+    console.log("networkState", networkState);
    // console.log('test');
    // setIsLoading(createNetworkSettingLoading.current);
   }
@@ -570,9 +569,9 @@ const BlazorNetworkInputs = (prop) => {
                     type="checkbox"
                     id={`postType_${pt.id}`}
                     label={pt.name}
-                    name="postTypeIds"
+                    name="posttypejson"
                     value={pt.id}
-                    checked={networkState.postTypeIds?.includes(pt.id) || false}
+                    checked={networkState.posttypejson?.includes(pt.id) || false}
                     onChange={handleNetworkSetting}
                   />
                 </div>

@@ -41,8 +41,7 @@ export default function CustomDatePicker(prop) {
             <DatePicker
               value={value ? dayjs(value) : dayjs()}
               onChange={(e) => {
-                //
-                onChange(e.$d, label);
+                onChange(e.$d, label); // pass raw JS Date
               }}
               format="MM/DD/YYYY"
               name={name}
@@ -54,9 +53,11 @@ export default function CustomDatePicker(prop) {
                   helperText: errorMessage,
                 },
               }}
-              maxDate={max ? max : ''}
-              minDate={min ? min : ''}
+              maxDate={max || ''}
+              minDate={min || ''}
+             // disablePast={true}
             />
+
           </LocalizationProvider>
         </div>
       </div>
