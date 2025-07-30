@@ -102,7 +102,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       (res) => {
         console.log('Notification responce', res);
         if (res.status === true) {
-          alert(JSON.stringify(res));
+          //alert(JSON.stringify(res));
           const mappedArray = res.data.map((data) => ({
             id: data.id,
             roleName: data.name,

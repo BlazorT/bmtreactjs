@@ -323,7 +323,7 @@ namespace com.blazor.bmt.util
                     using (var command = connection.CreateCommand())
                     {
 
-                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultOrgId,DefaultOrgName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,dsp_admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,InsertSMSHistoryQuery,UpdateSMSNotificationsQuery,GetSMSNotificationsQuery,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM BasicConfigurations ";
+                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultOrgId,DefaultOrgName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,dsp_admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,InsertSMSHistoryQuery,UpdateSMSNotificationsQuery,GetSMSNotificationsQuery,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM basicconfigurations ";
                         command.CommandType = System.Data.CommandType.Text;
                         using (DbDataReader dr = command.ExecuteReader())
                         {
