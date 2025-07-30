@@ -15,6 +15,7 @@ namespace com.blazor.bmt.controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
+    [Route("Compaigns")]
     public class CompaignsController : ControllerBase
     {            
         private readonly IBlazorUtilPageService _utilPageService;
@@ -65,8 +66,107 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
            
         }
+        
+        //   [Route("Users/ImportFile")]
+        [HttpPost]
+        [Route("Compaigns/ImportFile")]
+        public IActionResult ImportFile(List<IFormFile> files)
+        {
+            var contentIdlst = new List<string>();
+            var response = new BlazorResponseViewModel();
+
+            try
+            {
+                if (files == null || files.Count == 0)
+                {
+                    return BadRequest(new { status = false, message = "No files selected or the files are empty." });
+                }
+
+                if (!HttpContext.Request.Form.ContainsKey("netowrkid"))
+                {
+                    return BadRequest(new { status = false, message = "Missing network ID." });
+                }
+
+                if (!int.TryParse(HttpContext.Request.Form["netowrkid"], out int networkid))
+                {
+                    return BadRequest(new { status = false, message = "Invalid network ID." });
+                }
+
+                foreach (var file in files)
+                {
+                    using (var stream = new StreamReader(file.OpenReadStream()))
+                    {
+                        string fileContent = stream.ReadToEnd();
+                        var lines = fileContent.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        for (int i = 1; i < lines.Length; i++) // skip header row
+                        {
+                            var line = lines[i];
+                            if (string.IsNullOrWhiteSpace(line)) continue;
+
+                            var firstValue = line.Split(',')[0];
+
+                            switch (networkid)
+                            {
+                                case (int)util.MEDIA_NETWORKS.EMAIL:
+                                    if (firstValue.Contains("@"))
+                                        contentIdlst.Add(firstValue);
+                                    break;
+
+                                case (int)util.MEDIA_NETWORKS.WHATSAPP:
+                                case (int)util.MEDIA_NETWORKS.SMS:
+                                case (int)util.MEDIA_NETWORKS.INSTAGRAM:
+                                    if (firstValue.Length >= 7)
+                                        contentIdlst.Add(firstValue);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                response.data = contentIdlst;
+                response.status = true;
+                response.message = "Import completed successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.data = null;
+                response.status = false;
+                response.message = $"Import failed. Error: {ex.Message}";
+            }
+
+            return Ok(response);
+        }
+        [HttpPost]
+        [HttpGet]
+        public async Task<BlazorResponseViewModel> postCompaignContactData([FromBody] List<CompaignrecipientModel> model)
+        {
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            if (model == null) return new BlazorResponseViewModel { message = "Incomplete Data", data = null, status = false };
+            try
+            {
+                int UserId = 0;
+                if (this.User != null && this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault() != null)
+                    UserId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "UserId").FirstOrDefault().Value);
+                // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
+
+                response = await _blazorRepoPageService.postCompaignContactData(model);
+
+                //response.message = String.Format(BlazorConstant.INSERTED_SUCCESS_API, model.Title, UTIL.GlobalUTIL.CurrentDateTime.ToString());
+                // response.status = false;
+
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = ex.Message;
+            }
+            return response;
+
+        }
         [HttpPost]
         //[ValidateAntiForgeryToken]
+
         public async Task sendInvitationEmail(string email, int roleId = 0, int id = 0)
 
         {           
