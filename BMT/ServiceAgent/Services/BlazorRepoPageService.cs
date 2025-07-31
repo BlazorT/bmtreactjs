@@ -297,13 +297,13 @@ namespace Blazor.Web.UI.Services
                                 CompaignrecipientModel contact = new CompaignrecipientModel();
                                 contact.NetworkId = Convert.ToInt32(dr["NetworkId"]);
                                 contact.ContentId = "" + dr["ContentId"];
-                              //  contact.NetworkNme = "" + dr["Name"];
+                                //contact.NetworkName = "" + dr["Name"];
                                 ls.Add(contact);
                             }//while (dr.Read())
                         }// using (DbDataReader dr = command.ExecuteReader())
                         response.data = ls;
                         response.status = true;
-                        response.message = string.Format("Contacts {0} are saved successfully", ls.Count.ToString());
+                        response.message = string.Format("Import is completed, new contacts {0} are saved successfully", ls.Count.ToString());
                     }
                 }
             }// Try
