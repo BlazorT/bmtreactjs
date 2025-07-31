@@ -34,7 +34,7 @@ public partial class NotificationModel:BaseModelTransactions
     public int? clicksCount { get; set; }
     public int? commentsCount { get; set; }
     public int? readCount { get; set; }
-
+    public int? viewsCount { get; set; }
     // public int CreatedBy { get; set; }
 
     public DateTime ExpiryTime { get; set; }

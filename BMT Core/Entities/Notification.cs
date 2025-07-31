@@ -35,7 +35,8 @@ public partial class Notification:EntityTransaction
     public int? clicksCount { get; set; }
     public int? commentsCount { get; set; }
     public int? readCount { get; set; }
-   
+    public int? viewsCount { get; set; }
+    
     public string? Description { get; set; }
 
     public int CreatedBy { get; set; }

@@ -55,9 +55,9 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-        [HttpGet("GetCampaignNotificationReportData")]
-        [HttpPost("GetCampaignNotificationReportData")]
-        [Route("GetCampaignNotificationReportData")]
+        //[HttpGet("GetCampaignNotificationReportData")]
+        [HttpPost("notificationsreportdata")]
+        //[Route("GetCampaignNotificationReportData")]
         public async Task<ActionResult> GetCampaignNotificationReportData([FromBody] CampaignNotificationViewModel vm)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) ||
