@@ -303,7 +303,7 @@ namespace Blazor.Web.UI.Services
                         }// using (DbDataReader dr = command.ExecuteReader())
                         response.data = ls;
                         response.status = true;
-                        response.message = string.Format("Import is completed, new contacts {0} are saved successfully", ls.Count.ToString());
+                        response.message = string.Format("Data process is completed, new contacts {0} are saved successfully", ls.Count.ToString());
                     }
                 }
             }// Try
