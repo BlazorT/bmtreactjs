@@ -94,9 +94,9 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
 
     //alert(JSON.stringify(fetchBody));
     console.log("fetchBody",JSON.stringify(fetchBody));
-    await GetNotificationReportData('/Report/GetCampaignNotificationReportData',
+    await GetNotificationReportData('/Report/notificationsreportdata',
       {
-        method: 'GET',
+        method: 'POST',
         body: JSON.stringify(fetchBody)
       },
       (res) => {
