@@ -358,7 +358,7 @@ FROM compaigns c
 INNER JOIN notification n ON c.id = n.comaignId
 LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
 WHERE c.OrgId = @p_OrgId
-  AND n.deliveryStatus = @p_DeliveryStatus
+  AND (n.deliveryStatus = @p_DeliveryStatus OR  @p_DeliveryStatus=0)
   AND c.CreatedAt >= @p_DateFrom
   AND c.CreatedAt <= @p_DateTo
  AND n.Recipient LIKE CONCAT('%', @p_Recipient, '%')
@@ -1724,7 +1724,7 @@ WHERE c.OrgId = @p_OrgId
                         pStartTime.Value = (model.StartTime == null ? GlobalUTIL.CurrentDateTime : model.StartTime);
                         parameter.Add(pStartTime);
                         MySqlParameter pFinishTime = new MySqlParameter("p_finishTime", MySqlDbType.DateTime);
-                        pFinishTime.Value = (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddMonths(1) : model.FinishTime);
+                        pFinishTime.Value = GlobalUTIL.CurrentDateTime.AddDays(10);// (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddMonths(1) : model.FinishTime);
                         parameter.Add(pFinishTime);
                         MySqlParameter pUserid = new MySqlParameter("p_userId", MySqlDbType.Int32);
                         pUserid.Value = model.CreatedBy <= 0 ? model.LastUpdatedBy : model.CreatedBy;
