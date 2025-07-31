@@ -54,7 +54,6 @@ const BlazorNetworkInputs = (prop) => {
     autoReplyAllowed: 1,
     autoReplyContent: "",
     replyAttachment: "",
-    postTypeId: 1,
     virtualAccount: 0,
     networkId: networkId,
     rowVer: 0,
@@ -77,39 +76,40 @@ const BlazorNetworkInputs = (prop) => {
     fetchData: createNetworkSetting,
   } = useFetch();
   const handleNetworkSetting = (e, label) => {
-   // console.log("Label", label); 
-    if (label == 'startTime' || label == 'finishTime') {
-     // alert(label);
+    const { name, value, type, checked } = e.target;
+
+    if (label === 'startTime' || label === 'finishTime') {
       SetNetworkState((prev) => ({
         ...prev,
         [label]: e,
       }));
+    } else if (name === 'postTypeIds') {
+      const postTypeId = parseInt(value);
+      SetNetworkState((prev) => {
+        const selected = prev.postTypeIds || [];
+        const updated = checked
+          ? [...selected, postTypeId]  // Add
+          : selected.filter((id) => id !== postTypeId); // Remove
+        return { ...prev, postTypeIds: updated };
+      });
+    } else if (type === 'checkbox') {
+      SetNetworkState((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else if (type === 'number' && value !== '') {
+      SetNetworkState((prev) => ({
+        ...prev,
+        [name]: parseInt(value),
+      }));
     } else {
-      //// || name == 'unitId' || name == 'port') && value !=='')
-      const { name, value, type, checked } = e.target
-      if (type == 'checkbox') {
-       // alert(type);
-        SetNetworkState((prev) => ({
-          ...prev,
-          [name]:  checked ,
-        }));
-      } else if (type == "number" && value !== '')
-      {
-      // alert(name);
-        SetNetworkState((prev) => ({
-          ...prev,
-          [name]: parseInt(value),
-        }));
-      } else {
-       // alert(type);
-        SetNetworkState((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      }
+      SetNetworkState((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
 
-    }//else {
-  }
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
@@ -162,7 +162,7 @@ const BlazorNetworkInputs = (prop) => {
       );
     }
 
-   // console.log({ networkList });
+    console.log("networkState", networkState);
    // console.log('test');
    // setIsLoading(createNetworkSettingLoading.current);
   }
@@ -560,24 +560,25 @@ const BlazorNetworkInputs = (prop) => {
           />
         </CCol>
         
-        <CCol className="" md={6}>
-          <CustomSelectInput
-            label="Post Type"
-            icon={cilUser}
-            value={networkState.postTypeId}
-            onChange={handleNetworkSetting}
-            options={globalutil.postTypes()}
-            type="text"
-            id="postTypeId"
-            name="postTypeId"
-            placeholder="Post Type"
-            className="form-control item"
-            disableOption= 'Select Post Type'
-            isRequired={false}
-            title="Post Type "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
+          <CCol md={6}>
+            <label className="form-label fw-bold">Post Types</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+              {globalutil.postTypes().map((pt) => (
+                <div key={pt.id} style={{ minWidth: '110px' }}>
+                  <CFormCheck
+                    type="checkbox"
+                    id={`postType_${pt.id}`}
+                    label={pt.name}
+                    name="posttypejson"
+                    value={pt.id}
+                    checked={networkState.posttypejson?.includes(pt.id) || false}
+                    onChange={handleNetworkSetting}
+                  />
+                </div>
+              ))}
+            </div>
+          </CCol>
+
           
           <CCol className="mg-topset" md={3}>
           <CFormCheck
