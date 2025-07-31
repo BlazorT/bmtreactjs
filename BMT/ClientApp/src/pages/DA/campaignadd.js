@@ -429,7 +429,17 @@ const campaignadd = () => {
                     inputFields={ campaignAddInputs }
                     yesFn={goToAnotherPage}
                     submitBtnTitle="Next"
-                    submitFn={() => setActiveTab(1)}
+                    submitFn={() => {
+                      const trimmedName = campaignRegData.name?.trim() || '';
+                      if (trimmedName === '') {
+                        showToast('Please Enter Title', 'warning');
+                        return;
+                      }
+
+                      campaignRegData.name = trimmedName; // Update value if needed
+                      setActiveTab(1);
+                    }}
+
                   >
                     <div className="row">
                       <div className="col-md-6 mt-4">
@@ -608,7 +618,7 @@ const campaignadd = () => {
                             key={`${IconName}-${pt.id}`}
                             id={`${IconName}-${pt.id}`}
                             name={`${IconName}-${pt.id}`}
-                            label={pt.name}
+                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()} // ✅ Capit
                             checked={
                               selectedPostTypes[network.name]?.includes(pt.id) || false
                             }
@@ -634,12 +644,16 @@ const campaignadd = () => {
                   Back
                 </button>
                 <button
-                  onClick={() => setActiveTab(2)}
+                  onClick={() => {
+                    setActiveTab(2);               // Go to tab 2
+                    toggleAddScheduleMdl();        // Open modal
+                  }}
                   type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
                   Next
                 </button>
+
               </div>
             </React.Fragment>
           </React.Fragment>
