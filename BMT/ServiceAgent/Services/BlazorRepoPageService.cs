@@ -327,29 +327,23 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
-                        MySqlParameter DeliveryStatus = new MySqlParameter("p_DeliveryStatus", MySqlDbType.Int32);
-                        DeliveryStatus.Value = cModel.DeliveryStatus;
-                        parameter.Add(DeliveryStatus);
-                        MySqlParameter DateFrom = new MySqlParameter("p_DateFrom", MySqlDbType.DateTime);
-                        DateFrom.Value = cModel.CreatedAt;
-                        parameter.Add(DateFrom);
-                        MySqlParameter DateTo = new MySqlParameter("p_DateTo", MySqlDbType.DateTime);
-                        DateTo.Value = cModel.LastUpdatedAt;
-                        parameter.Add(DateTo);
-                        MySqlParameter recipient = new MySqlParameter("p_Recipient", MySqlDbType.DateTime);
-                        recipient.Value = cModel.recipient;
-                        parameter.Add(recipient);
+                        command.Parameters.Add(new MySqlParameter("@p_OrgId", MySqlDbType.Int32) { Value = cModel.OrgId });
+                        command.Parameters.Add(new MySqlParameter("@p_DeliveryStatus", MySqlDbType.Int32) { Value = cModel.DeliveryStatus });
+                        command.Parameters.Add(new MySqlParameter("@p_DateFrom", MySqlDbType.DateTime) { Value = cModel.CreatedAt });
+                        command.Parameters.Add(new MySqlParameter("@p_DateTo", MySqlDbType.DateTime) { Value = cModel.LastUpdatedAt });
+                        command.Parameters.Add(new MySqlParameter("@p_Recipient", MySqlDbType.VarChar) { Value = cModel.recipient ?? string.Empty });
+
                         command.CommandText = @"
 SELECT 
     c.Id,
     c.Name,
     c.Description,
     c.Title,
-    IFNULL(c.readCount, 0) AS readCount,
-    IFNULL(c.commentsCount, 0) AS commentsCount,
-    IFNULL(c.clicksCount, 0) AS clicksCount,
-    IFNULL(c.sharesCount, 0) AS sharesCount,
-    IFNULL(c.likesCount, 0) AS likesCount,
+    IFNULL(n.readCount, 0) AS readCount,
+    IFNULL(n.commentsCount, 0) AS commentsCount,
+    IFNULL(n.clicksCount, 0) AS clicksCount,
+    IFNULL(n.sharesCount, 0) AS sharesCount,
+    IFNULL(n.likesCount, 0) AS likesCount,
     c.Remarks,
     c.HashTags,
     c.TotalBudget,
@@ -359,9 +353,9 @@ SELECT
     c.Status,
     n.id AS notificationid,
     n.deliveryStatus,
-    n.Name AS networkname
+    nt.Name AS networkname
 FROM compaigns c
-INNER JOIN notification n ON c.id = n.campaignid
+INNER JOIN notification n ON c.id = n.comaignId
 LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
 WHERE c.OrgId = @p_OrgId
   AND n.deliveryStatus = @p_DeliveryStatus
@@ -374,7 +368,6 @@ WHERE c.OrgId = @p_OrgId
 
                         command.CommandType = CommandType.Text;
 
-                        command.Parameters.Add(new MySqlParameter("@p_OrgId", MySqlDbType.Int32) { Value = cModel.OrgId });
                         
                         using (DbDataReader dr = await command.ExecuteReaderAsync())
                         {
