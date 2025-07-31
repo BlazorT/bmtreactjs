@@ -24,9 +24,8 @@ const ImportedContactDropdown = (prop) => {
         color: "white",
         padding: "10px",
         borderRadius: "8px",
-        width: "260px",
+        width: "240px",
         maxHeight: "240px",
-        overflowY: "auto"
       }}
     >
       {/* List Items */}
@@ -73,6 +72,7 @@ const ImportedContactDropdown = (prop) => {
       placement="bottom"
       trigger="click"
     >
+    <li>
       <button
         onClick={() => setVisible(!visible)}
         style={{
@@ -85,7 +85,8 @@ const ImportedContactDropdown = (prop) => {
         }}
       >
         Imported ({items.length})
-      </button>
+        </button>
+      </li>
     </CPopover>
   );
 };

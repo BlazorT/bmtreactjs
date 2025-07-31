@@ -55,7 +55,7 @@ export default function CustomDatePicker(prop) {
               }}
               maxDate={max || ''}
               minDate={min || ''}
-              disablePast={true}
+           //   disablePast={true}
             />
 
           </LocalizationProvider>

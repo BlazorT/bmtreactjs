@@ -153,16 +153,26 @@ const campaignContacts = () => {
 
       if (!validateRecipient(network, value)) {
         let label = 'ID';
-        if (lowerNetwork === 'email') label = 'email address';
-        else if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') label = 'contact number (min 7 digits)';
+        let correctFormatExample = 'e.g., 123456';
 
-        showToast(`Invalid ${network} format. Please enter a valid ${label}.`, 'error');
+        if (lowerNetwork === 'email') {
+          label = 'email address';
+          correctFormatExample = 'e.g., user@example.com';
+        } else if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
+          label = 'contact number (min 7 digits)';
+          correctFormatExample = 'e.g., 03001234567';
+        }
+
+        showToast(
+          `❌ "${value}" is not a valid ${label}. Correct format: ${correctFormatExample}`,
+          'error'
+        );
         return;
       }
 
       // ❌ Block duplicate in same network only
       if (currentList.includes(value)) {
-        showToast(`${value} is already added to ${network}.`, 'error');
+        showToast(`"${value}" is already added to ${network}.`, 'error');
         return;
       }
 
@@ -179,6 +189,7 @@ const campaignContacts = () => {
       }));
     }
   };
+
 
 
   const handleDeleteRecipient = (network, index) => {
@@ -277,7 +288,6 @@ const campaignContacts = () => {
     return payload;
   };
 
-
   const handleSubmitCampaignContacts = async () => {
     const payload = buildCampaignPayload();
     console.log(JSON.stringify(payload));
@@ -295,12 +305,10 @@ const campaignContacts = () => {
       });
 
       if (!response.ok) {
-        // Try to read error message if available
         const errorResult = await response.json().catch(() => ({}));
         console.error("Response not OK:", response.status, errorResult);
-
         showToast(errorResult.message || "Server error occurred.", "error");
-        return; // ✅ Stop further execution
+        return;
       }
 
       const result = await response.json();
@@ -308,17 +316,27 @@ const campaignContacts = () => {
 
       if (result.status) {
         showToast(result.message, "success");
-        const networksList = globalutil.networks(); // [{id: 1, name: "SMS"}, {id: 2, name: "WhatsApp"}]
+
+        const networksList = globalutil.networks();
 
         const groupedData = result.data.map((item) => {
           const networkName = networksList.find(n => n.id === item.networkId)?.name || 'Unknown';
-          const contacts = JSON.parse(item.contentId || '[]'); // make sure it's parsed
-          return { networkName, contacts };
+          const foundContacts = JSON.parse(item.contentId || '[]').map(c => parseInt(c));
+          const allContacts = payload
+            .filter(p => p.networkId === item.networkId)
+            .map(p => parseInt(p.contact));
+
+          const uniqueContacts = [...new Set(allContacts)];
+          const groupedContacts = uniqueContacts.map(contact => ({
+            contact,
+            found: foundContacts.includes(contact),
+          }));
+
+          return { networkName, contacts: groupedContacts };
         });
 
-        setGroupedContacts(groupedData); // store in state to display in UI
-      }
-   else {
+        setGroupedContacts(groupedData);
+      } else {
         showToast(result.message || "Submission failed.", "error");
       }
     } catch (error) {
@@ -326,7 +344,6 @@ const campaignContacts = () => {
       showToast("Error while submitting contacts.", "error");
     }
   };
-
 
 
   return (
@@ -454,24 +471,30 @@ const campaignContacts = () => {
             <div className="row">
               <div className="col-md-12">
                 {groupedContacts.length > 0 && (
-                  <div className="mt-4">
+                  <div className="mt-3">
                     {groupedContacts.map((group, index) => (
-                      <div key={index} className="mb-3">
-                        {groupedContacts.length > 1 && (
-                          <h5 className="fw-bold text-primary">{group.networkName}</h5>
-                        )}
-                        <table className="table table-bordered text-white">
-                          <thead>
+                      <div key={index} className="mb-4">
+                        <h5 style={{ fontWeight: 600 }}>{group.networkName}</h5>
+                        <table className="table table-bordered">
+                          <thead className="table-light">
                             <tr>
                               <th>#</th>
-                              <th>Contact Number</th>
+                              <th>Contact</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {group.contacts.map((contact, i) => (
-                              <tr key={i}>
+                            {group.contacts.map((contactObj, i) => (
+                              <tr
+                                key={i}
+                                style={{
+                                  backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
+                                  color: contactObj.found ? '#155724' : '#721c24'
+                                }}
+                              >
                                 <td>{i + 1}</td>
-                                <td>{contact}</td>
+                                <td>{contactObj.contact}</td>
+                                <td>{contactObj.found ? 'Found' : 'Not Found'}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -481,8 +504,9 @@ const campaignContacts = () => {
                   </div>
                 )}
 
+              </div>
             </div>
-            </div>
+
             </React.Fragment>
           </React.Fragment>
      
