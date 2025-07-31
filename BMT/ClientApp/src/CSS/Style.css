@@ -3208,6 +3208,9 @@ input[type='date']::-webkit-calendar-picker-indicator {
   background-position: right 0.9rem center, center right 0rem;
   width: 8%;
 }
+.legend {
+  color: #ef2525;
+}
 .ui-widget-content {
   border: 1px solid #dddddd;
   background-color: #0c355f;
@@ -3218,8 +3221,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
   margin-bottom: 0.5em;
   --cui-form-check-bg: #9ebef08f !important;
   flex-shrink: 0;
-  width: 1.7em;
-  height: 1.7em;
+  width: 1.5em;
+  height: 1.5em;
   margin-top: 0.25em;
   vertical-align: top;
   appearance: none;

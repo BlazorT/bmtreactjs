@@ -497,31 +497,38 @@ const AddScheduleModel = (prop) => {
                 />
               </AppContainer>
               <CRow>
-                {globalutil.networks().map((network, index) => {
-                  const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                  const IconComponent = icons[IconName];
-                  return (
-                    <CCol md={4} key={index}>
-                      <ul className="inlinedisplay">
-                        <li className="divCircle">
-                          {IconComponent && <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />}
-                        </li>
-                        <li className='network-checkbox-animate'>
-                          <CFormCheck
-                            id={IconName}
-                            name={IconName}
-                            label={network.name}
-                            checked={selectedNetworks.includes(network.name)}
-                            onChange={() => handleNetworkChange(network.name)}
-                          />
-                        </li>
-                      </ul>
-                    </CCol>
-                  );
-                })}
-
-
+                {globalutil.networks()
+                  .filter((network) => selectedNetworks.includes(network.name))
+                  .map((network, index) => {
+                    const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                    const IconComponent = icons[IconName];
+                    return (
+                      <CCol md={4} key={index}>
+                        <ul className="inlinedisplay">
+                          <li className="divCircle">
+                            {IconComponent && (
+                              <IconComponent
+                                className="BlazorIcon pdngleft"
+                                fontSize="large"
+                                color="success"
+                              />
+                            )}
+                          </li>
+                          <li className="network-checkbox-animate">
+                            <CFormCheck
+                              id={IconName}
+                              name={IconName}
+                              label={network.name}
+                              checked={selectedNetworks.includes(network.name)}
+                              onChange={() => handleNetworkChange(network.name)}
+                            />
+                          </li>
+                        </ul>
+                      </CCol>
+                    );
+                  })}
               </CRow>
+
             
             </React.Fragment>
             <CRow>
@@ -535,6 +542,7 @@ const AddScheduleModel = (prop) => {
                   className="form-control item form-select scheduleClass"
                   value={campaignRegData.intervalTypeId}
                   name="intervalTypes"
+                  isRequired="true"
                   title=" Select Interval Types "
                   onChange={handleIntervalTypeChange}
                   

@@ -8,7 +8,7 @@ import Facebook from '@mui/icons-material/Facebook';
 import LinkedIn from '@mui/icons-material/LinkedIn';
 import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
-import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
+import { CCard, CTooltip, CCol, CRow } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
 import ImportContactsListData from 'src/components/InputsComponent/ImportContactsList';
@@ -384,14 +384,38 @@ const campaignContacts = () => {
                   </li>
 
                   <li style={{ position: 'relative' }}>
-                    <CustomInput
-                      disabled={isChecked}
-                      type="text"
-                      value={recipientInput[networkKey] || ''}
-                      placeholder="Enter recipient and press Enter"
-                      onChange={(e) => handleInputChange(networkKey, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, networkKey)}
-                    />
+                    <CTooltip
+                      content={
+                        networkKey.toLowerCase() === 'email'
+                          ? 'Valid email format like: user@example.com'
+                          : networkKey.toLowerCase() === 'tiktock'
+                            ? 'Enter your TikTok username or URL'
+                            : networkKey.toLowerCase() === 'linkedin'
+                              ? 'Enter your LinkedIn profile URL'
+                              : networkKey.toLowerCase() === 'facebook'
+                                ? 'Enter your Facebook profile or page URL'
+                                : networkKey.toLowerCase() === 'instagram'
+                                  ? 'Enter your Instagram username or URL'
+                                  : networkKey.toLowerCase() === 'twitter'
+                                    ? 'Enter your Twitter handle or profile URL'
+                                    : 'Valid contact format like: 923331234567 (min 7 digits)'
+                      }
+                      placement="top"
+                    >
+
+
+                      <div>
+                        <CustomInput
+                          disabled={isChecked}
+                          type="text"
+                          value={recipientInput[networkKey] || ''}
+                          placeholder="Enter recipient and press Enter"
+                          onChange={(e) => handleInputChange(networkKey, e.target.value)}
+                          onKeyDown={(e) => handleKeyDown(e, networkKey)}
+                        />
+                      </div>
+                    </CTooltip>
+
 
                     {recipientCount > 0 && (
                       <CPopover
