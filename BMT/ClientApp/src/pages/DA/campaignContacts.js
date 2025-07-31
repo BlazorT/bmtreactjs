@@ -202,7 +202,7 @@ const campaignContacts = () => {
     formData.append("files", selectedFile);          // actual File object
     formData.append("netowrkid", selectedNetworkId); // keep key same as in C#
     try {
-      const response = await fetch('/Compaigns/ImportFile', {
+      const response = await fetch('/Compaigns/ImportFileData', {
         method: 'POST',
         body: formData
       });
@@ -254,7 +254,7 @@ const campaignContacts = () => {
         Id: 0,
         OrgId: user.orgId,
         NetworkId: networkId,
-        ContentId: allContacts,
+        ContentId: JSON.stringify(allContacts),
         Desc: "",
         CreatedBy: user.userId,
         CreatedAt: new Date(),
@@ -272,7 +272,6 @@ const campaignContacts = () => {
     console.log(JSON.stringify(payload));
 
     if (payload.length === 0) {
-
       showToast("No contacts to send.", "error");
       return;
     }
@@ -285,7 +284,12 @@ const campaignContacts = () => {
       });
 
       if (!response.ok) {
-        console.log(response);
+        // Try to read error message if available
+        const errorResult = await response.json().catch(() => ({}));
+        console.error("Response not OK:", response.status, errorResult);
+
+        showToast(errorResult.message || "Server error occurred.", "error");
+        return; // ✅ Stop further execution
       }
 
       const result = await response.json();

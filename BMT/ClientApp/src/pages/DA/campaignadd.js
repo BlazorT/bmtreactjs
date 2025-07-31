@@ -130,7 +130,10 @@ const campaignadd = () => {
 
 
 
-  const handleCampaignAddForm = (e, label) => {
+  const handleCampaignAddForm = (e, label, name) => {
+    const now = moment(); // current time
+
+    // ✅ FILE HANDLING
     if (label === 'video' || label === 'image' || label === 'pdf') {
       const file = e.target.files[0];
       if (!file) return;
@@ -150,37 +153,40 @@ const campaignadd = () => {
         ...prev,
         attachments: file,
       }));
+      return;
     }
 
-    else if (label === 'startTime' || label === 'finishTime') {
+    const fieldKey = name; // e.g., "startTime", "finishTime"
+
+    if (['startTime', 'finishTime'].includes(fieldKey)) {
+      const selectedDate = moment(e); // ✅ Declare inside the block that uses it
+
+      if (selectedDate.isBefore(now, 'minute')) {
+        showToast(`${label} cannot be in the past.`, 'error');
+        return;
+      }
+
+      // ✅ Update the state
       setCampaignRegData((prev) => ({
         ...prev,
-        [label]: e,
+        [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
+        ...(fieldKey === 'startTime' && { startDate: selectedDate.format('YYYY-MM-DD') }),
+        ...(fieldKey === 'finishTime' && { endDate: selectedDate.format('YYYY-MM-DD') }),
       }));
-    }
 
-    else if (label === 'Campaign Start Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        startDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
+      return;
     }
-
-    else if (label === 'Campaign End Date') {
-      setCampaignRegData((prev) => ({
-        ...prev,
-        endDate: e ? moment(e).format('YYYY-MM-DD HH:mm:ss') : null,
-      }));
-    }
-
-    else if (label === 'logoPath') {
+    // ✅ LOGO HANDLING
+    if (label === 'logoPath') {
       setCampaignRegData((prevData) => ({
         ...prevData,
         logoPath: e,
       }));
+      return;
     }
 
-    else if (e?.target) {
+    // ✅ GENERIC INPUT HANDLING
+    if (e?.target) {
       const { name, value, type, checked, files } = e.target;
       const inputValue =
         type === 'checkbox' ? checked :
@@ -191,12 +197,14 @@ const campaignadd = () => {
         ...prevData,
         [name]: inputValue,
       }));
+      return;
     }
 
-    else {
-      console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
-    }
+    // ✅ UNHANDLED CASE
+    console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
   };
+
+
 
 
 
@@ -316,12 +324,12 @@ const campaignadd = () => {
     setScheduleRows(updatedRows);
   };
   const schedulecolumns = [
-    { field: 'interval', headerName: 'Interval', width: 100 },
-    { field: 'budget', headerName: 'Budget', minWidth: 130 },
-    { field: 'NetworkId', headerName: 'Network', minWidth: 150, flex: 1 },
-    { field: 'days', headerName: 'Days', minWidth: 250 },
-    { field: 'startTime', headerName: 'Start Time', minWidth: 150 },
-    { field: 'finishTime', headerName: 'End Time', minWidth: 130 },
+    { field: 'interval',flex:1, headerName: 'Interval', width: 100 },
+    { field: 'budget', flex: 1, headerName: 'Budget', minWidth: 130 },
+    { field: 'NetworkId', flex: 1, headerName: 'Network', minWidth: 150,  },
+    { field: 'days', flex: 1, headerName: 'Days', minWidth: 250 },
+    { field: 'startTime', flex: 1, headerName: 'Start Time', minWidth: 150 },
+    { field: 'finishTime', flex: 1, headerName: 'End Time', minWidth: 130 },
 
     {
       field: 'action',
@@ -526,56 +534,7 @@ const campaignadd = () => {
 
                             </CCol>
                           </CRow>
-                          <CCol md="12 mt-2">
-                            <textarea
-                              label="Area"
-                              icon={cilFlagAlt}
-                              type="text"
-                              id="description"
-                              placeholder="text area for description"
-                              className="form-control item"
-                              value={campaignRegData.description}
-                              name="description"
-                              onChange={handleCampaignAddForm}
-                            />
-                          </CCol>
-                          <CCol md="8" className="mt-2">
-                            <CustomInput
-                              label="Target User"
-                              icon={cilFlagAlt}
-                              type="text"
-                              id="targetUser"
-                              placeholder="add target user"
-                              className="form-control item"
-                              value={targetUser}
-                              name="targetUser"
-                              onChange={(e) => setTargetUser(e.target.value)}
-                            />
-                          </CCol>
-                          <CCol md="4" className="mt-3">
-                            <div className="mt-3">
-                              <button
-                                type="submit"
-                                className="btn btn_Default sales-btn-style m-2"
-                                onClick={handleAdd}
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </CCol>
-                          <CCol md="12" className="mt-2">
-                            <h4>Target Users</h4>
-                            <ul>
-                              {targetUserData.map((c, index) => (
-                                <ListGroup.Item key={index} className="fontset">
-                                  {c}
-                                  <Button value="Delete" variant="danger" title="Delete" className="float-right margin-left" onClick={() => handleDeleteuser(index)}>
-                                    Delete
-                                  </Button>
-                                </ListGroup.Item>
-                              ))}
-                            </ul>
-                          </CCol>
+                       
                         </CRow>
                       </React.Fragment>
                     )}
@@ -595,7 +554,9 @@ const campaignadd = () => {
             </AppContainer>
             <CRow>
               {globalutil.networks().map((network, index) => {
-                const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                // Fix label casing (e.g., "Facebook")
+                const displayLabel = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                const IconName = displayLabel;
                 const IconComponent = icons[IconName];
 
                 let postTypeIds = [];
@@ -609,6 +570,19 @@ const campaignadd = () => {
                   .postTypes()
                   .filter((pt) => postTypeIds.includes(pt.id));
 
+                const isSelected = selectedNetworks.includes(network.name);
+
+                // Auto-select/deselect single post type
+                if (postTypeList.length === 1) {
+                  const singleTypeId = postTypeList[0].id;
+
+                  if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                    handlePostTypeToggle(network.name, singleTypeId); // select
+                  } else if (!isSelected && selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                    handlePostTypeToggle(network.name, singleTypeId); // unselect
+                  }
+                }
+
                 return (
                   <CCol md={4} key={index} className="mb-4">
                     <ul className="inlinedisplay">
@@ -619,33 +593,35 @@ const campaignadd = () => {
                         <CFormCheck
                           id={IconName}
                           name={IconName}
-                          label={network.name}
-                          checked={selectedNetworks.includes(network.name)}
+                          label={displayLabel} // ✅ Fixed label
+                          checked={isSelected}
                           onChange={() => handleCheckboxChange(network.name)}
                         />
                       </li>
                     </ul>
 
-                    <div className=" mt-2 displayFlex">
-                      {postTypeList.map((pt) => (
-                        <CFormCheck
-                          key={`${IconName}-${pt.id}`}
-                          id={`${IconName}-${pt.id}`}
-                          name={`${IconName}-${pt.id}`}
-                          label={pt.name}
-                          checked={
-                            selectedPostTypes[network.name]?.includes(pt.id) || false
-                          }
-                          onChange={() => handlePostTypeToggle(network.name, pt.id)}
-                          className="mb-1 form-checksub"
-                        />
-                      ))}
+                    <div className="mt-2 displayFlex">
+                      {/* Only show checkboxes if more than one post type */}
+                      {postTypeList.length > 1 &&
+                        postTypeList.map((pt) => (
+                          <CFormCheck
+                            key={`${IconName}-${pt.id}`}
+                            id={`${IconName}-${pt.id}`}
+                            name={`${IconName}-${pt.id}`}
+                            label={pt.name}
+                            checked={
+                              selectedPostTypes[network.name]?.includes(pt.id) || false
+                            }
+                            onChange={() => handlePostTypeToggle(network.name, pt.id)}
+                            className="mb-1 form-checksub"
+                          />
+                        ))}
                     </div>
                   </CCol>
                 );
               })}
-
             </CRow>
+
 
 
             <React.Fragment>
