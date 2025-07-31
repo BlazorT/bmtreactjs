@@ -11,6 +11,40 @@
   font-family: 'permanentmarker-regular';
   font-size: 1.1875em;
 }
+.popover {
+  background-color: #547ea1!important;
+}
+  .recipient-popover .popover {
+  background-color: #003366 !important; /* Dark Blue */
+  color: white;
+  padding: 10px;
+  max-width: 250px;
+  border-radius: 8px;
+}
+
+.popover-recipient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recipient-tag {
+  background: #ffffff22;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-icon {
+  cursor: pointer;
+  margin-left: 8px;
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .inlinedisplay {
     flex-direction: column;
@@ -47,7 +81,7 @@ text[Attributes Style] {
   overflow-x:hidden; /* Optional: allows horizontal scroll on smaller screens */
 }
 .networksListWidth{
-    width:22%!important;
+    width:20%!important;
 }
 .css-1mhxotf-MuiSvgIcon-root {
   -webkit-user-select: none;
@@ -127,7 +161,6 @@ text[Attributes Style] {
   justify-content: space-between;
   align-items: center;
   padding: 2px 6px;
-  border-bottom: 1px solid #eee;
   font-size: 14px;
 }
 .recipient-dropdown {
@@ -139,6 +172,8 @@ text[Attributes Style] {
   color: red;
   font-weight: bold;
   margin-left: 8px;
+  font-size: 2em;
+  margin-top: -6px;
 }
 
 /* Text input field */

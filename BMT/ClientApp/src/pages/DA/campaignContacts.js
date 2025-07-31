@@ -11,6 +11,7 @@ import Instagram from '@mui/icons-material/Instagram';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
+import ImportContactsListData from 'src/components/InputsComponent/ImportContactsList';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -23,6 +24,8 @@ import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
+import { CPopover } from "@coreui/react";
+
 
 const campaignContacts = () => {
   // let state;
@@ -43,6 +46,8 @@ const campaignContacts = () => {
   const [selectedFiles, setSelectedFiles] = useState({}); // { Twitter: File }
   const [cityData, setCityData] = useState([]); // Your table data
   const showToast = useShowToast();
+  const [groupedContacts, setGroupedContacts] = useState([]);
+
  
   const handleCampaignAddContacts = (e, networkId) => {
     const file = e.target.files?.[0];
@@ -229,20 +234,25 @@ const campaignContacts = () => {
   };
   console.log("Selected Networks:", selectedNetworks);
   console.log("Recipients List:", recipientsList);
+  console.log("importedData List:", importedData);
 
   const buildCampaignPayload = () => {
     const payload = [];
+    const allNetworks = globalutil.networks();
 
-    const allNetworks = globalutil.networks(); // Cache this once
-    console.log("Recipients List:", recipientsList);
+    // Combine keys from both sources
+    const allNetworkKeys = new Set([
+      ...Object.keys(recipientsList || {}),
+      ...Object.keys(importedData || {})
+    ]);
 
-    Object.keys(recipientsList).forEach((networkKey) => {
+    allNetworkKeys.forEach((networkKey) => {
       const networkObj = allNetworks.find(n => n.name === networkKey);
       if (!networkObj) return;
 
       const networkId = parseInt(networkObj.id);
-      const manualContacts = recipientsList[networkKey] || [];
-      const importedContacts = importedData[networkKey] || [];
+      const manualContacts = recipientsList?.[networkKey] || [];
+      const importedContacts = importedData?.[networkKey] || [];
       const allContacts = [...manualContacts, ...importedContacts];
 
       if (allContacts.length === 0) {
@@ -262,6 +272,7 @@ const campaignContacts = () => {
         RowVer: 1
       });
     });
+
     console.log("payload", payload);
     return payload;
   };
@@ -296,8 +307,18 @@ const campaignContacts = () => {
       console.log('Server response:', result);
 
       if (result.status) {
-        showToast("Contacts submitted successfully.", "success");
-      } else {
+        showToast(result.message, "success");
+        const networksList = globalutil.networks(); // [{id: 1, name: "SMS"}, {id: 2, name: "WhatsApp"}]
+
+        const groupedData = result.data.map((item) => {
+          const networkName = networksList.find(n => n.id === item.networkId)?.name || 'Unknown';
+          const contacts = JSON.parse(item.contentId || '[]'); // make sure it's parsed
+          return { networkName, contacts };
+        });
+
+        setGroupedContacts(groupedData); // store in state to display in UI
+      }
+   else {
         showToast(result.message || "Submission failed.", "error");
       }
     } catch (error) {
@@ -356,47 +377,30 @@ const campaignContacts = () => {
                     />
 
                     {recipientCount > 0 && (
-                      <>
-                        <span
-                          className="recipient-count"
-                          onClick={() => {
-                            const dropdown = document.getElementById(`recipients-${networkKey}`);
-                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                          }}
-                        >
-                          {recipientCount}
-                        </span>
-
-                        <div id={`recipients-${networkKey}`} className="recipient-dropdown">
-                          {(recipientsList[networkKey] || []).map((rec, idx) => (
-                            <div key={idx} className="recipient-tag">
-                              {rec}
-                              <span
-                                className="delete-icon"
-                                onClick={() => handleDeleteRecipient(networkKey, idx)}
-                              >
-                                &times;
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </>
+                      <CPopover
+                        content={
+                          <div className="popover-recipient-list">
+                            {(recipientsList[networkKey] || []).map((rec, idx) => (
+                              <div key={idx} className="recipient-tag">
+                                {rec}
+                                <span
+                                  className="delete-icon"
+                                  onClick={() => handleDeleteRecipient(networkKey, idx)}
+                                >
+                                  &times;
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        }
+                        placement="left" // you can change to 'bottom', 'top', etc.
+                        trigger="click"
+                        className="recipient-popover"
+                      >
+                        <span className="recipient-count">{recipientCount}</span>
+                      </CPopover>
                     )}
 
-
-                    <div id={`recipients-${networkKey}`} className="recipient-dropdown">
-                      {(recipientsList[networkKey] || []).map((rec, idx) => (
-                        <div key={idx} className="recipient-tag">
-                          {rec}
-                          <span
-                            className="delete-icon"
-                            onClick={() => handleDeleteRecipient(networkKey, idx)}
-                          >
-                            &times;
-                          </span>
-                        </div>
-                      ))}
-                    </div>
                   </li>
 
                   <li>
@@ -408,16 +412,14 @@ const campaignContacts = () => {
                     />
                   </li>
                   {importedData[networkKey]?.length > 0 && (
-                    <li className="imported-dropdown">
-                      <div className="recipient-dropdown">
-                        {importedData[networkKey].map((item, idx) => (
-                          <div key={idx} className="recipient-tag">
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    </li>
+                    <ImportContactsListData
+                      networkKey={networkKey}
+                      importedData={importedData}
+                      setImportedData={setImportedData}
+                    />
                   )}
+
+
 
                   <li>
                     <button onClick={() => handleImportClick(networkKey, networkId)} disabled={!selectedFiles[networkId]}>Import</button>
@@ -446,8 +448,41 @@ const campaignContacts = () => {
               >
                 Save
               </button>
+            
 
-              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                {groupedContacts.length > 0 && (
+                  <div className="mt-4">
+                    {groupedContacts.map((group, index) => (
+                      <div key={index} className="mb-3">
+                        {groupedContacts.length > 1 && (
+                          <h5 className="fw-bold text-primary">{group.networkName}</h5>
+                        )}
+                        <table className="table table-bordered text-white">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Contact Number</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {group.contacts.map((contact, i) => (
+                              <tr key={i}>
+                                <td>{i + 1}</td>
+                                <td>{contact}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+            </div>
+            </div>
             </React.Fragment>
           </React.Fragment>
      
