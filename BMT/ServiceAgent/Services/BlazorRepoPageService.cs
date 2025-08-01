@@ -1374,11 +1374,9 @@ WHERE c.OrgId = @p_OrgId
                             MySqlParameter pJson = new MySqlParameter("p_vrightsjson", MySqlDbType.JSON);
                             pJson.Value = vRightsSON;
                             parameter.Add(pJson);
-
                             command.CommandText = "spAddUpdateRoleRights";
                             command.CommandType = System.Data.CommandType.StoredProcedure;
                             command.Parameters.AddRange(parameter.ToArray());
-
                             var result = await command.ExecuteScalarAsync();
                             blazorApiResponse.data = result.ToString();
                             blazorApiResponse.status = true;
