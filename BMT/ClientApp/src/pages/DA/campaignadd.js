@@ -22,6 +22,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 //import CustomDatePicker from 'src/components/UI/DatePicker';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
+import dayjs from 'dayjs';
 
 import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
@@ -130,8 +131,8 @@ const campaignadd = () => {
 
 
 
-  const handleCampaignAddForm = (e, label, name) => {
-    const now = moment(); // current time
+  const handleCampaignAddForm = (e, label) => {
+    const now = moment();
 
     // ✅ FILE HANDLING
     if (label === 'video' || label === 'image' || label === 'pdf') {
@@ -156,26 +157,28 @@ const campaignadd = () => {
       return;
     }
 
-    const fieldKey = name; // e.g., "startTime", "finishTime"
+    // ✅ DATE HANDLING
+    const fieldKey = (label === 'Campaign Start Date') ? 'startTime' :
+      (label === 'Campaign End Date') ? 'finishTime' : null;
 
     if (['startTime', 'finishTime'].includes(fieldKey)) {
-      const selectedDate = moment(e); // ✅ Declare inside the block that uses it
+      const selectedDate = moment(e);
 
       if (selectedDate.isBefore(now, 'minute')) {
         showToast(`${label} cannot be in the past.`, 'error');
         return;
       }
 
-      // ✅ Update the state
       setCampaignRegData((prev) => ({
         ...prev,
         [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
-        ...(fieldKey === 'startTime' && { startDate: selectedDate.format('YYYY-MM-DD') }),
+        ...(fieldKey === 'startTime' && { startDate:selectedDate.format('YYYY-MM-DD') }),
         ...(fieldKey === 'finishTime' && { endDate: selectedDate.format('YYYY-MM-DD') }),
       }));
 
       return;
     }
+
     // ✅ LOGO HANDLING
     if (label === 'logoPath') {
       setCampaignRegData((prevData) => ({
@@ -200,14 +203,11 @@ const campaignadd = () => {
       return;
     }
 
-    // ✅ UNHANDLED CASE
+    // ❌ UNHANDLED CASE
     console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
   };
 
-
-
-
-
+  console.log("campaignRegDataInitial", campaignRegData);
 
   const toggleStock = () => {
     setshowForm((prev) => !prev);
@@ -278,7 +278,7 @@ const campaignadd = () => {
     Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: Email // Assuming Email is your component for Email icon
   };
-
+  console.log(campaignRegData,'test')
   useEffect(() => {
     const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
 
@@ -442,16 +442,7 @@ const campaignadd = () => {
 
                   >
                     <div className="row">
-                      <div className="col-md-6 mt-4">
-                        <CFormCheck
-                          id="autoGenerateLeads"
-                          name="autoGenerateLeads"
-                          label="Generate Auto Leads"
-                          checked={campaignRegData.autoGenerateLeads}
-                          onChange={handleCampaignAddForm}
-                        />
-
-                      </div>
+                    
                       <div className="col-md-6 mt-2">
                         <FormControl>
                           <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Status</FormLabel>
@@ -465,8 +456,6 @@ const campaignadd = () => {
                             <FormControlLabel value={2} control={<Radio />} label="Paused" />
                             <FormControlLabel value={3} control={<Radio />} label="Cancel" />
                           </RadioGroup>
-
-                          
                         </FormControl>
                       </div>
                     </div>
