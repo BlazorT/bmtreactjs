@@ -281,7 +281,7 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
-                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("p_json", MySqlDbType.LongText, 8000);
+                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("p_json", MySqlDbType.JSON);
                         pCompaignContentsJSON.Value = StoreCompaignContactModelJSON;
                         parameter.Add(pCompaignContentsJSON);
 
@@ -358,7 +358,7 @@ FROM compaigns c
 INNER JOIN notification n ON c.id = n.comaignId
 LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
 WHERE c.OrgId = @p_OrgId
-  AND (n.deliveryStatus = @p_DeliveryStatus OR  @p_DeliveryStatus=0)
+  AND (n.deliveryStatus = @p_DeliveryStatus OR ifnull(@p_DeliveryStatus,0)=0)
   AND c.CreatedAt >= @p_DateFrom
   AND c.CreatedAt <= @p_DateTo
  AND n.Recipient LIKE CONCAT('%', @p_Recipient, '%')
