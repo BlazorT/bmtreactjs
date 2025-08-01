@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 // userFormConfig.js
+import dayjs from 'dayjs';
 
 import {
   cilUser,
@@ -105,7 +106,19 @@ export const getCampaignAddConfig = (
       name: 'startTime',
       className: 'form-control item',
       isRequired: false,
-      minDate: new Date(),
+      minDate: dayjs(),
+      maxDate: dayjs(campaignRegData.finishTime),
+      disablePast: true, // 👈 allow past dates here
+    
+    },
+    {
+      component: CFormCheck,
+      label: 'Generate Auto Leads',
+      checked: campaignRegData.autoGenerateLeads,
+      onChange: handleCampaignAddForm,
+      id: 'autoGenerateLeads',
+      name: 'autoGenerateLeads',
+      className: 'item mt-4',
     },
     {
       component: CustomDatePicker,
@@ -117,20 +130,26 @@ export const getCampaignAddConfig = (
       name: 'finishTime',
       className: 'form-control item',
       isRequired: false,
-      minDate: new Date(),
+      minDate: dayjs(campaignRegData.startTime), 
+      disablePast: true, // 👈 allow past dates here
     },
     
  
 ];
-export const getInitialCampaignData = (user) => ({
-  id: 0,
-  logoPath: '',
-  name: '',
-  status: 1,
-  rowVer: 1,
-  compaignDetailId: 0,
-  isTermsAccepted: false,
-  createdBy: user.userId,
-  lastUpdatedBy: user.userId,
-  createdAt: moment().utc().format(),
-});
+export const getInitialCampaignData = (user) => {
+  const now = moment();
+  return {
+    id: 0,
+    logoPath: '',
+    name: '',
+    status: 1,
+    rowVer: 1,
+    compaignDetailId: 0,
+    isTermsAccepted: false,
+    createdBy: user.userId,
+    lastUpdatedBy: user.userId,
+    createdAt: now.utc().format(),
+    startTime:now.format('YYYY-MM-DD HH:mm:ss'), // optional if needed
+    finishTime:now.add(2,'days').format('YYYY-MM-DD HH:mm:ss'), // optional if needed
+  };
+};
