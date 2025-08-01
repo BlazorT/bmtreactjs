@@ -358,7 +358,7 @@ FROM compaigns c
 INNER JOIN notification n ON c.id = n.comaignId
 LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
 WHERE c.OrgId = @p_OrgId
-  AND (n.deliveryStatus = @p_DeliveryStatus OR  @p_DeliveryStatus=0)
+  AND (n.deliveryStatus = @p_DeliveryStatus OR ifnull(@p_DeliveryStatus,0)=0)
   AND c.CreatedAt >= @p_DateFrom
   AND c.CreatedAt <= @p_DateTo
  AND n.Recipient LIKE CONCAT('%', @p_Recipient, '%')

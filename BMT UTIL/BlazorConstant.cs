@@ -80,7 +80,7 @@ namespace com.blazor.bmt.util
         // SMS
         public static string SMS_ENABLE = "EnableSMS";
         public static string SMS_PASSWORD = "SMSPassword";
-        public static string SMS_MESSAGE_TEMPLATE = "smsMessageBody";
+        public static string SMS_MESSAGE_TEMPLATE = "smstemplate";
         public static string SMS_SERVICE_QOUTA = "SMSQouta";
         public static string SMS_SERVICE_USERNAME = "SMSUserName";
         public static string SMS_SENDER_CODE = "SMSSenderName";
@@ -120,16 +120,14 @@ namespace com.blazor.bmt.util
         public static IFormatProvider? INSERTED_SUCCESS_API;
 
         //  public static string VehicleOfferNotificationEmailBody { get; set; } = "VehicleOfferNotificationEmailBody";       
-        public static string SMS_MESSAGE_BODY { get; set; } = "smsMessageBody";
-        public static string ONBOARDING_EMAIL_BODY { get; set; } = "OnBoardedEmaillBody";
-        public static string BACKGROUND_CHECK_EMAIL { get; set; } = "BackgroundCheckEmaillBody";
+        public static string WHATSAPP_TEMPLATE { get; set; } = "WhatsApp";
+        public static string INSTA_TEMPLATE { get; set; } = "instagram";
+        public static string TWITTER_TEMPLATE { get; set; } = "twitter";
         // public static string accountStatusEmailSubject { get; set; } = String.Empty;
-        public static string DRUG_CHECK_EMAIL { get; set; } = "DrugCheckEmaillBody";
-        public static string OFFGROUND_EMAIL_BODY { get; set; } = "OffboardedEmailBody";
-        public static string DSP_PERFORMACE_NOTIFICATION { get; set; } = "DSPPerformanceNotification";
-        public static string DA_PERFORMACE_NOTIFICATION { get; set; } = "DAPerformanceNotification";
-        public static string DA_REPLY_NOTIFICATION { get; set; } = "DAReplyNotification";
-        public static string DA_JOB_PROCESS_UPDATED { get; set; } = "DAJObApplyProcessUpdated";
+        public static string SNAPCHAT_TEMPLATE { get; set; } = "snapchat";
+        public static string TIKTOK_TEMPLATE { get; set; } = "tiktok";
+        public static string LINKEDIN_TEMPLATE { get; set; } = "linkedin";
+        public static string FACEBOOK_TEMPLATE { get; set; } = "facebook";    
         public static string ACCOUNT_DELETED_EMAIL_BODY { get; set; } = "AccountDeletedEmailBody";
         public static string ACCOUNT_STATUS_CHANGED_EMAIL_BODY { get; set; } = "AccountStatusChangedEmailBody";
  
