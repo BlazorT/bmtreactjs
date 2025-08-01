@@ -144,16 +144,24 @@ const AddScheduleModel = (prop) => {
     Intervalval: '',
     intervalTypeId: 0,
     isFixedTime: false,
-    startDate: moment().toDate(),                  // Moment → Date
-    endDate: moment().add(1, 'day').toDate(),      // Moment → Date
-    startTime: dayjs().startOf('day'),            // 00:00:00 (dayjs object)
-    finishTime: dayjs().startOf('day').add(4, 'hour'), // today 01:00:00
+    startDate: dayjs(submitData.startTime),                 
+    endDate: dayjs(submitData.finishTime),   
+    startTime: dayjs().startOf('day').add(1, 'hour'),            // 00:00:00 (dayjs object)
+    finishTime: dayjs().startOf('day').add(10, 'hour'), // today 01:00:00
     selectedDays: []
   });
+
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
   const [jsonRates, setJsonRates] = useState([]);
- 
+  const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
+
+  useEffect(() => {
+    if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
+      setInitialVisibleNetworks([...selectedNetworks]);
+    }
+  }, [selectedNetworks]);
+
   // Effect: select/unselect days based on intervalTypeId
   useEffect(() => {
     if (campaignRegData.intervalTypeId === 2) {
@@ -197,8 +205,6 @@ const AddScheduleModel = (prop) => {
 
 
   const dispatch = useDispatch();
-  
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -234,9 +240,10 @@ const AddScheduleModel = (prop) => {
     } else if (label === 'startDate' || label === 'endDate') {
       setCampaignRegData((prev) => ({
         ...prev,
-        [date]: e,
+        [label]: e,
       }));
-    } else {
+    }
+  else {
       const { name, value } = e.target;
       setCampaignRegData((prev) => ({
         ...prev,
@@ -244,7 +251,6 @@ const AddScheduleModel = (prop) => {
       }));
     }
   };
-
 
   const onCancel = () => {
     dispatch(
@@ -309,38 +315,18 @@ const AddScheduleModel = (prop) => {
     campaignRegData.finishTime
   ]);
 
-  //var daysArray = campaignRegData.selectedDays;
-  //const buildScheduledDays = (daysArray, userId) => {
-  //  const now = new Date().toISOString();
-  //  return daysArray.map(day => ({
-  //    Id: 0,
-  //    CompaignScheduleId: 0,
-  //    DayNumber: day,
-  //    RowVer: 1,
-  //    Status: 1,
-  //    CreatedAt: now,
-  //    CreatedBy: userId
-  //  }));
-  //};
-
   const onSave = () => {
-    console.log("Step 1: Validating input");
-    console.log("campaignRegData:", campaignRegData);
-    console.log("selectedNetworks:", selectedNetworks);
-
-    if (
-      !campaignRegData.intervalTypeId ||
-      selectedNetworks.length === 0
-    ) {
+    if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
       console.error("Validation failed", campaignRegData);
       showToast('All required fields must be filled.', 'error');
       return;
     }
+
     const selectedNetworkObjects = globalutil.networks()
       .filter(n => selectedNetworks.includes(n.name))
       .map((n) => {
         const networkName = n.name.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
-        const postTypeIds = selectedPostTypes[networkName];// || [];
+        const postTypeIds = selectedPostTypes[networkName];
         console.log("postTypeIds", postTypeIds);
         return {
           id: 0,
@@ -356,31 +342,43 @@ const AddScheduleModel = (prop) => {
         };
       });
 
-
     console.log("Selected network objects:", JSON.stringify(selectedNetworkObjects));
+
     setSelectedNetworkJson(selectedNetworkObjects);
 
-    const schedulePayload = [];
-   // const scheduledDays = buildScheduledDays(campaignRegData.selectedDays, user.userId);
-    const start = moment(campaignRegData.startDate).set({
-      hour: moment(campaignRegData.startTime).hour(),
-      minute: moment(campaignRegData.startTime).minute(),
-      second: 0,
-    });
+    // Log the campaign start/end date and time
+    const startDate = campaignRegData.startDate; // dayjs object
+    const endDate = campaignRegData.endDate;     // dayjs object
+    const startTime = dayjs(campaignRegData.startTime);
+    const endTime = dayjs(campaignRegData.finishTime);
 
-    const end = moment(campaignRegData.endDate).set({
-      hour: moment(campaignRegData.finishTime).hour(),
-      minute: moment(campaignRegData.finishTime).minute(),
-      second: 0,
-    });
-    console.log("Step 4: Building schedule payload");
+
+    // Combine start date + time
+    const combinedStart = dayjs(startDate)
+      .hour(startTime.hour())
+      .minute(startTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    // Combine end date + time
+    const combinedEnd = dayjs(endDate)
+      .hour(endTime.hour())
+      .minute(endTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    console.log("✔️ Correct StartTime:", combinedStart.format());
+    console.log("✔️ Correct FinishTime:", combinedEnd.format());
+
+
+    const schedulePayload = [];
     for (let ntwk of selectedNetworkObjects) {
       const payloadItem = {
         id: 0,
         NetworkId: ntwk.NetworkId,
         CompaignDetailId: 0,
-        StartTime: start.toISOString(),
-        FinishTime: end.toISOString(),
+        StartTime: combinedStart.toISOString(),
+        FinishTime: combinedEnd.toISOString(),
         Intervalval: parseFloat(campaignRegData.intervalval),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
@@ -388,52 +386,58 @@ const AddScheduleModel = (prop) => {
         MessageCount: budgetData.TotalSchMessages,
         CreatedAt: new Date(),
         CreatedBy: user.userId,
-        days: JSON.stringify(campaignRegData.selectedDays), // ✅ now an array of objects
+        days: JSON.stringify(campaignRegData.selectedDays),
         Budget: budgetData.TotalSchBudget,
       };
       schedulePayload.push(payloadItem);
     }
 
+    console.log("Final schedulePayload:", JSON.stringify(schedulePayload, null, 2));
+
     const updatedSchedule = [...scheduleJson, ...schedulePayload];
     setScheduleJson(updatedSchedule);
     setData(updatedSchedule);
+
     showToast('Schedule saved successfully!', 'success');
   };
-
-  console.log("Networks:", globalutil.networks());
-
-  //useEffect(() => {
-  //  if (selectedNetworkJson.length && scheduleJson.length && jsonRates.length) {
-  //    calculateBudget(selectedNetworkJson, scheduleJson, jsonRates);
-  //  }
-  //}, [selectedNetworkJson, scheduleJson, jsonRates]);
-
   const submitCompaign = async () => {
-    // ✅ Prevent submit if scheduleJson is empty
     if (!Array.isArray(scheduleJson) || scheduleJson.length === 0) {
       showToast('Please add at least one schedule before submitting.', 'warning');
       return;
     }
-    console.log("submitData",submitData);
+
     const {
       name,
       tag,
       autoGenerateLeads,
-      startDate,
-      endDate,
       startTime,
       finishTime,
       status
     } = submitData;
-    // ✅ Check if name is empty/null/whitespace
+
     if (!name || name.trim() === '') {
       showToast('Please add a campaign name || Title before submit.', 'warning');
       return;
     }
 
-    const startDateTime = moment(`${moment(startDate).format("YYYY-MM-DD")} ${moment(startTime).format("HH:mm")}`).toISOString();
-    const endDateTime = moment(`${moment(endDate).format("YYYY-MM-DD")} ${moment(finishTime).format("HH:mm")}`).toISOString();
-    console.log("Select Networks Data", JSON.stringify(selectedNetworkJson));
+    // 🔹 STEP 1: Find the max time from scheduleJson.FinishTime
+    let maxFinishTime = null;
+    if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
+      maxFinishTime = scheduleJson
+        .map(s => moment(s.FinishTime))
+        .reduce((latest, current) => current.isAfter(latest) ? current : latest);
+    }
+
+    // 🔹 STEP 2: Combine original finish date with max finish time
+    const finishTimeWithMaxTime = maxFinishTime
+      ? moment(finishTime).set({
+        hour: maxFinishTime.hour(),
+        minute: maxFinishTime.minute(),
+        second: maxFinishTime.second(),
+        millisecond: 0
+      })
+      : moment(finishTime); // fallback to original
+
     const campaignBody = {
       Id: 0,
       orgId: user.orgId,
@@ -442,12 +446,12 @@ const AddScheduleModel = (prop) => {
       Title: name,
       HashTags: tag,
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
-      StartTime: startDateTime,
-      FinishTime: endDateTime,
+      StartTime: moment(startTime).toISOString(),
+      FinishTime: finishTimeWithMaxTime.toISOString(),
       Status: status ? 1 : 0,
       CreatedAt: moment().toISOString(),
       RowVer: 1,
-      Discount:0,
+      Discount: 0,
       CreatedBy: user.userId,
       TotalBudget: budgetData.TotalCampBudget,
       CompaignNetworks: selectedNetworkJson,
@@ -480,9 +484,6 @@ const AddScheduleModel = (prop) => {
     }
   };
 
-
-
-
   return (
     <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
       <ModalHeader>{header}</ModalHeader>
@@ -498,7 +499,7 @@ const AddScheduleModel = (prop) => {
               </AppContainer>
               <CRow>
                 {globalutil.networks()
-                  .filter((network) => selectedNetworks.includes(network.name))
+                  .filter((network) => initialVisibleNetworks.includes(network.name))
                   .map((network, index) => {
                     const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
                     const IconComponent = icons[IconName];
@@ -605,8 +606,11 @@ const AddScheduleModel = (prop) => {
                   id="startDate"
                   name="startDate"
                   value={campaignRegData.startDate}
+                  minDate={dayjs(submitData.startTime)}
+                  maxDate={dayjs(submitData.finishTime)}
                   title="start date"
                   className="scheduleClass"
+                  disablePast= "true"
                   onChange={(e) => handleCampaignAddForm(e, 'startDate')}
                 />
               </CCol>
@@ -619,6 +623,11 @@ const AddScheduleModel = (prop) => {
                   title="end date"
                   className="scheduleClass"
                   value={campaignRegData.endDate}
+                  disablePast="true"
+                  minDate={dayjs(submitData.startTime)}
+                  maxDate={dayjs(submitData.finishTime)}
+                 // min={submitData?.startTime}
+                 // max={submitData?.finishTime}
                   onChange={(e) => handleCampaignAddForm(e, 'endDate')}
                 />
               </CCol>
