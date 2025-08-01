@@ -28,7 +28,7 @@ namespace com.blazor.bmt.viewmodels
         public string stmppwd { get; set; } = "htt6755";
         public string smtpport { get; set; } = "587";       
         public string flagReportEmailBody { get; set; } = String.Empty;
-        public string vehicleUploadEmailbody { get; set; } = String.Empty;
+        
         public string accountActivateEmailBody { get; set; } = String.Empty;
         public string accountBlockEmailBody { get; set; } = String.Empty;
         public string CompaignUploadNotificationEmailSubject { get; set; } = String.Empty;
@@ -38,10 +38,17 @@ namespace com.blazor.bmt.viewmodels
         public bool enableFreeMinutes { get; set; } = false;
 
         public string profilePwdResetEmail = "profilePwdResetEmail";
-        public string profilePwdResetEmailSubject = "4DSPS - Forgot Password";
+        public string profilePwdResetEmailSubject = "BMT - Forgot Password";
         //  public static string VehicleOfferNotificationEmailBody { get; set; } = "VehicleOfferNotificationEmailBody";       
-        public string SmsMessageBody { get; set; } = "smsMessageBody";
-      
+        public string whatsapp { get; set; } = "Notification from Blazor Media Toolkit";
+        public string tiktoks { get; set; } = "Notification from Blazor Media Toolkit";
+        public string facebook { get; set; } = "Notification from Blazor Media Toolkit";
+        public string twitter { get; set; } = "Notification from Blazor Media Toolkit";
+        public string linkedin { get; set; } = "Notification from Blazor Media Toolkit";
+        public string snapchat { get; set; } = "Notification from Blazor Media Toolkit";
+        public string instagram { get; set; } = "Notification from Blazor Media Toolkit";
+        public string smstemplate { get; set; } = String.Empty;
+
         public string OrganizationRejectedEmailBody { get; set; } = "OrganizationRejectedEmailBody";
         public string OrganizationApprovedEmailBody { get; set; } = "OrganizationApprovedEmailBody";
         public string AccountDeletedEmailBody { get; set; } = "AccountDeletedEmailBody";     
