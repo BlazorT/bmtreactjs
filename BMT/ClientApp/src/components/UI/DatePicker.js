@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
@@ -9,7 +10,7 @@ import CIcon from '@coreui/icons-react';
 import moment from 'moment';
 
 export default function CustomDatePicker(prop) {
-  const { icon, label, title, id, name, value, onChange, isRequired, message, max, min } = prop;
+  const { icon, label, title, id, name, value, onChange, isRequired, message, max, min, minDate, maxDate,disablePast = false } = prop;
 
   const [error, setError] = React.useState(null);
 
@@ -24,6 +25,7 @@ export default function CustomDatePicker(prop) {
       }
     }
   }, [error]);
+  console.log({minDate, maxDate})
   return (
     <div className="text-start mt-2">
       <label htmlFor={id} className="login_label labelName">
@@ -53,9 +55,10 @@ export default function CustomDatePicker(prop) {
                   helperText: errorMessage,
                 },
               }}
-              maxDate={max || ''}
-              minDate={min || ''}
-           //   disablePast={true}
+              maxDate={maxDate || ''}
+              minDate={minDate || ''}
+              //disablePast={disablePast ?? false}  // default true if not provided
+
             />
 
           </LocalizationProvider>
