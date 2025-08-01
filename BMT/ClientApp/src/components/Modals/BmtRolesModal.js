@@ -14,7 +14,7 @@ import LoadingBtn from '../UI/LoadingBtn';
 
 const BmtRolesModal = (prop) => {
   const { isOpen, toggle, roleId, rolesData, header, canUpdate } = prop;
-  // console.log({ rolesData });
+   console.log({ rolesData });
   const { showSnackbar, showConfirmation } = useNotification();
 
   const { loading, postData: postRoles } = useApi('/Common/submitgrouprights');

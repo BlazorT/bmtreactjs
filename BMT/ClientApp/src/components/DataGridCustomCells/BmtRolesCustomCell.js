@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import { cilPencil, cilSettings } from '@coreui/icons';
 import { CCol, CRow } from '@coreui/react';
-import DSPRolesModal from '../Modals/BmtRolesModal';
+import { Tooltip } from '@material-ui/core';
+import CIcon from '@coreui/icons-react';
+
+import BmtRolesModal from '../Modals/BmtRolesModal';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { useDispatch } from 'react-redux';
 import ActionButton from '../UI/ActionButton';
@@ -19,6 +22,7 @@ const BmtRolesCustomCell = (prop) => {
   const { data: settingRes, loading, postData: fetchRoles } = useApi('/Common/rolemenus');
 
   const getRolesSetting = async () => {
+    
     const fetchBody = {
       roleId: value.row.id.toString(),
     };
@@ -44,15 +48,19 @@ const BmtRolesCustomCell = (prop) => {
     <CRow>
       {canUpdate !== 1 && (
         <CCol>
-          <ActionButton title="Setting Bmt roles" onClick={getRolesSetting} icon={cilSettings} />
+          <Tooltip title={'Setting Bmt roles'}>
+            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilSettings} />
+          </Tooltip>
         </CCol>
       )}
       {canUpdate === 1 && (
         <CCol>
-          <ActionButton title="Edit Bmt roles" onClick={getRolesSetting} icon={cilPencil} />
+          <Tooltip title={'Edit Bmt roles'}>
+            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilPencil} />
+          </Tooltip>
         </CCol>
       )}
-      <DSPRolesModal
+      <BmtRolesModal
         isOpen={modalOpen}
         toggle={() => toggleModal()}
         roleId={value.row.id}
