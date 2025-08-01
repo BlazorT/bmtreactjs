@@ -297,9 +297,23 @@ namespace com.blazor.bmt.util
                             if (BlazorConstant.INVITATION_EMAIL_SUBJECT.ToLower() == ("" + (dr["key"])).ToLower())
                                 viewModel.invitationEmailSubject = "" + (dr["value"]);                                                     
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.AccountDeletedEmailBody = "" + (dr["value"]);                           
-                            if (BlazorConstant.SMS_MESSAGE_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
-                                viewModel.SmsMessageBody = "" + (dr["value"]);                          
+                                viewModel.AccountDeletedEmailBody = "" + (dr["value"]); 
+                            
+                            if (BlazorConstant.WHATSAPP_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.whatsapp = "" + (dr["value"]);
+                            if (BlazorConstant.FACEBOOK_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.facebook = "" + (dr["value"]);
+                            if (BlazorConstant.LINKEDIN_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.linkedin = "" + (dr["value"]);
+                            if (BlazorConstant.INSTA_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.instagram = "" + (dr["value"]);
+                            if (BlazorConstant.SNAPCHAT_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.snapchat = "" + (dr["value"]);
+                            if (BlazorConstant.TIKTOK_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.tiktoks = "" + (dr["value"]);
+                            if (BlazorConstant.TWITTER_TEMPLATE.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
+                                viewModel.twitter = "" + (dr["value"]);
+
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.AccountDeletedEmailBody = "" + (dr["value"]);
                             if (BlazorConstant.ACCOUNT_STATUS_CHANGED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
