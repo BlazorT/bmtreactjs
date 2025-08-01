@@ -281,7 +281,7 @@ namespace Blazor.Web.UI.Services
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
-                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("p_json", MySqlDbType.LongText, 8000);
+                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("p_json", MySqlDbType.JSON);
                         pCompaignContentsJSON.Value = StoreCompaignContactModelJSON;
                         parameter.Add(pCompaignContentsJSON);
 
