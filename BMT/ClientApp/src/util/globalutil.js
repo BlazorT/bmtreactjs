@@ -170,5 +170,14 @@ export default class globalutil {
   static setmenus(menus) {
     localStorage.setItem('menus', JSON.stringify(menus));
   }
+  //deliverstatus
+  static deliverstatus() {
+    if (localStorage.getItem('deliverstatus') !== '' && localStorage.getItem('deliverstatus') !== null)
+      return JSON.parse(localStorage.getItem('deliverstatus'));
+    else return null;
+  }
+  static setdeliverstatus(deliverstatus) {
+    localStorage.setItem('deliverstatus', JSON.stringify(deliverstatus));
+  }
   
 }

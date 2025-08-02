@@ -168,13 +168,12 @@ const BmtRolesModal = (prop) => {
     };
 
     const body = updatePrivileges(rolesData, rolesSetting);
-    console.log(JSON.stringify(body));
-    console.log(body);
+    console.log(body.filter((b)=>b.id!=0));
     const res = await postRoles(body);
-
+    console.log("res", res);
     if (res?.status === true) {
       showSnackbar(res?.message, 'success');
-
+      
       toggle();
       setRoleSetting([]);
     } else {

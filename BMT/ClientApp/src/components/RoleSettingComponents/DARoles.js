@@ -11,7 +11,8 @@ const DARoles = (prop) => {
 
   const sortedData = rolesData !== undefined ? rolesData.sort((a, b) => a.id - b.id) : [];
   const menus = organizeData(sortedData);
-
+  console.table("sortedData", sortedData);
+  console.log("menus", menus);
   const [rolesRow, setRolesRow] = useState(() =>
     menus.flatMap((parent) => [
       {
@@ -27,7 +28,7 @@ const DARoles = (prop) => {
         : [{ group: '', screen: 'Dashboard', select: 'Dashboard' }]),
     ]),
   );
-
+  console.log("rolesRow", rolesRow);
   const roles_grid_cols = [
     {
       field: 'group',
