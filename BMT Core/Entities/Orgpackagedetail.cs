@@ -74,4 +74,5 @@ public partial class Orgpackagedetail : EntityTransaction
     public string? Apikey { get; set; }
 
     public string? WebUrl { get; set; }
+    public string? AccountAuthData { get; set; }
 }
