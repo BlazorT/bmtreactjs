@@ -59,6 +59,8 @@ services.AddScoped<IBundlingPackageRepository, BundlingPackageRepository>();
 services.AddScoped<IPackageRepository, PackageRepository>();
 services.AddScoped<ICampaignTemplateRepository, CampaignTemplateRepository>();
 services.AddScoped<ICampaignRecipientsRepository, CampaignRecipientsRepository>();
+services.AddScoped<IOrgPackageDetailRepository, OrgPackageDetailRepository>();
+
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
 // ServiceLayer

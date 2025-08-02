@@ -73,6 +73,7 @@ namespace com.blazor.bmt
             CreateMap<Rolemenu, RolemenuModel>().ReverseMap();
             CreateMap<Compaigntemplate, CompaigntemplateModel>().ReverseMap();
             CreateMap<Compaignrecipient, CompaignrecipientModel>().ReverseMap();
+            CreateMap<Orgpackagedetail, OrgpackagedetailModel>().ReverseMap();
             // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }
