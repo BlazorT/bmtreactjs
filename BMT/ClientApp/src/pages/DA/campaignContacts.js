@@ -537,10 +537,10 @@ const campaignContacts = () => {
                     <table className="table table-bordered">
                       <thead className="table-light">
                         <tr>
-                          <th>#</th>
-                          <th>Network</th>
-                          <th>Contact</th>
-                          <th>Status</th>
+                          <th className="text-center">#</th>
+                          <th className="text-center">Network</th>
+                          <th className="text-center">Contact</th>
+                          <th className="text-center">Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -553,10 +553,12 @@ const campaignContacts = () => {
                                 color: contactObj.found ? '#155724' : '#721c24',
                               }}
                             >
-                              <td>{i + 1}</td>
-                              <td>{group.networkName}</td>
-                              <td>{contactObj.contact}</td>
-                              <td>{contactObj.found ? 'Inserted Recipients' : 'Not Inserted'}</td>
+                              <td className="text-center">{i + 1}</td>
+                              <td className="text-center">{group.networkName}</td>
+                              <td className="text-center">{contactObj.contact}</td>
+                              <td className="text-center">
+                                {contactObj.found ? 'Inserted Recipients' : 'Duplicate Recipients'}
+                              </td>
                             </tr>
                           ))
                         )}
@@ -565,6 +567,7 @@ const campaignContacts = () => {
                   </div>
                 )}
               </div>
+
 
 
             </div>
