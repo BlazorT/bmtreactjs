@@ -276,29 +276,30 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-    
+
         [HttpPost("rolemenus")]
         [HttpGet("rolemenus")]
         [Route("rolemenus")]
         public async Task<ActionResult> GetRoleMenus([FromBody] WebApiFilters filter)
         {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });           
+            // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
             //GlobalLOVsViewModel lookUps = new GlobalLOVsViewModel();
             //  plist.Add(sdtl);
             BlazorApiResponse response = new BlazorApiResponse();
             try
             {
-                    try
-                    {
-                        response.data= await _blazorRepoPageService.loadRoleMenus(Convert.ToInt32(filter.roleId));
-                        response.status = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        response.message = ex.Message;
-                        response.status = false;
-                    }
-                   
+                try
+                {
+                    response.data = await _blazorRepoPageService.loadRoleMenus(Convert.ToInt32(filter.roleId));
+                    response.status = true;
+                }
+                catch (Exception ex)
+                {
+                    response.message = ex.Message;
+                    response.status = false;
+                }
+
             }
             catch (Exception ex)
             {
@@ -310,7 +311,6 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
-
         #endregion
         #region "Common Endpoints"
         [HttpGet("states")]

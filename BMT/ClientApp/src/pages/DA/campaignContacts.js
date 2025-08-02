@@ -317,23 +317,44 @@ const campaignContacts = () => {
       if (result.status) {
         showToast(result.message, "success");
 
+        const groupedData = [];
+
         const networksList = globalutil.networks();
 
-        const groupedData = result.data.map((item) => {
-          const networkName = networksList.find(n => n.id === item.networkId)?.name || 'Unknown';
-          const foundContacts = JSON.parse(item.contentId || '[]').map(c => parseInt(c));
-          const allContacts = payload
-            .filter(p => p.networkId === item.networkId)
-            .map(p => parseInt(p.contact));
+        // Get all unique networkIds from the payload
+        const networkIds = [...new Set(payload.map(p => p.networkId))];
 
+        networkIds.forEach((networkId) => {
+          const networkName = networksList.find(n => n.id === networkId)?.name || 'Unknown';
+
+          // Try to find matching result from server
+          const serverItem = result.data?.find(item => item.networkId === networkId);
+
+          // Extract found contacts from server response
+          const foundContacts = serverItem && serverItem.contentId
+            ? JSON.parse(serverItem.contentId || '[]')
+            : [];
+
+          // Get all contacts sent for this network
+          const allContacts = payload
+            .filter(p => p.networkId === networkId)
+            .map(p => p.contact); // Keep as string (email or number)
+
+          // Remove duplicates and create contact objects
           const uniqueContacts = [...new Set(allContacts)];
+
           const groupedContacts = uniqueContacts.map(contact => ({
             contact,
             found: foundContacts.includes(contact),
           }));
 
-          return { networkName, contacts: groupedContacts };
+          groupedData.push({ networkName, contacts: groupedContacts });
         });
+
+        setGroupedContacts(groupedData);
+
+        setGroupedContacts(groupedData);
+
 
         setGroupedContacts(groupedData);
       } else {

@@ -3211,12 +3211,30 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .legend {
   color: #ef2525;
 }
+.table-light {
+  --cui-table-color: rgb(241 243 247 / 95%)!important;
+  --cui-table-bg: #ebedef;
+  --cui-table-border-color: rgba(199.840776699, 203.5194174757, 208.5631067961, 0.99);
+  --cui-table-striped-bg: rgba(226.3363636364, 228.75, 231.5, 0.9975);
+  --cui-table-striped-color: rgba(44.4, 55.5, 74, 0.95);
+  --cui-table-active-bg: rgba(217.5894230769, 220.4206730769, 223.9278846154, 0.995);
+  --cui-table-active-color: rgba(44.4, 55.5, 74, 0.95);
+  --cui-table-hover-bg: rgba(221.973381295, 224.595323741, 227.7230215827, 0.99625);
+  --cui-table-hover-color: rgba(44.4, 55.5, 74, 0.95);
+  color: var(--cui-table-color);
+  border-color: var(--cui-table-border-color);
+}
 .ui-widget-content {
   border: 1px solid #dddddd;
   background-color: #0c355f;
   color: white !important;
   /* color: #333333; */
 }
+.group-header-row {
+  font-weight: 800!important;
+  background-color: #0d3b66; /* or any dark highlight */
+}
+
 .form-check-input {
   margin-bottom: 0.5em;
   --cui-form-check-bg: #9ebef08f !important;

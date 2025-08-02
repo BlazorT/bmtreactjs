@@ -26,6 +26,7 @@
     "dayjs": "^1.11.10",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
+    "notistack": "^3.0.2",
     "primereact": "^10.5.1",
     "prop-types": "^15.8.1",
     "react-burger-menu": "^3.0.9",

@@ -14,6 +14,7 @@ import CIcon from '@coreui/icons-react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import moment from 'moment';
+import _ from 'lodash';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
@@ -56,7 +57,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
   const initialFilter = {
     orgId: user.orgId,
     recipient: '',
-    deliveryStatus: '',
+    deliveryStatus: '6',
     status: 0,
     createdAt: dayjs().utc().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
@@ -65,14 +66,31 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
   const applyFilters = async () => {
     const filterBody = {
       recipient: filters.recipient,
-      deliveryStatus: filters.deliveryStatus === '' ? 0 : filters.deliveryStatus,
-      createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+      deliveryStatus: String(filters.deliveryStatus || ''), // ✅ Always string
+      createdAt: moment(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
     };
 
     getNotiList(filterBody);
-
   };
+
+  const deliveryStatuses = [
+    { id: 6, name: "SENT", code: "2", desc: "SENT", lvType: 2 },
+    { id: 7, name: "DELIVERED", code: "2", desc: "DELIVERED", lvType: 2 },
+    { id: 8, name: "FAILED", code: "2", desc: "FAILED", lvType: 2 },
+    { id: 9, name: "DELETED", code: "2", desc: "DELETED", lvType: 2 },
+    { id: 10, name: "READ", code: "2", desc: "READ", lvType: 2 },
+    { id: 11, name: "SEEN", code: "2", desc: "SEEN", lvType: 2 },
+    { id: 12, name: "UNDELIVERED", code: "2", desc: "UNDELIVERED", lvType: 2 },
+    { id: 13, name: "PENDING", code: "2", desc: "PENDING", lvType: 2 }
+  ];
+
+  const globalutil = {
+    // Other functions or properties
+    deliverstatus: () => deliveryStatuses
+  };
+
+
   const {
     response: GeNotiRes,
     loading: NotiLoading,
@@ -103,23 +121,63 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
         console.log('Notification responce', res);
         if (res.status === true) {
           //alert(JSON.stringify(res));
-          const mappedArray = res.data.map((data) => ({
-            id: data.id,
-            roleName: data.name,
-            userName: data.userName,
-            status: data.status,
-            contact: data.contact,
-            email: data.email,
-            createdAt: formatDate(data.createdAt) || '',
 
-            readCount: data.readCount || 0,
-            commentsCount: data.commentsCount || 0,
-            clicksCount: data.clicksCount || 0,
-            sharesCount: data.sharesCount || 0,
-            likesCount: data.likesCount || 0,
-          }));
+          const groupedData = _.groupBy(res.data, (item) =>
+            `${item.name}|${item.createdAt}|${item.networkName}`
+          );
+
+          const mappedArray = Object.entries(groupedData).flatMap(([groupKey, groupItems], index) => {
+            const [name, createdAt, networkName] = groupKey.split('|');
+
+            // Top (group) row — only shows campaign name, date, network
+            const groupRow = {
+              id: `group-${index}`,
+              name,
+              createdAt: formatDate(createdAt),
+              sent:0,
+              failed:0,
+              delivered:0,
+              networkName,
+              isGroupRow: true, // flag for custom render
+            };
+
+            // Child rows — normal data, no name/date/network
+            const childRows = groupItems.map((data, i) => {
+              const statusCounts = {};
+              globalutil.deliverstatus().forEach((statusObj) => {
+                const statusId = statusObj.id.toString();
+                statusCounts[statusObj.name.toLowerCase()] = groupItems.filter(
+                  (d) => d.deliveryStatus === statusId
+                ).length;
+              });
+
+              return {
+                id: `${data.id}-${i}`,
+                name: '', // empty for grouping effect
+                createdAt: '',
+                networkName: '',
+                readCount: data.readCount || 0,
+                commentsCount: data.commentsCount || 0,
+                clicksCount: data.clicksCount || 0,
+                sharesCount: data.sharesCount || 0,
+                likesCount: data.likesCount || 0,
+                // Add delivery status counts
+                sent: statusCounts["sent"] || 0,
+                delivered: statusCounts["delivered"] || 0,
+                failed: statusCounts["failed"] || 0,
+                deleted: statusCounts["deleted"] || 0,
+                read: statusCounts["read"] || 0,
+                seen: statusCounts["seen"] || 0,
+                undelivered: statusCounts["undelivered"] || 0,
+                pending: statusCounts["pending"] || 0,
+              };
+            });
+
+            return [groupRow, ...childRows];
+          });
 
           setRows(mappedArray);
+          console.log(mappedArray);
         } else {
           dispatch(
             updateToast({
@@ -135,15 +193,16 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     );
     setIsLoading(false);
   };
+  var deliveryStatus = globalutil.deliverstatus();
+  console.log("deliveryStatus", deliveryStatus);
   const [rows, setRows] = useState([]);
 
   const [columns, setColumns] = useState([
     {
       field: 'name',
       headerClassName: 'custom-header-data-grid',
-      headerName: ' Name',
-      flex: 1,
-      width: 150,
+      headerName: 'Campaign Name',
+      width: 160,
       editable: false,
       filterable: true,
     },
@@ -158,7 +217,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       type: 'timestamp',
     },
     {
-      field: 'network',
+      field: 'networkName',
       headerClassName: 'custom-header-data-grid',
       headerName: 'Network',
       flex: 1,
@@ -167,31 +226,40 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       filterable: true,
     },
     {
-      field: 'send',
+      field: 'sent',   // ✅ match with mapped row field
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Send',
+      headerName: 'Sent',
       width: 100,
       editable: false,
       filterable: true,
       flex: 1,
+      renderCell: (params) => {
+        return params.row?.isGroupRow?null:params.row.sent
+      }
     },
     {
-      field: 'failed',
+      field: 'failed',  // ✅ match with mapped row field
       headerClassName: 'custom-header-data-grid',
       headerName: 'Failed',
       width: 100,
       editable: false,
       filterable: true,
       flex: 1,
+      renderCell: (params) => {
+        return params.row?.isGroupRow ? null : params.row.failed
+      }
     },
     {
-      field: 'delivered',
+      field: 'delivered',  // ✅ match with mapped row field
       headerClassName: 'custom-header-data-grid',
       headerName: 'Delivered',
       width: 100,
       editable: false,
       filterable: true,
       flex: 1,
+      renderCell: (params) => {
+        return params.row?.isGroupRow ? null : params.row.delivered
+      }
     },
     {
       field: 'readCount',
@@ -237,8 +305,9 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       editable: false,
       filterable: true,
       flex: 1,
-    }
+    },
   ]);
+
 
   const [showStock, setShowStock] = useState(false);
   const makeGroupingRows = (data) => {
@@ -351,30 +420,31 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                         />
                       </div>
 
-                      <div className="col-md-6">
-                        <CustomSelectInput
-                          label="Delivery Status"
-                          icon={cilFlagAlt}
-                          disableOption="Select Delivery Status"
-                          id="deliveryStatus"
-                         // options={globalutil.commonstatuses()}
-                          className="form-control item form-select"
-                          value={filters.deliveryStatus}
-                          name="deliveryStatus"
-                          title=" delivery Status "
-                          onChange={(e) => changeFilter(e)}
-                        />
-                      </div>
+                    <div className="col-md-6">
+                      <CustomSelectInput
+                        label="Delivery Status"
+                        icon={cilFlagAlt}
+                        disableOption="Select Delivery Status"
+                        id="deliveryStatus"
+                        options={globalutil.deliverstatus()}  
+                        className="form-control item form-select"
+                        value={filters.deliveryStatus}
+                        name="deliveryStatus"
+                        title="delivery Status"
+                        onChange={(e) => changeFilter(e)}
+                      />
+                    </div>
+
                     </div>
                     <div className="row">
                       <div className="col-md-6 mt-2">
                         <CustomDatePicker
                           icon={cilCalendar}
-                          label="Date From "
+                          label="Date From"
                           id="createdAt"
                           name="createdAt"
                           value={filters.createdAt}
-                        title=" Campaign start date  "
+                          title="Campaign start date"
                           onChange={(e) => changeFilter(e, 'createdAt')}
                         />
                       </div>
@@ -410,7 +480,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
               ) : null}
             </div>
             <div className="bg_Div mb-2 d-flex flex-column">
-              <DataGridHeader exportFn={() => generatePdf()} title=" Notification" />
+             {/* <DataGridHeader exportFn={() => generatePdf()} title=" Notification" />*/}
               <div className="show-stock">
                 <div className="row ">
                   <div className="col-md-12 col-xl-12">
@@ -423,7 +493,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                       // canPrint={pageRoles.canPrint}
                     summary={[
                       {
-                        field: 'send',
+                        field: 'sent',
                         aggregates: [{ aggregate: 'sum', caption: 'Total Send' }],
                       },
                       {
@@ -435,6 +505,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                         aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
                       },
                     ]}
+
 
                       
                     />
