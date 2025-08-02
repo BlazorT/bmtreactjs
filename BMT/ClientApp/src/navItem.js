@@ -2,7 +2,7 @@ export const transformData = (data) => {
   const result = [];
   const stack = [];
   const visited = new Set();
-
+  console.log("data", data);
   // Push the root elements onto the stack
   stack.push({ parentId: 0, result });
 
