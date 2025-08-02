@@ -73,4 +73,5 @@ public partial class OrgpackagedetailViewModel
     public string? WebUrl { get; set; }
     public double? UnitPriceInclTax { get; set; }
     public short? CategoryId { get; set; }
+    public string? AccountAuthData { get; set; }
 }

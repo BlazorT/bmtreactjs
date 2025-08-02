@@ -75,4 +75,5 @@ public partial class OrgpackagedetailModel : BaseModelTransactions
     public string? Apikey { get; set; }
 
     public string? WebUrl { get; set; }
+    public string? AccountAuthData { get; set; }
 }
