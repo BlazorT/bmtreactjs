@@ -14,14 +14,42 @@ namespace com.blazor.bmt.application.services
     public class OrganizationService : IOrganizationService
     {
         private readonly IOrganizationRepository _OrgRepository;
+        private readonly IOrgPackageDetailRepository _0rgPackageDetailRepository;
         private readonly IAppLogger<OrganizationService> _logger;
         private readonly IMapper _mapper;
-        public OrganizationService(IOrganizationRepository orgRepository, IMapper mapper, IAppLogger<OrganizationService> logger)
+        public OrganizationService(IOrganizationRepository orgRepository, IOrgPackageDetailRepository orgPackageDetailRepository, IMapper mapper, IAppLogger<OrganizationService> logger)
         {
             _OrgRepository = orgRepository ?? throw new ArgumentNullException(nameof(orgRepository));
+            _0rgPackageDetailRepository = orgPackageDetailRepository ?? throw new ArgumentNullException(nameof(orgPackageDetailRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }       
+        public async Task<IEnumerable<OrgpackagedetailModel>> GetOrgPackageDetailsBynetworkAndOrgAsync(int networkid, int orgid)
+        {
+            var list = await _0rgPackageDetailRepository.GetOrgPackageDetailsBynetworkAndOrgAsync(networkid, orgid);
+            var mapped = _mapper.Map<IEnumerable<OrgpackagedetailModel>>(list);
+            return mapped;
         }
+        public async Task<IEnumerable<OrgpackagedetailModel>> GetOrgPackageDetailByNameAsync(string name)
+        {
+            var list = await _0rgPackageDetailRepository.GetOrgPackageDetailByNameAsync(name);
+            var mapped = _mapper.Map<IEnumerable<OrgpackagedetailModel>>(list);
+            return mapped;
+        }
+        public async Task<OrgpackagedetailModel> GetOrgPackageDetailseAsync(Int64 Id)
+        {
+            var list = await _0rgPackageDetailRepository.GetOrgPackageDetailseAsync(Id);
+            var mapped = _mapper.Map<OrgpackagedetailModel>(list);
+            return mapped;
+        }
+        public async Task<IEnumerable<OrgpackagedetailModel>> GetOrgPackageDetailsAllFiltersAsync(OrgpackagedetailModel model)
+        {
+            var sModel = _mapper.Map<Orgpackagedetail>(model);
+            var list = await _0rgPackageDetailRepository.GetOrgPackageDetailsAllFiltersAsync(sModel);
+            var mapped = _mapper.Map<IEnumerable<OrgpackagedetailModel>>(list);
+            return mapped;
+        }
+
         public async Task<IEnumerable<OrganizationModel>> GetOrgsByStatusList(int status)
         {
             var list = await _OrgRepository.GetOrgListByStatusAsync(status);
