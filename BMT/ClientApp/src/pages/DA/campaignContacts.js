@@ -368,6 +368,9 @@ const campaignContacts = () => {
         const groupedData = Object.values(networkGroups);
         console.log("Grouped data to display:", groupedData);
         setGroupedContacts(groupedData);
+        setTimeout(() => {
+          tableRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100); // slight delay to ensure rendering
 
        
       }
