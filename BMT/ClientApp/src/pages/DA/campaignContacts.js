@@ -79,7 +79,7 @@ const campaignContacts = () => {
     }));
   };
   
-
+  const tableRef = useRef(null);
   
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
@@ -317,47 +317,61 @@ const campaignContacts = () => {
       if (result.status) {
         showToast(result.message, "success");
 
-        const groupedData = [];
-
+        // First: group contacts you sent per network
         const networksList = globalutil.networks();
 
-        // Get all unique networkIds from the payload
-        const networkIds = [...new Set(payload.map(p => p.networkId))];
+        // Step 1: Build a flat list of contacts from payload
+        const flatPayload = [];
 
-        networkIds.forEach((networkId) => {
-          const networkName = networksList.find(n => n.id === networkId)?.name || 'Unknown';
-
-          // Try to find matching result from server
-          const serverItem = result.data?.find(item => item.networkId === networkId);
-
-          // Extract found contacts from server response
-          const foundContacts = serverItem && serverItem.contentId
-            ? JSON.parse(serverItem.contentId || '[]')
-            : [];
-
-          // Get all contacts sent for this network
-          const allContacts = payload
-            .filter(p => p.networkId === networkId)
-            .map(p => p.contact); // Keep as string (email or number)
-
-          // Remove duplicates and create contact objects
-          const uniqueContacts = [...new Set(allContacts)];
-
-          const groupedContacts = uniqueContacts.map(contact => ({
-            contact,
-            found: foundContacts.includes(contact),
-          }));
-
-          groupedData.push({ networkName, contacts: groupedContacts });
+        payload.forEach((p) => {
+          const contactArray = JSON.parse(p.ContentId || '[]');
+          contactArray.forEach((contact) => {
+            flatPayload.push({
+              networkId: p.NetworkId,
+              contact: contact
+            });
+          });
         });
 
+        // Step 2: Group them by network
+        const networkGroups = {};
+
+        flatPayload.forEach((p) => {
+          if (!networkGroups[p.networkId]) {
+            const networkName = networksList.find(n => n.id === p.networkId)?.name || 'Unknown';
+            networkGroups[p.networkId] = {
+              networkName,
+              contacts: []
+            };
+          }
+
+          networkGroups[p.networkId].contacts.push({
+            contact: p.contact,
+            found: false
+          });
+        });
+
+        // Step 3: If server returned any found contacts, update them
+        if (Array.isArray(result.data) && result.data.length > 0) {
+          result.data.forEach((item) => {
+            const foundContacts = JSON.parse(item.contentId || '[]');
+            if (networkGroups[item.networkId]) {
+              networkGroups[item.networkId].contacts = networkGroups[item.networkId].contacts.map((c) => ({
+                ...c,
+                found: foundContacts.includes(c.contact)
+              }));
+            }
+          });
+        }
+
+        // Step 4: Convert to array for rendering
+        const groupedData = Object.values(networkGroups);
+        console.log("Grouped data to display:", groupedData);
         setGroupedContacts(groupedData);
 
-        setGroupedContacts(groupedData);
-
-
-        setGroupedContacts(groupedData);
-      } else {
+       
+      }
+ else {
         showToast(result.message || "Submission failed.", "error");
       }
     } catch (error) {
@@ -514,42 +528,42 @@ const campaignContacts = () => {
 
             </div>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-12" ref={tableRef}>
                 {groupedContacts.length > 0 && (
                   <div className="mt-3">
-                    {groupedContacts.map((group, index) => (
-                      <div key={index} className="mb-4">
-                        <h5 style={{ fontWeight: 600 }}>{group.networkName}</h5>
-                        <table className="table table-bordered">
-                          <thead className="table-light">
-                            <tr>
-                              <th>#</th>
-                              <th>Contact</th>
-                              <th>Status</th>
+                    <table className="table table-bordered">
+                      <thead className="table-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Network</th>
+                          <th>Contact</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {groupedContacts.flatMap((group, groupIndex) =>
+                          group.contacts.map((contactObj, i) => (
+                            <tr
+                              key={`${groupIndex}-${i}`}
+                              style={{
+                                backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
+                                color: contactObj.found ? '#155724' : '#721c24',
+                              }}
+                            >
+                              <td>{i + 1}</td>
+                              <td>{group.networkName}</td>
+                              <td>{contactObj.contact}</td>
+                              <td>{contactObj.found ? 'Inserted Recipients' : 'Not Inserted'}</td>
                             </tr>
-                          </thead>
-                          <tbody>
-                            {group.contacts.map((contactObj, i) => (
-                              <tr
-                                key={i}
-                                style={{
-                                  backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
-                                  color: contactObj.found ? '#155724' : '#721c24'
-                                }}
-                              >
-                                <td>{i + 1}</td>
-                                <td>{contactObj.contact}</td>
-                                <td>{contactObj.found ? 'Found' : 'Not Found'}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    ))}
+                          ))
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 )}
-
               </div>
+
+
             </div>
 
             </React.Fragment>
