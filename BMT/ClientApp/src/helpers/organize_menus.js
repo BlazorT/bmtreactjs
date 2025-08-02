@@ -3,7 +3,7 @@ export const organizeData = (data) => {
   const result = [];
 
   data.forEach((item) => {
-    const { id, parentId } = item;
+    const { submenuId: id, parentId } = item;
     if (!organized[id]) {
       organized[id] = { ...item, children: [] };
     } else {
