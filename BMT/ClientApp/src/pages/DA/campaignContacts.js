@@ -271,12 +271,12 @@ const campaignContacts = () => {
         console.log(`No contacts for network ID: ${networkId}`);
         return;
       }
-
+      console.log("allContacts", allContacts);
       payload.push({
         Id: 0,
         OrgId: user.orgId,
         NetworkId: networkId,
-        ContentId: JSON.stringify(allContacts),
+        Contentlst: allContacts,
         Desc: "",
         CreatedBy: user.userId,
         CreatedAt: new Date(),

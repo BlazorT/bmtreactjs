@@ -224,13 +224,14 @@ namespace com.blazor.bmt.controllers
         //[Route("submitmycompaign")]
         public async Task<ActionResult> PostMyCompaignData([FromBody] CompaignsViewModel model)
         {
-           // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
-            BlazorApiResponse response = new BlazorApiResponse();
+            // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
             {
                 model.LastUpdatedBy = model.LastUpdatedBy == null ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : model.LastUpdatedBy;
                 model.CreatedBy = model.CreatedBy == null ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : model.CreatedBy; // model.CreatedBy == null ? UserId : model.CreatedBy;
-                response.data = await _blazorRepoPageService.postCompaignData(model, Convert.ToInt32(model.CreatedBy));              
+                response = await _blazorRepoPageService.postCompaignData(model, Convert.ToInt32(model.CreatedBy));
+                //response.id= response.data
                 response.status = true;
             }
             catch (Exception ex)
