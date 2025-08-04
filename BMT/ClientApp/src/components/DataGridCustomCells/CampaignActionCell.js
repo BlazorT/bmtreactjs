@@ -28,7 +28,7 @@ import { CCol, CRow } from '@coreui/react';
 
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
+import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import Spinner from '../UI/Spinner';
 import { useSelector } from 'react-redux';
 import Popover from '../UI/Popover';
@@ -49,16 +49,13 @@ const CampaignActionCell = (prop) => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const [DADetailModalOpen, setDADetailModalOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isJustDispMdlOpen, setIsJustDispMdlOpen] = useState(false);
 
   const loginUser = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-  const { data, error, loading, updateStatus } = useToggleUserStatus();
+  const { data, error, loading, updateStatus } = useToggleCampaignStatus();
 
   const toggleStatus = (status) => {
     handleClose();
@@ -74,17 +71,25 @@ const CampaignActionCell = (prop) => {
   };
 
   const onYesToggle = async (status) => {
-    const response = await updateStatus(user, status);
+  try {
 
-    if (response.status) {
+    const response = await updateStatus(user, status);
+    console.log("response", response);
+    if (response?.status) {
       showToast(`${user[0].name} ${status === 1 ? 're activated' : 'deleted'} successfully`);
-    //  fetching();
+      //  fetching();
     } else {
-      showToast(response.message, 'error');
+      showToast(response?.message, 'error');
     }
 
+  } catch (e) {
+    console.log(e, 'error')
+    } finally {
+      
     onNoConfirm();
+  }
   };
+  
 
   const onNoConfirm = () => {
     showConfirmation({
@@ -96,50 +101,11 @@ const CampaignActionCell = (prop) => {
     handleClose();
     navigate('/campaignadd', { state: { id: value.row.id, user: user } });
   };
-  const DADetailInfoModal = () => {
-    setDADetailModalOpen((prev) => !prev);
-  };
 
   if (loading) {
     return <Spinner />;
   }
 
-  // const actions = [
-  //   {
-  //     icon: <EditOutlinedIcon />,
-  //     title: 'Edit DA',
-  //     onClick: editUser,
-  //     disabled: !canUpdate === 1,
-  //   },
-  //   {
-  //     icon: <DeleteOutlineOutlinedIcon />,
-  //     title: 'Delete DA',
-  //     onClick: () => toggleStatus(4),
-  //     disabled: !canUpdate === 1,
-  //   },
-  //   {
-  //     icon: <InventoryOutlinedIcon />,
-  //     title: 'Daily Dispatchments',
-  //     onClick: () => {
-  //       setIsOpen(true);
-  //     },
-  //   },
-  //   {
-  //     icon: <LocalShippingOutlinedIcon />,
-  //     title: 'Dispatchments',
-  //     onClick: () => {
-  //       setIsJustDispMdlOpen(true);
-  //     },
-  //     disabled: loginUser.roleId !== 1,
-  //   },
-  //   {
-  //     icon: <InfoOutlinedIcon />,
-  //     title: 'See DA detail',
-  //     onClick: () => {
-  //       setDADetailModalOpen(true);
-  //     },
-  //   },
-  // ];
   return (
     <React.Fragment>
 
@@ -161,7 +127,7 @@ const CampaignActionCell = (prop) => {
             <CCol>
                 <Tooltip title="Edit Campaign">
                 <CIcon
-                    onClick={() => editCampaign(value.row.id)}
+                  onClick={() => editCampaign(value.row.id)}
                   className="stock-toggle-icon"
                   icon={cilPencil}
                 />
@@ -184,21 +150,7 @@ const CampaignActionCell = (prop) => {
         </CRow>
       )}
 
-      <DAInventoryModal
-        header={`${value.row.firstName}, ${value.row.state}, ID # ${value.row.code}`}
-        isOpen={isOpen}
-        value={value}
-        toggle={() => setIsOpen(!isOpen)}
-        isSingleDis={false}
-      />
-      <DAInventoryModal
-        header={`${value.row.firstName}, ${value.row.state}, ID # ${value.row.code}`}
-        isOpen={isJustDispMdlOpen}
-        value={value}
-        toggle={() => setIsJustDispMdlOpen(!isJustDispMdlOpen)}
-        isSingleDis={true}
-      />
-      <DADetailModal isOpen={DADetailModalOpen} user={user} toggle={DADetailInfoModal} />
+   
     </React.Fragment>
   );
 };
