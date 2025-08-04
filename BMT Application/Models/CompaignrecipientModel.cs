@@ -12,6 +12,7 @@ public partial class CompaignrecipientModel : BaseModel
     public int? NetworkId { get; set; }
 
     public string ContentId { get; set; } = null!;
+    public string[]? Contentlst { get; set; } 
 
     public int? SourceId { get; set; }
 
