@@ -26,7 +26,7 @@ public partial class Mediacontent : EntityTransaction
 
     public string? Remarks { get; set; }
 
-    public string? MimeType { get; set; }
+    //public string? MimeType { get; set; }
 
     public int? ContentTypeId { get; set; }
 
@@ -38,10 +38,10 @@ public partial class Mediacontent : EntityTransaction
 
     public DateTime? LastUpdatedAt { get; set; }
     
-        public string? Mediacontentcol { get; set; }
+    public string? Mediacontentcol { get; set; }
     public string? PosterImage { get; set; }
 
-    public int? Status { get; set; }
+    //public int? Status { get; set; }
 
     public int RowVer { get; set; }
 }
