@@ -47,6 +47,7 @@ const campaignContacts = () => {
   const [cityData, setCityData] = useState([]); // Your table data
   const showToast = useShowToast();
   const [groupedContacts, setGroupedContacts] = useState([]);
+  const [showTableModal, setShowTableModal] = useState(false);
 
  
   const handleCampaignAddContacts = (e, networkId) => {
@@ -368,6 +369,7 @@ const campaignContacts = () => {
         const groupedData = Object.values(networkGroups);
         console.log("Grouped data to display:", groupedData);
         setGroupedContacts(groupedData);
+        setShowTableModal(true); // Show the modal immediately
         setTimeout(() => {
           tableRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, 100); // slight delay to ensure rendering
@@ -530,47 +532,58 @@ const campaignContacts = () => {
             
 
             </div>
-            <div className="row">
-              <div className="col-md-12" ref={tableRef}>
-                {groupedContacts.length > 0 && (
-                  <div className="mt-3">
-                    <table className="table table-bordered">
-                      <thead className="table-light">
-                        <tr>
-                          <th className="text-center">#</th>
-                          <th className="text-center">Network</th>
-                          <th className="text-center">Contact</th>
-                          <th className="text-center">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {groupedContacts.flatMap((group, groupIndex) =>
-                          group.contacts.map((contactObj, i) => (
-                            <tr
-                              key={`${groupIndex}-${i}`}
-                              style={{
-                                backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
-                                color: contactObj.found ? '#155724' : '#721c24',
-                              }}
-                            >
-                              <td className="text-center">{i + 1}</td>
-                              <td className="text-center">{group.networkName}</td>
-                              <td className="text-center">{contactObj.contact}</td>
-                              <td className="text-center">
-                                {contactObj.found ? 'Inserted Recipients' : 'Duplicate Recipients'}
-                              </td>
+            {/* Modal */}
+            {showTableModal && (
+              <div className="modal show fade d-block" tabIndex="-1" role="dialog">
+                <div className="modal-dialog modal-lg" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title">Contact Status</h5>
+                      <button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>
+                    </div>
+                    <div className="modal-body">
+                      <div className="table-responsive">
+                        <table className="table table-bordered">
+                          <thead className="table-light">
+                            <tr>
+                              <th className="text-center">#</th>
+                              <th className="text-center">Network</th>
+                              <th className="text-center">Contact</th>
+                              <th className="text-center">Status</th>
                             </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
+                          </thead>
+                          <tbody>
+                            {groupedContacts.flatMap((group, groupIndex) =>
+                              group.contacts.map((contactObj, i) => (
+                                <tr
+                                  key={`${groupIndex}-${i}`}
+                                  style={{
+                                    backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
+                                    color: contactObj.found ? '#155724' : '#721c24',
+                                  }}
+                                >
+                                  <td className="text-center">{i + 1}</td>
+                                  <td className="text-center">{group.networkName}</td>
+                                  <td className="text-center">{contactObj.contact}</td>
+                                  <td className="text-center">
+                                    {contactObj.found ? 'Inserted Recipients' : 'Duplicate Recipients'}
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" onClick={() => setShowTableModal(false)}>
+                        Close
+                      </button>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
-
-
-
-            </div>
+            )}
 
             </React.Fragment>
           </React.Fragment>

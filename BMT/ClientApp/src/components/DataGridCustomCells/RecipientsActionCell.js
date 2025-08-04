@@ -157,9 +157,9 @@ const RecipientsActionCell = (prop) => {
         </CRow>
       ) : (
         <CRow>
-          {canUpdate === 1 && (
+          {/*{canUpdate === 1 && (*/}
             <CCol>
-                <Tooltip title="Edit Campaign">
+                <Tooltip title="Edit Recipients">
                 <CIcon
                     onClick={() => editCampaign(value.row.id)}
                   className="stock-toggle-icon"
@@ -167,11 +167,11 @@ const RecipientsActionCell = (prop) => {
                 />
               </Tooltip>
             </CCol>
-          )}
+          {/*)}*/}
         
           {canDelete === 1 && (
             <CCol>
-              <Tooltip title="Delete Campaign">
+              <Tooltip title="Delete Recipients">
                 <CIcon
                   className="stock-toggle-icon"
                   icon={cilTrash}

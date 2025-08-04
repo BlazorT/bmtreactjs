@@ -1,10 +1,10 @@
 /* eslint-disable react/react-in-jsx-scope */
-import CampaignActionCell from 'src/components/DataGridCustomCells/CampaignActionCell';
+import RecipientsActionCell from 'src/components/DataGridCustomCells/RecipientsActionCell';
 
-export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
+export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'name',
-    headerName: 'Campaign Name',
+    field: 'networkId',
+    headerName: 'Network Name',
     flex: 1,
     minWidth: 160,
     editable: false,
@@ -14,8 +14,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'orgName',
-    headerName: 'Organization Name',
+    field: 'contentId',
+    headerName: 'Recipients ',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -27,8 +27,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
  
  
   {
-    field: 'startTime',
-    headerName: 'Start Time',
+    field: 'createdAt',
+    headerName: 'Created At',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -38,19 +38,7 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
-  {
-    field: 'finishTime',
-    headerName: 'End Time',
-    flex: 1,
-    minWidth: 120,
-    editable: false,
-    filterable: true,
-    sortable: true,
-    disableColumnMenu: true,
-    hide: true,
-    hideable: false,
-    headerClassName: 'custom-header-data-grid',
-  },
+ 
  
   {
     field: 'imageUrl',
@@ -64,12 +52,12 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
     renderCell: (params) => (
-      <CampaignActionCell
+      <RecipientsActionCell
         value={params}
         fetching={daRes}
         user={daRes.filter((item) => item.id === params.row.id)}
-        canUpdate={pageRoles.canUpdate}
-        canDelete={pageRoles.canDelete}
+      //  canUpdate={pageRoles.canUpdate}
+      //  canDelete={pageRoles.canDelete}
       />
     ),
   },

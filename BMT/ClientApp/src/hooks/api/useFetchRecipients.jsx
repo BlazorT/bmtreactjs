@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
-export const useFetchCampaigns = () => {
+export const useFetchRecipients = () => {
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
 
-  const { data, error, loading, postData } = useApi('/BlazorApi/GetCampaignRecipientsList');
+  const { data, error, loading, postData } = useApi('/BlazorApi/campaignrecipients');
 
   const fetchRecipients = async (filters) => {
    //alert(JSON.stringify(filters));
@@ -26,7 +26,7 @@ export const useFetchCampaigns = () => {
         : moment().utc().format(),
     };
    
-   // console.log(userBody,'body')
+    console.log(recipientssBody, 'body');
     const res = await postData(recipientssBody);
     console.log(( res),'recipientsData' );
    // alert((res.data.status) );
