@@ -420,15 +420,34 @@ WHERE c.OrgId = @p_OrgId
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
+
                         MySqlParameter pOrgId = new MySqlParameter("@p_OrgId", MySqlDbType.Int32);
                         pOrgId.Value = cModel.OrgId;
                         parameter.Add(pOrgId);
+
                         MySqlParameter pNetworkId = new MySqlParameter("@p_NetworkId", MySqlDbType.Int32);
                         pNetworkId.Value = cModel.NetworkId;
-                        parameter.Add(pNetworkId);
-                        command.CommandText = "SELECT `Id`,   `networkId`,  `ContentId`, `SourceId`,  `Desc`, `OrgId`, `CreatedBy`, `CreatedAt`,`LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status` FROM `compaignrecipients` where orgid=@p_OrgId and NetworkId=@p_NetworkId and Status=1; ";
+                        parameter.Add(pNetworkId); // ✅ Fix: Add this line
+
+                        MySqlParameter pContentId = new MySqlParameter("@p_ContentId", MySqlDbType.Int32);
+                        pContentId.Value = cModel.ContentId;
+                        parameter.Add(pContentId);
+
+                        // Optional — this parameter is declared but not used in the query:
+                        MySqlParameter DateTo = new MySqlParameter("@p_DateTo", MySqlDbType.DateTime);
+                        DateTo.Value = cModel.LastUpdatedAt;
+                        // ❌ You can ignore adding this unless the query uses it.
+
+                        command.CommandText = @"
+  SELECT 
+    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
+    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status` 
+  FROM `compaignrecipients` 
+  WHERE orgid = @p_OrgId AND NetworkId = @p_NetworkId AND Status = 1;
+";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
+
 
                         using (DbDataReader dr = await command.ExecuteReaderAsync())
                         {

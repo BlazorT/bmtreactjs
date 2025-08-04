@@ -29,7 +29,7 @@ export const getDaDspsFiltersFields = (filters, changeFilter) => [
     icon: cilFlagAlt,
     id: 'businessTypeId',
     name: 'businessTypeId',
-   // options: globalutil.businesstypes(),
+    options: globalutil?.businessentitiess()??[],
     disableOption: 'Select Business Type',
     className: 'form-control item form-select',
     title: ' Buisness Type',
@@ -43,28 +43,28 @@ export const getDaDspsFiltersFields = (filters, changeFilter) => [
     id: 'country',
     name: 'country',
     disableOption: 'Select Country',
-  //  options: globalutil.countries(),
+   // options: globalutil?.countries()??[],
     className: 'form-control item form-select',
-    title: 'DA Country',
+    title: 'Org Country',
   },
-  {
-    component: CustomSelectInput,
-    label: 'State / Province',
-    value: filters.stateId,
-    onChange: changeFilter,
-    icon: cilFlagAlt,
-    id: 'stateId',
-    name: 'stateId',
-    disableOption: 'Select State',
-    options:
-      filters.country === ''
-        ? []
-        : filters.country == 1
-        ? globalutil.states().slice(0, 50)
-        : globalutil.states().slice(50),
-    className: 'form-control item form-select',
-    title: 'DA State',
-  },
+  //{
+  //  component: CustomSelectInput,
+  //  label: 'State / Province',
+  //  value: filters.stateId,
+  //  onChange: changeFilter,
+  //  icon: cilFlagAlt,
+  //  id: 'stateId',
+  //  name: 'stateId',
+  //  disableOption: 'Select State',
+  //  options:
+  //    filters.country === ''
+  //      ? []
+  //      : filters.country == 1
+  //      ? globalutil.states().slice(0, 50)
+  //      : globalutil.states().slice(50),
+  //  className: 'form-control item form-select',
+  //  title: 'Org State',
+  //},
   {
     component: CustomDatePicker,
     label: `Reg. Date (>=)`,

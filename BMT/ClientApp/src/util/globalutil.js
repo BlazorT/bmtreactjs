@@ -179,5 +179,14 @@ export default class globalutil {
   static setdeliverstatus(deliverstatus) {
     localStorage.setItem('deliverstatus', JSON.stringify(deliverstatus));
   }
+
+  static businessentitiess() {
+    if (localStorage.getItem('businessentitiess') !== '' && localStorage.getItem('businessentitiess') !== null)
+      return JSON.parse(localStorage.getItem('businessentitiess'));
+    else return null;
+  }
+  static setbusinessentitiess(businessentitiess) {
+    localStorage.setItem('businessentitiess', JSON.stringify(businessentitiess));
+  }
   
 }
