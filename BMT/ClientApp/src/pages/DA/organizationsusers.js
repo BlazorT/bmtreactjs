@@ -116,7 +116,8 @@ const organizationsusers = () => {
     });
   };
 
-  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter);
+  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, orgData);
+
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {
