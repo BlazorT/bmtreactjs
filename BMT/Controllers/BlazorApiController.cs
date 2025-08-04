@@ -523,7 +523,7 @@ namespace com.blazor.bmt.controllers
         public async Task<BlazorApiResponse> addImages([FromForm] MediacontentModel mcbm)
         {
             BlazorApiResponse response = new BlazorApiResponse();
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" };
+          //  if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" };
             try
             {
                 Int64 productId = Convert.ToInt64(mcbm.id);
