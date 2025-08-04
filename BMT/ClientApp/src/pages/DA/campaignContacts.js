@@ -325,7 +325,7 @@ const campaignContacts = () => {
         const flatPayload = [];
 
         payload.forEach((p) => {
-          const contactArray = JSON.parse(p.ContentId || '[]');
+          const contactArray = p.Contentlst || '[]';
           contactArray.forEach((contact) => {
             flatPayload.push({
               networkId: p.NetworkId,
@@ -355,11 +355,11 @@ const campaignContacts = () => {
         // Step 3: If server returned any found contacts, update them
         if (Array.isArray(result.data) && result.data.length > 0) {
           result.data.forEach((item) => {
-            const foundContacts = JSON.parse(item.contentId || '[]');
+            const contactId = item.contentId;
             if (networkGroups[item.networkId]) {
               networkGroups[item.networkId].contacts = networkGroups[item.networkId].contacts.map((c) => ({
                 ...c,
-                found: foundContacts.includes(c.contact)
+                found: c.contact === contactId || c.found // preserve already found ones
               }));
             }
           });
@@ -539,7 +539,7 @@ const campaignContacts = () => {
                   <div className="modal-content">
                     <div className="modal-header">
                       <h5 className="modal-title">Contact Status</h5>
-                      <button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>
+                      {/*<button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>*/}
                     </div>
                     <div className="modal-body">
                       <div className="table-responsive">
