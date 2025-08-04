@@ -11,16 +11,16 @@ export const useToggleUserStatus = () => {
       id: user[0].id,
       paymentDetailId: user[0].paymentDetailId,
       orgId: user[0].orgId === 1 ? 0 : user[0].orgId,
-      userCode: user[0].userCode,
+      userCode: "",
       registrationSource: user[0].registrationSource,
       fmctoken: user[0].fmctoken,
       cityId: user[0].cityId,
       userName: user[0].userName,
       securityToken: user[0].securityToken,
       contact: user[0].contact,
-      firstName: user[0].firstName,
+      firstName: "",
       middleName: user[0].middleName,
-      lastName: user[0].lastName,
+      lastName: "",
       nick: user[0].nick,
       email: user[0].email,
       password: user[0].password,
@@ -47,7 +47,7 @@ export const useToggleUserStatus = () => {
       orgName: user[0].orgName,
       stateName: user[0].stateName,
     };
-
+    console.log("deleteBody", deleteBody);
     const response = await postData(deleteBody);
     return response;
   };

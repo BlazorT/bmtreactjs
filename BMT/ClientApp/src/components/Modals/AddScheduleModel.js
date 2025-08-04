@@ -479,7 +479,7 @@ const AddScheduleModel = (prop) => {
        // alert(campaignId);
 
         await uploadAttachmentsAfterCampaign(campaignId);
-      // navigate('/campaignslisting');
+        navigate('/campaignslisting');
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
@@ -503,7 +503,7 @@ const AddScheduleModel = (prop) => {
       if (!file) continue;
 
       const formData = new FormData();
-      formData.append("id", campaignId);
+      formData.append("compaignId", campaignId);
       formData.append("CreatedBy", userId);
       formData.append("files", file); // backend should use Request.Form.Files
 
