@@ -475,11 +475,11 @@ const AddScheduleModel = (prop) => {
 
       if (result.status === true) {
         showToast(`Campaign "${name}" submitted successfully!`, 'success');
-        const campaignId = parseInt(result.result.data.data, 10);
+        const campaignId = parseInt(result.data, 10);
         alert(campaignId);
 
         await uploadAttachmentsAfterCampaign(campaignId);
-       // navigate('/campaignslisting');
+       navigate('/campaignslisting');
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
