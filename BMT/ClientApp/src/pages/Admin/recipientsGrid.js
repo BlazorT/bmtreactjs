@@ -221,8 +221,6 @@ const recipientslisting = () => {
               />
             )}
           </AppContainer>
-
-
           <AppContainer>
             <DataGridHeader
               title="Recipients List"
