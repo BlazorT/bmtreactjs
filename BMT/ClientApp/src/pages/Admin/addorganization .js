@@ -36,6 +36,7 @@ import Inputs from 'src/components/Filters/Inputs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
 import useApi from 'src/hooks/useApi';
+import globalutil from '../../util/globalutil';
 
 const addorganization = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
@@ -386,7 +387,6 @@ const addorganization = () => {
     onBlur,
     GetCityRes?.current?.data ? GetCityRes.current.data : []
   );
-
   const daAppllySsnInputs = getDaAppllySsnInputs(daIdentificationData, handleDAIdentification);
   const daAppllyIDInputs = getDaAppllyIDInputs(daIdentificationData, handleDAIdentification);
   const daAppllyBirthInputs = getDaAppllyBirthInputs(daIdentificationData, handleDAIdentification);

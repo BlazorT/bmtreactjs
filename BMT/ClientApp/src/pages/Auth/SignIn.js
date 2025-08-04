@@ -99,6 +99,8 @@ function SignIn() {
     globalutil.setcommonstatuses(data.commonstatuses);
     globalutil.setauditentities(data.auditentities);  
     globalutil.setuserroles(data.userroles);
+    globalutil.setbusinessentitiess(data.businessentities);
+
   };
 
   const getUtils = async () => {
