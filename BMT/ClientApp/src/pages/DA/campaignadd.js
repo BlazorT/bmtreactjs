@@ -135,27 +135,33 @@ const campaignadd = () => {
     const now = moment();
 
     // ✅ FILE HANDLING
-    if (label === 'video' || label === 'image' || label === 'pdf') {
-      const file = e.target.files[0];
-      if (!file) return;
+ if (label === 'video' || label === 'image' || label === 'pdf') {
+  const file = e.target.files[0];
+  if (!file) return;
 
-      const type = file.type;
-      const isVideo = label === 'video' && type.startsWith('video/');
-      const isImage = label === 'image' && type.startsWith('image/');
-      const isPDF = label === 'pdf' && type === 'application/pdf';
+  const type = file.type;
+  const isVideo = label === 'video' && type.startsWith('video/');
+  const isImage = label === 'image' && type.startsWith('image/');
+  const isPDF = label === 'pdf' && type === 'application/pdf';
 
-      if (!(isVideo || isImage || isPDF)) {
-        e.target.value = null;
-        showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
-        return;
-      }
+  if (!(isVideo || isImage || isPDF)) {
+    e.target.value = null;
+    showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
+    return;
+  }
 
-      setCampaignRegData((prev) => ({
-        ...prev,
-        attachments: file,
-      }));
-      return;
-    }
+  // Save the file into the correct field based on the label
+  const fieldName =
+    label === 'video' ? 'videoAttachment' :
+    label === 'image' ? 'imageAttachment' :
+    label === 'pdf' ? 'pdfAttachment' : null;
+
+  setCampaignRegData((prev) => ({
+    ...prev,
+    [fieldName]: file,
+  }));
+  return;
+}
 
     // ✅ DATE HANDLING
     const fieldKey = (label === 'Campaign Start Date') ? 'startTime' :

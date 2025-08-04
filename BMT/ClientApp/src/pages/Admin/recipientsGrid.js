@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import useFetch from 'src/hooks/useFetch';
@@ -13,12 +12,12 @@ import NotificationModal from 'src/components/Modals/NotificationModal';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import moment from 'moment';
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
-import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
+import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import AppContainer from 'src/components/UI/AppContainer';
-
+import globalutil from 'src/util/globalutil';
 const recipientslisting = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user)
@@ -48,16 +47,23 @@ const recipientslisting = () => {
   const [rows, setRows] = useState([]);
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const getRecipientsList = async (filters) => {
-    const campaignsList = await getRecipientList(filters);  
-    setRecipientsData(campaignsList);
-    const mappedArray = campaignsList.map((data) => ({
-      id: data.id,
-      contentId: data.contentId,
-      networkId: data.networkId,
-      orgName: data.orgName,
-      status: data.status,
-      createdAt: formatDateTime(data.createdAt),
-    }));
+    const recipientsList = await getRecipientList(filters);  
+    setRecipientsData(recipientsList);
+    const networks = globalutil.networks(); // assuming it returns an array of { id, name }
+
+    const mappedArray = recipientsList.map((data) => {
+      const network = networks.find(n => n.id === data.networkId);
+
+      return {
+        id: data.id,
+        contentId: data.contentId,
+        networkId: network ? network.name : '', // <-- show name instead of ID
+        orgName: data.orgName,
+        status: data.status,
+        createdAt: formatDateTime(data.createdAt),
+      };
+    });
+
     console.log(mappedArray, 'recipients data');
     setRows(mappedArray);
   };
@@ -188,7 +194,7 @@ const recipientslisting = () => {
     );
   };
   const orgFilterFields = getRecipientsFilterConfig(filters, changeFilter, GetOrgRes?.current?.data||[]);
-  const recipientslistingCols = getcampaignslistingCols(getRecipientsList, recipientsData, pageRoles);
+  const recipientslistingCols = getrecipietslistingCols(getRecipientsList, recipientsData, pageRoles);
 
   if (loading) {
     return <Loading />;
