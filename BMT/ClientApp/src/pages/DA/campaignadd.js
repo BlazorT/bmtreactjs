@@ -559,9 +559,8 @@ const campaignadd = () => {
             </AppContainer>
             <CRow>
               {globalutil.networks().map((network, index) => {
-                // Fix label casing (e.g., "Facebook")
-                const displayLabel = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                const IconName = displayLabel;
+                const displayLabel = network.name;
+                const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase(); // icon key lookup
                 const IconComponent = icons[IconName];
 
                 let postTypeIds = [];
@@ -598,7 +597,7 @@ const campaignadd = () => {
                         <CFormCheck
                           id={IconName}
                           name={IconName}
-                          label={displayLabel} // ✅ Fixed label
+                          label={displayLabel}
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(network.name)}
                         />
@@ -606,17 +605,14 @@ const campaignadd = () => {
                     </ul>
 
                     <div className="mt-2 displayFlex">
-                      {/* Only show checkboxes if more than one post type */}
                       {postTypeList.length > 1 &&
                         postTypeList.map((pt) => (
                           <CFormCheck
                             key={`${IconName}-${pt.id}`}
                             id={`${IconName}-${pt.id}`}
                             name={`${IconName}-${pt.id}`}
-                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()} // ✅ Capit
-                            checked={
-                              selectedPostTypes[network.name]?.includes(pt.id) || false
-                            }
+                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()}
+                            checked={selectedPostTypes[network.name]?.includes(pt.id) || false}
                             onChange={() => handlePostTypeToggle(network.name, pt.id)}
                             className="mb-1 form-checksub"
                           />
@@ -625,6 +621,7 @@ const campaignadd = () => {
                   </CCol>
                 );
               })}
+
             </CRow>
 
 
