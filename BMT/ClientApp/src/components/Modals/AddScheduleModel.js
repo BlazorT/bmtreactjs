@@ -447,7 +447,8 @@ const AddScheduleModel = (prop) => {
       HashTags: tag,
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
       StartTime: moment(startTime).toISOString(),
-      FinishTime: finishTimeWithMaxTime.toISOString(),
+     // FinishTime: finishTimeWithMaxTime.toISOString(),
+      FinishTime: moment(finishTime).toISOString(),
       Status: status ? 1 : 0,
       CreatedAt: moment().toISOString(),
       RowVer: 1,
@@ -474,13 +475,54 @@ const AddScheduleModel = (prop) => {
 
       if (result.status === true) {
         showToast(`Campaign "${name}" submitted successfully!`, 'success');
-        navigate('/campaignslisting');
+        const campaignId = parseInt(result.data, 10);
+        alert(campaignId);
+
+        await uploadAttachmentsAfterCampaign(campaignId);
+       navigate('/campaignslisting');
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
     } catch (error) {
       console.error("Error submitting campaign:", error);
       showToast('An error occurred.', 'error');
+    }
+  };
+  console.log("submitData", submitData);
+  const uploadAttachmentsAfterCampaign = async (campaignId) => {
+    console.log("campaignId",campaignId);
+    const files = {
+      image: submitData.imageAttachment,
+      pdf: submitData.pdfAttachment,
+      video: submitData.videoAttachment,
+    };
+    const userId = user.userId;
+
+    for (const type of ['video', 'image', 'pdf']) {
+      const file = files?.[type];
+      if (!file) continue;
+
+      const formData = new FormData();
+      formData.append("id", campaignId);
+      formData.append("CreatedBy", userId);
+      formData.append("files", file); // backend should use Request.Form.Files
+
+      try {
+        const res = await fetch('/BlazorApi/uploadAttachment', {
+          method: 'POST',
+          body: formData // don't set headers here
+        });
+
+        const uploadResult = await res.json();
+        console.log(`Upload ${type} result:`, uploadResult);
+
+        if (uploadResult.status !== true) {
+          showToast(`Failed to upload ${type} attachment.`, 'warning');
+        }
+      } catch (err) {
+        console.error(`Error uploading ${type}:`, err);
+        showToast(`Error uploading ${type} attachment.`, 'error');
+      }
     }
   };
 

@@ -8,6 +8,7 @@ const Organizationadd = React.lazy(() => import('./pages/DA/organizationadd'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
+const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 //const DADspRegister = React.lazy(() => import('./pages/DA/DADspRegister'));
 const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
@@ -154,6 +155,7 @@ export const routes = [
   { path: '/UserReport', name: 'UserReport', element: UserReport },
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/bmtRoles', name: 'bmtRoles', element: BmtRoles },
+  { path: '/recipientsGrid', name: 'recipientsGrid', element: RecipientsGrid },
   { path: '/Packages', name: 'Packages', element: Packages },
   { path: '/Users', name: 'Users', element: Users },
   { path: '/Organizations', name: 'Organizations', element: Organizations },

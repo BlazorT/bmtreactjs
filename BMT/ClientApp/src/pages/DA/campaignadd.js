@@ -135,27 +135,33 @@ const campaignadd = () => {
     const now = moment();
 
     // ✅ FILE HANDLING
-    if (label === 'video' || label === 'image' || label === 'pdf') {
-      const file = e.target.files[0];
-      if (!file) return;
+ if (label === 'video' || label === 'image' || label === 'pdf') {
+  const file = e.target.files[0];
+  if (!file) return;
 
-      const type = file.type;
-      const isVideo = label === 'video' && type.startsWith('video/');
-      const isImage = label === 'image' && type.startsWith('image/');
-      const isPDF = label === 'pdf' && type === 'application/pdf';
+  const type = file.type;
+  const isVideo = label === 'video' && type.startsWith('video/');
+  const isImage = label === 'image' && type.startsWith('image/');
+  const isPDF = label === 'pdf' && type === 'application/pdf';
 
-      if (!(isVideo || isImage || isPDF)) {
-        e.target.value = null;
-        showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
-        return;
-      }
+  if (!(isVideo || isImage || isPDF)) {
+    e.target.value = null;
+    showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
+    return;
+  }
 
-      setCampaignRegData((prev) => ({
-        ...prev,
-        attachments: file,
-      }));
-      return;
-    }
+  // Save the file into the correct field based on the label
+  const fieldName =
+    label === 'video' ? 'videoAttachment' :
+    label === 'image' ? 'imageAttachment' :
+    label === 'pdf' ? 'pdfAttachment' : null;
+
+  setCampaignRegData((prev) => ({
+    ...prev,
+    [fieldName]: file,
+  }));
+  return;
+}
 
     // ✅ DATE HANDLING
     const fieldKey = (label === 'Campaign Start Date') ? 'startTime' :
@@ -553,9 +559,8 @@ const campaignadd = () => {
             </AppContainer>
             <CRow>
               {globalutil.networks().map((network, index) => {
-                // Fix label casing (e.g., "Facebook")
-                const displayLabel = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                const IconName = displayLabel;
+                const displayLabel = network.name;
+                const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase(); // icon key lookup
                 const IconComponent = icons[IconName];
 
                 let postTypeIds = [];
@@ -592,7 +597,7 @@ const campaignadd = () => {
                         <CFormCheck
                           id={IconName}
                           name={IconName}
-                          label={displayLabel} // ✅ Fixed label
+                          label={displayLabel}
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(network.name)}
                         />
@@ -600,17 +605,14 @@ const campaignadd = () => {
                     </ul>
 
                     <div className="mt-2 displayFlex">
-                      {/* Only show checkboxes if more than one post type */}
                       {postTypeList.length > 1 &&
                         postTypeList.map((pt) => (
                           <CFormCheck
                             key={`${IconName}-${pt.id}`}
                             id={`${IconName}-${pt.id}`}
                             name={`${IconName}-${pt.id}`}
-                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()} // ✅ Capit
-                            checked={
-                              selectedPostTypes[network.name]?.includes(pt.id) || false
-                            }
+                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()}
+                            checked={selectedPostTypes[network.name]?.includes(pt.id) || false}
                             onChange={() => handlePostTypeToggle(network.name, pt.id)}
                             className="mb-1 form-checksub"
                           />
@@ -619,6 +621,7 @@ const campaignadd = () => {
                   </CCol>
                 );
               })}
+
             </CRow>
 
 
