@@ -479,7 +479,7 @@ const AddScheduleModel = (prop) => {
        // alert(campaignId);
 
         await uploadAttachmentsAfterCampaign(campaignId);
-       navigate('/campaignslisting');
+      // navigate('/campaignslisting');
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
