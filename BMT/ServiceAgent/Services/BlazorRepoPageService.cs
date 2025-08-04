@@ -440,8 +440,8 @@ WHERE c.OrgId = @p_OrgId
                                     NetworkId = Convert.ToInt32(dr["networkId"]),
                                     SourceId = Convert.ToInt32(dr["SourceId"]),
                                     ContentId = ""+ dr["ContentId"]  ,                                 
-                                    Status = Convert.ToInt32(dr["Status"])                                   
-
+                                    Status = Convert.ToInt32(dr["Status"]),
+                                    CreatedAt = Convert.ToDateTime(dr["CreatedAt"])
                                 });
                             }
 
