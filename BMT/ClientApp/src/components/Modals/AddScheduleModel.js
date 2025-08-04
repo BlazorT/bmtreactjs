@@ -508,7 +508,7 @@ const AddScheduleModel = (prop) => {
       formData.append("files", file); // backend should use Request.Form.Files
 
       try {
-        const res = await fetch('/BlazorApi/uploadAttachment', {
+        const res = await fetch('/BlazorApi/uploadattachments', {
           method: 'POST',
           body: formData // don't set headers here
         });
