@@ -8,11 +8,9 @@ public partial class Mediacontent : EntityTransaction
 {
     //public long Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!;  
 
-    public int? CompaignId { get; set; }
-
-    public string ContentCode { get; set; } = null!;
+    public Int64? CompaignId { get; set; }   
 
     public string? Title { get; set; }
 
@@ -26,8 +24,6 @@ public partial class Mediacontent : EntityTransaction
 
     public string? Remarks { get; set; }
 
-    //public string? MimeType { get; set; }
-
     public int? ContentTypeId { get; set; }
 
     public int CreatedBy { get; set; }
@@ -39,9 +35,8 @@ public partial class Mediacontent : EntityTransaction
     public DateTime? LastUpdatedAt { get; set; }
     
     public string? Mediacontentcol { get; set; }
+    public string? ContentCode { get; set; }
     public string? PosterImage { get; set; }
-
-    //public int? Status { get; set; }
 
     public int RowVer { get; set; }
 }
