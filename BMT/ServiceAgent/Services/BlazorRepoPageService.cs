@@ -444,7 +444,7 @@ WHERE c.OrgId = @p_OrgId
     `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
     `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status` 
   FROM `compaignrecipients` 
-  WHERE orgid = @p_OrgId AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like '% + @p_ContentId + %' OR length(@p_ContentId) <=0)  AND Status = 1;
+  WHERE orgid = @p_OrgId AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
 ";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
