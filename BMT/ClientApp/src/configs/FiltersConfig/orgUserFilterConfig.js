@@ -28,7 +28,7 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
   {
     component: CustomSelectInput,
     label: 'Networks',
-    value: filters.state,
+    value: filters.networks,
     onChange: changeFilter,
     icon: cilFlagAlt,
     id: 'networks',

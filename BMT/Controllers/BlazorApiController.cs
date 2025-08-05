@@ -500,7 +500,7 @@ namespace com.blazor.bmt.controllers
                     await _orgPageService.Update(dbModel);
                     blazorApiResponse.data = dvm;
                
-                blazorApiResponse.message = string.Format("User {0} has been saved", ("" + dvm.Name).Length <= 0 ? dvm.Name : dvm.Name + "" + dvm.Name);
+                blazorApiResponse.message = string.Format("Organization {0} has been update", ("" + dvm.Name).Length <= 0 ? dvm.Name : dvm.Name + "" + dvm.Name);
                 blazorApiResponse.status = true;
 
             }

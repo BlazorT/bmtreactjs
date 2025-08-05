@@ -50,13 +50,13 @@ export const getRecipientsFilterConfig = (filters, changeFilter, orgs) => [
   },
   {
     component: CustomDatePicker,
-    label: 'Date To (Register)',
-    value: filters.lastUpdatedAt,
-    onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
+    label: 'Date (>=)',
+    value: filters.createdAt,
+    onChange: (e) => changeFilter(e, 'createdAt'),
     icon: cilCalendar,
    // title: ' DA Registration Date',
     isRequired: true,
-    min: dayjs(filters.createdAt),
+   // min: dayjs(filters.createdAt),
     message: 'Enter Valid To Date',
   },
   
