@@ -924,6 +924,12 @@ WHERE c.OrgId = @p_OrgId
                         MySqlParameter pRegistrationDate = new MySqlParameter("p_RegistrationDate", MySqlDbType.Date);
                         pRegistrationDate.Value = model.CreatedAt.Year<=1900?System.DateTime.UtcNow.AddYears(-5): model.CreatedAt;
                         parameters.Add(pRegistrationDate);
+                        MySqlParameter pKeyword = new MySqlParameter("p_keyword", MySqlDbType.VarChar, 200);
+                        pKeyword.Value = model.Name;
+                        parameters.Add(pKeyword);
+                        MySqlParameter pCityId = new MySqlParameter("p_cityId", MySqlDbType.Int32);
+                        pCityId.Value = (model.CityId == null ? 0 : model.CityId);
+                        parameters.Add(pCityId);
                         MySqlParameter pStatus = new MySqlParameter("p_Status", MySqlDbType.Int32);
                         pStatus.Value = model.Status;
                         parameters.Add(pStatus);
