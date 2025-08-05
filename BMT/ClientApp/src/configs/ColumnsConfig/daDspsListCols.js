@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import OrgUserActionCell from 'src/components/DataGridCustomCells/OrgUserActionCell';
+import OrgActionCell from 'src/components/DataGridCustomCells/OrgActionCell';
 
 export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
   {
@@ -86,7 +86,7 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
     renderCell: (params) => (
-      <OrgUserActionCell
+      <OrgActionCell
         value={params}
         fetching={orgsList}
         user={orgsList.filter((item) => item.id === params.row.id)}

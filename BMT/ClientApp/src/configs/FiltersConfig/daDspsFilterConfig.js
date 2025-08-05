@@ -6,7 +6,7 @@ import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput'
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 
-export const getDaDspsFiltersFields = (filters, changeFilter) => [
+export const getDaDspsFiltersFields = (filters, changeFilter, cityList) => [
   {
     component: CustomInput,
     label: 'keyword',
@@ -21,50 +21,21 @@ export const getDaDspsFiltersFields = (filters, changeFilter) => [
     isRequired: false,
     title: ' using by Name, Contact, Email',
   },
-  {
-    component: CustomSelectInput,
-    label: 'Buisness Type',
-    value: filters.businessTypeId,
-    onChange: changeFilter,
-    icon: cilFlagAlt,
-    id: 'businessTypeId',
-    name: 'businessTypeId',
-    options: globalutil?.businessentitiess()??[],
-    disableOption: 'Select Business Type',
-    className: 'form-control item form-select',
-    title: ' Buisness Type',
-  },
+ 
   {
     component: CustomSelectInput,
     label: 'Country',
-    value: filters.country,
+    value: filters.state,
     onChange: changeFilter,
     icon: cilFlagAlt,
-    id: 'country',
-    name: 'country',
+    id: 'state',
+    name: 'state',
     disableOption: 'Select Country',
-   // options: globalutil?.countries()??[],
+    options: globalutil?.states() ?? [],
     className: 'form-control item form-select',
     title: 'Org Country',
   },
-  //{
-  //  component: CustomSelectInput,
-  //  label: 'State / Province',
-  //  value: filters.stateId,
-  //  onChange: changeFilter,
-  //  icon: cilFlagAlt,
-  //  id: 'stateId',
-  //  name: 'stateId',
-  //  disableOption: 'Select State',
-  //  options:
-  //    filters.country === ''
-  //      ? []
-  //      : filters.country == 1
-  //      ? globalutil.states().slice(0, 50)
-  //      : globalutil.states().slice(50),
-  //  className: 'form-control item form-select',
-  //  title: 'Org State',
-  //},
+  
   {
     component: CustomDatePicker,
     label: `Reg. Date (>=)`,
@@ -73,4 +44,20 @@ export const getDaDspsFiltersFields = (filters, changeFilter) => [
     icon: cilCalendar,
     title: ' DSPS Registration Date',
   },
+  {
+    component: CustomSelectInput,
+    label: 'City',
+    icon: cilFlagAlt,
+    id: 'cityId',
+    className: 'form-control item form-select',
+    name: 'cityId',
+    value: filters.cityId,
+    onChange: changeFilter,
+    isRequired: false,
+    disableOption: 'Select City',
+    message: 'Please select your city',
+    options: cityList
+
+  },
+ 
 ];

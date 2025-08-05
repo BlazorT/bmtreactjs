@@ -88,7 +88,7 @@ function SignIn() {
     globalutil.setstates(data.states);
     globalutil.setstatuses(data.statuses);
     globalutil.setintervals(data.intervals);
-   // globalutil.setcountries(data.countries);
+    globalutil.setcountries(data.countries);
     globalutil.setcategories(data.categories);
     globalutil.setalerts(data.alerts);
     globalutil.setpackages(data.packages);
@@ -100,6 +100,7 @@ function SignIn() {
     globalutil.setauditentities(data.auditentities);  
     globalutil.setuserroles(data.userroles);
     globalutil.setbusinessentitiess(data.businessentities);
+    globalutil.setbusinesstypes(data.businesstypes);
 
   };
 

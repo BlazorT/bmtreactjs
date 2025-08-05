@@ -30,7 +30,7 @@ export const useFetchOrgUser = () => {
       securityToken: '',
       // dob: moment().utc().format(),
       registrationTime: moment().utc().format(),
-      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
+      cityId: filters ? (filters.cityId === '' ? 0 : filters.cityId) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
