@@ -9,17 +9,17 @@ export const useFetchOrgs = () => {
   const showToast = useShowToast();
   const { fetchData: fetchDsps } = useFetch();
 
-  const getOrgs = async (role,filters) => {
+  const getOrgs = async (filters) => {
     const orgBody = {
       id: 0,
-      roleId: role,
+      roleId: 0,
       orgId: 0,
       email: '',
-      name: '',
+      name: filters ? (filters.name === '' ? '' : filters.name):'', 
       contact: "",
       rowVer: 0,
-      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      cityId: filters ? (filters.cityId === '' ? 0 : filters.cityId) : 0,
+      status: filters ? (filters?.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
         ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
@@ -29,10 +29,10 @@ export const useFetchOrgs = () => {
         : moment().utc().format(),
       createdBy:0,
       lastUpdatedBy:0,
-      ...filters,
+      
     };
     
-
+    console.log(orgBody,'orgBody')
     // Wrap the fetchUsers call in a Promise
     return new Promise((resolve, reject) => {
       fetchDsps(

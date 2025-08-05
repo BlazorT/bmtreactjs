@@ -17,6 +17,7 @@ export const useFetchRecipients = () => {
       orgId: filters ? filters.orgId : 0, 
       rowVer: filters ? filters.rowVer : 0 ,
       networkId: filters ? filters.networkId:0,
+      contentId: filters ? filters.contentId :"",
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters
         ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
