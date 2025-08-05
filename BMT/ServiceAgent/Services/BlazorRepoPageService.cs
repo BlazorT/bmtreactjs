@@ -429,13 +429,14 @@ WHERE c.OrgId = @p_OrgId
                         pNetworkId.Value = cModel.NetworkId;
                         parameter.Add(pNetworkId); // ✅ Fix: Add this line
 
-                        MySqlParameter pContentId = new MySqlParameter("@p_ContentId", MySqlDbType.Int32);
+                        MySqlParameter pContentId = new MySqlParameter("@p_ContentId", MySqlDbType.VarChar,200);
                         pContentId.Value = cModel.ContentId;
                         parameter.Add(pContentId);
 
                         // Optional — this parameter is declared but not used in the query:
-                        MySqlParameter DateTo = new MySqlParameter("@p_DateTo", MySqlDbType.DateTime);
-                        DateTo.Value = cModel.LastUpdatedAt;
+                        MySqlParameter DateFrom = new MySqlParameter("@p_DateFrom", MySqlDbType.DateTime);
+                        DateFrom.Value = cModel.CreatedAt;
+                        parameter.Add(DateFrom);
                         // ❌ You can ignore adding this unless the query uses it.
 
                         command.CommandText = @"
@@ -443,7 +444,7 @@ WHERE c.OrgId = @p_OrgId
     `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
     `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status` 
   FROM `compaignrecipients` 
-  WHERE orgid = @p_OrgId AND NetworkId = @p_NetworkId AND Status = 1;
+  WHERE orgid = @p_OrgId AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like COALESCE('%',@p_ContentId,'%') OR length(@p_ContentId) <=0)  AND Status = 1;
 ";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
@@ -958,7 +959,7 @@ WHERE c.OrgId = @p_OrgId
                                 org.Address = "" + (reader["Address"]);
                                 org.Email = "" + (reader["Email"]);
                                 org.CurrencyName = Convert.ToString(reader["currencyName"]);
-                                org.CityName = Convert.ToString(reader["CityName"]);
+                                org.CityName = ""+reader["CityName"];
                                 org.Contact = ""+ reader["Contact"];
                                 org.UserName = "" + reader["userName"];  
                                 org.CreatedBy = Convert.ToInt32(reader["CreatedBy"]);
