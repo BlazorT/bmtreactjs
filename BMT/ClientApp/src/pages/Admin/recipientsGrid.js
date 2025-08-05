@@ -49,6 +49,7 @@ const recipientslisting = () => {
   const [rows, setRows] = useState([]);
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const getRecipientsList = async (filters) => {
+    console.log(filters,"filtersfilters")
     const recipientsList = await getRecipientList(filters);  
     setRecipientsData(recipientsList);
     const networks = globalutil.networks(); // assuming it returns an array of { id, name }
