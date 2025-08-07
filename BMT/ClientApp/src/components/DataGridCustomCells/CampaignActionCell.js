@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import {
   cilBell,
   cilCalendarCheck,
-  cilCog,
-  cilInfo,
+  cilMediaPause,
+  cilMediaStop,
   cilLibrary,
   cilPencil,
   cilReload,
@@ -56,19 +56,39 @@ const CampaignActionCell = (prop) => {
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
   const { data, error, loading, updateStatus } = useToggleCampaignStatus();
-
   const toggleStatus = (status) => {
     handleClose();
+
+    const campaignName = user?.[0]?.name || value?.row?.name || 'this campaign';
+
+    // Define action labels based on status code
+    let actionLabel = '';
+    switch (status) {
+      case 1:
+        actionLabel = 're-activate';
+        break;
+      case 4:
+        actionLabel = 'delete';
+        break;
+      case 6:
+        actionLabel = 'pause';
+        break;
+      case 7:
+        actionLabel = 'stop';
+        break;
+      default:
+        actionLabel = 'update';
+    }
+
     showConfirmation({
       header: 'Confirmation!',
-      body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'}  ${
-        user[0].name
-      }?`,
+      body: `Are you sure you want to ${actionLabel} ${campaignName}?`,
       isOpen: true,
       onYes: () => onYesToggle(status),
       onNo: () => onNoConfirm(),
     });
   };
+
 
   const onYesToggle = async (status) => {
   try {
@@ -108,7 +128,6 @@ const CampaignActionCell = (prop) => {
 
   return (
     <React.Fragment>
-
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
@@ -117,6 +136,7 @@ const CampaignActionCell = (prop) => {
                 onClick={() => toggleStatus(5)}
                 className="stock-toggle-icon"
                 icon={cilReload}
+                style={{ cursor: 'pointer' }}
               />
             </Tooltip>
           </CCol>
@@ -125,16 +145,41 @@ const CampaignActionCell = (prop) => {
         <CRow>
           {canUpdate === 1 && (
             <CCol>
-                <Tooltip title="Edit Campaign">
+              <Tooltip title="Edit Campaign">
                 <CIcon
                   onClick={() => editCampaign(value.row.id)}
                   className="stock-toggle-icon"
                   icon={cilPencil}
+                  style={{ cursor: 'pointer' }}
                 />
               </Tooltip>
             </CCol>
           )}
-        
+
+          {/* Pause Campaign */}
+          <CCol>
+            <Tooltip title="Pause Campaign">
+              <CIcon
+                onClick={() => toggleStatus(6)} // Assuming 6 = Pause
+                className="stock-toggle-icon"
+                icon={cilMediaPause}
+                style={{ cursor: 'pointer' }}
+              />
+            </Tooltip>
+          </CCol>
+
+          {/* Stop Campaign */}
+          <CCol>
+            <Tooltip title="Stop Campaign">
+              <CIcon
+                onClick={() => toggleStatus(7)} // Assuming 7 = Stop
+                className="stock-toggle-icon"
+                icon={cilMediaStop}
+                style={{ cursor: 'pointer' }}
+              />
+            </Tooltip>
+          </CCol>
+
           {canDelete === 1 && (
             <CCol>
               <Tooltip title="Delete Campaign">
@@ -142,16 +187,15 @@ const CampaignActionCell = (prop) => {
                   className="stock-toggle-icon"
                   icon={cilTrash}
                   onClick={() => toggleStatus(4)}
+                  style={{ cursor: 'pointer' }}
                 />
               </Tooltip>
             </CCol>
           )}
-        
         </CRow>
       )}
-
-   
     </React.Fragment>
   );
+
 };
 export default CampaignActionCell;

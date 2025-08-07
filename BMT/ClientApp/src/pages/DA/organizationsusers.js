@@ -7,6 +7,8 @@ import utc from 'dayjs/plugin/utc';
 import useFetch from 'src/hooks/useFetch';
 
 import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
+import { updateToast } from 'src/redux/toast/toastSlice';
+import moment from 'moment';
 
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -36,6 +38,7 @@ const organizationsusers = () => {
     (item) => item.name === 'Organizations Users',
   );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
@@ -76,7 +79,6 @@ const organizationsusers = () => {
     console.log(mappedArray, 'orgUsersList');
     setRows(mappedArray);
   };
-
   const changeFilter = (e, date) => {
     if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
@@ -84,14 +86,24 @@ const organizationsusers = () => {
         [date]: e,
       }));
     } else {
-      const { name, value } = e.target;
-
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
+      // Handle custom event (e is an object like { name: 'name', value: 'Org 1' })
+      if (e && e.name !== undefined && e.value !== undefined) {
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          [e.name]: e.value,
+        }));
+      }
+      // Handle normal event
+      else if (e?.target) {
+        const { name, value } = e.target;
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          [name]: value,
+        }));
+      }
     }
   };
+
 
   const NoticeModal = () => {
     setNoticemodalOpen((prev) => !prev);
@@ -115,8 +127,60 @@ const organizationsusers = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
+  const {
+    response: GetOrgRes,
+    loading: OrgLoading,
+    error: GetOrgError,
+    fetchData: GetOrg,
+  } = useFetch();
+  useEffect(() => {
+    getOrganizationLst(filters);
+  }, []);
+  const getOrganizationLst = async (compaign) => {
+    const compaignBody = {
+      id: 0,
+      roleId: compaign,
+      orgId: 0,
+      email: '',
+      name: '',
+      contact: '',
+      rowVer: 0,
+      cityId: filters?.state ? filters.state : 0,
+      createdAt: filters
+        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
+        : moment().subtract(1, 'year').utc().format(),
+      lastUpdatedAt: filters
+        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : moment().utc().format(),
+      createdBy: 0,
+      lastUpdatedBy: 0,
+      ...filters,
+      status: filters?.status ? parseInt(filters.status, 10) : 0, // <- force numeric
+    };
 
-  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, orgData);
+    await GetOrg(
+      '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(compaignBody), },
+      (res) => {
+        console.log(res, 'orgs');
+        if (res.status === true) {
+
+
+          // setRows(mappedArray);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          /*   setRows([]);*/
+        }
+        setIsLoading(OrgLoading.current);
+      },
+    );
+  };
+  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter,GetOrgRes?.current?.data || []);
 
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
