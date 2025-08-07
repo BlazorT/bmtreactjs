@@ -559,7 +559,6 @@ const BlazorNetworkInputs = (prop) => {
           // message="Enter Buisness Name"
           />
         </CCol>
-        
           <CCol md={6}>
             <label className="form-label fw-bold">Post Types</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
@@ -568,7 +567,9 @@ const BlazorNetworkInputs = (prop) => {
                   <CFormCheck
                     type="checkbox"
                     id={`postType_${pt.id}`}
-                    label={pt.name}
+                    label={
+                      pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()
+                    }
                     name="posttypejson"
                     value={pt.id}
                     checked={networkState.posttypejson?.includes(pt.id) || false}
@@ -579,7 +580,6 @@ const BlazorNetworkInputs = (prop) => {
             </div>
           </CCol>
 
-          
           <CCol className="mg-topset" md={3}>
           <CFormCheck
             className=""

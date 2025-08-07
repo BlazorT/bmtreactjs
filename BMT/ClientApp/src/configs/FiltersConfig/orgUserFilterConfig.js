@@ -7,6 +7,7 @@ import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput'
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
   {
@@ -39,16 +40,28 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
     className: 'form-control item form-select',
     title: 'Networks',
   },
-  
+  {
+    component: CustomSelectInput,
+    label: 'Status',
+    value: filters.status,
+    onChange: changeFilter,
+    icon: cilFlagAlt,
+    id: 'status',
+    name: 'status',
+    disableOption: 'Select Status',
+    options: globalutil.statuses(),
+    className: 'form-control item form-select',
+    title: 'user status',
+  },
   {
     component: CustomDatePicker,
     label: 'Date From (>=)',
-    value: filters.lastUpdatedAt,
-    onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
+    value: filters.createdAt,
+    onChange: (e) => changeFilter(e, 'createdAt'),
     icon: cilCalendar,
    // title: ' DA Registration Date',
     isRequired: true,
-    min: dayjs(filters.createdAt),
+   // min: dayjs(filters.createdAt),
     message: 'Enter Valid To Date',
   },
   //{

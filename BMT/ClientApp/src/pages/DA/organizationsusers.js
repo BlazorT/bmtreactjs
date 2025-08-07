@@ -46,18 +46,20 @@ const organizationsusers = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
-
+  const user = useSelector((state) => state.user);
+  const orgName = user.orgId;
   const [filters, setFilters] = useState({
-    name: '',
-    state: '',
-    status: '',
-    createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+    name: "",
+    state: "",
+    status: 1,
+    createdAt: dayjs().subtract(2, 'year').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
+
   const [rows, setRows] = useState([]);
-
+ 
   const { data, loading, fetchUsers: getUserbyRole } = useFetchOrgUser();
-
+  const Role = user.roleId;
   const getOrgsList = async (filter) => {
     const orgUsersList = await getUserbyRole(6, filter);
 

@@ -17,7 +17,7 @@ export const useFetchOrgUser = () => {
       // userCode: user.userId.toString(),
       id: 0,
       roleId: role,
-      orgId: user.orgId === 1 ? 0 : user.orgId,
+      orgId: user.orgId,
       email: '',
       userCode: '',
       userName: '',
@@ -35,7 +35,7 @@ export const useFetchOrgUser = () => {
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
         ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        : moment().subtract(2, 'year').utc().format(),
       lastUpdatedAt: filters
         ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : moment().utc().format(),
