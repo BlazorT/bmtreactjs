@@ -18,7 +18,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import {  formatDateTime } from 'src/helpers/formatDate';
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import AppContainer from 'src/components/UI/AppContainer';
-
+import _ from 'lodash';
 const campaignslisting = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user)
@@ -46,45 +46,82 @@ const campaignslisting = () => {
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
+  const groupByName = (data) => {
+    return data.reduce((acc, item) => {
+      const name = item.name;
+      if (!acc[name]) {
+        acc[name] = [];
+      }
+      acc[name].push(item);
+      return acc;
+    }, {});
+  };
+
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
   const getCampaignsList = async (filters) => {
-    const campaignsList = await getCompaignsList(filters);  
+    const campaignsList = await getCompaignsList(filters);
     setCampaignData(campaignsList);
+
     const mappedArray = campaignsList.map((data) => ({
       id: data.id,
       name: data.name,
       orgName: data.orgName,
       startTime: formatDateTime(data.startTime),
-      finishTime: formatDateTime(data.finishTime)
+      finishTime: formatDateTime(data.finishTime),
     }));
-    console.log(mappedArray, 'campaign data');
-    setRows(mappedArray);
+
+    // ✅ Group ONLY by name
+    const groupedData = _.groupBy(mappedArray, (item) => item.name);
+
+    const groupedRows = Object.entries(groupedData).flatMap(([name, groupItems], index) => {
+      // Group header row
+      const groupRow = {
+        id: `group-${index}`,
+        name,
+        startTime: '',
+        finishTime: '',
+        orgName: '',
+        isGroupRow: true, // flag for rendering
+      };
+
+      // Child rows
+      const childRows = groupItems.map((item, i) => ({
+        id: `${item.id}-${i}`,
+        name: '', // hide name in children
+        startTime: item.startTime,
+        finishTime: item.finishTime,
+        orgName: item.orgName,
+        isGroupRow: false,
+      }));
+
+      return [groupRow, ...childRows];
+    });
+
+    setRows(groupedRows);
+    console.log(groupedRows, 'Grouped ONLY by name');
   };
 
-  const changeFilter = (event, date,label) => {
-    var colName = date;
-    if (date === 'createdAt' || date === 'lastUpdatedAt') {
+  const changeFilter = (event, fieldName, label) => {
+    let colName = fieldName;
+
+    if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
+      // Custom value or date picker
       setFilters((prevFilters) => ({
         ...prevFilters,
         [colName]: event,
       }));
-    }
-    else if (label === 'name') {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [colName]: event,
-      }));
-    }
-    else {
-      const { name, value, type, checked } = event.target;
-      colName = (name == 'networks') ? "networkId" : name; // column name was replaced bc networks is not backend key value
+    } else if (event?.target) {
+      // DOM input event
+      const { name, value } = event.target;
+      colName = name === 'networks' ? 'networkId' : name;
+
       setFilters((prevData) => ({
         ...prevData,
         [colName]: value,
-
       }));
-     // alert(JSON.stringify(filters));
+    } else {
+      console.warn("Unsupported event type:", event);
     }
   };
 
@@ -101,7 +138,7 @@ const campaignslisting = () => {
   };
 
   const handleReset = () => {
-    getCampaignsList();
+   // getCampaignsList();
     //setFilters({
     //  id: 0,
     //  orgId: user.orgId,
@@ -149,17 +186,7 @@ const campaignslisting = () => {
       (res) => {
         console.log(res, 'orgs');
         if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  //id: data.id,
-          //  //userId: data.userId,
-          //  //dspid: user.dspId.toString(),
-          //  //logDesc: data.logDesc,
-          //  //entityName: data.entityName,
-          //  //menuId: data.menuId,
-          //  //machineIp: data.machineIp,
-          //  //actionType: data.actionType,
-          //  //logTime: formatDateTime(data.logTime),
-          //}));
+         
 
           // setRows(mappedArray);
         } else {

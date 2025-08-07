@@ -122,16 +122,16 @@ const recipientslisting = () => {
 
   const handleReset = () => {
     getRecipientsList();
-    //setFilters({
-    //  id: 0,
-    //  orgId: user.orgId,
-    //  rowVer: 0,
-    //  networkId: 0,
-    //  name: '',
-    //  status: 0,
-    //  createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
-    //  lastUpdatedAt: dayjs().utc().startOf('day').format()     
-    //});
+    setFilters({
+      id: 0,
+      orgId: user.orgId,
+      rowVer: 0,
+      networkId: 0,
+      name: '',
+      status: 0,
+      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      lastUpdatedAt: dayjs().utc().startOf('day').format()     
+    });
   };
   const {
     response: GetOrgRes,

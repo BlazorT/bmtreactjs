@@ -12,19 +12,20 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
   {
     component: CustomSearch,
     label: 'Organization',
-    value: filters.keyword,
+    value: filters.name,
     // onChange: setOrg,
     onChange: changeFilter,
     icon: cilUser,
     type: 'text',
-    id: 'organization',
-    data: Array.isArray(orgs) ? orgs : [],
-    name: 'organization',
+    id: 'name',
+    data: orgs,
+    name: 'name',
     placeholder: 'organization',
     className: 'form-control item',
     isRequired: false,
     title: 'name of organization',
   },
+
   {
     component: CustomSelectInput,
     label: 'Networks',
@@ -41,7 +42,7 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
   
   {
     component: CustomDatePicker,
-    label: 'Date To (Apply, Join)',
+    label: 'Date From (>=)',
     value: filters.lastUpdatedAt,
     onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
     icon: cilCalendar,

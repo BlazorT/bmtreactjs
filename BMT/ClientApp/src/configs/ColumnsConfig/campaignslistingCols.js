@@ -57,20 +57,25 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerName: 'Action',
     flex: 1,
     minWidth: 50,
-    // maxWidth: 100,
     editable: false,
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
-    renderCell: (params) => (
-      <CampaignActionCell
-        value={params}
-        fetching={daRes}
-        user={daRes.filter((item) => item.id === params.row.id)}
-        canUpdate={pageRoles.canUpdate}
-        canDelete={pageRoles.canDelete}
-      />
-    ),
-  },
+    renderCell: (params) => {
+      // ✅ Prevent rendering for group rows
+      if (params.row.isGroupRow) return null;
+
+      return (
+        <CampaignActionCell
+          value={params}
+          fetching={daRes}
+          user={daRes.filter((item) => item.id === params.row.id)}
+          canUpdate={pageRoles.canUpdate}
+          canDelete={pageRoles.canDelete}
+        />
+      );
+    },
+  }
+
 ];
