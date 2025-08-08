@@ -168,7 +168,7 @@ const BmtRolesModal = (prop) => {
     };
 
     const body = updatePrivileges(rolesData, rolesSetting);
-    console.log(body.filter((b)=>b.id!=0));
+    console.log(JSON.stringify(body.filter((b)=>b.id!=0)));
     const res = await postRoles(body);
     console.log("res", res);
     if (res?.status === true) {

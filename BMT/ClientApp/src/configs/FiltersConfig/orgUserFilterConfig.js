@@ -9,7 +9,7 @@ import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
+export const getorgUsersFilterFields = (filters, changeFilter, orgs, Role) => [
   {
     component: CustomSearch,
     label: 'Organization',
@@ -25,6 +25,7 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs) => [
     className: 'form-control item',
     isRequired: false,
     title: 'name of organization',
+    disabled: Role !== 1 // <-- This disables unless roleId is 1
   },
 
   {
