@@ -204,7 +204,7 @@ const organizationsusers = () => {
         }));
     }
   }, [GetOrgRes?.current?.data,orgId])
-  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter,GetOrgRes?.current?.data || []);
+  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, GetOrgRes?.current?.data || [], Role);
 
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
