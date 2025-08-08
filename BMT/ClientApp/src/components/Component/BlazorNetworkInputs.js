@@ -55,6 +55,7 @@ const BlazorNetworkInputs = (prop) => {
     autoReplyContent: "",
     replyAttachment: "",
     virtualAccount: 0,
+    posttypejson: [],
     networkId: networkId,
     rowVer: 0,
     status: 1,
@@ -83,14 +84,14 @@ const BlazorNetworkInputs = (prop) => {
         ...prev,
         [label]: e,
       }));
-    } else if (name === 'postTypeIds') {
+    } else if (name === 'posttypejson') {
       const postTypeId = parseInt(value);
       SetNetworkState((prev) => {
-        const selected = prev.postTypeIds || [];
+        const selected = Array.isArray(prev.posttypejson) ? prev.posttypejson : [];
         const updated = checked
           ? [...selected, postTypeId]  // Add
           : selected.filter((id) => id !== postTypeId); // Remove
-        return { ...prev, postTypeIds: updated };
+        return { ...prev, posttypejson: updated };
       });
     } else if (type === 'checkbox') {
       SetNetworkState((prev) => ({
