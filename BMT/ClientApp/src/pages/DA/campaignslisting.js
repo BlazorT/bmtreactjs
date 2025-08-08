@@ -36,6 +36,7 @@ const campaignslisting = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
+  const orgId = user.orgId;
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
@@ -104,8 +105,13 @@ const campaignslisting = () => {
 
   const changeFilter = (event, fieldName, label) => {
     let colName = fieldName;
-
-    if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
+    if (fieldName === "name") {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        name: event,
+      }));
+    }
+    else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
       // Custom value or date picker
       setFilters((prevFilters) => ({
         ...prevFilters,
@@ -203,6 +209,18 @@ const campaignslisting = () => {
       },
     );
   };
+  useEffect(() => {
+    if (GetOrgRes?.current?.data?.length > 0) {
+      const orgData = GetOrgRes?.current?.data
+      const findUserOrg = orgData?.find((item) => item.id === orgId)
+      console.log(findUserOrg, 'findUserOrg')
+      if (findUserOrg)
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          name: findUserOrg,
+        }));
+    }
+  }, [GetOrgRes?.current?.data, orgId])
   const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data||[]);
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
