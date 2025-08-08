@@ -47,7 +47,7 @@ const organizationsusers = () => {
 
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
   const user = useSelector((state) => state.user);
-  const orgName = user.orgId;
+  const orgId = user.orgId;
   const [filters, setFilters] = useState({
     name: "",
     state: "",
@@ -82,7 +82,14 @@ const organizationsusers = () => {
     setRows(mappedArray);
   };
   const changeFilter = (e, date) => {
-    if (date === 'createdAt' || date === 'lastUpdatedAt') {
+    console.log(e, date, 'iput')
+    if (date === "name") {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        name: e,
+      }));
+    }
+    else if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [date]: e,
@@ -90,6 +97,7 @@ const organizationsusers = () => {
     } else {
       // Handle custom event (e is an object like { name: 'name', value: 'Org 1' })
       if (e && e.name !== undefined && e.value !== undefined) {
+
         setFilters((prevFilters) => ({
           ...prevFilters,
           [e.name]: e.value,
@@ -97,6 +105,7 @@ const organizationsusers = () => {
       }
       // Handle normal event
       else if (e?.target) {
+
         const { name, value } = e.target;
         setFilters((prevFilters) => ({
           ...prevFilters,
@@ -182,6 +191,19 @@ const organizationsusers = () => {
       },
     );
   };
+
+  useEffect(() => {
+    if (GetOrgRes?.current?.data?.length > 0) {
+      const orgData = GetOrgRes?.current?.data
+      const findUserOrg = orgData?.find((item) => item.id === orgId)
+      console.log(findUserOrg,'findUserOrg')
+      if (findUserOrg)
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          name: findUserOrg,
+        }));
+    }
+  }, [GetOrgRes?.current?.data,orgId])
   const orgFilterFields = getorgUsersFilterFields(filters, changeFilter,GetOrgRes?.current?.data || []);
 
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
