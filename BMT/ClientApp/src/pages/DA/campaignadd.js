@@ -19,6 +19,7 @@ import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
 //import { Fieldset } from 'primereact/fieldset';
 //import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
+import Range from 'src/views/forms/range/Range';
 //import CustomDatePicker from 'src/components/UI/DatePicker';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
@@ -36,7 +37,7 @@ import { CContainer } from '@coreui/react';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import globalutil from 'src/util/globalutil';
 //import CustomTimePicker from 'src/components/UI/TimePicker';
-
+import LocationSelector from "src/components/Component/LocationMarker"; 
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import { CFormCheck } from '@coreui/react';
@@ -68,7 +69,9 @@ const campaignadd = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
- 
+  const [locationSearch, setLocationSearch] = useState("");
+  const [interestSearch, setInterestSearch] = useState("");
+
   const [scheduleData, setScheduleData] = useState([]);
 
   const [areaSelectModal, setAreaSelectModal] = useState(false);
@@ -86,6 +89,88 @@ const campaignadd = () => {
   const [cityList, setCityList] = useState([]);
   const [cityData, setCityData] = useState([]); // Your table data
   const showToast = useShowToast();
+  const availableLocations = [
+    // USA
+    "New York",
+    "Los Angeles",
+    "Chicago",
+    "Houston",
+    "Miami",
+    "Dallas",
+    "San Francisco",
+    "Seattle",
+
+    // Pakistan
+    "Karachi",
+    "Lahore",
+    "Islamabad",
+    "Rawalpindi",
+    "Faisalabad",
+    "Multan",
+    "Peshawar",
+    "Quetta",
+    "Sialkot",
+    "Hyderabad (Pakistan)",
+    "Gujranwala",
+    "Johar Town",
+    "Wapda Town",
+    "Ucp",
+    "Shokat Khanum",
+    "Faisal Town",
+    "Bahria Town",
+    "",
+
+    // Global
+    "London",
+    "India",
+    "Dubai",
+    "UAE",
+    "Saudi Arabia",
+    "Doha",
+    "Afghanistan",
+    "Bangladesh",
+    "Srilanka",
+    "Toronto",
+    "Sydney",
+    "Paris",
+    "Berlin",
+    "Istanbul",
+    "Singapore",
+    "Kuala Lumpur",
+  ];
+  const availableInterests = [
+    // Existing
+    "Technology",
+    "Sports",
+    "Music",
+    "Travel",
+    "Cooking",
+    "Fitness",
+    "Gaming",
+    "Movies",
+
+    // New additions
+    "Photography",
+    "Art & Design",
+    "Entrepreneurship",
+    "Fashion",
+    "Reading",
+    "Education",
+    "History",
+    "Science",
+    "Health & Wellness",
+    "Politics",
+    "Nature",
+    "Gardening",
+    "Volunteering",
+    "Business & Finance",
+    "Self-Improvement",
+    "Spirituality",
+    "Food & Drinks",
+    "Automobiles",
+    "Home Decor",
+  ];
+
   const {
     response: GetCityRes,
     loading: CityLoading,
@@ -410,7 +495,15 @@ const campaignadd = () => {
     });
   };
 
-  console.log("selectedPostTypes", selectedPostTypes);
+ // console.log("selectedPostTypes", selectedPostTypes);
+  const filteredLocations = availableLocations.filter((loc) =>
+    loc.toLowerCase().includes(locationSearch.toLowerCase())
+  );
+
+  const filteredInterests = availableInterests.filter((interest) =>
+    interest.toLowerCase().includes(interestSearch.toLowerCase())
+  );
+
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
@@ -475,74 +568,189 @@ const campaignadd = () => {
                     </AppContainer>
                     {targetAudience && (
                       <React.Fragment>
+                        {/* Gender Selection */}
                         <CRow>
-                        
-                          <CCol md="4" className="mt-4">
-                            <button
-                              onClick={AddAreaClick}
-                              type="button"
-                              className="btn btn_Default sales-btn-style m-2 btn-Width"
-                            >
-                              Area Select
-                            </button>
-                          </CCol>
-                          <CCol md="2" className="mt-4">
-                            <CIcon className="mt-3" onClick={AddGoogleMapClick} icon={cilGlobeAlt} size="xxl" />
+                          <CCol md="6" className="mt-3">
+                            <div className="btn-group">
+                              <FormControl>
+                                <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                                <RadioGroup
+                                  row
+                                  name="genderId"
+                                  value={campaignRegData.genderId} // 👈 number value
+                                  onChange={handleCampaignAddForm}
+                                >
+                                  <FormControlLabel value={1} control={<Radio />} label="All" />
+                                  <FormControlLabel value={2} control={<Radio />} label="Men" />
+                                  <FormControlLabel value={3} control={<Radio />} label="Women" />
+                                </RadioGroup>
+                              </FormControl>
+                            </div>
                           </CCol>
                           <CCol md="6">
-                            <CustomInput
-                              label="Area"
-                              icon={cilFlagAlt}
-                              type="text"
-                              id="custom"
-                              placeholder="Area Select"
-                              className="form-control item"
-                              value={campaignRegData.area}
-                              name="area"
-                              onChange={handleCampaignAddForm}
+                            <Range
+                              minAge={campaignRegData.minAge || 18}
+                              maxAge={campaignRegData.maxAge || 65}
+                              onMinAgeChange={(val) =>
+                                setCampaignRegData({ ...campaignRegData, minAge: val })
+                              }
+                              onMaxAgeChange={(val) =>
+                                setCampaignRegData({ ...campaignRegData, maxAge: val })
+                              }
                             />
-                          </CCol>
-                          <CRow className="mg-lft mt-2">
-                            <CCol md="12">
-                              <Table striped bordered hover>
-                                <thead>
-                                  <tr>
-                                    <th className="txt-color text-center align-middle">State</th>
-                                    <th className="txt-color text-center align-middle">City</th>
-                                    <th className="txt-color text-center align-middle">Action</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {console.log("City Data:", cityData)}
-                                  {cityData.map((item, index) => (
-                                    <tr key={index}>
-                                      <td className="txt-color text-center align-middle">
-                                        {getStateName(item.states)}
-                                      </td>
-                                      <td className="txt-color text-center align-middle">
-                                        {getCityName(item.city)}
-                                      </td>
-                                      <td className="txt-color text-center align-middle">
-                                        <Button
-                                          title="Delete"
-                                          value="Delete"
-                                          variant="danger"
-                                          onClick={() => handleDelete(index)}
-                                        >
-                                          Delete
-                                        </Button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </Table>
 
-                            </CCol>
-                          </CRow>
-                       
+                          </CCol>
                         </CRow>
+
+
+                        {/* Locations + Detailed Targeting */}
+                        <CRow className="mt-2">
+                            <LocationSelector
+                              campaignRegData={campaignRegData}
+                              setCampaignRegData={setCampaignRegData}
+                            />
+                          
+                          <CCol md="6">
+                            <h5>Interests</h5>
+                            <input
+                              type="text"
+                              placeholder="Type to search interests"
+                              className="form-control"
+                              value={interestSearch}
+                              onChange={(e) => setInterestSearch(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" && interestSearch.trim()) {
+                                  setCampaignRegData({
+                                    ...campaignRegData,
+                                    interests: [...(campaignRegData.interests || []), interestSearch.trim()],
+                                  });
+                                  setInterestSearch("");
+                                }
+                              }}
+                            />
+
+                            {/* Suggestions dropdown */}
+                            {interestSearch && filteredInterests.length > 0 && (
+                              <div className="border mt-1 p-2">
+                                {filteredInterests.map((interest, index) => (
+                                  <div
+                                    key={index}
+                                    style={{ cursor: "pointer", padding: "4px 0" }}
+                                    onClick={() => {
+                                      setCampaignRegData({
+                                        ...campaignRegData,
+                                        interests: [...(campaignRegData.interests || []), interest],
+                                      });
+                                      setInterestSearch("");
+                                    }}
+                                  >
+                                    {interest}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            <div className="mt-2">
+                              {(campaignRegData.interests || []).map((interest, index) => (
+                                <span
+                                  key={index}
+                                  className="badge bg-primary me-2"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setCampaignRegData({
+                                      ...campaignRegData,
+                                      interests: campaignRegData.interests.filter((_, i) => i !== index),
+                                    });
+                                  }}
+                                >
+                                  {interest} ✕
+                                </span>
+                              ))}
+                            </div>
+                          </CCol>
+
+                        </CRow>
+
+                        {/* Area Select Section */}
+                        {/*<CRow className="mt-4">*/}
+                        {/*  <CCol md="4">*/}
+                        {/*    <button*/}
+                        {/*      onClick={AddAreaClick}*/}
+                        {/*      type="button"*/}
+                        {/*      className="btn btn_Default sales-btn-style m-2 btn-Width"*/}
+                        {/*    >*/}
+                        {/*      Area Select*/}
+                        {/*    </button>*/}
+                        {/*  </CCol>*/}
+                        {/*  <CCol md="2">*/}
+                        {/*    <CIcon*/}
+                        {/*      className="mt-3"*/}
+                        {/*      onClick={AddGoogleMapClick}*/}
+                        {/*      icon={cilGlobeAlt}*/}
+                        {/*      size="xxl"*/}
+                        {/*    />*/}
+                        {/*  </CCol>*/}
+                        {/*  <CCol md="6">*/}
+                        {/*    <CustomInput*/}
+                        {/*      label="Area"*/}
+                        {/*      icon={cilFlagAlt}*/}
+                        {/*      type="text"*/}
+                        {/*      id="custom"*/}
+                        {/*      placeholder="Area Select"*/}
+                        {/*      className="form-control item"*/}
+                        {/*      value={campaignRegData.area}*/}
+                        {/*      name="area"*/}
+                        {/*      onChange={handleCampaignAddForm}*/}
+                        {/*    />*/}
+                        {/*  </CCol>*/}
+
+                        {/*  <CRow className="mg-lft mt-2">*/}
+                        {/*    <CCol md="12">*/}
+                        {/*      <Table striped bordered hover>*/}
+                        {/*        <thead>*/}
+                        {/*          <tr>*/}
+                        {/*            <th className="txt-color text-center align-middle">State</th>*/}
+                        {/*            <th className="txt-color text-center align-middle">City</th>*/}
+                        {/*            <th className="txt-color text-center align-middle">Action</th>*/}
+                        {/*          </tr>*/}
+                        {/*        </thead>*/}
+                        {/*        <tbody>*/}
+                        {/*          {cityData.map((item, index) => (*/}
+                        {/*            <tr key={index}>*/}
+                        {/*              <td className="txt-color text-center align-middle">*/}
+                        {/*                {getStateName(item.states)}*/}
+                        {/*              </td>*/}
+                        {/*              <td className="txt-color text-center align-middle">*/}
+                        {/*                {getCityName(item.city)}*/}
+                        {/*              </td>*/}
+                        {/*              <td className="txt-color text-center align-middle">*/}
+                        {/*                <Button*/}
+                        {/*                  title="Delete"*/}
+                        {/*                  value="Delete"*/}
+                        {/*                  variant="danger"*/}
+                        {/*                  onClick={() => handleDelete(index)}*/}
+                        {/*                >*/}
+                        {/*                  Delete*/}
+                        {/*                </Button>*/}
+                        {/*              </td>*/}
+                        {/*            </tr>*/}
+                        {/*          ))}*/}
+                        {/*        </tbody>*/}
+                        {/*      </Table>*/}
+                        {/*    </CCol>*/}
+                        {/*  </CRow>*/}
+                        {/*</CRow>*/}
+
+                        {/* Save Button */}
+                        {/*<CRow className="mt-4">*/}
+                        {/*  <CCol md="12" className="text-end">*/}
+                        {/*    <button className="btn btn-primary">Save audience</button>*/}
+                        {/*  </CCol>*/}
+                        {/*</CRow>*/}
                       </React.Fragment>
                     )}
+
+
                   </Inputs>
                 </React.Fragment>
               )}

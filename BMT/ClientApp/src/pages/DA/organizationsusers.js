@@ -60,6 +60,7 @@ const organizationsusers = () => {
  
   const { data, loading, fetchUsers: getUserbyRole } = useFetchOrgUser();
   const Role = user.roleId;
+ // alert(Role);
   const getOrgsList = async (filter) => {
     const orgUsersList = await getUserbyRole(6, filter);
 
@@ -205,7 +206,7 @@ const organizationsusers = () => {
     }
   }, [GetOrgRes?.current?.data,orgId])
   const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, GetOrgRes?.current?.data || [], Role);
-
+  console.log("orgFilterFields", orgFilterFields)
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {

@@ -125,7 +125,8 @@ const CampaignActionCell = (prop) => {
   if (loading) {
     return <Spinner />;
   }
-
+  console.log("canUpdate", canUpdate);
+  console.log("canDelete", canDelete);
   return (
     <React.Fragment>
       {value.row.status === 4 ? (

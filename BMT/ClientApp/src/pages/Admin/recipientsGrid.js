@@ -28,6 +28,8 @@ const recipientslisting = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Recipients',
   );
+  const orgId = user.orgId;
+  const Role = user.roleId;
   const navigate = useNavigate();
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
@@ -127,7 +129,7 @@ const recipientslisting = () => {
       orgId: user.orgId,
       rowVer: 0,
       networkId: 0,
-      name: '',
+    //  name: '',
       status: 0,
       createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format()     
@@ -196,7 +198,19 @@ const recipientslisting = () => {
       },
     );
   };
-  const orgFilterFields = getRecipientsFilterConfig(filters, changeFilter, GetOrgRes?.current?.data||[]);
+  useEffect(() => {
+    if (GetOrgRes?.current?.data?.length > 0) {
+      const orgData = GetOrgRes?.current?.data
+      const findUserOrg = orgData?.find((item) => item.id === orgId)
+     // console.log(findUserOrg, 'findUserOrg')
+      if (findUserOrg)
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          name: findUserOrg,
+        }));
+    }
+  }, [GetOrgRes?.current?.data, orgId])
+  const orgFilterFields = getRecipientsFilterConfig(filters, changeFilter, GetOrgRes?.current?.data||[],Role);
   const recipientslistingCols = getrecipietslistingCols(getRecipientsList, recipientsData, pageRoles);
 
   if (loading) {
