@@ -1731,6 +1731,9 @@ WHERE c.OrgId = @p_OrgId
                         MySqlParameter pHashtagt = new MySqlParameter("p_HashTags", MySqlDbType.VarChar, 200);
                         pHashtagt.Value = model.HashTags;
                         parameter.Add(pHashtagt);
+                        MySqlParameter ptargetaudiance = new MySqlParameter("p_targetaudiance", MySqlDbType.VarChar, 4000);
+                        ptargetaudiance.Value = model.targetaudiance;
+                        parameter.Add(ptargetaudiance);
                         MySqlParameter pNetworkJSON = new MySqlParameter("p_networks", MySqlDbType.LongText,4000);
                         pNetworkJSON.Value = networks;
                         parameter.Add(pNetworkJSON);
