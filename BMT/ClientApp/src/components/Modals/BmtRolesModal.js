@@ -135,7 +135,7 @@ const BmtRolesModal = (prop) => {
           if (frontendItem && frontendItem.childs && frontendItem.childs.length > 0) {
             // If frontend data is found and has children, update child-specific values
             const childPrivileges = frontendItem.childs.find((child) => child.page === item.name);
-            console.log({ childPrivileges, item });
+            console.log('childPrivileges',{ childPrivileges, item });
             if (childPrivileges) {
               const newItem = {
                 id: item.assignmentId,
@@ -168,7 +168,7 @@ const BmtRolesModal = (prop) => {
     };
 
     const body = updatePrivileges(rolesData, rolesSetting);
-    console.log(JSON.stringify(body.filter((b)=>b.id!=0)));
+    console.log("updatePrivileges",JSON.stringify(body.filter((b)=>b.id!=0)));
     const res = await postRoles(body);
     console.log("res", res);
     if (res?.status === true) {

@@ -18,6 +18,7 @@ public partial class CompaignModel
     public string? Remarks { get; set; }
 
     public string? HashTags { get; set; }
+    public string? targetaudiance { get; set; }
 
     public byte? AutoGenerateLeads { get; set; }
 
