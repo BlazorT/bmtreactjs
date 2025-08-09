@@ -73,7 +73,7 @@ const UserRegister = () => {
     formValidator();
     fetchDspList();
     const state = location.state;
-
+    console.log({ state });
     if (state !== null) {
       const userData = state.user[0];
       console.log({ userData });

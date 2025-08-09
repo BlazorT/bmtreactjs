@@ -9,18 +9,14 @@ import Twitter from '@mui/icons-material/Twitter';
 import Instagram from '@mui/icons-material/Instagram';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { Table, ListGroup } from 'react-bootstrap';
 import DeleteIcon from '@mui/icons-material/Delete'; // if using MUI
 import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
-//import { Fieldset } from 'primereact/fieldset';
-//import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import Range from 'src/views/forms/range/Range';
-//import CustomDatePicker from 'src/components/UI/DatePicker';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
 import dayjs from 'dayjs';
@@ -29,28 +25,20 @@ import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-//import { formValidator } from 'src/helpers/formValidator';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import {getCampaignAddConfig,getInitialCampaignData,} from 'src/configs/InputConfig/campaignAddConfig';
 import { CContainer } from '@coreui/react';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import globalutil from 'src/util/globalutil';
-//import CustomTimePicker from 'src/components/UI/TimePicker';
 import LocationSelector from "src/components/Component/LocationMarker"; 
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import { CFormCheck } from '@coreui/react';
 import Form from 'src/components/UI/Form';
-import { useCreateCampaignData } from 'src/hooks/api/useCreateCampaignData';
-import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import AreaSelectModel from 'src/components/Modals/AreaSelectModel';
-import GoogleMapModel from 'src/components/Modals/GoogleMapModel';
 import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
-import Button from '../../components/InputsComponent/Button';
-import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
 
@@ -58,9 +46,7 @@ const campaignadd = () => {
   // let state;
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const { uploadAvatar } = useUploadAvatar();
-  const { createUpdateCampaign } = useCreateCampaignData();
-
+  const location = useLocation();
   const [campaignRegData, setCampaignRegData] = useState(getInitialCampaignData(user));
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
@@ -69,13 +55,11 @@ const campaignadd = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [locationSearch, setLocationSearch] = useState("");
+ 
   const [interestSearch, setInterestSearch] = useState("");
 
   const [scheduleData, setScheduleData] = useState([]);
 
-  const [areaSelectModal, setAreaSelectModal] = useState(false);
-  const [googleMapModel, setGoogleMapModel] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
  
   const [schedulerows, setScheduleRows] = useState([]);
@@ -85,59 +69,7 @@ const campaignadd = () => {
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
 
   const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
-  const [stateList, setStateList] = useState([]);
-  const [cityList, setCityList] = useState([]);
-  const [cityData, setCityData] = useState([]); // Your table data
   const showToast = useShowToast();
-  const availableLocations = [
-    // USA
-    "New York",
-    "Los Angeles",
-    "Chicago",
-    "Houston",
-    "Miami",
-    "Dallas",
-    "San Francisco",
-    "Seattle",
-
-    // Pakistan
-    "Karachi",
-    "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
-    "Multan",
-    "Peshawar",
-    "Quetta",
-    "Sialkot",
-    "Hyderabad (Pakistan)",
-    "Gujranwala",
-    "Johar Town",
-    "Wapda Town",
-    "Ucp",
-    "Shokat Khanum",
-    "Faisal Town",
-    "Bahria Town",
-    "",
-
-    // Global
-    "London",
-    "India",
-    "Dubai",
-    "UAE",
-    "Saudi Arabia",
-    "Doha",
-    "Afghanistan",
-    "Bangladesh",
-    "Srilanka",
-    "Toronto",
-    "Sydney",
-    "Paris",
-    "Berlin",
-    "Istanbul",
-    "Singapore",
-    "Kuala Lumpur",
-  ];
   const availableInterests = [
     // Existing
     "Technology",
@@ -170,52 +102,23 @@ const campaignadd = () => {
     "Automobiles",
     "Home Decor",
   ];
-
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
-  const dispatch = useDispatch();
   useEffect(() => {
-    // Get states from util
-    const states = globalutil.states();
-    console.log('State name:', globalutil.states()); // <-- Correct logging
-    setStateList(states);
+    const state = location.state;
 
-    // Get cities from API
-    getCityList();
-  }, []);
-
-  const getCityList = async () => {
-    await GetCity('/Common/cities', { method: 'POST' }, (res) => {
-      if (res.status === true) {
-        setCityList(res.data); // cities: [{id, name, stateId}]
-        console.log('City name:', res.data); // <-- Correct logging
-      } else {
-        dispatch(
-          updateToast({
-            isToastOpen: true,
-            toastMessage: res.message,
-            toastVariant: 'error',
-          })
-        );
-      }
-    });
-  };
-  const getStateName = (id) => {
-    const state = stateList.find((s) => s.id == id); // Use `==` or convert types
-    return state ? state.name : id;
-  };
-
-  const getCityName = (id) => {
-    const city = cityList.find((c) => c.id == id);
-    return city ? city.name : id;
-  };
-
-
-
+    if (state !== null) {
+      const campaignData = state.user[0];
+      console.log({ campaignData });
+      setCampaignRegData({
+        ...campaignData,
+        //roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
+        //password: userData.password ? atob(userData.password) : '',
+        //country: userData.stateId < 54 ? 1 : 2 ?? '',
+        //isTermsAccepted: false,
+        //contact: userData.contact,
+        //genderId: userData.genderId
+      });
+    }
+  }, [location.state]);
   const handleCampaignAddForm = (e, label) => {
     const now = moment();
 
@@ -297,30 +200,16 @@ const campaignadd = () => {
     // ❌ UNHANDLED CASE
     console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
   };
-
   console.log("campaignRegDataInitial", campaignRegData);
-
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
   const toggleTargetAud = () => {
     setTargetAudience((prev) => !prev);
   };
-  const toggleAreaSelectMdl = () => {
-    setAreaSelectModal((prev) => !prev);
-  };
+ 
   const toggleAddScheduleMdl = () => {
     setAddScheduleModel((prev) => !prev);
-  };
-  const toggleGoogleMapMdl = () => {
-    setGoogleMapModel((prev) => !prev);
-  };
-
-  const AddGoogleMapClick = () => {
-    toggleGoogleMapMdl(true);
-  };
-  const AddAreaClick = () => {
-    toggleAreaSelectMdl(true);
   };
   const AddScheduleClick = () => {
     toggleAddScheduleMdl(true);
@@ -329,23 +218,13 @@ const campaignadd = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
   const confirmationModal = () => {
-
     setConfirmationModalOpen(!confirmationModalOpen);
   };
   const goToAnotherPage = () => {
     setConfirmationModalOpen(false); // close the modal
     navigate('/campaignslisting');
   };
-  const onCancel = () => {
-    showConfirmation({
-      header: 'Confirmation!',
-      body: 'Are you sure you want to cancel?',
-      isOpen: true,
-      onYes: () => onYesConfirm(),
-      onNo: () => onNoConfirm(),
-    });
-  };
-
+  
   const onYesConfirm = () => {
    // toggle();
     onNoConfirm();
@@ -438,23 +317,7 @@ const campaignadd = () => {
   if (isLoading) {
     return <Loading />;
   }
-  const handleDelete = (index) => {
-    setCityData(cityData.filter((item, i) => i !== index));
-  };
-  const [targetUser, setTargetUser] = useState('');
-  const [targetUserData, setTargetUserData] = useState([]);
-
-  const handleAdd = () => {
-    if (targetUser !== '') {
-      setTargetUserData([...targetUserData, targetUser]);
-      setTargetUser('');
-    }
-  };
-  const handleDeleteuser = (index) => {
-    const newCountries = [...targetUserData];
-    newCountries.splice(index, 1);
-    setTargetUserData(newCountries);
-  };
+ 
   const handleCheckboxChange = (networkName) => {
     setSelectedNetworks((prevSelected) => {
       const isSelected = prevSelected.includes(networkName);
@@ -494,12 +357,6 @@ const campaignadd = () => {
       };
     });
   };
-
- // console.log("selectedPostTypes", selectedPostTypes);
-  const filteredLocations = availableLocations.filter((loc) =>
-    loc.toLowerCase().includes(locationSearch.toLowerCase())
-  );
-
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase())
   );
@@ -671,82 +528,6 @@ const campaignadd = () => {
 
                         </CRow>
 
-                        {/* Area Select Section */}
-                        {/*<CRow className="mt-4">*/}
-                        {/*  <CCol md="4">*/}
-                        {/*    <button*/}
-                        {/*      onClick={AddAreaClick}*/}
-                        {/*      type="button"*/}
-                        {/*      className="btn btn_Default sales-btn-style m-2 btn-Width"*/}
-                        {/*    >*/}
-                        {/*      Area Select*/}
-                        {/*    </button>*/}
-                        {/*  </CCol>*/}
-                        {/*  <CCol md="2">*/}
-                        {/*    <CIcon*/}
-                        {/*      className="mt-3"*/}
-                        {/*      onClick={AddGoogleMapClick}*/}
-                        {/*      icon={cilGlobeAlt}*/}
-                        {/*      size="xxl"*/}
-                        {/*    />*/}
-                        {/*  </CCol>*/}
-                        {/*  <CCol md="6">*/}
-                        {/*    <CustomInput*/}
-                        {/*      label="Area"*/}
-                        {/*      icon={cilFlagAlt}*/}
-                        {/*      type="text"*/}
-                        {/*      id="custom"*/}
-                        {/*      placeholder="Area Select"*/}
-                        {/*      className="form-control item"*/}
-                        {/*      value={campaignRegData.area}*/}
-                        {/*      name="area"*/}
-                        {/*      onChange={handleCampaignAddForm}*/}
-                        {/*    />*/}
-                        {/*  </CCol>*/}
-
-                        {/*  <CRow className="mg-lft mt-2">*/}
-                        {/*    <CCol md="12">*/}
-                        {/*      <Table striped bordered hover>*/}
-                        {/*        <thead>*/}
-                        {/*          <tr>*/}
-                        {/*            <th className="txt-color text-center align-middle">State</th>*/}
-                        {/*            <th className="txt-color text-center align-middle">City</th>*/}
-                        {/*            <th className="txt-color text-center align-middle">Action</th>*/}
-                        {/*          </tr>*/}
-                        {/*        </thead>*/}
-                        {/*        <tbody>*/}
-                        {/*          {cityData.map((item, index) => (*/}
-                        {/*            <tr key={index}>*/}
-                        {/*              <td className="txt-color text-center align-middle">*/}
-                        {/*                {getStateName(item.states)}*/}
-                        {/*              </td>*/}
-                        {/*              <td className="txt-color text-center align-middle">*/}
-                        {/*                {getCityName(item.city)}*/}
-                        {/*              </td>*/}
-                        {/*              <td className="txt-color text-center align-middle">*/}
-                        {/*                <Button*/}
-                        {/*                  title="Delete"*/}
-                        {/*                  value="Delete"*/}
-                        {/*                  variant="danger"*/}
-                        {/*                  onClick={() => handleDelete(index)}*/}
-                        {/*                >*/}
-                        {/*                  Delete*/}
-                        {/*                </Button>*/}
-                        {/*              </td>*/}
-                        {/*            </tr>*/}
-                        {/*          ))}*/}
-                        {/*        </tbody>*/}
-                        {/*      </Table>*/}
-                        {/*    </CCol>*/}
-                        {/*  </CRow>*/}
-                        {/*</CRow>*/}
-
-                        {/* Save Button */}
-                        {/*<CRow className="mt-4">*/}
-                        {/*  <CCol md="12" className="text-end">*/}
-                        {/*    <button className="btn btn-primary">Save audience</button>*/}
-                        {/*  </CCol>*/}
-                        {/*</CRow>*/}
                       </React.Fragment>
                     )}
 
@@ -831,9 +612,6 @@ const campaignadd = () => {
               })}
 
             </CRow>
-
-
-
             <React.Fragment>
               <div className="CenterAlign pt-2">
                 <button
@@ -888,27 +666,12 @@ const campaignadd = () => {
           </React.Fragment>
         )}
       </CContainer>
-
-
-    
       <ConfirmationModal
         header="Confirmation!"
         body="Are you sure you want to cancel?"
         isOpen={confirmationModalOpen}
         onYes={goToAnotherPage}
         onNo={confirmationModal}
-      />
-      <AreaSelectModel
-        isOpen={areaSelectModal}
-        toggle={toggleAreaSelectMdl}
-        header="Area Select"
-        setData={setCityData}
-        data={cityData }
-      />
-      <GoogleMapModel
-        isOpen={googleMapModel}
-        toggle={toggleGoogleMapMdl}
-        header="Area Select"
       />
       <AddScheduleModel
         isOpen={addScheduleModel}
