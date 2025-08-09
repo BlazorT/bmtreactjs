@@ -29,7 +29,8 @@ namespace com.blazor.bmt.viewmodels
         public int Status { get; set; }
         public int RowVer { get; set; }
         public string? NetworkName { get; set; }
-        public string? OrgName { get; set; }       
+        public string? OrgName { get; set; }
+        public string? targetaudiance { get; set; }
         public string? Contact { get; set; }       
         public double? Budget { get; set; }       
         public string? logoAvatar { get; set; }
