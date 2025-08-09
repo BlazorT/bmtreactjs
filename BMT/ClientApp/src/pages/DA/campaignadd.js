@@ -102,23 +102,19 @@ const campaignadd = () => {
     "Automobiles",
     "Home Decor",
   ];
-  useEffect(() => {
-    const state = location.state;
+  //useEffect(() => {
+  //  const state = location.state;
 
-    if (state !== null) {
-      const campaignData = state.user[0];
-      console.log({ campaignData });
-      setCampaignRegData({
-        ...campaignData,
-        //roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
-        //password: userData.password ? atob(userData.password) : '',
-        //country: userData.stateId < 54 ? 1 : 2 ?? '',
-        //isTermsAccepted: false,
-        //contact: userData.contact,
-        //genderId: userData.genderId
-      });
-    }
-  }, [location.state]);
+  //  if (state !== null) {
+  //    const campaignData = state.user[0];
+  //    console.log({ campaignData });
+  //    setCampaignRegData({
+  //      ...campaignData,
+  //     // name: campaignData.name,
+  //    //  hashTags: campaignData.hashTags
+  //    });
+  //  }
+  //}, [location.state]);
   const handleCampaignAddForm = (e, label) => {
     const now = moment();
 
