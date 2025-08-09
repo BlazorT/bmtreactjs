@@ -21,6 +21,7 @@ export interface FilterField {
   title?: string;
   message?: string;
   disableOption?: string;
+  disabled?:boolean
 }
 
 interface CustomFiltersProps {
@@ -61,6 +62,7 @@ const CustomFilters: React.FC<CustomFiltersProps> = ({
                   min={field.min}
                   title={field.title}
                   message={field.message}
+                  disabled={field.disabled}
                   disableOption={field.disableOption}
                 />
               </CCol>

@@ -37,6 +37,7 @@ const campaignslisting = () => {
   const dispatch = useDispatch();
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
   const orgId = user.orgId;
+  const Role = user.roleId;
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
@@ -47,17 +48,7 @@ const campaignslisting = () => {
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-  const groupByName = (data) => {
-    return data.reduce((acc, item) => {
-      const name = item.name;
-      if (!acc[name]) {
-        acc[name] = [];
-      }
-      acc[name].push(item);
-      return acc;
-    }, {});
-  };
-
+ 
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
   const getCampaignsList = async (filters) => {
@@ -213,7 +204,7 @@ const campaignslisting = () => {
     if (GetOrgRes?.current?.data?.length > 0) {
       const orgData = GetOrgRes?.current?.data
       const findUserOrg = orgData?.find((item) => item.id === orgId)
-      console.log(findUserOrg, 'findUserOrg')
+     // console.log(findUserOrg, 'findUserOrg')
       if (findUserOrg)
         setFilters((prevFilters) => ({
           ...prevFilters,
@@ -221,7 +212,7 @@ const campaignslisting = () => {
         }));
     }
   }, [GetOrgRes?.current?.data, orgId])
-  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data||[]);
+  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data || [], Role);
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {
