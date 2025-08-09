@@ -412,7 +412,11 @@ const AddScheduleModel = (prop) => {
       autoGenerateLeads,
       startTime,
       finishTime,
-      status
+      status,
+      interests,
+      genderId,
+      locations,
+
     } = submitData;
 
     if (!name || name.trim() === '') {
@@ -445,6 +449,11 @@ const AddScheduleModel = (prop) => {
       description: name,
       Title: name,
       HashTags: tag,
+      targetaudiance: JSON.stringify({
+        interests: interests || [],
+        genderId: genderId || null,
+        locations: locations || []
+      }),
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
       StartTime: moment(startTime).toISOString(),
      // FinishTime: finishTimeWithMaxTime.toISOString(),
