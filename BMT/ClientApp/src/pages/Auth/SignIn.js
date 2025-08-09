@@ -250,8 +250,8 @@ function SignIn() {
                     onChange={handleChange}
                     value={userDetail.fullName}
                     name="fullName"
-                    title="User Name OR Email e.g (abc@gmail.com)"
-                    placeholder="User Name OR Email e.g (abc@gmail.com)"
+                    title="User Name | Email e.g abc@gmail.com"
+                    placeholder="User Name | Email e.g abc@gmail.com"
                   />
                 </div>
                 <div className="form-outline mb-1 text-start">

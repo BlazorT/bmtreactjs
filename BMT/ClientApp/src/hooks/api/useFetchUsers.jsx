@@ -22,7 +22,7 @@ export const useFetchUsers = () => {
       lastName: '',
       firstName: '',
       password: '',
-      contact: "",
+     // contact: "",
       rowVer: 0,
       genderId: 0,
       securityToken: '',      

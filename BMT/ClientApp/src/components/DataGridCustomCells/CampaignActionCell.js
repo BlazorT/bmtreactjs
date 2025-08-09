@@ -144,7 +144,7 @@ const CampaignActionCell = (prop) => {
         </CRow>
       ) : (
         <CRow>
-          {canUpdate === 1 && (
+       {/*   {canUpdate === 1 && (*/}
             <CCol>
               <Tooltip title="Edit Campaign">
                 <CIcon
@@ -155,7 +155,7 @@ const CampaignActionCell = (prop) => {
                 />
               </Tooltip>
             </CCol>
-          )}
+        {/*  )}*/}
 
           {/* Pause Campaign */}
           <CCol>
