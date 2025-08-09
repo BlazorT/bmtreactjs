@@ -184,7 +184,7 @@ const Login = () => {
                         onChange={handleChange}
                         value={userDetail.userName}
                         name="userName"
-                        placeholder="Username"
+                        placeholder="User Name"
                       />
                     </div>
 

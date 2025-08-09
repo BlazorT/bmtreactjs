@@ -8,7 +8,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-export const getOrgFiltersFields = (filters, changeFilter, orgs) => [
+export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
   {
     component: CustomSearch,
     label: 'Organization',
@@ -22,6 +22,8 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs) => [
     placeholder: 'Organization',
     isRequired: false,
     title: 'Name Of Organization',
+    disabled: Role !== 1 // <-- This disables unless roleId is 1
+
   },
   {
     component: CustomSelectInput,

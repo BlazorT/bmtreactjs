@@ -28,7 +28,8 @@ const SingleDispatchment = () => {
   const dispatch = useDispatch();
   const [networkList,setNetworkList]=useState([])
   const [isLoading, setIsLoading] = useState(false);
-  
+  const user = useSelector((state) => state.user)
+  const orgId = user.orgId;
   const handleSubmit = (e) => {
    // console.log(e);
     e.preventDefault();
@@ -82,22 +83,22 @@ const SingleDispatchment = () => {
   useEffect(() => {
     getOrganizationLst();
   }, []);
-  const getOrganizationLst = async (compaign) => {
+  const getOrganizationLst = async () => {
     const orgBody = {
       id: 0,
-      roleId: compaign,
+      roleId: user.roleId,
       orgId: 0,
       email: '',
       name: '',
       contact: "",
       rowVer: 0,
-      cityId:1,
+      cityId:0,
       status:1,
       // keyword: filters ? filters.keyword : '',
       createdAt: moment().subtract(1, 'year').utc().format(),
       lastUpdatedAt: moment().utc().format('YYYY-MM-DD'),
-      createdBy: 0,
-      lastUpdatedBy: 0,
+      createdBy: user.userId,
+      lastUpdatedBy: user.userId,
     };
     await GetOrg(
       '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(orgBody), },
@@ -107,8 +108,19 @@ const SingleDispatchment = () => {
       },
     );
   };
+  useEffect(() => {
+    if (GetOrgRes?.current?.data?.length > 0) {
+      const orgData = GetOrgRes?.current?.data;
+      const findUserOrg = orgData?.find((item) => item.id === orgId);
+      console.log(findUserOrg, 'findUserOrg');
+
+      if (findUserOrg) {
+        setOrganization(findUserOrg); // store the whole object or just label/value depending on CustomSearch
+      }
+    }
+  }, [GetOrgRes?.current?.data, orgId]);
   const orglist = GetOrgRes?.current?.data || [];
-  //console.log(orglist, 'org listt');
+  console.log(orglist, 'org listt');
   return (
     <AppContainer>
       <form
@@ -122,16 +134,15 @@ const SingleDispatchment = () => {
             label="Organization"
             icon={cilUser}
             type="text"
-            //se={organization}
             id="name"
             onChange={(e,value) => setOrganization(value)}
             placeholder="Organization"
             name="name"
             data={orglist}
             className="form-control item"
-            isRequired={false}
+            isRequired={true}
             title="Select Organization"
-          // message="Enter Buisness Name"
+           message="Select Organization"
           />
         </CCol>
 

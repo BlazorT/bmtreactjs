@@ -142,6 +142,7 @@ export const getInitialCampaignData = (user) => {
     id: 0,
     logoPath: '',
     name: '',
+    genderId: user?.genderId ?? 2, // ✅ if undefined, default to Men
     status: 1,
     rowVer: 1,
     compaignDetailId: 0,
