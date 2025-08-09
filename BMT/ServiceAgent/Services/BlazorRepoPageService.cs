@@ -718,6 +718,7 @@ WHERE c.OrgId = @p_OrgId
                                 uvmi.FirstName = "" + reader["FirstName"];
                                 uvmi.LastName = "" + reader["LastName"];
                                 uvmi.MiddleName = "" + reader["MiddleName"];
+                                uvmi.Contact = "" + reader["Contact"];
                                 uvmi.Password = "" + reader["Password"];
                                 uvmi.RoleId = Convert.ToInt32(reader["RoleID"]);
                                 uvmi.Email = "" + reader["Email"];
