@@ -11,6 +11,16 @@
   font-family: 'permanentmarker-regular';
   font-size: 1.1875em;
 }
+.css-dkrdoe-MuiTablePagination-root {
+  overflow: auto;
+  color: rgb(253 248 248 / 87%)!important;
+  font-size: 0.875rem;
+  margin-top: 1em;
+}
+p {
+  margin-top: 0;
+  margin-bottom: 0rem!important;
+}
 .popover {
   background-color: #547ea1!important;
 }
@@ -3287,6 +3297,14 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .MuiSvgIcon-root {
   height: 1em !important;
   width: 1em !important;
+  
+}
+.neticons {
+  height: 1em !important;
+  width: 1em !important;
+  padding-left: 8px;
+  padding-top: 8px;
+  font-size: 2.2em !important;
 }
 .custom-loader {
   height: 80dvh;

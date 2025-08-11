@@ -2,10 +2,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { DataGrid, GridPagination, GridOverlay, GridSortModel } from '@mui/x-data-grid';
-
 import CustomSummary from './DataGridSummary';
 import CustomGridToolbar from './CustomGridToolbar';
-
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/material';
 //import DatagridSkeleton from './DatagridSkeleton';

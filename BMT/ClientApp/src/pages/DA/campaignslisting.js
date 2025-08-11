@@ -9,7 +9,6 @@ import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
-import NotificationModal from 'src/components/Modals/NotificationModal';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import moment from 'moment';
 import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
@@ -35,7 +34,7 @@ const campaignslisting = () => {
   const [campaignData, setCampaignData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
+ 
   const orgId = user.orgId;
   const Role = user.roleId;
   const [filters, setFilters] = useState({
@@ -120,10 +119,6 @@ const campaignslisting = () => {
     } else {
       console.warn("Unsupported event type:", event);
     }
-  };
-
-  const NoticeModal = () => {
-    setNoticemodalOpen((prev) => !prev);
   };
 
   const toggleFilters = () => {
@@ -271,7 +266,6 @@ const campaignslisting = () => {
               />
             )}
 
-            <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />
           </AppContainer>
         </React.Fragment>
       )}

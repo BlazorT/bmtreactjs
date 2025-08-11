@@ -21,12 +21,12 @@ const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const CampaignContacts = React.lazy(() => import('./pages/DA/campaignContacts'));
-const waves = React.lazy(() => import('./pages/DA/Wave'));
+//const waves = React.lazy(() => import('./pages/DA/Wave'));
 const CampaignNotification = React.lazy(() => import('./pages/Reports/campaignNotification'));
 //const waves = React.lazy(() => import('./pages/DA/Waves'));
 //const Dispatchment = React.lazy(() => import('./pages/DA/Dispatchment'));
 //const DailyRoster = React.lazy(() => import('./pages/DA/DailyRoster'));
-const DSPSRoles = React.lazy(() => import('./pages/Admin/DSPSRoles'));
+//const DSPSRoles = React.lazy(() => import('./pages/Admin/DSPSRoles'));
 //const WorkFlowTask = React.lazy(() => import('./pages/Workflow/WorkFlowTask'));
 //const ServiceIntegrated = React.lazy(() => import('./pages/Fleet/FleetServiceIntegrated'));
 //const InventoryManagement = React.lazy(() => import('./pages/Inventory/InventoryManagement'));
@@ -126,12 +126,12 @@ export const rolesRoutes = [
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
  // { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
-  { path: '/waves', name: 'waves', element: waves },
+ // { path: '/waves', name: 'waves', element: waves },
 
   //{ path: '/rosterReport', name: 'rosterReport', element: rosterReport },
   //{ path: '/Dispatchment', name: 'Delivery', element: Dispatchment },
   //{ path: '/Schedule', name: 'Schedule', element: DailyRoster },
-  { path: '/DSPSRoles', name: 'DSPSRoles', element: DSPSRoles },
+  //{ path: '/DSPSRoles', name: 'DSPSRoles', element: DSPSRoles },
   //{ path: '/WorkFlowTask', name: 'WorkFlowTask', element: WorkFlowTask },
   //{ path: '/WorkFlowSubTask', name: 'WorkFlowSubTask', element: WorkFlowSubTask },
   //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
