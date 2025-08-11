@@ -13,16 +13,8 @@ import {
 } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
 import CIcon from '@coreui/icons-react';
-import DADetailModal from 'src/components/Modals/DADetailModal';
 import Tooltip from '@mui/material/Tooltip';
-import DAInventoryModal from '../Modals/DAInventoryModal';
 
 import { CCol, CRow } from '@coreui/react';
 

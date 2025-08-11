@@ -410,7 +410,7 @@ const campaignContacts = () => {
               <CCol md={12} key={index}>
                 <ul className="inlinedisplay">
                   <li className="divCircle">
-                    <IconComponent className="BlazorIcon" fontSize="large" color="success" />
+                    <IconComponent className="BlazorIcon neticons" fontSize="large" color="success" />
                   </li>
 
                   <li className='network-checkbox-animate networksListWidth'>

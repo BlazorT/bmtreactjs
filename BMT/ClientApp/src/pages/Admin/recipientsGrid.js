@@ -8,7 +8,6 @@ import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
-import NotificationModal from 'src/components/Modals/NotificationModal';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import moment from 'moment';
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
@@ -36,7 +35,6 @@ const recipientslisting = () => {
   const [recipientsData, setRecipientsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
@@ -69,7 +67,7 @@ const recipientslisting = () => {
       };
     });
 
-    console.log(mappedArray, 'recipients data');
+   // console.log(mappedArray, 'recipients data');
     setRows(mappedArray);
   };
 
@@ -107,11 +105,6 @@ const recipientslisting = () => {
     else {
       console.warn('Invalid event passed to changeFilter:', event);
     }
-  };
-
-
-  const NoticeModal = () => {
-    setNoticemodalOpen((prev) => !prev);
   };
 
   const toggleFilters = () => {
@@ -267,7 +260,6 @@ const recipientslisting = () => {
               />
             )}
 
-            <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />
           </AppContainer>
         </React.Fragment>
       )}

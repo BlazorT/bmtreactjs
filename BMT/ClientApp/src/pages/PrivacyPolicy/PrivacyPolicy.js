@@ -1,24 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
-import { cilUser, cilCalendar, cilFlagAlt, cilChevronBottom } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
-import CIcon from '@coreui/icons-react';
 import moment from 'moment';
-
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { getBusinessTypeById } from 'src/constants/buisnessType';
 import { getCountryById, getStateById } from 'src/constants/countries_and_states';
-
-//import CustomDatePicker from 'src/components/UI/DatePicker';
-//import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-//import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import DSPListModal from 'src/components/Modals/DSPListModal';
-import DADSspsListCell from 'src/components/DataGridCustomCells/DADSspsListCell';
-//import CustomInput from 'src/components/InputsComponent/CustomInput';
-//import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-
 //import globalutil from 'src/util/globalutil';
 import useFetch from 'src/hooks/useFetch';
 import Loading from 'src/components/UI/Loading';
@@ -46,12 +32,10 @@ const PrivacyPolicy = (prop) => {
     createdAt: moment().utc().startOf('year').format(),
   });
 
-  const [showStock, setShowStock] = useState(false);
+ 
   const [showLicence, setShowLicence] = useState(true);
-  const [dspListModal, setdspListModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 880);
-
+ 
   const navigate = useNavigate();
   const [rows, setRows] = useState([
     {
@@ -158,52 +142,27 @@ const PrivacyPolicy = (prop) => {
       sortable: true,
       disableColumnMenu: false,
     },
-    {
-      field: 'status',
-      headerName: 'Action',
-      headerClassName: 'custom-header-data-grid',
-      flex: 1,
-      minWidth: 160,
-      editable: false,
-      filterable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      renderCell: (params) => (
-        <DADSspsListCell
-          value={params}
-          fetchDspList={fetchDspList}
-          user={dspsListRes.current?.data?.data.filter((item) => item.id === params.row.id)}
-        />
-      ),
-    },
+    //{
+    //  field: 'status',
+    //  headerName: 'Action',
+    //  headerClassName: 'custom-header-data-grid',
+    //  flex: 1,
+    //  minWidth: 160,
+    //  editable: false,
+    //  filterable: false,
+    //  sortable: true,
+    //  disableColumnMenu: true,
+    //  renderCell: (params) => (
+    //    //<DADSspsListCell
+    //    //  value={params}
+    //    //  fetchDspList={fetchDspList}
+    //    //  user={dspsListRes.current?.data?.data.filter((item) => item.id === params.row.id)}
+    //    ///>
+    // // ),
+    //},
   ]);
 
-  const applyFilters = () => {
-    const filterBody = {
-      name: filters.keyword,
-      businessTypeId: filters.businessTypeId === '' ? null : filters.businessTypeId,
-      stateId: filters.stateId === '' ? null : filters.stateId,
-      createdAt: filters.createdAt === '' ? null : filters.createdAt,
-    };
-
-    fetchDspList(filterBody);
-  };
-
-  const changeFilter = (e, date) => {
-    if (date === 'date') {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        createdAt: moment(e).utc().format(),
-      }));
-    } else {
-      const { name, value, type, checked } = e.target;
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
-    }
-  };
-
+  
   const fetchDspList = async (filter) => {
     const dspsBody = {
       dspid: user.roleId === 1 ? 0 : user.dspId,
@@ -255,21 +214,14 @@ const PrivacyPolicy = (prop) => {
     setIsLoading(dspsLoading.current);
   };
 
-  const toggleListMdl = () => {
-    setdspListModal((prev) => !prev);
-    var newalert = rows;
-    // alert(JSON.stringify(newalert));
-  };
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
   };
 
-  const toggleStock = () => {
-    setShowStock((prev) => !prev);
-  };
-
+ 
   return (
     <>
       {isLoading ? (
@@ -456,7 +408,7 @@ const PrivacyPolicy = (prop) => {
                 ) : null}
               </div>
             </div>
-            <DSPListModal isOpen={dspListModal} toggle={toggleListMdl} />
+        
           </form>
         </div>
       )}
