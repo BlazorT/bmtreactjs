@@ -6,7 +6,7 @@ import { DataGrid, GridPagination, GridOverlay, GridSortModel } from '@mui/x-dat
 import CustomSummary from './DataGridSummary';
 import CustomGridToolbar from './CustomGridToolbar';
 
-import { Theme } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/material';
 //import DatagridSkeleton from './DatagridSkeleton';
 

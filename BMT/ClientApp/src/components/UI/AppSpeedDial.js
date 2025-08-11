@@ -3,7 +3,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@mui/material/Tooltip';
 import CIcon from '@coreui/icons-react';
 import { cilCog } from '@coreui/icons';
 import { SpeedDialAction } from '@mui/material';

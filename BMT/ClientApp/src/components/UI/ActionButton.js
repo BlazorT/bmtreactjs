@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import CIcon from '@coreui/icons-react';
 import { CCol } from '@coreui/react';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@mui/material/Tooltip';
+
 import React from 'react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 
