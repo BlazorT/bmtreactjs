@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 import { cilPencil, cilSettings } from '@coreui/icons';
 import { CCol, CRow } from '@coreui/react';
-import { Tooltip } from '@material-ui/core';
+//import { Tooltip } from '@material-ui/core';
+import Tooltip from '@mui/material/Tooltip';
+
 import CIcon from '@coreui/icons-react';
 
 import BmtRolesModal from '../Modals/BmtRolesModal';
