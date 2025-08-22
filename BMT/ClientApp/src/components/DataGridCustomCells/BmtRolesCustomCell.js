@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { cilPencil, cilSettings } from '@coreui/icons';
-import { CCol, CRow } from '@coreui/react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 //import { Tooltip } from '@material-ui/core';
-import Tooltip from '@mui/material/Tooltip';
 import CIcon from '@coreui/icons-react';
 import BmtRolesModal from '../Modals/BmtRolesModal';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { useDispatch } from 'react-redux';
 import ActionButton from '../UI/ActionButton';
 import useApi from 'src/hooks/useApi';
-import { useShowSnackbar } from 'src/hooks/useShowSnackbar';
 import Spinner from '../UI/Spinner';
+import { useShowToast } from 'src/hooks/useShowToast';
 const BmtRolesCustomCell = (prop) => {
   const { value, canUpdate } = prop;
   const dispatch = useDispatch();
-  const showSnackbar = useShowSnackbar();
-
+  const showToast = useShowToast();
   const [modalOpen, setModalOpen] = useState(false);
 
   const { data: settingRes, loading, postData: fetchRoles } = useApi('/Common/rolemenus');
 
   const getRolesSetting = async () => {
-    
     const fetchBody = {
       roleId: value.row.id.toString(),
     };
@@ -31,7 +28,7 @@ const BmtRolesCustomCell = (prop) => {
     if (res?.status === true) {
       setModalOpen(true);
     } else {
-      showSnackbar(res?.message, 'error');
+      showToast(res?.message, 'error');
     }
   };
 
@@ -47,16 +44,16 @@ const BmtRolesCustomCell = (prop) => {
     <CRow>
       {canUpdate !== 1 && (
         <CCol>
-          <Tooltip title={'Setting Bmt roles'}>
+          <CTooltip content={'Setting Bmt roles'}>
             <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilSettings} />
-          </Tooltip>
+          </CTooltip>
         </CCol>
       )}
       {canUpdate === 1 && (
         <CCol>
-          <Tooltip title={'Edit Bmt roles'}>
+          <CTooltip content={'Edit Bmt roles'}>
             <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilPencil} />
-          </Tooltip>
+          </CTooltip>
         </CCol>
       )}
       <BmtRolesModal

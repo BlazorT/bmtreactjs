@@ -1,20 +1,22 @@
-import React, { ReactNode, MouseEvent } from 'react';
-
-import { CCol, CRow } from '@coreui/react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ReactNode } from 'react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-
 import FilterIconMenu from './FilterIconMenu';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import { Tooltip } from '@mui/material';
+import { cilCloudDownload } from '@coreui/icons';
 
 interface OtherControl {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any; // Replace with the actual type of your icon
   fn: () => void;
 }
 
-interface DataGridHeaderProps {
+interface Action {
   title: string;
+  onClick: () => void;
+}
+
+interface DataGridHeaderProps {
+  title?: string;
   addButton?: string;
   addBtnClick?: () => void;
   otherControls?: OtherControl[];
@@ -26,73 +28,145 @@ interface DataGridHeaderProps {
   addBtnContent?: ReactNode;
   popOverId?: string;
   actionCell?: ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions?: any[];
+  actions?: Action[];
+  className?: string;
 }
 
 const DataGridHeader: React.FC<DataGridHeaderProps> = ({
-  title,
+  title = '',
   addButton,
   addBtnClick,
-  otherControls,
+  otherControls = [],
   addSecButton,
   addSecBtnClick,
-  filterDisable,
+  filterDisable = false,
   exportFn,
   addBtnContent,
   popOverId,
   actionCell,
-  actions,
-  onClick
+  actions = [],
+  onClick,
+  className = '',
 }) => {
   return (
-    <div className="d-flex flex-column w-100">
+    <div className={`d-flex flex-column w-100 mb-3 ${className}`}>
       <CRow className="w-100 p-0 align-self-center">
         <CCol className="d-flex justify-content-start align-items-center p-0">
-          <div className="pointer" onClick={onClick}>{title}</div>
+          <div
+            className={`pointer ${onClick ? 'text-primary' : ''}`}
+            onClick={onClick}
+            role={onClick ? 'button' : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            onKeyDown={
+              onClick
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      onClick();
+                    }
+                  }
+                : undefined
+            }
+          >
+            {title}
+          </div>
         </CCol>
         <CCol className="d-flex justify-content-end align-items-center gap-3 p-0">
+          {/* Action Cell - Custom component */}
           {actionCell && actionCell}
+
+          {/* Dynamic Actions */}
           {actions &&
+            actions.length > 0 &&
             actions.map((action, index) => (
               <span
                 key={index}
-                className="lblAddPartner labelName heading-font-weight text-truncate"
+                className="lblAddPartner labelName heading-font-weight text-truncate cursor-pointer"
                 onClick={action.onClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    action.onClick();
+                  }
+                }}
               >
                 {action.title}
               </span>
             ))}
+
+          {/* Primary Add Button */}
           {addButton && (
             <span
-              className="lblAddPartner labelName heading-font-weight text-truncate"
+              className="lblAddPartner labelName heading-font-weight text-truncate cursor-pointer"
               onClick={addBtnClick}
               aria-describedby={popOverId}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  addBtnClick?.();
+                }
+              }}
             >
-              {addButton} {addButton ? `${addBtnContent ? addBtnContent : '(+)'}` : ''}
+              {addButton} {addButton && `${addBtnContent ? addBtnContent : '(+)'}`}
             </span>
           )}
+
+          {/* Secondary Add Button */}
           {addSecButton && (
             <span
-              className="lblAddPartner labelName heading-font-weight text-truncate"
+              className="lblAddPartner labelName heading-font-weight text-truncate cursor-pointer"
               onClick={addSecBtnClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  addSecBtnClick?.();
+                }
+              }}
             >
-              {addSecButton}
+              {addSecButton} (+)
             </span>
           )}
+
+          {/* Export Function */}
           {exportFn && (
-            <Tooltip title="Download Report">
-              <FileDownloadOutlinedIcon
-                fontSize="medium"
-                className="stock-toggle-icon"
+            <CTooltip content="Download Report">
+              <CIcon
+                icon={cilCloudDownload}
+                className="stock-toggle-icon cursor-pointer"
                 onClick={exportFn}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e: { key: string }) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    exportFn();
+                  }
+                }}
               />
-            </Tooltip>
+            </CTooltip>
           )}
-          {filterDisable ? null : <FilterIconMenu />}
+
+          {/* Filter Menu Icon */}
+          {!filterDisable && <FilterIconMenu onClick={undefined} />}
+
+          {/* Other Controls */}
           {otherControls &&
+            otherControls.length > 0 &&
             otherControls.map(({ icon, fn }, index) => (
-              <CIcon key={index} className="stock-toggle-icon" onClick={fn} icon={icon} />
+              <CIcon
+                key={index}
+                className="stock-toggle-icon cursor-pointer"
+                onClick={fn}
+                icon={icon}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    fn();
+                  }
+                }}
+              />
             ))}
         </CCol>
       </CRow>

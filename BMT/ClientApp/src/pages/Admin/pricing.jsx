@@ -30,12 +30,12 @@ const Products = () => {
 
   const getProducts = async () => {
     const pricingList = await fetchPricing();
-   // alert(JSON.stringify(pricingList));
+    // alert(JSON.stringify(pricingList));
     const mappedArray = pricingList.map((data) => ({
       id: data.id,
       //name: `${data.name} ,${data.shortCode}`,
       name: data.name,
-      unitName: data.unitName == null || data.unitName.length <= 0 ? " - " : data.unitName,
+      unitName: data.unitName == null || data.unitName.length <= 0 ? ' - ' : data.unitName,
       unitPrice: data.unitPrice,
       discount: data.discount,
       freeAllowed: data.freeAllowed,
@@ -54,24 +54,18 @@ const Products = () => {
   //alert(JSON.stringify(pricingRows));
   return (
     <AppContainer>
-      <DataGridHeader
-        title="Network Prices"
-        addBtnClick={toggleAddProductModal}
-      />
+      {/* <DataGridHeader title="Network Prices" addBtnClick={toggleAddProductModal} /> */}
       <CustomDatagrid
         rows={pricingRows}
         columns={pricingCols}
         pagination={true}
         loading={loading || !data}
         rowHeight={50}
-        hiddenCols={{
-          columnVisibilityModel: {           
-            lastUpdatedAt: false,
-          },
-        }}
         canExport={pageRoles.canExport}
         canPrint={pageRoles.canPrint}
-        sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
+        isHeader={true}
+        headerProps={{ title: 'Network Prices', filterDisable: true }}
+        sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
       />
     </AppContainer>
   );

@@ -52,12 +52,12 @@ const Logs = () => {
       keyword: filters.keyword,
       menuId: filters.menuId === '' ? 0 : filters.menuId,
       logTime: dayjs(filters.logTime).utc().format().split('T')[0],
-      logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0]
+      logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0],
     };
 
     getLogList(filterBody);
 
-   // getLogList(filterBody);
+    // getLogList(filterBody);
   };
   const {
     response: GetLogRes,
@@ -76,7 +76,7 @@ const Logs = () => {
       logDesc: '',
       menuId: 0,
       actionType: 0,
-      ...filters,     
+      ...filters,
     };
     //alert(JSON.stringify(fetchBody));
     await GetLog(
@@ -119,9 +119,9 @@ const Logs = () => {
 
   const [columns, setColumns] = useState([
     {
-      field: 'entityName',
+      key: 'entityName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Entity',
+      name: 'Entity',
       /* flex: 1,*/
       width: 100,
       editable: false,
@@ -129,18 +129,18 @@ const Logs = () => {
     },
 
     //{
-    //  field: 'field',
+    //  key: 'key',
     //  headerClassName: 'custom-header-data-grid',
-    //  headerName: 'Field',
+    //  name: 'Field',
     //  /*flex: 1,*/
     //  minWidth: 120,
     //  editable: false,
     //  filterable: true,
     //},
     {
-      field: 'logDesc',
+      key: 'logDesc',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Log',
+      name: 'Log',
       flex: 1,
       minWidth: 180,
       editable: false,
@@ -149,26 +149,26 @@ const Logs = () => {
       disableColumnMenu: false,
     },
     {
-      field: 'machineIp',
+      key: 'machineIp',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Machine ',
+      name: 'Machine ',
       /*  flex: 1,*/
       width: 120,
       editable: false,
       filterable: true,
     },
     //{
-    //  field: 'service',
+    //  key: 'service',
     //  headerClassName: 'custom-header-data-grid',
-    //  headerName: 'Service',
+    //  name: 'Service',
     //  flex: 1,
     //  minWidth: 150,
     //  editable: false,
     //  filterable: true,
     //},
     {
-      field: 'logTime',
-      headerName: 'Log Time',
+      key: 'logTime',
+      name: 'Log Time',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -249,7 +249,7 @@ const Logs = () => {
                     icon={cilFlagAlt}
                     id="menuId"
                     disableOption="Select Business Entity"
-                   // options={globalutil.businessentities()}
+                    // options={globalutil.businessentities()}
                     className="form-control item form-select"
                     value={filters.menuId}
                     name="menuId"
@@ -303,7 +303,7 @@ const Logs = () => {
         ) : null}
       </div>
       <div className="bg_Div mb-2 d-flex flex-column">
-        <DataGridHeader exportFn={() => ''} title="Log Viewer" />
+        <DataGridHeader exportFn={() => ''} title="Log Viewer" filterDisable />
         <div className="show-stock">
           <div className="row ">
             <div className="col-md-12 col-xl-12">
@@ -312,8 +312,6 @@ const Logs = () => {
                 columns={columns}
                 rowHeight={'normal'}
                 pagination={true}
-              //  canExport={pageRoles.canExport}
-              //  canPrint={pageRoles.canPrint}
                 summary={[
                   {
                     field: 'logTime',

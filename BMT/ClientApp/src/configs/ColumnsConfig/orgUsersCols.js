@@ -3,8 +3,8 @@ import OrgUserActionCell from 'src/components/DataGridCustomCells/OrgUserActionC
 
 export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'completeName',
-    headerName: ' Name',
+    key: 'completeName',
+    name: ' Name',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -14,8 +14,8 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'orgName',
-    headerName: 'Organization Name',
+    key: 'orgName',
+    name: 'Organization Name',
     flex: 1,
     minWidth: 140,
     editable: false,
@@ -25,8 +25,8 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'roleName',
-    headerName: 'Role Name',
+    key: 'roleName',
+    name: 'Role Name',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -36,8 +36,8 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'contact',
-    headerName: 'Contact',
+    key: 'contact',
+    name: 'Contact',
     flex: 1,
     minWidth: 60,
     // Width: 100,
@@ -49,8 +49,8 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
   },
 
   {
-    field: 'createdAt',
-    headerName: 'Registration Time',
+    key: 'createdAt',
+    name: 'Registration Time',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -61,8 +61,8 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'status',
-    headerName: 'Status',
+    key: 'status',
+    name: 'Status',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -72,11 +72,10 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
- 
- 
+
   {
-    field: 'imageUrl',
-    headerName: 'Action',
+    key: 'imageUrl',
+    name: 'Action',
     flex: 1,
     minWidth: 50,
     // maxWidth: 100,

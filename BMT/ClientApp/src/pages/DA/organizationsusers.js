@@ -27,7 +27,6 @@ import AppContainer from 'src/components/UI/AppContainer';
 const organizationsusers = () => {
   dayjs.extend(utc);
 
-
   useEffect(() => {
     getOrgsList();
   }, []);
@@ -47,18 +46,18 @@ const organizationsusers = () => {
   const user = useSelector((state) => state.user);
   const orgId = user.orgId;
   const [filters, setFilters] = useState({
-    name: "",
-    state: "",
+    name: '',
+    state: '',
     status: 1,
     createdAt: dayjs().subtract(2, 'year').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
 
   const [rows, setRows] = useState([]);
- 
+
   const { data, loading, fetchUsers: getUserbyRole } = useFetchOrgUser();
   const Role = user.roleId;
- // alert(Role);
+  // alert(Role);
   const getOrgsList = async (filter) => {
     const orgUsersList = await getUserbyRole(6, filter);
 
@@ -70,7 +69,7 @@ const organizationsusers = () => {
       completeName: data.completeName,
       roleName: data.roleName,
       orgName: data.orgName,
-      contact:  data.contact,
+      contact: data.contact,
       createdAt: formatDate(data.createdAt),
       status: globalutil.statuses().find((item) => item.id === data.status)
         ? globalutil.statuses().find((item) => item.id === data.status).name
@@ -81,14 +80,13 @@ const organizationsusers = () => {
     setRows(mappedArray);
   };
   const changeFilter = (e, date) => {
-    console.log(e, date, 'iput')
-    if (date === "name") {
+    console.log(e, date, 'iput');
+    if (date === 'name') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         name: e,
       }));
-    }
-    else if (date === 'createdAt' || date === 'lastUpdatedAt') {
+    } else if (date === 'createdAt' || date === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [date]: e,
@@ -96,7 +94,6 @@ const organizationsusers = () => {
     } else {
       // Handle custom event (e is an object like { name: 'name', value: 'Org 1' })
       if (e && e.name !== undefined && e.value !== undefined) {
-
         setFilters((prevFilters) => ({
           ...prevFilters,
           [e.name]: e.value,
@@ -104,7 +101,6 @@ const organizationsusers = () => {
       }
       // Handle normal event
       else if (e?.target) {
-
         const { name, value } = e.target;
         setFilters((prevFilters) => ({
           ...prevFilters,
@@ -113,7 +109,6 @@ const organizationsusers = () => {
       }
     }
   };
-
 
   const NoticeModal = () => {
     setNoticemodalOpen((prev) => !prev);
@@ -169,12 +164,11 @@ const organizationsusers = () => {
     };
 
     await GetOrg(
-      '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(compaignBody), },
+      '/BlazorApi/orgsfulldata',
+      { method: 'POST', body: JSON.stringify(compaignBody) },
       (res) => {
         console.log(res, 'orgs');
         if (res.status === true) {
-
-
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -193,18 +187,23 @@ const organizationsusers = () => {
 
   useEffect(() => {
     if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data
-      const findUserOrg = orgData?.find((item) => item.id === orgId)
-      console.log(findUserOrg,'findUserOrg')
+      const orgData = GetOrgRes?.current?.data;
+      const findUserOrg = orgData?.find((item) => item.id === orgId);
+      console.log(findUserOrg, 'findUserOrg');
       if (findUserOrg)
         setFilters((prevFilters) => ({
           ...prevFilters,
           name: findUserOrg,
         }));
     }
-  }, [GetOrgRes?.current?.data,orgId])
-  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, GetOrgRes?.current?.data || [], Role);
-  console.log("orgFilterFields", orgFilterFields)
+  }, [GetOrgRes?.current?.data, orgId]);
+  const orgFilterFields = getorgUsersFilterFields(
+    filters,
+    changeFilter,
+    GetOrgRes?.current?.data || [],
+    Role,
+  );
+  console.log('orgFilterFields', orgFilterFields);
   const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
 
   if (loading) {
@@ -240,9 +239,10 @@ const organizationsusers = () => {
               addBtnClick={() => navigate('/UserRegister')}
               onClick={toggleGrid}
               otherControls={[
-              /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
+                /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
                 { icon: cilChevronBottom, fn: toggleGrid },
               ]}
+              filterDisable
             />
             {showDaGrid && (
               <CustomDatagrid

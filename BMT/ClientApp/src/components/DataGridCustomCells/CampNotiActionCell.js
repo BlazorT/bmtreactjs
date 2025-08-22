@@ -1,32 +1,19 @@
 import React, { useState } from 'react';
 
-import {
-  cilPencil,
-  cilReload,
-  cilTrash,
-} from '@coreui/icons';
+import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
-
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import CIcon from '@coreui/icons-react';
 import DADetailModal from 'src/components/Modals/DADetailModal';
-import Tooltip from '@mui/material/Tooltip';
 import DAInventoryModal from '../Modals/DAInventoryModal';
 
-import { CCol, CRow } from '@coreui/react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 
-import { useShowToast } from 'src/hooks/useShowToast';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
-import Spinner from '../UI/Spinner';
 import { useSelector } from 'react-redux';
-import Popover from '../UI/Popover';
-import { AppSpeedDial } from '../UI/AppSpeedDial';
+import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
+import Spinner from '../UI/Spinner';
 
 const OrgUserActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
@@ -101,26 +88,26 @@ const OrgUserActionCell = (prop) => {
   // const actions = [
   //   {
   //     icon: <EditOutlinedIcon />,
-  //     title: 'Edit DA',
+  //     content: 'Edit DA',
   //     onClick: editUser,
   //     disabled: !canUpdate === 1,
   //   },
   //   {
   //     icon: <DeleteOutlineOutlinedIcon />,
-  //     title: 'Delete DA',
+  //     content: 'Delete DA',
   //     onClick: () => toggleStatus(4),
   //     disabled: !canUpdate === 1,
   //   },
   //   {
   //     icon: <InventoryOutlinedIcon />,
-  //     title: 'Daily Dispatchments',
+  //     content: 'Daily Dispatchments',
   //     onClick: () => {
   //       setIsOpen(true);
   //     },
   //   },
   //   {
   //     icon: <LocalShippingOutlinedIcon />,
-  //     title: 'Dispatchments',
+  //     content: 'Dispatchments',
   //     onClick: () => {
   //       setIsJustDispMdlOpen(true);
   //     },
@@ -128,7 +115,7 @@ const OrgUserActionCell = (prop) => {
   //   },
   //   {
   //     icon: <InfoOutlinedIcon />,
-  //     title: 'See DA detail',
+  //     content: 'See DA detail',
   //     onClick: () => {
   //       setDADetailModalOpen(true);
   //     },
@@ -140,47 +127,47 @@ const OrgUserActionCell = (prop) => {
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
-            <Tooltip title="Re-Activate Organization User">
+            <CTooltip content="Re-Activate Organization User">
               <CIcon
                 onClick={() => toggleStatus(5)}
                 className="stock-toggle-icon"
                 icon={cilReload}
               />
-            </Tooltip>
+            </CTooltip>
           </CCol>
         </CRow>
       ) : (
         <CRow>
           {canUpdate === 1 && (
             <CCol>
-                <Tooltip title="Edit Organization User">
+              <CTooltip content="Edit Organization User">
                 <CIcon
                   onClick={() => editUser(value.row.id)}
                   className="stock-toggle-icon"
                   icon={cilPencil}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           )}
           {/*<CCol>*/}
-          {/*    <Tooltip title="Organization User Actions">*/}
+          {/*    <CTooltip content="Organization User Actions">*/}
           {/*    <CIcon*/}
           {/*      className="stock-toggle-icon"*/}
           {/*      icon={cilCog}*/}
           {/*      onClick={handleClick}*/}
           {/*      aria-describedby={id}*/}
           {/*    />*/}
-          {/*  </Tooltip>*/}
+          {/*  </CTooltip>*/}
           {/*</CCol>*/}
           {canDelete === 1 && (
             <CCol>
-              <Tooltip title="Delete Organization User">
+              <CTooltip content="Delete Organization User">
                 <CIcon
                   className="stock-toggle-icon"
                   icon={cilTrash}
                   onClick={() => toggleStatus(4)}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           )}
           {/* <CCol>
@@ -199,8 +186,9 @@ const OrgUserActionCell = (prop) => {
           {/*        <div className="da-popover bg-dark-color ">*/}
           {/*          <div className="tab-style">*/}
           {/*            <CCol>*/}
-          {/*              */}{/* <span className="fs-6 text-dim">Daily Dispatchments</span> */}
-          {/*              <Tooltip title="Daily Dispatchments">*/}
+          {/*              */}
+          {/* <span className="fs-6 text-dim">Daily Dispatchments</span> */}
+          {/*              <CTooltip content="Daily Dispatchments">*/}
           {/*                <CIcon*/}
           {/*                  className="stock-toggle-icon"*/}
           {/*                  icon={cilLibrary}*/}
@@ -212,12 +200,12 @@ const OrgUserActionCell = (prop) => {
           {/*                />*/}
           {/*                <br></br>*/}
           {/*                <div className="text-dim">Daily Disp.</div>*/}
-          {/*              </Tooltip>*/}
+          {/*              </CTooltip>*/}
           {/*            </CCol>*/}
           {/*          </div>*/}
           {/*          <div className="tab-style">*/}
           {/*            <CCol className="">*/}
-          {/*              <Tooltip title="Dispatchments">*/}
+          {/*              <CTooltip content="Dispatchments">*/}
           {/*                <CIcon*/}
           {/*                  className={`stock-toggle-icon user-select-none ${*/}
           {/*                    loginUser.roleId !== 1 && 'pe-none'*/}
@@ -231,12 +219,12 @@ const OrgUserActionCell = (prop) => {
           {/*                />*/}
           {/*                <br></br>*/}
           {/*                <div className="text-dim">Dispatchment</div>*/}
-          {/*              </Tooltip>*/}
+          {/*              </CTooltip>*/}
           {/*            </CCol>*/}
           {/*          </div>*/}
           {/*          <div className="tab-style">*/}
           {/*            <CCol>*/}
-          {/*              <Tooltip title="Send Notification">*/}
+          {/*              <CTooltip content="Send Notification">*/}
           {/*                <CIcon*/}
           {/*                  className="stock-toggle-icon"*/}
           {/*                  icon={cilBell}*/}
@@ -248,12 +236,12 @@ const OrgUserActionCell = (prop) => {
           {/*                />*/}
           {/*                <br></br>*/}
           {/*                <div className=" text-dim">Notification</div>*/}
-          {/*              </Tooltip>*/}
+          {/*              </CTooltip>*/}
           {/*            </CCol>*/}
           {/*          </div>*/}
           {/*          <div className="tab-style">*/}
           {/*            <CCol>*/}
-          {/*              <Tooltip title="See DA detail">*/}
+          {/*              <CTooltip content="See DA detail">*/}
           {/*                <CIcon*/}
           {/*                  className="stock-toggle-icon"*/}
           {/*                  icon={cilInfo}*/}
@@ -265,7 +253,7 @@ const OrgUserActionCell = (prop) => {
           {/*                />*/}
           {/*                <br></br>*/}
           {/*                <div className=" text-dim">DA Detail</div>*/}
-          {/*              </Tooltip>*/}
+          {/*              </CTooltip>*/}
           {/*            </CCol>*/}
           {/*          </div>*/}
           {/*        </div>*/}

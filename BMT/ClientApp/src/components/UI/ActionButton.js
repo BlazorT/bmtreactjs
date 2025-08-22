@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import CIcon from '@coreui/icons-react';
-import { CCol } from '@coreui/react';
-import Tooltip from '@mui/material/Tooltip';
+import { CCol, CTooltip } from '@coreui/react';
 
 import React from 'react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
@@ -25,9 +24,9 @@ const ActionButton = ({ title, status, updateFn, name, icon }) => {
   };
   return (
     <CCol>
-      <Tooltip title={title}>
+      <CTooltip content={title}>
         <CIcon className="stock-toggle-icon" onClick={() => toggleStatus(status)} icon={icon} />
-      </Tooltip>
+      </CTooltip>
     </CCol>
   );
 };

@@ -1,28 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { CCol, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CCol, CRow, CFormCheck } from '@coreui/react';
 //import { CFormCheck } from '@coreui/react';
-import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormLabel from '@mui/material/FormLabel';
 
 // Icons
 import { cilChevronBottom } from '@coreui/icons';
 
 // Custom Components
 
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 //import Loading from 'src/components/UI/Loading';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
-import Form from 'src/components/UI/Form';
 import AppContainer from 'src/components/UI/AppContainer';
+import Form from 'src/components/UI/Form';
 
 // Hooks and Helpers
 import useFetch from 'src/hooks/useFetch';
@@ -35,8 +30,8 @@ import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
-import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
 //import Spinner from 'src/components/UI/Spinner';
@@ -81,12 +76,12 @@ const UserRegister = () => {
       //console.log({ userData });
       setUserData({
         ...userData,
-        roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
+        roleId: userData.roleId === 0 ? '' : (userData.roleId ?? ''),
         password: userData.password ? atob(userData.password) : '',
-        country: userData.stateId < 54 ? 1 : 2 ?? '',
+        country: userData.stateId < 54 ? 1 : (2 ?? ''),
         isTermsAccepted: false,
         contact: userData.contact,
-        genderId: userData.genderId
+        genderId: userData.genderId,
       });
     }
   }, [location.state]);
@@ -246,7 +241,6 @@ const UserRegister = () => {
     getCityList();
   }, []);
   const getCityList = async () => {
-
     await GetCity(
       '/Common/cities',
       {
@@ -267,7 +261,6 @@ const UserRegister = () => {
           //  actionType: data.actionType,
           //  logTime: formatDateTime(data.logTime),
           //}));
-
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -297,8 +290,7 @@ const UserRegister = () => {
     dspList,
     TermsModal,
     onBlur,
-    GetCityRes?.current?.data ? GetCityRes.current.data : []
-
+    GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
 
   return (
@@ -306,79 +298,76 @@ const UserRegister = () => {
       {/*{isLoading ? (*/}
       {/*  <Loading />*/}
       {/*) : (*/}
-        <AppContainer>
-          <DataGridHeader
+      <AppContainer>
+        <DataGridHeader
           title="Advance Information"
           onClick={toggleForm}
-            otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
-            filterDisable={true}
-          />
-          <Form name="da-user-form">
-            {showForm && (
-                <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser} >
+          otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
+          filterDisable={true}
+        />
+        <Form name="da-user-form">
+          {showForm && (
+            <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser}>
               <CRow className="w-50 align-self-center mt-2 mb-3">
                 <CCol md="6">
-                <FormControl>
-                  <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel
-                     // value="Male"
-                        control={<Radio />}
+                  <CForm>
+                    <CFormLabel className="labelName" htmlFor="gender-radio-group">
+                      Gender
+                    </CFormLabel>
+                    <div className="d-flex">
+                      <CFormCheck
+                        type="radio"
                         id="male"
                         name="genderId"
-                      onChange={handleUserInput}
-                      checked={UserData.genderId.toString() === '0'}
-                      value={0}
-                      label="Male" />
-                    <FormControlLabel
-                     // value="Female"
-                        control={<Radio />}
+                        value={0}
+                        label="Male"
+                        checked={UserData.genderId.toString() === '0'}
+                        onChange={handleUserInput}
+                        className="me-3"
+                      />
+                      <CFormCheck
+                        type="radio"
                         id="female"
                         name="genderId"
-                      value={1}
-                      onChange={handleUserInput}
-                      checked={UserData.genderId.toString() === '1'}
-                      label="Female" />
-                  </RadioGroup>
-                </FormControl>
+                        value={1}
+                        label="Female"
+                        checked={UserData.genderId.toString() === '1'}
+                        onChange={handleUserInput}
+                      />
+                    </div>
+                  </CForm>
                 </CCol>
-                  </CRow>
-                  <CFormCheck
-                    name="isTermsAccepted"
-                    checked={UserData.isTermsAccepted}
-                    onChange={handleUserInput}
-                    className="d-flex flex-row justify-content-center"
-                    id="isTermsAccepted"
-                    required
-                    label={
-                      <span>
-                        By providing this info, you agree to our terms & conditions, read our{' '}
-                        <strong className="lblTerms" onClick={TermsModal}>
-                          Terms & Conditions (EULA)
-                        </strong>
-                      </span>
-                    }
-                  />
-                </Inputs>
-
-              )}
-              
-          </Form>
-          <EmailBrandNewModal
-            isOpen={modalOpen}
-            toggle={toggleModal}
-            isThisBrandnew={isThisBrandnew}
-            IsThisBrandNewClick={IsThisBrandNewClick}
-            associatedWithAmazonNo={associatedWithAmazonNo}
-            associatedWithAmazon={associatedWithAmazon}
-          />
-          <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
-        </AppContainer>
-     {/* )}*/}
+              </CRow>
+              <CFormCheck
+                name="isTermsAccepted"
+                checked={UserData.isTermsAccepted}
+                onChange={handleUserInput}
+                className="d-flex flex-row justify-content-center"
+                id="isTermsAccepted"
+                required
+                label={
+                  <span>
+                    By providing this info, you agree to our terms & conditions, read our{' '}
+                    <strong className="lblTerms" onClick={TermsModal}>
+                      Terms & Conditions (EULA)
+                    </strong>
+                  </span>
+                }
+              />
+            </Inputs>
+          )}
+        </Form>
+        <EmailBrandNewModal
+          isOpen={modalOpen}
+          toggle={toggleModal}
+          isThisBrandnew={isThisBrandnew}
+          IsThisBrandNewClick={IsThisBrandNewClick}
+          associatedWithAmazonNo={associatedWithAmazonNo}
+          associatedWithAmazon={associatedWithAmazon}
+        />
+        <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
+      </AppContainer>
+      {/* )}*/}
     </React.Fragment>
   );
 };

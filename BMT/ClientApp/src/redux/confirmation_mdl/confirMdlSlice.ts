@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from 'src/store';
 
 export type ConfirmationDialogState = {
   header: string;

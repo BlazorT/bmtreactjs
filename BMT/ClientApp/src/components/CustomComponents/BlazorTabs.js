@@ -1,58 +1,54 @@
 import React, { useState } from 'react';
-import { CNavItem, CNav, CNavLink, CContainer, CRow, CCol } from '@coreui/react';
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+  CNavItem,
+  CNav,
+  CNavLink,
+  CContainer,
+  CRow,
+  CCol,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilMenu } from '@coreui/icons';
 
 const BlazorTabs = (prop) => {
   const { title, tabs, handleActiveTab, activeTab, onAddVehicle } = prop;
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  //alert("Blazor Tabs " + JSON.stringify(tabs));
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const handleTab = (i) => {
-    //alert(i);
     handleActiveTab(i);
-    setAnchorEl(null);
+    setDropdownOpen(false);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   return (
     <CContainer fluid>
       <CRow className="p-0">
         <CCol className="p-0">
           <div className="mobile-tabs-view">
-            <IconButton
-              aria-label="more"
-              id="long-button"
-              aria-controls={open ? 'long-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-haspopup="true"
-              onClick={(e) => handleClick(e)}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                'aria-labelledby': 'long-button',
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-            >
-              {tabs?.map((tab, index) => (
-                <MenuItem
-                  key={tab.id}
-                  selected={activeTab === tab.id}
-                  onClick={() => handleTab(tab.id)}
-                >
-                  {tab.name}
-                </MenuItem>
-              ))}
-            </Menu>
+            <CDropdown>
+              <CDropdownToggle caret>
+                <CIcon icon={cilMenu} />
+              </CDropdownToggle>
+              <CDropdownMenu className="cDropdown">
+                {tabs?.map((tab, index) => (
+                  <CDropdownItem
+                    key={tab.id}
+                    className="cDropdown"
+                    active={activeTab === tab.id}
+                    onClick={() => handleTab(tab.id)}
+                  >
+                    {tab.name}
+                  </CDropdownItem>
+                ))}
+              </CDropdownMenu>
+            </CDropdown>
           </div>
           <CNav className="dashboard-links">
             {tabs?.map((tab, index) => (

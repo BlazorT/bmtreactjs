@@ -3,8 +3,8 @@ import OrgActionCell from 'src/components/DataGridCustomCells/OrgActionCell';
 
 export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
   {
-    field: 'name',
-    headerName: 'Organization Name',
+    key: 'name',
+    name: 'Organization Name',
     flex: 1,
     minWidth: 160,
     editable: false,
@@ -14,8 +14,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'cityId',
-    headerName: 'City',
+    key: 'cityId',
+    name: 'City',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -25,8 +25,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'compaignsCount',
-    headerName: 'Campaigns # ',
+    key: 'compaignsCount',
+    name: 'Campaigns # ',
     flex: 1,
     minWidth: 60,
     // Width: 100,
@@ -37,8 +37,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'currencyName',
-    headerName: 'Currency',
+    key: 'currencyName',
+    name: 'Currency',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -49,8 +49,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'createdAt',
-    headerName: 'Register Date',
+    key: 'createdAt',
+    name: 'Register Date',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -61,8 +61,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'expiryTime',
-    headerName: 'Expiry Time',
+    key: 'expiryTime',
+    name: 'Expiry Time',
     flex: 1,
     minWidth: 170,
     editable: false,
@@ -75,8 +75,8 @@ export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
   },
 
   {
-    field: 'imageUrl',
-    headerName: 'Action',
+    key: 'imageUrl',
+    name: 'Action',
     flex: 1,
     minWidth: 50,
     // maxWidth: 100,

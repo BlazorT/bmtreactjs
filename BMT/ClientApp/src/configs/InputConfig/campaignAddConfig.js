@@ -8,7 +8,7 @@ import {
   cilScreenSmartphone,
   cilFlagAlt,
   cilInfo,
-  cilCalendar
+  cilCalendar,
 } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
@@ -17,12 +17,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import ImagePicker from 'src/components/UI/ImagePicker';
 import globalutil from 'src/util/globalutil';
 
-export const getCampaignAddConfig = (
-  campaignRegData,
-  handleCampaignAddForm,
-  TermsModal,
-) => [
- 
+export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, TermsModal) => [
   {
     component: CustomInput,
     label: 'Title',
@@ -56,87 +51,84 @@ export const getCampaignAddConfig = (
     // pattern: '.*[A-Z].*',
     message: 'Enter #Tag',
   },
-    {
-      component: CustomInput,
-      label: 'Video Attachment',
-      onChange: (e) => handleCampaignAddForm(e, 'video'),
-      icon: cilEnvelopeClosed,
-      type: 'file',
-      id: 'videoAttachment',
-      name: 'videoAttachment',
-      className: 'form-control item',
-      isRequired: false,
-      accept: 'video/*',
-    },
+  {
+    component: CustomInput,
+    label: 'Video Attachment',
+    onChange: (e) => handleCampaignAddForm(e, 'video'),
+    icon: cilEnvelopeClosed,
+    type: 'file',
+    id: 'videoAttachment',
+    name: 'videoAttachment',
+    className: 'form-control item',
+    isRequired: false,
+    accept: 'video/*',
+  },
 
-    {
-      component: CustomInput,
-      label: 'Image Attachment',
-      onChange: (e) => handleCampaignAddForm(e, 'image'),
-      icon: cilEnvelopeClosed,
-      type: 'file',
-      id: 'imageAttachment',
-      name: 'imageAttachment',
-      className: 'form-control item',
-      isRequired: false,
-      accept: 'image/*',
-    },
+  {
+    component: CustomInput,
+    label: 'Image Attachment',
+    onChange: (e) => handleCampaignAddForm(e, 'image'),
+    icon: cilEnvelopeClosed,
+    type: 'file',
+    id: 'imageAttachment',
+    name: 'imageAttachment',
+    className: 'form-control item',
+    isRequired: false,
+    accept: 'image/*',
+  },
 
-    {
-      component: CustomInput,
-      label: 'Pdf Attachment',
-      onChange: (e) => handleCampaignAddForm(e, 'pdf'),
-      icon: cilEnvelopeClosed,
-      type: 'file',
-      id: 'pdfAttachment',
-      name: 'pdfAttachment',
-      className: 'form-control item',
-      isRequired: false,
-      accept: 'application/pdf',
-    },
+  {
+    component: CustomInput,
+    label: 'Pdf Attachment',
+    onChange: (e) => handleCampaignAddForm(e, 'pdf'),
+    icon: cilEnvelopeClosed,
+    type: 'file',
+    id: 'pdfAttachment',
+    name: 'pdfAttachment',
+    className: 'form-control item',
+    isRequired: false,
+    accept: 'application/pdf',
+  },
 
-    {
-      component: CustomDatePicker,
-      label: 'Campaign Start Date',
-      value: campaignRegData.startTime,
-      onChange: handleCampaignAddForm,
-      icon: cilCalendar,
-      id: 'startTime',
-      name: 'startTime',
-      className: 'form-control item',
-      isRequired: false,
-      minDate: dayjs(),
-      maxDate: dayjs(campaignRegData.finishTime),
-      disablePast: true, // 👈 allow past dates here
-    
-    },
-    {
-      component: CFormCheck,
-      label: 'Generate Auto Leads',
-      checked: campaignRegData.autoGenerateLeads,
-      onChange: handleCampaignAddForm,
-      id: 'autoGenerateLeads',
-      name: 'autoGenerateLeads',
-      className: 'item mt-4',
-    },
-    {
-      component: CustomDatePicker,
-      label: 'Campaign End Date',
-      value: campaignRegData.finishTime,
-      onChange: handleCampaignAddForm,
-      icon: cilCalendar,
-      id: 'finishTime',
-      name: 'finishTime',
-      className: 'form-control item',
-      isRequired: false,
-      minDate: dayjs(campaignRegData.startTime), 
-      disablePast: true, // 👈 allow past dates here
-    },
-    
- 
+  {
+    component: CustomDatePicker,
+    label: 'Campaign Start Date',
+    value: campaignRegData.startTime,
+    onChange: handleCampaignAddForm,
+    icon: cilCalendar,
+    id: 'startTime',
+    name: 'startTime',
+    className: 'form-control item',
+    isRequired: false,
+    minDate: dayjs(),
+    maxDate: dayjs(campaignRegData.finishTime),
+    disablePast: true, // 👈 allow past dates here
+  },
+  {
+    component: CFormCheck,
+    label: 'Generate Auto Leads',
+    checked: campaignRegData.autoGenerateLeads,
+    onChange: handleCampaignAddForm,
+    id: 'autoGenerateLeads',
+    name: 'autoGenerateLeads',
+    className: 'item mt-4',
+  },
+  {
+    component: CustomDatePicker,
+    label: 'Campaign End Date',
+    value: campaignRegData.finishTime,
+    onChange: handleCampaignAddForm,
+    icon: cilCalendar,
+    id: 'finishTime',
+    name: 'finishTime',
+    className: 'form-control item',
+    isRequired: false,
+    minDate: dayjs(campaignRegData.startTime),
+    disablePast: true, // 👈 allow past dates here
+  },
 ];
 export const getInitialCampaignData = (user) => {
-  const now = dayjs()
+  const now = dayjs();
   return {
     id: 0,
     logoPath: '',
@@ -149,7 +141,7 @@ export const getInitialCampaignData = (user) => {
     createdBy: user.userId,
     lastUpdatedBy: user.userId,
     createdAt: now.utc().format(),
-    startTime:now.format('YYYY-MM-DD HH:mm:ss'), // optional if needed
-    finishTime:now.add(2,'days').format('YYYY-MM-DD HH:mm:ss'), // optional if needed
+    startTime: now.format('YYYY-MM-DD HH:mm:ss'), // optional if needed
+    finishTime: now.add(2, 'days').format('YYYY-MM-DD HH:mm:ss'), // optional if needed
   };
 };

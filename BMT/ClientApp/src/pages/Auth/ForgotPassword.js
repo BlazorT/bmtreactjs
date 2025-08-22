@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 
 // local imports
-import EmailForgotPassword from 'src/components/ForgotPswrdComponents/EmailForgotPassword';
 import Fotter from 'src/layout/AppFooter';
 import ResetPassword from 'src/components/ForgotPswrdComponents/ResetPassword';
 import SecurityCode from 'src/components/ForgotPswrdComponents/SecurityCode';
-import CustomSnackbar from 'src/components/UI/CustomSnackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
-import { CCol, CRow } from '@coreui/react';
+import EmailForgotPassword from 'src/components/ForgotPswrdComponents/EmailForgotPassword';
 
 const ForgotPassword = () => {
   const [token, setToken] = useState('');
@@ -44,18 +42,6 @@ const ForgotPassword = () => {
       </div>
 
       <Fotter />
-      <CustomSnackbar
-        message={toast.toastMessage}
-        variant={toast.toastVariant}
-        open={toast.isToastOpen}
-        setOpen={() =>
-          dispatch(
-            updateToast({
-              isToastOpen: false,
-            }),
-          )
-        }
-      />
     </div>
   );
 };

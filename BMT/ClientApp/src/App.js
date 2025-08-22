@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import './scss/style.scss';
 import '../src/CSS/Style.css';
 import '../src/CSS/Form.css';
+import 'react-data-grid/lib/styles.css';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
 /*import Blazorhub from './Blazorhub';*/
@@ -36,8 +37,8 @@ const App = () => {
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-           {/* <Route exact path="/addorganization" name="addorganization" element={<addorganization />} />*/}
-          {/*  <Route exact path="/AddDA" name="AddDA" element={<AddDA />} />*/}
+            {/* <Route exact path="/addorganization" name="addorganization" element={<addorganization />} />*/}
+            {/*  <Route exact path="/AddDA" name="AddDA" element={<AddDA />} />*/}
             <Route
               exact
               path="/forgot-password"

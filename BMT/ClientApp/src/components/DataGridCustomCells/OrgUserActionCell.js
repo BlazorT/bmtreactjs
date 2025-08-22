@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 
-import {
-  cilPencil,
-  cilReload,
-  cilTrash,
-} from '@coreui/icons';
+import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 
-
 import CIcon from '@coreui/icons-react';
-import Tooltip from '@mui/material/Tooltip';
 
-import { CCol, CRow } from '@coreui/react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
@@ -22,7 +16,6 @@ const OrgUserActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
- 
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -30,7 +23,6 @@ const OrgUserActionCell = (prop) => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
 
   const navigate = useNavigate();
   const showToast = useShowToast();
@@ -52,10 +44,10 @@ const OrgUserActionCell = (prop) => {
 
   const onYesToggle = async (status) => {
     const response = await updateStatus(user, status);
-    console.log(response, "response");
+    console.log(response, 'response');
     if (response.status) {
       showToast(`${user[0].userName} ${status === 1 ? 're activated' : 'deleted'} successfully`);
-     // fetching();
+      // fetching();
     } else {
       showToast(response.message, 'error');
     }
@@ -73,57 +65,52 @@ const OrgUserActionCell = (prop) => {
     handleClose();
     navigate('/UserRegister', { state: { id: value.row.id, user: user } });
   };
- 
+
   if (loading) {
     return <Spinner />;
   }
 
-  
   return (
     <React.Fragment>
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
-            <Tooltip title="Re-Activate Organization User">
+            <CTooltip content="Re-Activate Organization User">
               <CIcon
                 onClick={() => toggleStatus(5)}
                 className="stock-toggle-icon"
                 icon={cilReload}
               />
-            </Tooltip>
+            </CTooltip>
           </CCol>
         </CRow>
       ) : (
         <CRow>
           {canUpdate === 1 && (
             <CCol>
-                <Tooltip title="Edit Organization User">
+              <CTooltip content="Edit Organization User">
                 <CIcon
                   onClick={() => editUser(value.row.id)}
                   className="stock-toggle-icon"
                   icon={cilPencil}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           )}
-       
+
           {canDelete === 1 && (
             <CCol>
-              <Tooltip title="Delete Organization User">
+              <CTooltip content="Delete Organization User">
                 <CIcon
                   className="stock-toggle-icon"
                   icon={cilTrash}
                   onClick={() => toggleStatus(4)}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           )}
-        
         </CRow>
       )}
-
-     
-     
     </React.Fragment>
   );
 };

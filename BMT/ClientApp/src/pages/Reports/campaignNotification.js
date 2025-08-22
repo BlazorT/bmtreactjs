@@ -15,18 +15,13 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import _ from 'lodash';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import globalutil from 'src/util/globalutil';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import { CContainer } from '@coreui/react';
 import Loading from 'src/components/UI/Loading';
 import { getUserReportPdf } from 'src/helpers/getUserReportPdf';
-
-//import FleetInspectionTab from 'src/components/FleetComponents/FleetInspectionTab';
-import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 
 const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
@@ -48,7 +43,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     applyFilters();
   }, []);
   const [activeTab, setActiveTab] = useState(1);
- 
+
   const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
 
@@ -67,28 +62,27 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       recipient: filters.recipient,
       deliveryStatus: String(filters.deliveryStatus || ''), // ✅ Always string
       createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
-      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
     };
 
     getNotiList(filterBody);
   };
 
   const deliveryStatuses = [
-    { id: 6, name: "SENT", code: "2", desc: "SENT", lvType: 2 },
-    { id: 7, name: "DELIVERED", code: "2", desc: "DELIVERED", lvType: 2 },
-    { id: 8, name: "FAILED", code: "2", desc: "FAILED", lvType: 2 },
-    { id: 9, name: "DELETED", code: "2", desc: "DELETED", lvType: 2 },
-    { id: 10, name: "READ", code: "2", desc: "READ", lvType: 2 },
-    { id: 11, name: "SEEN", code: "2", desc: "SEEN", lvType: 2 },
-    { id: 12, name: "UNDELIVERED", code: "2", desc: "UNDELIVERED", lvType: 2 },
-    { id: 13, name: "PENDING", code: "2", desc: "PENDING", lvType: 2 }
+    { id: 6, name: 'SENT', code: '2', desc: 'SENT', lvType: 2 },
+    { id: 7, name: 'DELIVERED', code: '2', desc: 'DELIVERED', lvType: 2 },
+    { id: 8, name: 'FAILED', code: '2', desc: 'FAILED', lvType: 2 },
+    { id: 9, name: 'DELETED', code: '2', desc: 'DELETED', lvType: 2 },
+    { id: 10, name: 'READ', code: '2', desc: 'READ', lvType: 2 },
+    { id: 11, name: 'SEEN', code: '2', desc: 'SEEN', lvType: 2 },
+    { id: 12, name: 'UNDELIVERED', code: '2', desc: 'UNDELIVERED', lvType: 2 },
+    { id: 13, name: 'PENDING', code: '2', desc: 'PENDING', lvType: 2 },
   ];
 
   const globalutil = {
     // Other functions or properties
-    deliverstatus: () => deliveryStatuses
+    deliverstatus: () => deliveryStatuses,
   };
-
 
   const {
     response: GeNotiRes,
@@ -110,70 +104,74 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     };
 
     //alert(JSON.stringify(fetchBody));
-    console.log("fetchBody",JSON.stringify(fetchBody));
-    await GetNotificationReportData('/Report/notificationsreportdata',
+    console.log('fetchBody', JSON.stringify(fetchBody));
+    await GetNotificationReportData(
+      '/Report/notificationsreportdata',
       {
         method: 'POST',
-        body: JSON.stringify(fetchBody)
+        body: JSON.stringify(fetchBody),
       },
       (res) => {
         console.log('Notification responce', res);
         if (res.status === true) {
           //alert(JSON.stringify(res));
 
-          const groupedData = _.groupBy(res.data, (item) =>
-            `${item.name}|${item.createdAt}|${item.networkName}`
+          const groupedData = _.groupBy(
+            res.data,
+            (item) => `${item.name}|${item.createdAt}|${item.networkName}`,
           );
 
-          const mappedArray = Object.entries(groupedData).flatMap(([groupKey, groupItems], index) => {
-            const [name, createdAt, networkName] = groupKey.split('|');
+          const mappedArray = Object.entries(groupedData).flatMap(
+            ([groupKey, groupItems], index) => {
+              const [name, createdAt, networkName] = groupKey.split('|');
 
-            // Top (group) row — only shows campaign name, date, network
-            const groupRow = {
-              id: `group-${index}`,
-              name,
-              createdAt: formatDate(createdAt),
-              sent:0,
-              failed:0,
-              delivered:0,
-              networkName,
-              isGroupRow: true, // flag for custom render
-            };
+              // Top (group) row — only shows campaign name, date, network
+              const groupRow = {
+                id: `group-${index}`,
+                name,
+                createdAt: formatDate(createdAt),
+                sent: 0,
+                failed: 0,
+                delivered: 0,
+                networkName,
+                isGroupRow: true, // flag for custom render
+              };
 
-            // Child rows — normal data, no name/date/network
-            const childRows = groupItems.map((data, i) => {
-              const statusCounts = {};
-              globalutil.deliverstatus().forEach((statusObj) => {
-                const statusId = statusObj.id.toString();
-                statusCounts[statusObj.name.toLowerCase()] = groupItems.filter(
-                  (d) => d.deliveryStatus === statusId
-                ).length;
+              // Child rows — normal data, no name/date/network
+              const childRows = groupItems.map((data, i) => {
+                const statusCounts = {};
+                globalutil.deliverstatus().forEach((statusObj) => {
+                  const statusId = statusObj.id.toString();
+                  statusCounts[statusObj.name.toLowerCase()] = groupItems.filter(
+                    (d) => d.deliveryStatus === statusId,
+                  ).length;
+                });
+
+                return {
+                  id: `${data.id}-${i}`,
+                  name: '', // empty for grouping effect
+                  createdAt: '',
+                  networkName: '',
+                  readCount: data.readCount || 0,
+                  commentsCount: data.commentsCount || 0,
+                  clicksCount: data.clicksCount || 0,
+                  sharesCount: data.sharesCount || 0,
+                  likesCount: data.likesCount || 0,
+                  // Add delivery status counts
+                  sent: statusCounts['sent'] || 0,
+                  delivered: statusCounts['delivered'] || 0,
+                  failed: statusCounts['failed'] || 0,
+                  deleted: statusCounts['deleted'] || 0,
+                  read: statusCounts['read'] || 0,
+                  seen: statusCounts['seen'] || 0,
+                  undelivered: statusCounts['undelivered'] || 0,
+                  pending: statusCounts['pending'] || 0,
+                };
               });
 
-              return {
-                id: `${data.id}-${i}`,
-                name: '', // empty for grouping effect
-                createdAt: '',
-                networkName: '',
-                readCount: data.readCount || 0,
-                commentsCount: data.commentsCount || 0,
-                clicksCount: data.clicksCount || 0,
-                sharesCount: data.sharesCount || 0,
-                likesCount: data.likesCount || 0,
-                // Add delivery status counts
-                sent: statusCounts["sent"] || 0,
-                delivered: statusCounts["delivered"] || 0,
-                failed: statusCounts["failed"] || 0,
-                deleted: statusCounts["deleted"] || 0,
-                read: statusCounts["read"] || 0,
-                seen: statusCounts["seen"] || 0,
-                undelivered: statusCounts["undelivered"] || 0,
-                pending: statusCounts["pending"] || 0,
-              };
-            });
-
-            return [groupRow, ...childRows];
-          });
+              return [groupRow, ...childRows];
+            },
+          );
 
           setRows(mappedArray);
           console.log(mappedArray);
@@ -193,22 +191,22 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     setIsLoading(false);
   };
   var deliveryStatus = globalutil.deliverstatus();
-  console.log("deliveryStatus", deliveryStatus);
+  console.log('deliveryStatus', deliveryStatus);
   const [rows, setRows] = useState([]);
 
   const [columns, setColumns] = useState([
     {
-      field: 'name',
+      key: 'name',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Campaign Name',
+      name: 'Campaign Name',
       width: 160,
       editable: false,
       filterable: true,
     },
     {
-      field: 'createdAt',
+      key: 'createdAt',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Start Date',
+      name: 'Start Date',
       flex: 1,
       width: 140,
       editable: false,
@@ -216,97 +214,96 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       type: 'timestamp',
     },
     {
-      field: 'networkName',
+      key: 'networkName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Network',
+      name: 'Network',
       flex: 1,
       width: 130,
       editable: false,
       filterable: true,
     },
     {
-      field: 'sent',   // ✅ match with mapped row field
+      key: 'sent', // ✅ match with mapped row key
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Sent',
-      width: 100,
+      name: 'Sent',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
       renderCell: (params) => {
-        return params.row?.isGroupRow?null:params.row.sent
-      }
+        return params.row?.isGroupRow ? null : params.row.sent;
+      },
     },
     {
-      field: 'failed',  // ✅ match with mapped row field
+      key: 'failed', // ✅ match with mapped row key
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Failed',
-      width: 100,
+      name: 'Failed',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
       renderCell: (params) => {
-        return params.row?.isGroupRow ? null : params.row.failed
-      }
+        return params.row?.isGroupRow ? null : params.row.failed;
+      },
     },
     {
-      field: 'delivered',  // ✅ match with mapped row field
+      key: 'delivered', // ✅ match with mapped row key
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Delivered',
-      width: 100,
+      name: 'Delivered',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
       renderCell: (params) => {
-        return params.row?.isGroupRow ? null : params.row.delivered
-      }
+        return params.row?.isGroupRow ? null : params.row.delivered;
+      },
     },
     {
-      field: 'readCount',
+      key: 'readCount',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Reads',
-      width: 100,
+      name: 'Reads',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
     },
     {
-      field: 'commentsCount',
+      key: 'commentsCount',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Comments',
-      width: 100,
+      name: 'Comments',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
     },
     {
-      field: 'clicksCount',
+      key: 'clicksCount',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Clicks',
-      width: 100,
+      name: 'Clicks',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
     },
     {
-      field: 'sharesCount',
+      key: 'sharesCount',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Shares',
-      width: 100,
+      name: 'Shares',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
     },
     {
-      field: 'likesCount',
+      key: 'likesCount',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Likes',
-      width: 100,
+      name: 'Likes',
+      // width: 120,
       editable: false,
       filterable: true,
       flex: 1,
     },
   ]);
-
 
   const [showStock, setShowStock] = useState(false);
   const makeGroupingRows = (data) => {
@@ -325,7 +322,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           updatedData.push(item);
         });
     });
-    const mappedArray = data.map((field, index) => {
+    const mappedArray = data.map((key, index) => {
       let mappedObject;
 
       if (index == 0) {
@@ -335,27 +332,31 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           contact: 'Contact',
           email: 'Email',
           status: 'status',
-          createdAt: 'Date Of Joining'
-        }
-
-      }
-      else {
+          createdAt: 'Date Of Joining',
+        };
+      } else {
         mappedObject = {
-          userName: field.userName,
-          roleName: field.roleName,
-          contact: field.contact,
-          email: field.email,
-          status: field.status,
-          createdAt: field.createdAt,
-        }
+          userName: key.userName,
+          roleName: key.roleName,
+          contact: key.contact,
+          email: key.email,
+          status: key.status,
+          createdAt: key.createdAt,
+        };
       }
       return mappedObject;
     });
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.userName, item.roleName, item.contact, item.email, item.status.toString(), item.createdAt];
+      const rowData = [
+        item.userName,
+        item.roleName,
+        item.contact,
+        item.email,
+        item.status.toString(),
+        item.createdAt,
+      ];
       return [rowData];
-
     });
     // console.log({ grouping });
     return grouping;
@@ -383,41 +384,39 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
   }
   return (
     <>
-     
       <CContainer fluid className="mt-4">
-      
-          <div className="">
-            <div className="bg_Div mb-2 d-flex flex-column">
-              <div className="dashboard-stock-header dashboard-drop">
-                <div className="pointer" onClick={() => toggleStock()}>
-                  Advance Search
-                </div>
-                <CIcon
-                  className="stock-toggle-icon"
-                  onClick={() => toggleStock()}
-                  icon={cilChevronBottom}
-                />
+        <div className="">
+          <div className="bg_Div mb-2 d-flex flex-column">
+            <div className="dashboard-stock-header dashboard-drop">
+              <div className="pointer" onClick={() => toggleStock()}>
+                Advance Search
               </div>
-              {showStock == true ? (
-                <div className="show-stock">
-                  <div className="mb-0 dashboard-table padLeftRight">
-                    <div className="row">
-                      <div className="col-md-6">
-                        <CustomInput
+              <CIcon
+                className="stock-toggle-icon"
+                onClick={() => toggleStock()}
+                icon={cilChevronBottom}
+              />
+            </div>
+            {showStock == true ? (
+              <div className="show-stock">
+                <div className="mb-0 dashboard-table padLeftRight">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <CustomInput
                         label="Recipient"
                         value={filters.recipient}
-                          onChange={changeFilter}
-                          icon={cilUser}
-                          type="text"
-                          id="recipient"
-                          name="recipient"
-                          placeholder="recipient"
-                          className="form-control item"
-                          isRequired={false}
-                          title="recipient "
+                        onChange={changeFilter}
+                        icon={cilUser}
+                        type="text"
+                        id="recipient"
+                        name="recipient"
+                        placeholder="recipient"
+                        className="form-control item"
+                        isRequired={false}
+                        title="recipient "
                         // message="Enter Buisness Name"
-                        />
-                      </div>
+                      />
+                    </div>
 
                     <div className="col-md-6">
                       <CustomSelectInput
@@ -425,7 +424,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                         icon={cilFlagAlt}
                         disableOption="Select Delivery Status"
                         id="deliveryStatus"
-                        options={globalutil.deliverstatus()}  
+                        options={globalutil.deliverstatus()}
                         className="form-control item form-select"
                         value={filters.deliveryStatus}
                         name="deliveryStatus"
@@ -433,96 +432,90 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                         onChange={(e) => changeFilter(e)}
                       />
                     </div>
-
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 mt-2">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date From"
+                        id="createdAt"
+                        name="createdAt"
+                        value={filters.createdAt}
+                        title="Campaign start date"
+                        onChange={(e) => changeFilter(e, 'createdAt')}
+                      />
                     </div>
-                    <div className="row">
-                      <div className="col-md-6 mt-2">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          label="Date From"
-                          id="createdAt"
-                          name="createdAt"
-                          value={filters.createdAt}
-                          title="Campaign start date"
-                          onChange={(e) => changeFilter(e, 'createdAt')}
-                        />
-                      </div>
-                      <div className="col-md-6 mt-2">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          label="Date To"
-                          id="lastUpdatedAt"
-                          name="lastUpdatedAt"
-                          value={filters.lastUpdatedAt}
-                          title=" Campaign end date  "
-                          onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6"> </div>
-                      <div className="col-md-6">
-                        <div className="mt-2">
-                          <button
-                            type="button"
-                            title="Click for searching user report data"
-                            onClick={() => applyFilters()}
-                            className="btn_Default m-2 sales-btn-style alignLeft"
-                          >
-                            Search
-                          </button>
-                        </div>
-                      </div>
+                    <div className="col-md-6 mt-2">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date To"
+                        id="lastUpdatedAt"
+                        name="lastUpdatedAt"
+                        value={filters.lastUpdatedAt}
+                        title=" Campaign end date  "
+                        onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                      />
                     </div>
                   </div>
-                </div>
-              ) : null}
-            </div>
-            <div className="bg_Div mb-2 d-flex flex-column">
-             {/* <DataGridHeader exportFn={() => generatePdf()} title=" Notification" />*/}
-              <div className="show-stock">
-                <div className="row ">
-                  <div className="col-md-12 col-xl-12">
-                    <CustomDatagrid
-                      rows={rows}
-                      columns={columns}
-                      rowHeight={'normal'}
-                      pagination={true}
-                      // canExport={pageRoles.canExport}
-                      // canPrint={pageRoles.canPrint}
-                    summary={[
-                      {
-                        field: 'sent',
-                        aggregates: [{ aggregate: 'sum', caption: 'Total Send' }],
-                      },
-                      {
-                        field: 'failed',
-                        aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }],
-                      },
-                      {
-                        field: 'delivered',
-                        aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
-                      },
-                    ]}
-
-
-                      
-                    />
+                  <div className="row">
+                    <div className="col-md-6"> </div>
+                    <div className="col-md-6">
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          title="Click for searching user report data"
+                          onClick={() => applyFilters()}
+                          className="btn_Default m-2 sales-btn-style alignLeft"
+                        >
+                          Search
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-md-12 col-xl-12 mt-2">
-                <div className="d-flex justify-content-end align-items-center ">
-                  {/*<button type="button" className="btn_Default m-2 sales-btn-style">*/}
-                  {/*  Cancel*/}
-                  {/*</button>*/}
+            ) : null}
+          </div>
+          <div className="bg_Div mb-2 d-flex flex-column">
+            {/* <DataGridHeader exportFn={() => generatePdf()} title=" Notification" />*/}
+            <div className="show-stock">
+              <div className="row ">
+                <div className="col-md-12 col-xl-12">
+                  <CustomDatagrid
+                    rows={rows}
+                    columns={columns}
+                    pagination={true}
+                    // canExport={pageRoles.canExport}
+                    // canPrint={pageRoles.canPrint}
+                    summary={[
+                      {
+                        key: 'sent',
+                        aggregates: [{ aggregate: 'sum', caption: 'Total Send' }],
+                      },
+                      {
+                        key: 'failed',
+                        aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }],
+                      },
+                      {
+                        key: 'delivered',
+                        aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             </div>
           </div>
-      
+          <div className="row">
+            <div className="col-md-12 col-xl-12 mt-2">
+              <div className="d-flex justify-content-end align-items-center ">
+                {/*<button type="button" className="btn_Default m-2 sales-btn-style">*/}
+                {/*  Cancel*/}
+                {/*</button>*/}
+              </div>
+            </div>
+          </div>
+        </div>
       </CContainer>
     </>
   );

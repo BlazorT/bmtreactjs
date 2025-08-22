@@ -3,7 +3,7 @@ import BmtRolesCustomCell from 'src/components/DataGridCustomCells/BmtRolesCusto
 
 export const getRolesCols = (pageRoles) => [
   {
-    field: 'id',
+    key: 'id',
     headerClassName: 'custom-header-data-grid',
     flex: 1,
     minWidth: 120,
@@ -11,11 +11,11 @@ export const getRolesCols = (pageRoles) => [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    headerName: 'id',
+    name: 'id',
     hidable: false,
   },
   {
-    field: 'roleName',
+    key: 'roleName',
     headerClassName: 'custom-header-data-grid',
     flex: 1,
     minWidth: 150,
@@ -23,10 +23,10 @@ export const getRolesCols = (pageRoles) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'RoleName',
+    name: 'RoleName',
   },
   {
-    field: 'status',
+    key: 'status',
     headerClassName: 'custom-header-data-grid',
     flex: 1,
     minWidth: 150,
@@ -34,10 +34,10 @@ export const getRolesCols = (pageRoles) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Status',
+    name: 'Status',
   },
   {
-    field: 'lastUpdate',
+    key: 'lastUpdate',
     headerClassName: 'custom-header-data-grid',
     flex: 1,
     minWidth: 150,
@@ -45,10 +45,10 @@ export const getRolesCols = (pageRoles) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Last Update Time',
+    name: 'Last Update Time',
   },
   {
-    field: 'imageUrl',
+    key: 'imageUrl',
     width: 150,
     headerClassName: 'custom-header-data-grid',
     flex: 1,
@@ -57,10 +57,13 @@ export const getRolesCols = (pageRoles) => [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    headerName: 'Action',
-    renderCell: (params) => <BmtRolesCustomCell value={params}
-     // canUpdate={pageRoles.canUpdate}
-      canUpdate={1}
-    />,
+    name: 'Action',
+    renderCell: (params) => (
+      <BmtRolesCustomCell
+        value={params}
+        // canUpdate={pageRoles.canUpdate}
+        canUpdate={1}
+      />
+    ),
   },
 ];

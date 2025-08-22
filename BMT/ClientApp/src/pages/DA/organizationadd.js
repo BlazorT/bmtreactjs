@@ -33,19 +33,20 @@ import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
 //import useApi from 'src/hooks/useApi';
 //alert('ORG Called')
-const organizationadd = () => {
+const OrganizationAdd = () => {
   dayjs.extend(utc);
   //document.write(JSON.stringify(useSelector((state) => state.navItems.pageRoles)));
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => (item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() || item.name.toLowerCase() === 'organizationadd'.toLowerCase()),
+    (item) =>
+      item.name.toLowerCase() === 'BMT Subscription'.toLowerCase() ||
+      item.name.toLowerCase() === 'organizationadd'.toLowerCase(),
   );
   const user = useSelector((state) => state.user);
 
   const [isLoading, setIsLoading] = useState(false);
   //alert(JSON.stringify(pageRoles));
   useEffect(() => {
-    
-    if (pageRoles==null || pageRoles.canAdd === 0) {
+    if (pageRoles == null || pageRoles.canAdd === 0) {
       dispatch(
         updateToast({
           isToastOpen: true,
@@ -88,7 +89,6 @@ const organizationadd = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [showOther, setShowOther] = useState(false);
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
 
@@ -141,35 +141,24 @@ const organizationadd = () => {
       }
     }
   };
-  // Define a single change handler handleDAIdentification to update daIdentificationData dynamically
-  const handleDAIdentification = (event) => {
-    const { name, value, files } = event.target;
 
-    setDAIdentificationData((prevData) => ({
-      ...prevData,
-      [name]: value, // If it's a file input, use files[0], otherwise use the value
-    }));
-  };
-
-  const toggleOther = () => {
-    setShowOther((prev) => !prev);
-  };
   const {
     response: GetCityRes,
     loading: CityLoading,
     error: createCityError,
     fetchData: GetCity,
   } = useFetch();
+
   useEffect(() => {
     getCityList();
   }, []);
+
   const getCityList = async () => {
-    
     await GetCity(
       '/Common/cities',
       {
         method: 'POST',
-       // body: JSON.stringify(fetchBody),
+        // body: JSON.stringify(fetchBody),
       },
       (res) => {
         console.log(res, 'city');
@@ -185,8 +174,7 @@ const organizationadd = () => {
           //  actionType: data.actionType,
           //  logTime: formatDateTime(data.logTime),
           //}));
-
-         // setRows(mappedArray);
+          // setRows(mappedArray);
         } else {
           dispatch(
             updateToast({
@@ -195,7 +183,7 @@ const organizationadd = () => {
               toastVariant: 'error',
             }),
           );
-       /*   setRows([]);*/
+          /*   setRows([]);*/
         }
         setIsLoading(CityLoading.current);
       },
@@ -212,17 +200,17 @@ const organizationadd = () => {
     if (form.checkValidity()) {
       const daBody = {
         ...daApplyFormData,
-        id:0,
+        id: 0,
         contact: daApplyFormData.contact,
         address: daApplyFormData.mailAddress,
-     
+
         rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
-       // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
+        // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
         createdAt: dayjs().utc().format(),
         lastUpdatedAt: dayjs().utc().format(),
         remarks: 'Organization registered successfully',
       };
-     //console.log(daBody);
+      //console.log(daBody);
       // Upload & Submit
       const fUpload = document.getElementById('fileAvatar');
       if (fUpload.files !== null && fUpload.files.length > 0) {
@@ -354,39 +342,14 @@ const organizationadd = () => {
     }
   };
 
-  //const IsThisBrandNewClick = () => {
-  //  setIsThisBrandnew(!isThisBrandnew);
-  //};
-  const maxlength = 14;
-  const associatedWithAmazonNo = () => {
-    toggleModal();
-    setEmailReadonly(false);
-  };
-
-  //const associatedWithAmazon = () => {
-  //  toggleModal();
-  //  setEmailReadonly(true);
-  //};
-
-  const handleFocus = () => {
-    toggleModal(true);
-    setIsThisBrandnew(true);
-  };
-
   const daApplyInputs = getDaAppllyInputs(
     daApplyFormData,
     handleDAFormData,
-    handleFocus,
-    emailReadonly,
     emailMessage,
-    pageRoles.canAdd,
+    true,
     onBlur,
-    GetCityRes?.current?.data ? GetCityRes.current.data:[]
+    GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
-
-  const daAppllySsnInputs = getDaAppllySsnInputs(daIdentificationData, handleDAIdentification);
-  const daAppllyIDInputs = getDaAppllyIDInputs(daIdentificationData, handleDAIdentification);
-  const daAppllyBirthInputs = getDaAppllyBirthInputs(daIdentificationData, handleDAIdentification);
 
   /*if (isLoading) {
     return <Loading />;
@@ -403,7 +366,6 @@ const organizationadd = () => {
           <React.Fragment>
             <Form name="apply-org-form">
               <Inputs inputFields={daApplyInputs} yesFn={goToAnotherPage} submitFn={submitDA}>
-                
                 <CFormCheck
                   className="mt-3 d-flex flex-row justify-content-center"
                   title="Are you agree for this?"
@@ -434,10 +396,10 @@ const organizationadd = () => {
           onNo={confirmationModal}
         />
       </AppContainer>
-     
+
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </React.Fragment>
   );
 };
 
-export default organizationadd;
+export default OrganizationAdd;

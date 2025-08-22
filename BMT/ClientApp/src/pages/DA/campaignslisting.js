@@ -13,14 +13,14 @@ import CustomFilters from 'src/components/Filters/CustomFilters';
 import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import {  formatDateTime } from 'src/helpers/formatDate';
+import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import AppContainer from 'src/components/UI/AppContainer';
 import _ from 'lodash';
 const campaignslisting = () => {
   dayjs.extend(utc);
-  const user = useSelector((state) => state.user)
-  useEffect(() => {    
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
     getCampaignsList();
   }, []);
 
@@ -33,20 +33,20 @@ const campaignslisting = () => {
   const [campaignData, setCampaignData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
- 
+
   const orgId = user.orgId;
   const Role = user.roleId;
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
     rowVer: 0,
-    networkId:0,
-    name: '',  
+    networkId: 0,
+    name: '',
     status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
- 
+
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
   const getCampaignsList = async (filters) => {
@@ -94,13 +94,12 @@ const campaignslisting = () => {
 
   const changeFilter = (event, fieldName, label) => {
     let colName = fieldName;
-    if (fieldName === "name") {
+    if (fieldName === 'name') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         name: event,
       }));
-    }
-    else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
+    } else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
       // Custom value or date picker
       setFilters((prevFilters) => ({
         ...prevFilters,
@@ -116,7 +115,7 @@ const campaignslisting = () => {
         [colName]: value,
       }));
     } else {
-      console.warn("Unsupported event type:", event);
+      console.warn('Unsupported event type:', event);
     }
   };
 
@@ -129,7 +128,7 @@ const campaignslisting = () => {
   };
 
   const handleReset = () => {
-   // getCampaignsList();
+    // getCampaignsList();
     //setFilters({
     //  id: 0,
     //  orgId: user.orgId,
@@ -138,7 +137,7 @@ const campaignslisting = () => {
     //  name: '',
     //  status: 0,
     //  createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
-    //  lastUpdatedAt: dayjs().utc().startOf('day').format()     
+    //  lastUpdatedAt: dayjs().utc().startOf('day').format()
     //});
   };
   const {
@@ -157,7 +156,7 @@ const campaignslisting = () => {
       orgId: 0,
       email: '',
       name: '',
-      contact: "",
+      contact: '',
       rowVer: 0,
       cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
@@ -173,12 +172,11 @@ const campaignslisting = () => {
       ...filters,
     };
     await GetOrg(
-      '/BlazorApi/orgsfulldata',{ method: 'POST', body: JSON.stringify(compaignBody),},
+      '/BlazorApi/orgsfulldata',
+      { method: 'POST', body: JSON.stringify(compaignBody) },
       (res) => {
         console.log(res, 'orgs');
         if (res.status === true) {
-         
-
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -196,17 +194,22 @@ const campaignslisting = () => {
   };
   useEffect(() => {
     if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data
-      const findUserOrg = orgData?.find((item) => item.id === orgId)
-     // console.log(findUserOrg, 'findUserOrg')
+      const orgData = GetOrgRes?.current?.data;
+      const findUserOrg = orgData?.find((item) => item.id === orgId);
+      // console.log(findUserOrg, 'findUserOrg')
       if (findUserOrg)
         setFilters((prevFilters) => ({
           ...prevFilters,
           name: findUserOrg,
         }));
     }
-  }, [GetOrgRes?.current?.data, orgId])
-  const orgFilterFields = getOrgFiltersFields(filters, changeFilter, GetOrgRes?.current?.data || [], Role);
+  }, [GetOrgRes?.current?.data, orgId]);
+  const orgFilterFields = getOrgFiltersFields(
+    filters,
+    changeFilter,
+    GetOrgRes?.current?.data || [],
+    Role,
+  );
   const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
 
   if (loading) {
@@ -219,7 +222,7 @@ const campaignslisting = () => {
           <AppContainer>
             <DataGridHeader
               title="Advance Search"
-              onClick={toggleFilters }
+              onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
             />
@@ -235,16 +238,14 @@ const campaignslisting = () => {
             )}
           </AppContainer>
 
-
           <AppContainer>
             <DataGridHeader
               title="Campaigns Listing"
               onClick={toggleGrid}
               addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
               addBtnClick={() => navigate('/campaignadd')}
-              otherControls={[        
-                { icon: cilChevronBottom, fn: toggleGrid },
-              ]}
+              otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
+              filterDisable
             />
             {showDaGrid && (
               <CustomDatagrid
@@ -253,12 +254,11 @@ const campaignslisting = () => {
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
-                sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]} 
+                sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
               />
             )}
-
           </AppContainer>
         </React.Fragment>
       )}

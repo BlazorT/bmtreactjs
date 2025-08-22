@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import CIcon from '@coreui/icons-react';
 import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
-import { CCol, CRow } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Tooltip from '@mui/material/Tooltip';
 
 import Spinner from '../UI/Spinner';
 
 import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
-import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
 const UsersActionCell = (prop) => {
   const { params, fetching, user, canEdit, canDelete } = prop;
   const navigate = useNavigate();
@@ -58,36 +57,35 @@ const UsersActionCell = (prop) => {
         <CRow>
           {userStatus === 6 ? (
             <CCol>
-              <Tooltip title="Re-Activate User">
+              <CTooltip content="Re-Activate User">
                 <CIcon
                   onClick={() => toggleStatus(5)}
                   className="stock-toggle-icon"
                   icon={cilReload}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           ) : (
             <>
-             
-                <CCol>
-                  <Tooltip title="Edit User">
-                    <CIcon
-                      onClick={() => editUser(params.id)}
-                      className="stock-toggle-icon"
-                      icon={cilPencil}
-                    />
-                  </Tooltip>
-                </CCol>
-             
+              <CCol>
+                <CTooltip content="Edit User">
+                  <CIcon
+                    onClick={() => editUser(params.id)}
+                    className="stock-toggle-icon"
+                    icon={cilPencil}
+                  />
+                </CTooltip>
+              </CCol>
+
               {canDelete === 1 && (
                 <CCol>
-                  <Tooltip title="Delete User">
+                  <CTooltip content="Delete User">
                     <CIcon
                       className="stock-toggle-icon"
                       onClick={() => toggleStatus(4)}
                       icon={cilTrash}
                     />
-                  </Tooltip>
+                  </CTooltip>
                 </CCol>
               )}
             </>

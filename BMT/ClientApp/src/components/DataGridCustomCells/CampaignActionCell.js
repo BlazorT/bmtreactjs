@@ -14,17 +14,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
-import Tooltip from '@mui/material/Tooltip';
 
-import { CCol, CRow } from '@coreui/react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import Spinner from '../UI/Spinner';
 import { useSelector } from 'react-redux';
-import Popover from '../UI/Popover';
-import { AppSpeedDial } from '../UI/AppSpeedDial';
 
 const CampaignActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
@@ -40,7 +37,6 @@ const CampaignActionCell = (prop) => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
 
   const loginUser = useSelector((state) => state.user);
 
@@ -81,27 +77,22 @@ const CampaignActionCell = (prop) => {
     });
   };
 
-
   const onYesToggle = async (status) => {
-  try {
-
-    const response = await updateStatus(user, status);
-    console.log("response", response);
-    if (response?.status) {
-      showToast(`${user[0].name} ${status === 1 ? 're activated' : 'deleted'} successfully`);
-      //  fetching();
-    } else {
-      showToast(response?.message, 'error');
-    }
-
-  } catch (e) {
-    console.log(e, 'error')
+    try {
+      const response = await updateStatus(user, status);
+      console.log('response', response);
+      if (response?.status) {
+        showToast(`${user[0].name} ${status === 1 ? 're activated' : 'deleted'} successfully`);
+        //  fetching();
+      } else {
+        showToast(response?.message, 'error');
+      }
+    } catch (e) {
+      console.log(e, 'error');
     } finally {
-      
-    onNoConfirm();
-  }
+      onNoConfirm();
+    }
   };
-  
 
   const onNoConfirm = () => {
     showConfirmation({
@@ -117,78 +108,77 @@ const CampaignActionCell = (prop) => {
   if (loading) {
     return <Spinner />;
   }
- // console.log("canUpdate", canUpdate);
- // console.log("canDelete", canDelete);
+  // console.log("canUpdate", canUpdate);
+  // console.log("canDelete", canDelete);
   return (
     <React.Fragment>
       {value.row.status === 4 ? (
         <CRow>
           <CCol>
-            <Tooltip title="Re-Activate Campaign">
+            <CTooltip content="Re-Activate Campaign">
               <CIcon
                 onClick={() => toggleStatus(5)}
                 className="stock-toggle-icon"
                 icon={cilReload}
                 style={{ cursor: 'pointer' }}
               />
-            </Tooltip>
+            </CTooltip>
           </CCol>
         </CRow>
       ) : (
         <CRow>
-       {/*   {canUpdate === 1 && (*/}
-            <CCol>
-              <Tooltip title="Edit Campaign">
-                <CIcon
-                  onClick={() => editCampaign(value.row.id)}
-                  className="stock-toggle-icon"
-                  icon={cilPencil}
-                  style={{ cursor: 'pointer' }}
-                />
-              </Tooltip>
-            </CCol>
-        {/*  )}*/}
+          {/*   {canUpdate === 1 && (*/}
+          <CCol>
+            <CTooltip content="Edit Campaign">
+              <CIcon
+                onClick={() => editCampaign(value.row.id)}
+                className="stock-toggle-icon"
+                icon={cilPencil}
+                style={{ cursor: 'pointer' }}
+              />
+            </CTooltip>
+          </CCol>
+          {/*  )}*/}
 
           {/* Pause Campaign */}
           <CCol>
-            <Tooltip title="Pause Campaign">
+            <CTooltip content="Pause Campaign">
               <CIcon
                 onClick={() => toggleStatus(6)} // Assuming 6 = Pause
                 className="stock-toggle-icon"
                 icon={cilMediaPause}
                 style={{ cursor: 'pointer' }}
               />
-            </Tooltip>
+            </CTooltip>
           </CCol>
 
           {/* Stop Campaign */}
           <CCol>
-            <Tooltip title="Stop Campaign">
+            <CTooltip content="Stop Campaign">
               <CIcon
                 onClick={() => toggleStatus(7)} // Assuming 7 = Stop
                 className="stock-toggle-icon"
                 icon={cilMediaStop}
                 style={{ cursor: 'pointer' }}
               />
-            </Tooltip>
+            </CTooltip>
           </CCol>
 
           {canDelete === 1 && (
             <CCol>
-              <Tooltip title="Delete Campaign">
+              <CTooltip content="Delete Campaign">
                 <CIcon
                   className="stock-toggle-icon"
                   icon={cilTrash}
                   onClick={() => toggleStatus(4)}
                   style={{ cursor: 'pointer' }}
                 />
-              </Tooltip>
+              </CTooltip>
             </CCol>
           )}
         </CRow>
       )}
     </React.Fragment>
   );
-
 };
 export default CampaignActionCell;

@@ -3,8 +3,8 @@ import RecipientsActionCell from 'src/components/DataGridCustomCells/RecipientsA
 
 export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'networkId',
-    headerName: 'Network Name',
+    key: 'networkId',
+    name: 'Network Name',
     flex: 1,
     minWidth: 160,
     editable: false,
@@ -14,8 +14,8 @@ export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'contentId',
-    headerName: 'Recipients ',
+    key: 'contentId',
+    name: 'Recipients ',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -24,11 +24,10 @@ export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
- 
- 
+
   {
-    field: 'createdAt',
-    headerName: 'Created At',
+    key: 'createdAt',
+    name: 'Created At',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -38,11 +37,10 @@ export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
- 
- 
+
   {
-    field: 'imageUrl',
-    headerName: 'Action',
+    key: 'imageUrl',
+    name: 'Action',
     flex: 1,
     minWidth: 50,
     // maxWidth: 100,
@@ -56,8 +54,8 @@ export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
         value={params}
         fetching={daRes}
         user={daRes.filter((item) => item.id === params.row.id)}
-      //  canUpdate={pageRoles.canUpdate}
-      //  canDelete={pageRoles.canDelete}
+        //  canUpdate={pageRoles.canUpdate}
+        //  canDelete={pageRoles.canDelete}
       />
     ),
   },

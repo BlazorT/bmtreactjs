@@ -1,44 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Sms from '@mui/icons-material/Sms';
-import WhatsApp from '@mui/icons-material/WhatsApp';
-import Email from '@mui/icons-material/Email';
-import Facebook from '@mui/icons-material/Facebook';
-import LinkedIn from '@mui/icons-material/LinkedIn';
-import Twitter from '@mui/icons-material/Twitter';
-import Instagram from '@mui/icons-material/Instagram';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import DeleteIcon from '@mui/icons-material/Delete'; // if using MUI
-import IconButton from '@mui/material/IconButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import Range from 'src/views/forms/range/Range';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import useFetch from 'src/hooks/useFetch';
+import { cilChevronBottom, cilTrash } from '@coreui/icons';
+import { CCol, CContainer, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
+
 import dayjs from 'dayjs';
-import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import LocationSelector from 'src/components/Component/LocationMarker';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import {getCampaignAddConfig,getInitialCampaignData,} from 'src/configs/InputConfig/campaignAddConfig';
-import { CContainer } from '@coreui/react';
-import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
-import globalutil from 'src/util/globalutil';
-import LocationSelector from "src/components/Component/LocationMarker"; 
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
+import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import AppContainer from 'src/components/UI/AppContainer';
-import { CFormCheck } from '@coreui/react';
 import Form from 'src/components/UI/Form';
 import Loading from 'src/components/UI/Loading';
+import {
+  getCampaignAddConfig,
+  getInitialCampaignData,
+} from 'src/configs/InputConfig/campaignAddConfig';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
-import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
+import globalutil from 'src/util/globalutil';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
+import Range from 'src/components/UI/Range';
+import {
+  cibFacebook,
+  cibGmail,
+  cibInstagram,
+  cibLinkedin,
+  cibSnapchat,
+  cibTiktok,
+  cibTwitter,
+  cibWhatsapp,
+  cilShortText,
+} from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
 
 const campaignadd = () => {
   // let state;
@@ -53,52 +50,56 @@ const campaignadd = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
- 
-  const [interestSearch, setInterestSearch] = useState("");
+
+  const [interestSearch, setInterestSearch] = useState('');
 
   const [scheduleData, setScheduleData] = useState([]);
 
   const [addScheduleModel, setAddScheduleModel] = useState(false);
- 
-  const [schedulerows, setScheduleRows] = useState([]);
-  const allNetworkNames = globalutil.networks().map(n => n.name);
 
-  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames??[]);
+  const [schedulerows, setScheduleRows] = useState([]);
+  const allNetworkNames = globalutil.networks().map((n) => n.name);
+
+  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
 
-  const tabs = [{ id: 0, name: 'Campaign' }, { id: 1, name: 'Networks' }, { id: 2, name: 'Schedule' }];
+  const tabs = [
+    { id: 0, name: 'Campaign' },
+    { id: 1, name: 'Networks' },
+    { id: 2, name: 'Schedule' },
+  ];
   const showToast = useShowToast();
   const availableInterests = [
     // Existing
-    "Technology",
-    "Sports",
-    "Music",
-    "Travel",
-    "Cooking",
-    "Fitness",
-    "Gaming",
-    "Movies",
+    'Technology',
+    'Sports',
+    'Music',
+    'Travel',
+    'Cooking',
+    'Fitness',
+    'Gaming',
+    'Movies',
 
     // New additions
-    "Photography",
-    "Art & Design",
-    "Entrepreneurship",
-    "Fashion",
-    "Reading",
-    "Education",
-    "History",
-    "Science",
-    "Health & Wellness",
-    "Politics",
-    "Nature",
-    "Gardening",
-    "Volunteering",
-    "Business & Finance",
-    "Self-Improvement",
-    "Spirituality",
-    "Food & Drinks",
-    "Automobiles",
-    "Home Decor",
+    'Photography',
+    'Art & Design',
+    'Entrepreneurship',
+    'Fashion',
+    'Reading',
+    'Education',
+    'History',
+    'Science',
+    'Health & Wellness',
+    'Politics',
+    'Nature',
+    'Gardening',
+    'Volunteering',
+    'Business & Finance',
+    'Self-Improvement',
+    'Spirituality',
+    'Food & Drinks',
+    'Automobiles',
+    'Home Decor',
   ];
   //useEffect(() => {
   //  const state = location.state;
@@ -117,39 +118,47 @@ const campaignadd = () => {
     const now = dayjs();
 
     // ✅ FILE HANDLING
- if (label === 'video' || label === 'image' || label === 'pdf') {
-  const file = e.target.files[0];
-  if (!file) return;
+    if (label === 'video' || label === 'image' || label === 'pdf') {
+      const file = e.target.files[0];
+      if (!file) return;
 
-  const type = file.type;
-  const isVideo = label === 'video' && type.startsWith('video/');
-  const isImage = label === 'image' && type.startsWith('image/');
-  const isPDF = label === 'pdf' && type === 'application/pdf';
+      const type = file.type;
+      const isVideo = label === 'video' && type.startsWith('video/');
+      const isImage = label === 'image' && type.startsWith('image/');
+      const isPDF = label === 'pdf' && type === 'application/pdf';
 
-  if (!(isVideo || isImage || isPDF)) {
-    e.target.value = null;
-    showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
-    return;
-  }
+      if (!(isVideo || isImage || isPDF)) {
+        e.target.value = null;
+        showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
+        return;
+      }
 
-  // Save the file into the correct field based on the label
-  const fieldName =
-    label === 'video' ? 'videoAttachment' :
-    label === 'image' ? 'imageAttachment' :
-    label === 'pdf' ? 'pdfAttachment' : null;
+      // Save the file into the correct key based on the label
+      const fieldName =
+        label === 'video'
+          ? 'videoAttachment'
+          : label === 'image'
+            ? 'imageAttachment'
+            : label === 'pdf'
+              ? 'pdfAttachment'
+              : null;
 
-  setCampaignRegData((prev) => ({
-    ...prev,
-    [fieldName]: file,
-  }));
-  return;
-}
+      setCampaignRegData((prev) => ({
+        ...prev,
+        [fieldName]: file,
+      }));
+      return;
+    }
 
     // ✅ DATE HANDLING
-    const fieldKey = (label === 'Campaign Start Date') ? 'startTime' :
-      (label === 'Campaign End Date') ? 'finishTime' : null;
+    const fieldKey =
+      label === 'Campaign Start Date'
+        ? 'startTime'
+        : label === 'Campaign End Date'
+          ? 'finishTime'
+          : null;
 
-    if (['startTime', 'finishTime'].includes(fieldKey)) {   
+    if (['startTime', 'finishTime'].includes(fieldKey)) {
       const selectedDate = dayjs(e);
       if (selectedDate.isBefore(now, 'minute')) {
         showToast(`${label} cannot be in the past.`, 'error');
@@ -159,7 +168,7 @@ const campaignadd = () => {
       setCampaignRegData((prev) => ({
         ...prev,
         [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
-        ...(fieldKey === 'startTime' && { startDate:selectedDate.format('YYYY-MM-DD') }),
+        ...(fieldKey === 'startTime' && { startDate: selectedDate.format('YYYY-MM-DD') }),
         ...(fieldKey === 'finishTime' && { endDate: selectedDate.format('YYYY-MM-DD') }),
       }));
 
@@ -179,9 +188,13 @@ const campaignadd = () => {
     if (e?.target) {
       const { name, value, type, checked, files } = e.target;
       const inputValue =
-        type === 'checkbox' ? checked :
-          type === 'file' ? files[0] :
-            name === 'status' ? parseInt(value) : value;
+        type === 'checkbox'
+          ? checked
+          : type === 'file'
+            ? files[0]
+            : name === 'status'
+              ? parseInt(value)
+              : value;
 
       setCampaignRegData((prevData) => ({
         ...prevData,
@@ -191,16 +204,16 @@ const campaignadd = () => {
     }
 
     // ❌ UNHANDLED CASE
-    console.warn("Unhandled input in handleCampaignAddForm:", { e, label });
+    console.warn('Unhandled input in handleCampaignAddForm:', { e, label });
   };
-  console.log("campaignRegDataInitial", campaignRegData);
+  console.log('campaignRegDataInitial', campaignRegData);
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
   const toggleTargetAud = () => {
     setTargetAudience((prev) => !prev);
   };
- 
+
   const toggleAddScheduleMdl = () => {
     setAddScheduleModel((prev) => !prev);
   };
@@ -217,11 +230,10 @@ const campaignadd = () => {
     setConfirmationModalOpen(false); // close the modal
     navigate('/campaignslisting');
   };
-  
-  const onYesConfirm = () => {
-   // toggle();
-    onNoConfirm();
 
+  const onYesConfirm = () => {
+    // toggle();
+    onNoConfirm();
   };
 
   const onNoConfirm = () => {
@@ -229,19 +241,23 @@ const campaignadd = () => {
       isOpen: false,
     });
   };
-  const campaignAddInputs = getCampaignAddConfig(campaignRegData,handleCampaignAddForm,TermsModal);
+  const campaignAddInputs = getCampaignAddConfig(
+    campaignRegData,
+    handleCampaignAddForm,
+    TermsModal,
+  );
   const icons = {
-    Tiktock: Email,
-    Snapchat: Email,
-    Facebook: Facebook,
-    Sms: Sms,
-    Linkedin: LinkedIn,
-    Twitter: Twitter,
-    Instagram: Instagram,
-    Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
-    Email: Email // Assuming Email is your component for Email icon
+    Tiktock: cibTiktok,
+    Snapchat: cibSnapchat,
+    Facebook: cibFacebook,
+    Sms: cilShortText,
+    Linkedin: cibLinkedin,
+    Twitter: cibTwitter,
+    Instagram: cibInstagram,
+    Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
+    Email: cibGmail, // Assuming Email is your component for Email icon
   };
-  console.log(campaignRegData,'test')
+  console.log(campaignRegData, 'test');
   useEffect(() => {
     const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
 
@@ -255,7 +271,7 @@ const campaignadd = () => {
           const parsed = JSON.parse(item.days);
           parsedDays = Array.isArray(parsed) ? parsed : [];
         } catch (e) {
-          console.error("❌ Failed to parse days:", item.days);
+          console.error('❌ Failed to parse days:', item.days);
         }
       }
 
@@ -264,53 +280,47 @@ const campaignadd = () => {
         interval: item.Intervalval ?? '',
         budget: item.Budget ?? '',
         NetworkId: item.NetworkId ?? '',
-        days: parsedDays.length > 0
-          ? parsedDays.map(d => dayNames[d]).join(', ')
-          : '',
+        days: parsedDays.length > 0 ? parsedDays.map((d) => dayNames[d]).join(', ') : '',
         startTime: dayjs(item.StartTime).isValid()
-          ? dayjs(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
+          ? dayjs(item.StartTime).format('YYYY-MM-DD HH:mm:ss')
           : '',
         finishTime: dayjs(item.FinishTime).isValid()
-          ? dayjs(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
-          : ''
+          ? dayjs(item.FinishTime).format('YYYY-MM-DD HH:mm:ss')
+          : '',
       };
     });
 
     setScheduleRows(formatted);
-    console.log("✅ Formatted scheduleData:", formatted);
+    console.log('✅ Formatted scheduleData:', formatted);
   }, [scheduleData]); // <--- Depend on scheduleData only
 
-
-
   const handleDeleteRow = (idToDelete) => {
-    const updatedRows = schedulerows.filter(row => row.id !== idToDelete);
+    const updatedRows = schedulerows.filter((row) => row.id !== idToDelete);
     setScheduleRows(updatedRows);
   };
   const schedulecolumns = [
-    { field: 'interval',flex:1, headerName: 'Interval', width: 100 },
-    { field: 'budget', flex: 1, headerName: 'Budget', minWidth: 130 },
-    { field: 'NetworkId', flex: 1, headerName: 'Network', minWidth: 150,  },
-    { field: 'days', flex: 1, headerName: 'Days', minWidth: 250 },
-    { field: 'startTime', flex: 1, headerName: 'Start Time', minWidth: 150 },
-    { field: 'finishTime', flex: 1, headerName: 'End Time', minWidth: 130 },
+    { key: 'interval', flex: 1, name: 'Interval', width: 100 },
+    { key: 'budget', flex: 1, name: 'Budget', minWidth: 130 },
+    { key: 'NetworkId', flex: 1, name: 'Network', minWidth: 150 },
+    { key: 'days', flex: 1, name: 'Days', minWidth: 250 },
+    { key: 'startTime', flex: 1, name: 'Start Time', minWidth: 150 },
+    { key: 'finishTime', flex: 1, name: 'End Time', minWidth: 130 },
 
     {
-      field: 'action',
-      headerName: 'Action',
+      key: 'action',
+      name: 'Action',
       minWidth: 100,
       sortable: false,
       renderCell: (params) => (
-        <IconButton onClick={() => handleDeleteRow(params.row.id)} color="error">
-          <DeleteIcon />
-        </IconButton>
-      )
-    }
+        <CIcon icon={cilTrash} onClick={() => handleDeleteRow(params.row.id)} />
+      ),
+    },
   ];
 
   if (isLoading) {
     return <Loading />;
   }
- 
+
   const handleCheckboxChange = (networkName) => {
     setSelectedNetworks((prevSelected) => {
       const isSelected = prevSelected.includes(networkName);
@@ -346,12 +356,12 @@ const campaignadd = () => {
 
       return {
         ...prev,
-        [networkName]: updated
+        [networkName]: updated,
       };
     });
   };
   const filteredInterests = availableInterests.filter((interest) =>
-    interest.toLowerCase().includes(interestSearch.toLowerCase())
+    interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
 
   return (
@@ -375,7 +385,7 @@ const campaignadd = () => {
               {showForm && (
                 <React.Fragment>
                   <Inputs
-                    inputFields={ campaignAddInputs }
+                    inputFields={campaignAddInputs}
                     yesFn={goToAnotherPage}
                     submitBtnTitle="Next"
                     submitFn={() => {
@@ -388,24 +398,49 @@ const campaignadd = () => {
                       campaignRegData.name = trimmedName; // Update value if needed
                       setActiveTab(1);
                     }}
-
                   >
                     <div className="row">
-                    
                       <div className="col-md-6 mt-2">
-                        <FormControl>
-                          <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Status</FormLabel>
-                          <RadioGroup
-                            row
-                            name="status"
-                            value={campaignRegData.status} // 👈 number value
-                            onChange={handleCampaignAddForm}
-                          >
-                            <FormControlLabel value={1} control={<Radio />} label="Active" />
-                            <FormControlLabel value={2} control={<Radio />} label="Paused" />
-                            <FormControlLabel value={3} control={<Radio />} label="Cancel" />
-                          </RadioGroup>
-                        </FormControl>
+                        <CForm>
+                          <CFormLabel className="labelName" htmlFor="status-radio-group">
+                            Status
+                          </CFormLabel>
+                          <div className="d-flex">
+                            <CFormCheck
+                              type="radio"
+                              id="status-active"
+                              name="status"
+                              value={1}
+                              inline
+                              label="Active"
+                              checked={campaignRegData.status === 1}
+                              onChange={handleCampaignAddForm}
+                              className="me-3 d-flex"
+                            />
+                            <CFormCheck
+                              type="radio"
+                              id="status-paused"
+                              name="status"
+                              value={2}
+                              inline
+                              label="Paused"
+                              checked={campaignRegData.status === 2}
+                              onChange={handleCampaignAddForm}
+                              className="me-3 d-flex"
+                            />
+                            <CFormCheck
+                              type="radio"
+                              inline
+                              id="status-cancel"
+                              name="status"
+                              value={3}
+                              label="Cancel"
+                              checked={campaignRegData.status === 3}
+                              onChange={handleCampaignAddForm}
+                              className="d-flex"
+                            />
+                          </div>
+                        </CForm>
                       </div>
                     </div>
                     <AppContainer>
@@ -422,19 +457,46 @@ const campaignadd = () => {
                         <CRow>
                           <CCol md="6" className="mt-3">
                             <div className="btn-group">
-                              <FormControl>
-                                <FormLabel className="labelName" id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-                                <RadioGroup
-                                  row
-                                  name="genderId"
-                                  value={campaignRegData.genderId} // 👈 number value
-                                  onChange={handleCampaignAddForm}
-                                >
-                                  <FormControlLabel value={1} control={<Radio />} label="All" />
-                                  <FormControlLabel value={2} control={<Radio />} label="Men" />
-                                  <FormControlLabel value={3} control={<Radio />} label="Women" />
-                                </RadioGroup>
-                              </FormControl>
+                              <CForm>
+                                <CFormLabel className="labelName" htmlFor="gender-radio-group">
+                                  Gender
+                                </CFormLabel>
+                                <div className="d-flex">
+                                  <CFormCheck
+                                    type="radio"
+                                    id="gender-all"
+                                    name="genderId"
+                                    inline
+                                    value={1}
+                                    label="All"
+                                    checked={campaignRegData.genderId === 1}
+                                    onChange={handleCampaignAddForm}
+                                    className="me-3 d-flex"
+                                  />
+                                  <CFormCheck
+                                    type="radio"
+                                    id="gender-men"
+                                    name="genderId"
+                                    value={2}
+                                    inline
+                                    label="Men"
+                                    checked={campaignRegData.genderId === 2}
+                                    onChange={handleCampaignAddForm}
+                                    className="me-3 d-flex"
+                                  />
+                                  <CFormCheck
+                                    type="radio"
+                                    id="gender-women"
+                                    name="genderId"
+                                    inline
+                                    value={3}
+                                    label="Women"
+                                    checked={campaignRegData.genderId === 3}
+                                    onChange={handleCampaignAddForm}
+                                    className="d-flex"
+                                  />
+                                </div>
+                              </CForm>
                             </div>
                           </CCol>
                           <CCol md="6">
@@ -448,18 +510,16 @@ const campaignadd = () => {
                                 setCampaignRegData({ ...campaignRegData, maxAge: val })
                               }
                             />
-
                           </CCol>
                         </CRow>
 
-
                         {/* Locations + Detailed Targeting */}
                         <CRow className="mt-2">
-                            <LocationSelector
-                              campaignRegData={campaignRegData}
-                              setCampaignRegData={setCampaignRegData}
-                            />
-                          
+                          <LocationSelector
+                            campaignRegData={campaignRegData}
+                            setCampaignRegData={setCampaignRegData}
+                          />
+
                           <CCol md="6">
                             <h5>Interests</h5>
                             <input
@@ -469,12 +529,15 @@ const campaignadd = () => {
                               value={interestSearch}
                               onChange={(e) => setInterestSearch(e.target.value)}
                               onKeyDown={(e) => {
-                                if (e.key === "Enter" && interestSearch.trim()) {
+                                if (e.key === 'Enter' && interestSearch.trim()) {
                                   setCampaignRegData({
                                     ...campaignRegData,
-                                    interests: [...(campaignRegData.interests || []), interestSearch.trim()],
+                                    interests: [
+                                      ...(campaignRegData.interests || []),
+                                      interestSearch.trim(),
+                                    ],
                                   });
-                                  setInterestSearch("");
+                                  setInterestSearch('');
                                 }
                               }}
                             />
@@ -485,13 +548,13 @@ const campaignadd = () => {
                                 {filteredInterests.map((interest, index) => (
                                   <div
                                     key={index}
-                                    style={{ cursor: "pointer", padding: "4px 0" }}
+                                    style={{ cursor: 'pointer', padding: '4px 0' }}
                                     onClick={() => {
                                       setCampaignRegData({
                                         ...campaignRegData,
                                         interests: [...(campaignRegData.interests || []), interest],
                                       });
-                                      setInterestSearch("");
+                                      setInterestSearch('');
                                     }}
                                   >
                                     {interest}
@@ -505,11 +568,13 @@ const campaignadd = () => {
                                 <span
                                   key={index}
                                   className="badge bg-primary me-2"
-                                  style={{ cursor: "pointer" }}
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setCampaignRegData({
                                       ...campaignRegData,
-                                      interests: campaignRegData.interests.filter((_, i) => i !== index),
+                                      interests: campaignRegData.interests.filter(
+                                        (_, i) => i !== index,
+                                      ),
                                     });
                                   }}
                                 >
@@ -518,13 +583,9 @@ const campaignadd = () => {
                               ))}
                             </div>
                           </CCol>
-
                         </CRow>
-
                       </React.Fragment>
                     )}
-
-
                   </Inputs>
                 </React.Fragment>
               )}
@@ -534,22 +595,19 @@ const campaignadd = () => {
         {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
           <React.Fragment>
             <AppContainer>
-              <DataGridHeader
-                title="Networks"
-                filterDisable={false}
-              />
+              <DataGridHeader title="Networks" filterDisable={false} />
             </AppContainer>
             <CRow>
               {globalutil.networks().map((network, index) => {
                 const displayLabel = network.name;
-                const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase(); // icon key lookup
-                const IconComponent = icons[IconName];
+                const IconName =
+                  network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase(); // icon key lookup
 
                 let postTypeIds = [];
                 try {
-                  postTypeIds = JSON.parse(network.desc || "[]");
+                  postTypeIds = JSON.parse(network.desc || '[]');
                 } catch (err) {
-                  console.warn("Invalid desc format in network:", network.desc);
+                  console.warn('Invalid desc format in network:', network.desc);
                 }
 
                 const postTypeList = globalutil
@@ -564,7 +622,10 @@ const campaignadd = () => {
 
                   if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
                     handlePostTypeToggle(network.name, singleTypeId); // select
-                  } else if (!isSelected && selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                  } else if (
+                    !isSelected &&
+                    selectedPostTypes[network.name]?.includes(singleTypeId)
+                  ) {
                     handlePostTypeToggle(network.name, singleTypeId); // unselect
                   }
                 }
@@ -573,7 +634,7 @@ const campaignadd = () => {
                   <CCol md={4} key={index} className="mb-4">
                     <ul className="inlinedisplay">
                       <li className="divCircle">
-                        <IconComponent className="BlazorIcon pdngleft" fontSize="large" color="success" />
+                        <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
                       </li>
                       <li className="network-checkbox-animate">
                         <CFormCheck
@@ -603,7 +664,6 @@ const campaignadd = () => {
                   </CCol>
                 );
               })}
-
             </CRow>
             <React.Fragment>
               <div className="CenterAlign pt-2">
@@ -616,15 +676,14 @@ const campaignadd = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setActiveTab(2);               // Go to tab 2
-                    toggleAddScheduleMdl();        // Open modal
+                    setActiveTab(2); // Go to tab 2
+                    toggleAddScheduleMdl(); // Open modal
                   }}
                   type="button"
                   className="btn btn_Default sales-btn-style m-2"
                 >
                   Next
                 </button>
-
               </div>
             </React.Fragment>
           </React.Fragment>
@@ -639,6 +698,7 @@ const campaignadd = () => {
                       addButton="Schedule"
                       addBtnClick={AddScheduleClick}
                       title="Schedules"
+                      filterDisable
                     />
                     <div className="show-stock">
                       <div className="row">
@@ -676,7 +736,6 @@ const campaignadd = () => {
         setData={setScheduleData}
         data={scheduleData}
         header="Add Schedule "
-
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

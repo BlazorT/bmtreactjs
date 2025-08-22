@@ -1,36 +1,51 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { CCard, CCardHeader, CCol, CRow } from '@coreui/react';
+import {
+  cibFacebook,
+  cibGmail,
+  cibInstagram,
+  cibLinkedin,
+  cibSnapchat,
+  cibTiktok,
+  cibTwitter,
+  cibWhatsapp,
+  cilCalendar,
+  cilFlagAlt,
+  cilShortText,
+} from '@coreui/icons';
+import { CCol, CFormCheck, CRow } from '@coreui/react';
+import React, { useEffect, useState } from 'react';
 import AppContainer from 'src/components/UI/AppContainer';
-import { CFormCheck } from '@coreui/react';
-import { cilChevronBottom, cilFlagAlt, cilCalendar } from '@coreui/icons';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import Sms from '@mui/icons-material/Sms';
-import WhatsApp from '@mui/icons-material/WhatsApp';
-import Email from '@mui/icons-material/Email';
-import Facebook from '@mui/icons-material/Facebook';
-import LinkedIn from '@mui/icons-material/LinkedIn';
-import Twitter from '@mui/icons-material/Twitter';
-import Instagram from '@mui/icons-material/Instagram';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { cilTask, cilCode, cilExcerpt, cilGraph, cilInfo } from '@coreui/icons';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import useFetch from 'src/hooks/useFetch';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import CustomSelectInput from '../InputsComponent/CustomSelectInput';
-import globalutil from 'src/util/globalutil';
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import { useShowToast } from 'src/hooks/useShowToast';
-import CustomTimePicker from 'src/components/UI/TimePicker';
+
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { formValidator } from 'src/helpers/formValidator';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+import CustomTimePicker from 'src/components/UI/TimePicker';
 import { createSchedule } from 'src/hooks/api/createSchedule';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import globalutil from 'src/util/globalutil';
+import CustomSelectInput from '../InputsComponent/CustomSelectInput';
+import CIcon from '@coreui/icons-react';
 const AddScheduleModel = (prop) => {
   dayjs.extend(utc);
-  const { header, isOpen, toggle, initialData, selectedNetworks, selectedPostTypes, selectedDays, setData, data, selected, setSelected, campaignRegData : submitData } = prop;
+  const {
+    header,
+    isOpen,
+    toggle,
+    initialData,
+    selectedNetworks,
+    selectedPostTypes,
+    selectedDays,
+    setData,
+    data,
+    selected,
+    setSelected,
+    campaignRegData: submitData,
+  } = prop;
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
     TotalSchMessages: 0,
@@ -115,9 +130,9 @@ const AddScheduleModel = (prop) => {
   //};
 
   const calculateBudget = (networks, selectedDays) => {
-    console.log(networks)
-    
-    const networkCount = networks?.length??0;
+    console.log(networks);
+
+    const networkCount = networks?.length ?? 0;
     const dayCount = selectedDays.length;
 
     const scheduleCount = networkCount * (dayCount || 1); // Avoid multiplying by 0
@@ -138,17 +153,17 @@ const AddScheduleModel = (prop) => {
     { id: 4, name: 'Wednesday' },
     { id: 5, name: 'Thursday' },
     { id: 6, name: 'Friday' },
-    { id: 7, name: 'Saturday' }
+    { id: 7, name: 'Saturday' },
   ];
   const [campaignRegData, setCampaignRegData] = useState({
     Intervalval: '',
     intervalTypeId: 0,
     isFixedTime: false,
-    startDate: dayjs(submitData.startTime),                 
-    endDate: dayjs(submitData.finishTime),   
-    startTime: dayjs().startOf('day').add(1, 'hour'),            // 00:00:00 (dayjs object)
+    startDate: dayjs(submitData.startTime),
+    endDate: dayjs(submitData.finishTime),
+    startTime: dayjs().startOf('day').add(1, 'hour'), // 00:00:00 (dayjs object)
     finishTime: dayjs().startOf('day').add(10, 'hour'), // today 01:00:00
-    selectedDays: []
+    selectedDays: [],
   });
 
   const showToast = useShowToast();
@@ -168,13 +183,13 @@ const AddScheduleModel = (prop) => {
       // Select all days
       setCampaignRegData((prev) => ({
         ...prev,
-        selectedDays: daysList.map(day => day.id)
+        selectedDays: daysList.map((day) => day.id),
       }));
     } else {
       // Unselect all days
       setCampaignRegData((prev) => ({
         ...prev,
-        selectedDays: []
+        selectedDays: [],
       }));
     }
   }, [campaignRegData.intervalTypeId]);
@@ -199,10 +214,9 @@ const AddScheduleModel = (prop) => {
     setCampaignRegData((prev) => ({
       ...prev,
       intervalTypeId: newTypeId,
-      selectedDays: newTypeId === 2 ? [1, 2, 3, 4, 5, 6,7] : [], // auto-select or clear
+      selectedDays: newTypeId === 2 ? [1, 2, 3, 4, 5, 6, 7] : [], // auto-select or clear
     }));
   };
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -210,13 +224,12 @@ const AddScheduleModel = (prop) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
- 
 
   const handleCampaignAddForm = (e, label, date) => {
-    console.log("datee", e, label, date);
+    console.log('datee', e, label, date);
 
     if (label === 'startTime' || label === 'finishTime') {
-      const newTime = e ? e.format('HH:mm') : null;
+      const newTime = e ? e : null;
 
       // Convert both times to dayjs objects for comparison
       const currentStart = dayjs(campaignRegData.startTime, 'HH:mm');
@@ -242,8 +255,7 @@ const AddScheduleModel = (prop) => {
         ...prev,
         [label]: e,
       }));
-    }
-  else {
+    } else {
       const { name, value } = e.target;
       setCampaignRegData((prev) => ({
         ...prev,
@@ -271,7 +283,7 @@ const AddScheduleModel = (prop) => {
         isOpen: false,
       }),
     );
-  //  setCampaignRegData(initialData);
+    //  setCampaignRegData(initialData);
   };
 
   const onNoConfirm = () => {
@@ -282,25 +294,26 @@ const AddScheduleModel = (prop) => {
     );
   };
   const icons = {
-    Tiktock: Email,
-    Snapchat: Email,
-    Facebook: Facebook,
-    Sms: Sms,
-    Linkedin: LinkedIn,
-    Twitter: Twitter,
-    Instagram: Instagram,
-    Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
-    Email: Email // Assuming Email is your component for Email icon
+    Tiktock: cibTiktok,
+    Snapchat: cibSnapchat,
+    Facebook: cibFacebook,
+    Sms: cilShortText,
+    Linkedin: cibLinkedin,
+    Twitter: cibTwitter,
+    Instagram: cibInstagram,
+    Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
+    Email: cibGmail, // Assuming Email is your component for Email icon
   };
 
-//  const [selected, setSelected] = useState(selectedNetworks); // Initial load
+  //  const [selected, setSelected] = useState(selectedNetworks); // Initial load
   const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
 
   const handleNetworkChange = (networkName) => {
-    setSelected((prevSelected) =>
-      prevSelected.includes(networkName)
-        ? prevSelected.filter((n) => n !== networkName) // remove if unchecked
-        : [...prevSelected, networkName] // add if checked
+    setSelected(
+      (prevSelected) =>
+        prevSelected.includes(networkName)
+          ? prevSelected.filter((n) => n !== networkName) // remove if unchecked
+          : [...prevSelected, networkName], // add if checked
     );
   };
 
@@ -312,22 +325,23 @@ const AddScheduleModel = (prop) => {
     campaignRegData.startDate,
     campaignRegData.endDate,
     campaignRegData.startTime,
-    campaignRegData.finishTime
+    campaignRegData.finishTime,
   ]);
 
   const onSave = () => {
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
-      console.error("Validation failed", campaignRegData);
+      console.error('Validation failed', campaignRegData);
       showToast('All required fields must be filled.', 'error');
       return;
     }
 
-    const selectedNetworkObjects = globalutil.networks()
-      .filter(n => selectedNetworks.includes(n.name))
+    const selectedNetworkObjects = globalutil
+      .networks()
+      .filter((n) => selectedNetworks.includes(n.name))
       .map((n) => {
         const networkName = n.name.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
         const postTypeIds = selectedPostTypes[networkName];
-        console.log("postTypeIds", postTypeIds);
+        console.log('postTypeIds', postTypeIds);
         return {
           id: 0,
           CompaignId: 0,
@@ -338,20 +352,19 @@ const AddScheduleModel = (prop) => {
           LastUpdatedBy: user.userId,
           LastUpdatedAt: new Date(),
           CreatedAt: new Date(),
-          CreatedBy: user.userId
+          CreatedBy: user.userId,
         };
       });
 
-    console.log("Selected network objects:", JSON.stringify(selectedNetworkObjects));
+    console.log('Selected network objects:', JSON.stringify(selectedNetworkObjects));
 
     setSelectedNetworkJson(selectedNetworkObjects);
 
     // Log the campaign start/end date and time
     const startDate = campaignRegData.startDate; // dayjs object
-    const endDate = campaignRegData.endDate;     // dayjs object
+    const endDate = campaignRegData.endDate; // dayjs object
     const startTime = dayjs(campaignRegData.startTime);
     const endTime = dayjs(campaignRegData.finishTime);
-
 
     // Combine start date + time
     const combinedStart = dayjs(startDate)
@@ -367,9 +380,8 @@ const AddScheduleModel = (prop) => {
       .second(0)
       .millisecond(0);
 
-    console.log("✔️ Correct StartTime:", combinedStart.format());
-    console.log("✔️ Correct FinishTime:", combinedEnd.format());
-
+    console.log('✔️ Correct StartTime:', combinedStart.format());
+    console.log('✔️ Correct FinishTime:', combinedEnd.format());
 
     const schedulePayload = [];
     for (let ntwk of selectedNetworkObjects) {
@@ -392,7 +404,7 @@ const AddScheduleModel = (prop) => {
       schedulePayload.push(payloadItem);
     }
 
-    console.log("Final schedulePayload:", JSON.stringify(schedulePayload, null, 2));
+    console.log('Final schedulePayload:', JSON.stringify(schedulePayload, null, 2));
 
     const updatedSchedule = [...scheduleJson, ...schedulePayload];
     setScheduleJson(updatedSchedule);
@@ -416,7 +428,6 @@ const AddScheduleModel = (prop) => {
       interests,
       genderId,
       locations,
-
     } = submitData;
 
     if (!name || name.trim() === '') {
@@ -428,17 +439,17 @@ const AddScheduleModel = (prop) => {
     let maxFinishTime = null;
     if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
       maxFinishTime = scheduleJson
-        .map(s => dayjs(s.FinishTime))
-        .reduce((latest, current) => current.isAfter(latest) ? current : latest);
+        .map((s) => dayjs(s.FinishTime))
+        .reduce((latest, current) => (current.isAfter(latest) ? current : latest));
     }
 
     // 🔹 STEP 2: Combine original finish date with max finish time
     const finishTimeWithMaxTime = maxFinishTime
       ? dayjs(finishTime)
-        .set('hour', maxFinishTime.hour())
-        .set('minute', maxFinishTime.minute())
-        .set('second', maxFinishTime.second())
-        .set('millisecond', 0)
+          .set('hour', maxFinishTime.hour())
+          .set('minute', maxFinishTime.minute())
+          .set('second', maxFinishTime.second())
+          .set('millisecond', 0)
       : dayjs(finishTime); // fallback to original
 
     const campaignBody = {
@@ -451,31 +462,31 @@ const AddScheduleModel = (prop) => {
       targetaudiance: JSON.stringify({
         interests: interests || [],
         genderId: genderId || null,
-        locations: locations || []
+        locations: locations || [],
       }),
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
-      StartTime: dayjs(startTime).toISOString() ,
-     // FinishTime: finishTimeWithMaxTime.toISOString(),
-      FinishTime: dayjs(finishTime).toISOString(), 
+      StartTime: dayjs(startTime).toISOString(),
+      // FinishTime: finishTimeWithMaxTime.toISOString(),
+      FinishTime: dayjs(finishTime).toISOString(),
       Status: status ? 1 : 0,
-      CreatedAt: dayjs().toISOString() ,
+      CreatedAt: dayjs().toISOString(),
       RowVer: 1,
       Discount: 0,
       CreatedBy: user.userId,
       TotalBudget: budgetData.TotalCampBudget,
       CompaignNetworks: selectedNetworkJson,
-      CompaignExecutionSchedules: scheduleJson
+      CompaignExecutionSchedules: scheduleJson,
     };
 
-    console.log("body Data Submitted", JSON.stringify(campaignBody));
+    console.log('body Data Submitted', JSON.stringify(campaignBody));
 
     try {
       const response = await fetch('/Compaigns/submitmycompaign', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(campaignBody)
+        body: JSON.stringify(campaignBody),
       });
 
       const result = await response.json();
@@ -484,7 +495,7 @@ const AddScheduleModel = (prop) => {
       if (result.status === true) {
         showToast(`Campaign "${name}" submitted successfully!`, 'success');
         const campaignId = parseInt(result.data, 10);
-       // alert(campaignId);
+        // alert(campaignId);
 
         await uploadAttachmentsAfterCampaign(campaignId);
         navigate('/campaignslisting');
@@ -492,13 +503,13 @@ const AddScheduleModel = (prop) => {
         showToast(result.message || 'Submission failed.', 'error');
       }
     } catch (error) {
-      console.error("Error submitting campaign:", error);
+      console.error('Error submitting campaign:', error);
       showToast('An error occurred.', 'error');
     }
   };
-  console.log("submitData", submitData);
+  console.log('submitData', submitData);
   const uploadAttachmentsAfterCampaign = async (campaignId) => {
-    console.log("campaignId",campaignId);
+    console.log('campaignId', campaignId);
     const files = {
       image: submitData.imageAttachment,
       pdf: submitData.pdfAttachment,
@@ -511,14 +522,14 @@ const AddScheduleModel = (prop) => {
       if (!file) continue;
 
       const formData = new FormData();
-      formData.append("compaignId", campaignId);
-      formData.append("CreatedBy", userId);
-      formData.append("files", file); // backend should use Request.Form.Files
+      formData.append('compaignId', campaignId);
+      formData.append('CreatedBy', userId);
+      formData.append('files', file); // backend should use Request.Form.Files
 
       try {
         const res = await fetch('/BlazorApi/uploadattachments', {
           method: 'POST',
-          body: formData // don't set headers here
+          body: formData, // don't set headers here
         });
 
         const uploadResult = await res.json();
@@ -542,28 +553,20 @@ const AddScheduleModel = (prop) => {
           <AppContainer>
             <React.Fragment>
               <AppContainer>
-                <DataGridHeader
-                  title="Networks"
-                  filterDisable={false}
-                />
+                <DataGridHeader title="Networks" filterDisable={false} />
               </AppContainer>
               <CRow>
-                {globalutil.networks()
+                {globalutil
+                  .networks()
                   .filter((network) => initialVisibleNetworks.includes(network.name))
                   .map((network, index) => {
-                    const IconName = network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                    const IconComponent = icons[IconName];
+                    const IconName =
+                      network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
                     return (
                       <CCol md={4} key={index}>
                         <ul className="inlinedisplay">
                           <li className="divCircle">
-                            {IconComponent && (
-                              <IconComponent
-                                className="BlazorIcon pdngleft"
-                                fontSize="large"
-                                color="success"
-                              />
-                            )}
+                            <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
                           </li>
                           <li className="network-checkbox-animate">
                             <CFormCheck
@@ -579,8 +582,6 @@ const AddScheduleModel = (prop) => {
                     );
                   })}
               </CRow>
-
-            
             </React.Fragment>
             <CRow>
               <CCol md="6">
@@ -596,10 +597,9 @@ const AddScheduleModel = (prop) => {
                   isRequired="true"
                   title=" Select Interval Types "
                   onChange={handleIntervalTypeChange}
-                  
                 />
               </CCol>
-              <CCol md="6" className='mt-3'>
+              <CCol md="6" className="mt-3">
                 <CFormCheck
                   label="Is Fixed Time"
                   name="isFixedTime"
@@ -609,12 +609,9 @@ const AddScheduleModel = (prop) => {
                   } // ✅ update state on change
                   className="mt-4 d-flex flex-row justify-content-center scheduleClass"
                 />
-
-
               </CCol>
             </CRow>
             <CRow className="mt-2">
-             
               <fieldset className="fieldset">
                 <legend className="legend">Select Days</legend>
                 <CRow className="mt-3">
@@ -632,9 +629,8 @@ const AddScheduleModel = (prop) => {
                   ))}
                 </CRow>
               </fieldset>
-
             </CRow>
-            <CRow >
+            <CRow>
               <CustomInput
                 label="Interval Size (in seconds)"
                 value={campaignRegData.intervalval}
@@ -660,7 +656,7 @@ const AddScheduleModel = (prop) => {
                   maxDate={dayjs(submitData.finishTime)}
                   title="start date"
                   className="scheduleClass"
-                  disablePast= "true"
+                  disablePast="true"
                   onChange={(e) => handleCampaignAddForm(e, 'startDate')}
                 />
               </CCol>
@@ -676,8 +672,8 @@ const AddScheduleModel = (prop) => {
                   disablePast="true"
                   minDate={dayjs(submitData.startTime)}
                   maxDate={dayjs(submitData.finishTime)}
-                 // min={submitData?.startTime}
-                 // max={submitData?.finishTime}
+                  // min={submitData?.startTime}
+                  // max={submitData?.finishTime}
                   onChange={(e) => handleCampaignAddForm(e, 'endDate')}
                 />
               </CCol>

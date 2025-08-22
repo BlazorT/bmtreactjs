@@ -12,7 +12,6 @@ import SimpleBar from 'simplebar-react';
 //import 'simplebar/dist/simplebar.min.css';
 import 'simplebar-react/dist/simplebar.min.css';
 
-
 // sidebar nav config
 import navigation, { mapNavItem } from '../_nav';
 import { toggleSidebar, setSidebar } from '../redux/sidebar/sidebarSlice';
@@ -33,7 +32,7 @@ const AppSidebar = () => {
         dispatch(setSidebar(visible));
       }}
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
+      <CSidebarBrand className="d-none d-md-flex justify-content-center" to="/">
         <img
           src={user.userInfo.avatar ? user.userInfo.avatar : 'defaultImg.jpg'}
           alt="Logo"

@@ -34,7 +34,6 @@ const OrgList = () => {
     getCityList();
   }, []);
   const getCityList = async () => {
-
     await GetCity(
       '/Common/cities',
       {
@@ -55,7 +54,7 @@ const OrgList = () => {
           );
           /*   setRows([]);*/
         }
-       // setIsLoading(CityLoading.current);
+        // setIsLoading(CityLoading.current);
       },
     );
   };
@@ -67,7 +66,7 @@ const OrgList = () => {
   const { getOrgs } = useFetchOrgs();
   const [filters, setFilters] = useState({
     keyword: '',
-    cityId :'',
+    cityId: '',
     stateId: '',
     country: '',
     name: '',
@@ -85,14 +84,14 @@ const OrgList = () => {
       cityId: filters.cityId === '' ? null : filters.cityId,
       createdAt: filters.createdAt === '' ? null : filters.createdAt,
     };
-    console.log(JSON.stringify(filterBody), "filterBody");
+    console.log(JSON.stringify(filterBody), 'filterBody');
     fetchOrgList(filterBody);
   };
 
   const fetchOrgList = async (filter) => {
     const orgData = await getOrgs(filter);
     setOrgsList(orgData);
-    console.log(orgData,"orgData");
+    console.log(orgData, 'orgData');
     const cityList = GetCityRes?.current?.data || [];
 
     const mappedArray = orgData.map((data) => {
@@ -113,7 +112,7 @@ const OrgList = () => {
       };
     });
 
-    console.log(mappedArray,"mappedArray");
+    console.log(mappedArray, 'mappedArray');
     setRows(mappedArray);
     setIsLoading(false);
   };
@@ -126,7 +125,7 @@ const OrgList = () => {
     setFilters({
       keyword: '',
       cityId: 1,
-      createdAt: dayjs().utc().startOf('year').format()
+      createdAt: dayjs().utc().startOf('year').format(),
     });
     fetchOrgList();
   };
@@ -135,7 +134,7 @@ const OrgList = () => {
     if (date === 'date') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        createdAt: dayjs(e).utc().format()
+        createdAt: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value } = e.target;
@@ -147,7 +146,11 @@ const OrgList = () => {
   };
 
   const daDspsListCols = getDADspsListCols(fetchOrgList, orgsList, pageRoles);
-  const daDspsFiltersFields = getDaDspsFiltersFields(filters, changeFilter, GetCityRes?.current?.data ? GetCityRes.current.data : []);
+  const daDspsFiltersFields = getDaDspsFiltersFields(
+    filters,
+    changeFilter,
+    GetCityRes?.current?.data ? GetCityRes.current.data : [],
+  );
 
   return (
     <React.Fragment>
@@ -157,8 +160,8 @@ const OrgList = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-                title="Advance Search"
-                onClick={toggleStock}
+              title="Advance Search"
+              onClick={toggleStock}
               otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
               filterDisable={true}
             />
@@ -174,12 +177,19 @@ const OrgList = () => {
             )}
           </AppContainer>
           <AppContainer>
-            <DataGridHeader
+            {/* <DataGridHeader
               title="Organization List"
               addButton={pageRoles.canAdd === 1 ? 'New Organization' : ''}
-                addBtnClick={() => navigate('/organizationadd')}
-            />
+              addBtnClick={() => navigate('/organizationadd')}
+            /> */}
             <CustomDatagrid
+              isHeader
+              headerProps={{
+                title: 'Organization List',
+                addButton: pageRoles.canAdd === 1 ? 'New Organization' : '',
+                addBtnClick: () => navigate('/organizationadd'),
+                filterDisable: true,
+              }}
               rows={rows}
               columns={daDspsListCols}
               rowHeight={50}
@@ -194,8 +204,8 @@ const OrgList = () => {
               }}
               canPrint={pageRoles.canPrint}
               canExport={pageRoles.canExport}
-              rowSelection={true}
-              sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
+              rowSelection={false}
+              sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
             />
           </AppContainer>
         </React.Fragment>

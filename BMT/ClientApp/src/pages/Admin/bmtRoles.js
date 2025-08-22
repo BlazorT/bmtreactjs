@@ -17,7 +17,6 @@ const BmtRoles = () => {
   //const pageRoles = usePageRoles('Roles Settings');
   const pageRoles = usePageRoles('Users');
 
-  
   const roles = globalutil.userroles();
 
   const [showGrid, setShowGrid] = useState(true);
@@ -37,12 +36,13 @@ const BmtRoles = () => {
   };
 
   const rolesCols = getRolesCols(pageRoles);
-  console.log("pageRoles", pageRoles)
+  console.log('pageRoles', pageRoles);
   return (
     <AppContainer>
       <DataGridHeader
         title="BMT Roles"
         otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
+        filterDisable
       />
 
       {showGrid === true && (
@@ -50,9 +50,10 @@ const BmtRoles = () => {
           rows={rows}
           columns={rolesCols}
           pagination={true}
-          rowHeight={50}          
+          rowHeight={50}
           canExport={pageRoles.canExport}
           canPrint={pageRoles.canPrint}
+          isHeader
         />
       )}
     </AppContainer>

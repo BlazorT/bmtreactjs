@@ -9,14 +9,15 @@ import { formatDate } from 'src/helpers/formatDate';
 import { getRoleById } from 'src/constants/roles';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { getUsersListCols } from 'src/configs/ColumnsConfig/usersListCols';
+import {
+  getUsersListCols,
+  getUsersListColsFlexible,
+} from 'src/configs/ColumnsConfig/usersListCols';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import { getUsersFiltersFields } from 'src/configs/FiltersConfig/userFilterConfig';
 import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
 import AppContainer from 'src/components/UI/AppContainer';
 import { RootState } from 'src/store';
-
-
 
 const Users: React.FC = () => {
   dayjs.extend(utc);
@@ -78,7 +79,7 @@ const Users: React.FC = () => {
       lastUpdatedAt: data.lastUpdatedAt,
       status: data.status,
     }));
-   // console.log(mappedArray, 'users');
+    // console.log(mappedArray, 'users');
     setRows(mappedArray);
   };
 
@@ -101,7 +102,7 @@ const Users: React.FC = () => {
     fetching();
   };
 
-  const usersListCols = getUsersListCols(fetching, usersData, pageRoles);
+  const usersListCols = getUsersListColsFlexible(fetching, usersData, pageRoles);
   const userFilterFields = getUsersFiltersFields(filters, changeFilter);
 
   return (
@@ -126,6 +127,7 @@ const Users: React.FC = () => {
         <DataGridHeader
           title="BMT Users"
           onClick={toggleLicence}
+          filterDisable={true}
           addButton={pageRoles.canAdd === 1 ? 'User' : ''}
           addBtnClick={pageRoles.canAdd === 1 ? () => navigate('/UserRegister') : undefined}
           otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}
@@ -136,12 +138,12 @@ const Users: React.FC = () => {
             columns={usersListCols}
             rowHeight={50}
             pagination={true}
-            rowSelection={true}
+            rowSelection={false}
             loading={loading || !data}
             noRowsMessage={error ? 'Error Fetching data' : ''}
-            sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
+            sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
             canExport={pageRoles.canExport}
-            canPrint={pageRoles.canPrint}          
+            canPrint={pageRoles.canPrint}
           />
         )}
       </AppContainer>

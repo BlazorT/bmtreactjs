@@ -3,8 +3,8 @@ import CampaignActionCell from 'src/components/DataGridCustomCells/CampaignActio
 
 export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
   {
-    field: 'name',
-    headerName: 'Campaign Name',
+    key: 'name',
+    name: 'Campaign Name',
     flex: 1,
     minWidth: 160,
     editable: false,
@@ -14,8 +14,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'orgName',
-    headerName: 'Organization Name',
+    key: 'orgName',
+    name: 'Organization Name',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -24,11 +24,10 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
     headerClassName: 'custom-header-data-grid',
   },
- 
- 
+
   {
-    field: 'startTime',
-    headerName: 'Start Time',
+    key: 'startTime',
+    name: 'Start Time',
     flex: 1,
     minWidth: 70,
     // Width: 80,
@@ -39,8 +38,8 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
   {
-    field: 'finishTime',
-    headerName: 'End Time',
+    key: 'finishTime',
+    name: 'End Time',
     flex: 1,
     minWidth: 120,
     editable: false,
@@ -51,10 +50,10 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
     hideable: false,
     headerClassName: 'custom-header-data-grid',
   },
- 
+
   {
-    field: 'imageUrl',
-    headerName: 'Action',
+    key: 'imageUrl',
+    name: 'Action',
     flex: 1,
     minWidth: 50,
     editable: false,
@@ -76,6 +75,5 @@ export const getcampaignslistingCols = (getDasList, daRes, pageRoles) => [
         />
       );
     },
-  }
-
+  },
 ];

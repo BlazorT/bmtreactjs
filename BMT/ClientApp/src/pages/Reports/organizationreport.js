@@ -37,9 +37,9 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     const reportRows = makeGroupingRows(rows);
     const doc = getOrgReportPdf(reportRows, reportField);
     doc.output('dataurlnewwindow');
-    console.log(reportRows,'repoertdata');
+    console.log(reportRows, 'repoertdata');
   };
- 
+
   useEffect(() => {
     applyFilters();
   }, []);
@@ -62,11 +62,11 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       name: filters.name,
       status: filters.status === '' ? 0 : filters.status,
       createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
-      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
     };
 
     getDAuserList(filterBody);
-   // getDAuserList(filterBody);
+    // getDAuserList(filterBody);
   };
   const {
     response: GetOrgRes,
@@ -96,10 +96,13 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       status: 0,
       genderId: 0,
       rowVer: 0,
-      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
-      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
+      createdAt: dayjs(filters?.createdAt ?? dayjs())
+        .utc()
+        .format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters?.lastUpdatedAt ?? dayjs())
+        .utc()
+        .format('YYYY-MM-DD'),
       ...filters,
-      
     };
     //alert(JSON.stringify(fetchBody));
     await GetOrgs(
@@ -119,13 +122,13 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
             // dspid: user.dspId.toString(),
             userRole: data.userRole,
             userName: data.userName,
-            orgName: data.name + ", " + data.stateName,
+            orgName: data.name + ', ' + data.stateName,
             performance: data.performance,
             strength: data.strength,
             contact: data.contact,
             packageName: data.packageName,
             violations: data.violations,
-            status: data.status == 0 ? "Active":"In-Active",
+            status: data.status == 0 ? 'Active' : 'In-Active',
             //status: globalutil.statuses().find((item) => item.id === data.status)
             //  ? globalutil.statuses().find((item) => item.id === data.status).name
             //  : '',
@@ -154,60 +157,59 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
 
   const [columns, setColumns] = useState([
     //{
-    //  field: 'userName',
+    //  key: 'userName',
     //  headerClassName: 'custom-header-data-grid',
-    //  headerName: 'Name',
+    //  name: 'Name',
     //  flex: 1,
     //  width: 100,
     //  editable: false,
     //  filterable: true,
     //},
     {
-      field: 'orgName',
+      key: 'orgName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Organization Name',
+      name: 'Organization Name',
       flex: 1,
       minWidth: 200,
       editable: false,
       sortable: false,
       filterable: true,
-     // align: 'center',
-     // headerAlign: 'center',
+      // align: 'center',
+      // headerAlign: 'center',
       disableColumnMenu: false,
     },
     {
-      field: 'contact',
+      key: 'contact',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Contact',
+      name: 'Contact',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
     {
-      field: 'strength',
+      key: 'strength',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Strength',
+      name: 'Strength',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
     {
-      field: 'packageName',
+      key: 'packageName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Package',
+      name: 'Package',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
-    
-    
+
     {
-      field: 'status',
+      key: 'status',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Current Status',
+      name: 'Current Status',
       flex: 1,
       minWidth: 120,
       editable: false,
@@ -215,11 +217,11 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       filterable: true,
       disableColumnMenu: false,
     },
-    
+
     {
-      field: 'expiryTime',
+      key: 'expiryTime',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Expiry Date',
+      name: 'Expiry Date',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -257,7 +259,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
           updatedData.push(item);
         });
     });
-    const mappedArray = data.map((field,index) => {
+    const mappedArray = data.map((key, index) => {
       let mappedObject;
 
       if (index == 0) {
@@ -267,28 +269,32 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
           strength: 'Strength',
           packageName: 'Package',
           status: 'Status',
-          expiryTime:'Expiry Date'
-        }
-
-      }
-      else { 
+          expiryTime: 'Expiry Date',
+        };
+      } else {
         mappedObject = {
-          orgName: field.orgName,
-          contact: field.contact,
-          strength: field.strength,
-          packageName: field.packageName,
-          status: field.status,
-          expiryTime: field.expiryTime,
-      }
+          orgName: key.orgName,
+          contact: key.contact,
+          strength: key.strength,
+          packageName: key.packageName,
+          status: key.status,
+          expiryTime: key.expiryTime,
+        };
       }
       return mappedObject;
     });
-   // const header = ['name', 'contact', 'performance','status','date of joining'];
+    // const header = ['name', 'contact', 'performance','status','date of joining'];
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.orgName, item.contact, item.strength.toString(), item.packageName, item.status.toString(), item.expiryTime];
-        return [rowData];
-      
+      const rowData = [
+        item.orgName,
+        item.contact,
+        item.strength.toString(),
+        item.packageName,
+        item.status.toString(),
+        item.expiryTime,
+      ];
+      return [rowData];
     });
     console.log({ grouping });
     return grouping;
@@ -404,21 +410,20 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
         ) : null}
       </div>
       <div className="bg_Div mb-2 d-flex flex-column">
-        <DataGridHeader exportFn={() => generatePdf()} title="Organization Report" />
+        <DataGridHeader exportFn={() => generatePdf()} title="Organization Report" filterDisable />
         <div className="show-stock">
           <div className="row ">
             <div className="col-md-12 col-xl-12">
               <CustomDatagrid
                 rows={rows}
                 columns={columns}
-                rowHeight={'normal'}
                 pagination={true}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
                 // summary={
                 //   [
                 //     //{
-                //     //  field: 'logTime',
+                //     //  key: 'logTime',
                 //     //  aggregates: [
                 //     //    { aggregate: 'count', caption: 'Count' },
                 //     //    { aggregate: 'max', caption: 'Last log Time' },
@@ -431,7 +436,6 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
           </div>
         </div>
       </div>
-     
     </div>
   );
 };

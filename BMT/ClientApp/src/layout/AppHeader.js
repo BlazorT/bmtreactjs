@@ -1,14 +1,20 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { CListGroup, CListGroupItem } from '@coreui/react'
+import { CListGroup, CListGroupItem } from '@coreui/react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 import { CContainer, CHeader, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
-import { cilBell, cilEnvelopeOpen, cilAccountLogout, cilList, cilMenu } from '@coreui/icons';
+import {
+  cilBell,
+  cilEnvelopeOpen,
+  cilAccountLogout,
+  cilList,
+  cilMenu,
+  cilPeople,
+} from '@coreui/icons';
 import { CPopover } from '@coreui/react';
 //import Blazorhub from '../Blazorhub';
-import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import CIcon from '@coreui/icons-react';
 import useFetch from 'src/hooks/useFetch';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
@@ -17,7 +23,7 @@ import { setUserData } from 'src/redux/user/userSlice';
 import Loading from 'src/components/UI/Loading';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
 import { CBadge } from '@coreui/react';
-const AppHeader = ( phoneNumber ) => {
+const AppHeader = (phoneNumber) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -62,7 +68,7 @@ const AppHeader = ( phoneNumber ) => {
     await userLogout('/Common/logout?id=' + user.userId, { method: 'POST' });
 
     if (logoutRes.current?.status === true) {
-      navigate('');
+      navigate('/');
       const keysToKeep = ['dastatuses', 'states', 'countries'];
 
       Object.keys(localStorage).forEach((key) => {
@@ -114,16 +120,14 @@ const AppHeader = ( phoneNumber ) => {
             </div>
             <div className="col-md-9">
               <div className="row">
-              <div className="col-md-8">
-              <h5 className="mb-1">Ahmad Raza</h5>
+                <div className="col-md-8">
+                  <h5 className="mb-1">Ahmad Raza</h5>
                 </div>
                 <div className="col-md-4">
                   <small className="text-time">3 days ago</small>
+                </div>
               </div>
-              </div>
-              <p className="mb-1">
-                Donec id elit non mi porta gravida at eget metus.
-              </p>
+              <p className="mb-1">Donec id elit non mi porta gravida at eget metus.</p>
             </div>
           </div>
         </CListGroupItem>
@@ -141,9 +145,7 @@ const AppHeader = ( phoneNumber ) => {
                   <small className="text-time">3 days ago</small>
                 </div>
               </div>
-              <p className="mb-1">
-                Donec id elit non mi porta gravida at eget metus.
-              </p>
+              <p className="mb-1">Donec id elit non mi porta gravida at eget metus.</p>
             </div>
           </div>
         </CListGroupItem>
@@ -161,9 +163,7 @@ const AppHeader = ( phoneNumber ) => {
                   <small className="text-time">3 days ago</small>
                 </div>
               </div>
-              <p className="mb-1">
-                Donec id elit non mi porta gravida at eget metus.
-              </p>
+              <p className="mb-1">Donec id elit non mi porta gravida at eget metus.</p>
             </div>
           </div>
         </CListGroupItem>
@@ -186,16 +186,17 @@ const AppHeader = ( phoneNumber ) => {
                 placement="bottom"
               >
                 <CIcon className="labelName" icon={cilBell} size="xxl">
-                {/*  {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}*/}
+                  {/*  {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}*/}
                 </CIcon>
               </CPopover>
-              {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}
-
+              {notificationCount > 0 && (
+                <CBadge shape="pill" color="danger">
+                  {notificationCount}
+                </CBadge>
+              )}
             </CNavLink>
           </CNavItem>
-          <div>
-          {/*  <Blazorhub />*/}
-          </div>
+          <div>{/*  <Blazorhub />*/}</div>
           {/*<CNavItem>*/}
           {/*  <CNavLink>*/}
           {/*    <CIcon className="labelName" icon={cilList} size="lg" />*/}
@@ -204,14 +205,21 @@ const AppHeader = ( phoneNumber ) => {
           {/*</CNavItem>*/}
           <CNavItem>
             <CNavLink>
-              <PeopleAlt className="color-set" sx={{ fontSize: 30 }} />
-              {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}
+              <CIcon icon={cilPeople} className="color-set" />
+              {notificationCount > 0 && (
+                <CBadge shape="pill" color="danger">
+                  {notificationCount}
+                </CBadge>
+              )}
 
-            {/*  <CIcon className="labelName" icon={cilEnvelopeOpen} size="lg" />*/}
+              {/*  <CIcon className="labelName" icon={cilEnvelopeOpen} size="lg" />*/}
             </CNavLink>
           </CNavItem>
           <CNavItem className="d-flex align-items-center ">
-            <CNavLink onClick={handleChatClick} className="text-white d-flex align-items-center fw-bold ">
+            <CNavLink
+              onClick={handleChatClick}
+              className="text-white d-flex align-items-center fw-bold "
+            >
               {user.userInfo.whatsApp ? user.userInfo.whatsApp : ''} &nbsp;
               <img className="socialMediaIconHeader" src="whatsapp.png" alt="logo" />
             </CNavLink>

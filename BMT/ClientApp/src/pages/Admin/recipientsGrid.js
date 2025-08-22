@@ -18,8 +18,8 @@ import AppContainer from 'src/components/UI/AppContainer';
 import globalutil from 'src/util/globalutil';
 const recipientslisting = () => {
   dayjs.extend(utc);
-  const user = useSelector((state) => state.user)
-  useEffect(() => {    
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
     getRecipientsList();
   }, []);
 
@@ -37,24 +37,24 @@ const recipientslisting = () => {
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
-    contentId: "",
+    contentId: '',
     rowVer: 0,
-    networkId:0,
+    networkId: 0,
     status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-  console.log(filters, "filters");
+  console.log(filters, 'filters');
   const [rows, setRows] = useState([]);
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const getRecipientsList = async (filters) => {
-    console.log(filters,"filtersfilters")
-    const recipientsList = await getRecipientList(filters);  
+    console.log(filters, 'filtersfilters');
+    const recipientsList = await getRecipientList(filters);
     setRecipientsData(recipientsList);
     const networks = globalutil.networks(); // assuming it returns an array of { id, name }
 
     const mappedArray = recipientsList.map((data) => {
-      const network = networks.find(n => n.id === data.networkId);
+      const network = networks.find((n) => n.id === data.networkId);
 
       return {
         id: data.id,
@@ -66,7 +66,7 @@ const recipientslisting = () => {
       };
     });
 
-   // console.log(mappedArray, 'recipients data');
+    // console.log(mappedArray, 'recipients data');
     setRows(mappedArray);
   };
 
@@ -92,7 +92,7 @@ const recipientslisting = () => {
     // Handle standard input elements with event.target
     else if (event && event.target) {
       const { name, value, type, checked } = event.target;
-      colName = (name === 'networks') ? 'networkId' : name;
+      colName = name === 'networks' ? 'networkId' : name;
 
       setFilters((prevData) => ({
         ...prevData,
@@ -121,10 +121,10 @@ const recipientslisting = () => {
       orgId: user.orgId,
       rowVer: 0,
       networkId: 0,
-    //  name: '',
+      //  name: '',
       status: 0,
       createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
-      lastUpdatedAt: dayjs().utc().startOf('day').format()     
+      lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
   const {
@@ -143,7 +143,7 @@ const recipientslisting = () => {
       orgId: 0,
       email: '',
       name: '',
-      contact: "",
+      contact: '',
       rowVer: 0,
       cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
@@ -159,7 +159,8 @@ const recipientslisting = () => {
       ...filters,
     };
     await GetOrg(
-      '/BlazorApi/orgsfulldata', { method: 'POST', body: JSON.stringify(recipientsBody),},
+      '/BlazorApi/orgsfulldata',
+      { method: 'POST', body: JSON.stringify(recipientsBody) },
       (res) => {
         console.log(res, 'orgs');
         if (res.status === true) {
@@ -174,7 +175,6 @@ const recipientslisting = () => {
           //  //actionType: data.actionType,
           //  //logTime: formatDateTime(data.logTime),
           //}));
-
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -192,18 +192,27 @@ const recipientslisting = () => {
   };
   useEffect(() => {
     if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data
-      const findUserOrg = orgData?.find((item) => item.id === orgId)
-     // console.log(findUserOrg, 'findUserOrg')
+      const orgData = GetOrgRes?.current?.data;
+      const findUserOrg = orgData?.find((item) => item.id === orgId);
+      // console.log(findUserOrg, 'findUserOrg')
       if (findUserOrg)
         setFilters((prevFilters) => ({
           ...prevFilters,
           name: findUserOrg,
         }));
     }
-  }, [GetOrgRes?.current?.data, orgId])
-  const orgFilterFields = getRecipientsFilterConfig(filters, changeFilter, GetOrgRes?.current?.data||[],Role);
-  const recipientslistingCols = getrecipietslistingCols(getRecipientsList, recipientsData, pageRoles);
+  }, [GetOrgRes?.current?.data, orgId]);
+  const orgFilterFields = getRecipientsFilterConfig(
+    filters,
+    changeFilter,
+    GetOrgRes?.current?.data || [],
+    Role,
+  );
+  const recipientslistingCols = getrecipietslistingCols(
+    getRecipientsList,
+    recipientsData,
+    pageRoles,
+  );
 
   if (loading) {
     return <Loading />;
@@ -215,7 +224,7 @@ const recipientslisting = () => {
           <AppContainer>
             <DataGridHeader
               title="Advance Search"
-              onClick={toggleFilters }
+              onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
             />
@@ -234,11 +243,10 @@ const recipientslisting = () => {
             <DataGridHeader
               title="Recipients List"
               onClick={toggleGrid}
-              addButton={ 'Recipients'}
+              addButton={'Recipients'}
               addBtnClick={() => navigate('/campaignContacts')}
-              otherControls={[        
-                { icon: cilChevronBottom, fn: toggleGrid },
-              ]}
+              otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
+              filterDisable={true}
             />
             {showDaGrid && (
               <CustomDatagrid
@@ -247,17 +255,16 @@ const recipientslisting = () => {
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
-                sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}               
+                sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
                 hiddenCols={{
-                  columnVisibilityModel: {               
+                  columnVisibilityModel: {
                     lastUpdatedAt: false,
                   },
                 }}
-              //  canExport={pageRoles.canExport}
-               // canPrint={pageRoles.canPrint}
+                //  canExport={pageRoles.canExport}
+                // canPrint={pageRoles.canPrint}
               />
             )}
-
           </AppContainer>
         </React.Fragment>
       )}
