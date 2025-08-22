@@ -5,14 +5,13 @@ import useFetch from 'src/hooks/useFetch';
 import { formValidator } from 'src/helpers/formValidator';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { useSelector } from 'react-redux';
-//import BlazorTabs from '../FleetComponents/BlazorTabs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { CFormCheck } from '@coreui/react';
-//import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs'
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import {
   cilUser,
   cilCloudDownload,
@@ -35,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
 const BlazorNetworkInputs = (prop) => {
+  dayjs.extend(utc);
   const { header, networkId, setNetworkList, networkList } = prop
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -61,10 +61,10 @@ const BlazorNetworkInputs = (prop) => {
     status: 1,
     createBy: user.Id,
     lastUpdatedBy: user.Id,
-    startTime: moment().utc().format(),
-    finishTime: moment().utc().format(),
-    createdAt: moment().utc().startOf('month').format(),
-    lastUpdatedAt: moment().utc().format(),
+    startTime: dayjs().utc().format(),
+    finishTime: dayjs().utc().format(),
+    createdAt: dayjs().utc().startOf('month').format(),
+    lastUpdatedAt: dayjs().utc().format()
   })
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);

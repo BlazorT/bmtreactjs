@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import useFetch from 'src/hooks/useFetch';
 
 import { CFormCheck } from '@coreui/react';
@@ -39,6 +40,7 @@ import useApi from 'src/hooks/useApi';
 import globalutil from '../../util/globalutil';
 
 const addorganization = () => {
+  dayjs.extend(utc);
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'BMT Subscription',
   );
@@ -99,6 +101,7 @@ const addorganization = () => {
   const { checkUserAvailability } = useUserAvailability();
 
   const handleDAFormData = (event, label = '') => {
+    
     if (label === 'avatar') {
       console.log({ event });
       setDaApplyFormData((prevdaApplyFormData) => ({
@@ -109,7 +112,7 @@ const addorganization = () => {
       if (label !== '') {
         setDaApplyFormData((prevdaApplyFormData) => ({
           ...prevdaApplyFormData,
-          [label]: moment(event).utc().format(),
+          [label]: dayjs(event).utc().format(),
         }));
       } else {
         const { name, value, type, files, checked } = event.target;
@@ -217,13 +220,10 @@ const addorganization = () => {
         id: 0,
         contact: daApplyFormData.contact,
         address: daApplyFormData.mailAddress,
-        // status: 0,
-        // orgId: daApplyFormData.orgId,
-        // lastUpdatedBy: moment().utc().format(),
         rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
         // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
-        createdAt: moment().utc().format(),
-        lastUpdatedAt: moment().utc().format(),
+        createdAt: dayjs().utc().format(),
+        lastUpdatedAt: dayjs().utc().format(),
         remarks: 'created org',
       };
       console.log(daBody);
@@ -238,7 +238,7 @@ const addorganization = () => {
         formData.append('name', avatar.name);
         formData.append('fileName', avatar.name);
         formData.append('createdBy', user.userId);
-        formData.append('createdAt', moment().utc().format());
+        formData.append('createdAt', dayjs().utc().format());
 
         // alert("Upload version before upload");
         const uploadAvatarRes = await uploadAvatar(formData);
@@ -292,8 +292,8 @@ const addorganization = () => {
       formData.append('daid', userId);
       formData.append('createdBy', user.userId);
       formData.append('lastUpdatedBy', user.userId);
-      formData.append('createdAt', moment().utc().format());
-      formData.append('lastUpdatedAt', moment().utc().format());
+      formData.append('createdAt', dayjs().utc().format());
+      formData.append('lastUpdatedAt', dayjs().utc().format());
       formData.append('rowVer', 1);
     }
 

@@ -15,14 +15,12 @@ import { getOrgReportPdf } from 'src/helpers/getOrgReportPdf';
 
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import moment from 'moment';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import dayjs from 'dayjs';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-
 import utc from 'dayjs/plugin/utc';
 import Loading from 'src/components/UI/Loading';
 
@@ -63,8 +61,8 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     const filterBody = {
       name: filters.name,
       status: filters.status === '' ? 0 : filters.status,
-      createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
     };
 
     getDAuserList(filterBody);
@@ -98,11 +96,10 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       status: 0,
       genderId: 0,
       rowVer: 0,
-      //licenseExpiryDate: moment().utc().startOf('year').format(),
-      createdAt: moment().utc().subtract(1, 'year').format(),
-      lastUpdatedAt: moment().utc().format(),
+      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
       ...filters,
-      //logTime: moment().utc().startOf('year').format(),
+      
     };
     //alert(JSON.stringify(fetchBody));
     await GetOrgs(
@@ -300,7 +297,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;

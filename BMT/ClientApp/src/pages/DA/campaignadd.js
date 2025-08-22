@@ -20,8 +20,6 @@ import Range from 'src/views/forms/range/Range';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
 import dayjs from 'dayjs';
-
-import moment from 'moment';
 import { cilChevronBottom, cilFlagAlt, cilCalendar, cilGlobeAlt } from '@coreui/icons';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
@@ -116,7 +114,7 @@ const campaignadd = () => {
   //  }
   //}, [location.state]);
   const handleCampaignAddForm = (e, label) => {
-    const now = moment();
+    const now = dayjs();
 
     // ✅ FILE HANDLING
  if (label === 'video' || label === 'image' || label === 'pdf') {
@@ -151,9 +149,8 @@ const campaignadd = () => {
     const fieldKey = (label === 'Campaign Start Date') ? 'startTime' :
       (label === 'Campaign End Date') ? 'finishTime' : null;
 
-    if (['startTime', 'finishTime'].includes(fieldKey)) {
-      const selectedDate = moment(e);
-
+    if (['startTime', 'finishTime'].includes(fieldKey)) {   
+      const selectedDate = dayjs(e);
       if (selectedDate.isBefore(now, 'minute')) {
         showToast(`${label} cannot be in the past.`, 'error');
         return;
@@ -270,11 +267,11 @@ const campaignadd = () => {
         days: parsedDays.length > 0
           ? parsedDays.map(d => dayNames[d]).join(', ')
           : '',
-        startTime: moment(item.StartTime).isValid()
-          ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
+        startTime: dayjs(item.StartTime).isValid()
+          ? dayjs(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
           : '',
-        finishTime: moment(item.FinishTime).isValid()
-          ? moment(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
+        finishTime: dayjs(item.FinishTime).isValid()
+          ? dayjs(item.FinishTime).format("YYYY-MM-DD HH:mm:ss")
           : ''
       };
     });

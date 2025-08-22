@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
-import moment from 'moment';
-
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-
 import { roles_initial_state } from 'src/helpers/organize_menus';
-
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import DARoles from '../RoleSettingComponents/DARoles';
 import Button from '../UI/Button';
 import useApi from 'src/hooks/useApi';
@@ -13,6 +10,7 @@ import { useNotification } from 'src/hooks/useNotification';
 import LoadingBtn from '../UI/LoadingBtn';
 
 const BmtRolesModal = (prop) => {
+  dayjs.extend(utc);
   const { isOpen, toggle, roleId, rolesData, header, canUpdate } = prop;
    console.log({ rolesData });
   const { showSnackbar, showConfirmation } = useNotification();
@@ -152,8 +150,8 @@ const BmtRolesModal = (prop) => {
                 rowVer: 1,
                 status: 1,
                 lastUpdatedBy: 1,
-                lastUpdatedAt: moment().format(),
-                createdAt: moment().format(), // current date time
+                lastUpdatedAt: dayjs().format() ,
+                createdAt: dayjs().format() 
                 // Add other keys as needed
               };
 

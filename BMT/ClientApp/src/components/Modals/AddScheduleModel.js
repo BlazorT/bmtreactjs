@@ -25,11 +25,11 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import { useShowToast } from 'src/hooks/useShowToast';
 import CustomTimePicker from 'src/components/UI/TimePicker';
 import dayjs from 'dayjs';
-import moment from 'moment';
+import utc from 'dayjs/plugin/utc';
 import { formValidator } from 'src/helpers/formValidator';
 import { createSchedule } from 'src/hooks/api/createSchedule';
 const AddScheduleModel = (prop) => {
-
+  dayjs.extend(utc);
   const { header, isOpen, toggle, initialData, selectedNetworks, selectedPostTypes, selectedDays, setData, data, selected, setSelected, campaignRegData : submitData } = prop;
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
@@ -428,19 +428,18 @@ const AddScheduleModel = (prop) => {
     let maxFinishTime = null;
     if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
       maxFinishTime = scheduleJson
-        .map(s => moment(s.FinishTime))
+        .map(s => dayjs(s.FinishTime))
         .reduce((latest, current) => current.isAfter(latest) ? current : latest);
     }
 
     // 🔹 STEP 2: Combine original finish date with max finish time
     const finishTimeWithMaxTime = maxFinishTime
-      ? moment(finishTime).set({
-        hour: maxFinishTime.hour(),
-        minute: maxFinishTime.minute(),
-        second: maxFinishTime.second(),
-        millisecond: 0
-      })
-      : moment(finishTime); // fallback to original
+      ? dayjs(finishTime)
+        .set('hour', maxFinishTime.hour())
+        .set('minute', maxFinishTime.minute())
+        .set('second', maxFinishTime.second())
+        .set('millisecond', 0)
+      : dayjs(finishTime); // fallback to original
 
     const campaignBody = {
       Id: 0,
@@ -455,11 +454,11 @@ const AddScheduleModel = (prop) => {
         locations: locations || []
       }),
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
-      StartTime: moment(startTime).toISOString(),
+      StartTime: dayjs(startTime).toISOString() ,
      // FinishTime: finishTimeWithMaxTime.toISOString(),
-      FinishTime: moment(finishTime).toISOString(),
+      FinishTime: dayjs(finishTime).toISOString(), 
       Status: status ? 1 : 0,
-      CreatedAt: moment().toISOString(),
+      CreatedAt: dayjs().toISOString() ,
       RowVer: 1,
       Discount: 0,
       CreatedBy: user.userId,

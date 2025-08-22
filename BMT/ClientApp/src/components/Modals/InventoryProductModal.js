@@ -13,11 +13,13 @@ import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
 import useFetch from 'src/hooks/useFetch';
 import Loading from '../UI/Loading';
-import moment from 'moment';
 import LoadingBtn from '../UI/LoadingBtn';
 import { countries, countriesWithId } from 'src/constants/countries';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 const InventoryProductModal = (prop) => {
+  dayjs.extend(utc);
   const { header, toggle, isOpen, productData, getProducts } = prop;
 
   const dispatch = useDispatch();
@@ -96,9 +98,9 @@ const InventoryProductModal = (prop) => {
         lastUpdatedBy: user.userId,
         createdAt:
           inventoryProductData.id === 0
-            ? moment().utc().format()
-            : moment(productData.createdAt).utc().format(),
-        lastUpdatedAt: moment().utc().format(),
+            ? dayjs().utc().format()
+            : dayjs(productData.createdAt).utc().format(),
+        lastUpdatedAt: dayjs().utc().format()
       };
 
       setIsLoading(true);

@@ -1,6 +1,5 @@
 import React from 'react';
 import { CCol, CRow } from '@coreui/react';
-
 import FleetCard from '../Cards/FleetCard';
 
 function Tab() {

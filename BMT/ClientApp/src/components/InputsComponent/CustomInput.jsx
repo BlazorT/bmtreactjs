@@ -48,31 +48,28 @@ const CustomInput = ({
             </span>
           )}
           <input
-            ref={inputRef ?? inputRef}
+            ref={inputRef ?? undefined}
             type={type}
             className={`${className} form-control item`}
             id={id}
             name={name}
-            value={value && value}
+            value={value ?? ""}
             placeholder={placeholder}
             required={isRequired}
-            disabled={disabled ? disabled : false}
+            disabled={!!disabled}
             autoComplete="off"
-            onChange={(e) => {
-              onChange && onChange(e);
-            }}
-            autoFocus={autoFocus ?? autoFocus}
-            onClick={(e) => {
-              onClick && onClick();
-            }}
+            onChange={(e) => onChange?.(e)}
+            autoFocus={!!autoFocus}
+            onClick={() => onClick?.()}
             accept={accept}
-            readOnly={readOnly && readOnly}
+            readOnly={!!readOnly}
             pattern={pattern}
             onKeyDown={onKeyDown}
             maxLength={maxLength}
             defaultValue={defaultValue}
             onBlur={onBlur}
           />
+
           {isRequired && <span className="invalid-tooltip">{message}</span>}
         </div>
       </div>

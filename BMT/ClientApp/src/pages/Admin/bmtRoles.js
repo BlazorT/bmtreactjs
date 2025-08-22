@@ -6,12 +6,12 @@ import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import globalutil from 'src/util/globalutil';
 
-import moment from 'moment';
 import { formatDate } from 'src/helpers/formatDate';
 
 import usePageRoles from 'src/hooks/usePageRoles';
 import AppContainer from 'src/components/UI/AppContainer';
 import { getRolesCols } from 'src/configs/ColumnsConfig/rolesCols';
+import dayjs from 'dayjs';
 
 const BmtRoles = () => {
   //const pageRoles = usePageRoles('Roles Settings');
@@ -27,7 +27,7 @@ const BmtRoles = () => {
       id: role.id,
       roleName: role.name,
       status: 'Active',
-      lastUpdate: formatDate(moment()),
+      lastUpdate: formatDate(dayjs()),
       // imageUrl: 'Edit',
     })),
   );
@@ -50,12 +50,7 @@ const BmtRoles = () => {
           rows={rows}
           columns={rolesCols}
           pagination={true}
-          rowHeight={50}
-          hiddenCols={{
-            columnVisibilityModel: {
-              id: false,
-            },
-          }}
+          rowHeight={50}          
           canExport={pageRoles.canExport}
           canPrint={pageRoles.canPrint}
         />

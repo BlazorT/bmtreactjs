@@ -9,7 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import useFetch from 'src/hooks/useFetch';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomDatagrid from '../DataGridComponents/CustomDatagrid';
 import CIcon from '@coreui/icons-react';
 import CustomSearch from '../InputsComponent/CustomSearch';
@@ -21,6 +22,7 @@ import Form from '../UI/Form';
 import Button from '../InputsComponent/Button';
 
 const AddInventoryModal = (prop) => {
+  dayjs.extend(utc);
   const { header, toggle, isOpen, productData, getInventory } = prop;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -41,7 +43,7 @@ const AddInventoryModal = (prop) => {
     businessEntityId: '',
     categoryId: '',
     pNameId: '',
-    createdAt: moment().utc().format(),
+    createdAt: dayjs().utc().format()
   };
 
   const [inventoryProductData, setinventoryProductData] = useState(initialData);
@@ -52,7 +54,7 @@ const AddInventoryModal = (prop) => {
     if (pname === 'createdAt') {
       setinventoryProductData((prevData) => ({
         ...prevData,
-        [pname]: moment(e).utc().format(),
+        [pname]: dayjs(e).utc().format()
       }));
     } else {
       if (pname === 'productName') {
@@ -102,7 +104,7 @@ const AddInventoryModal = (prop) => {
         createdBy: user.dspId,
         rowVer: 0,
         createdAt: item.createdAt,
-        lastUpdatedAt: moment().utc().format(),
+        lastUpdatedAt: dayjs().utc().format(),
       }));
 
       console.log({ addInvBody });

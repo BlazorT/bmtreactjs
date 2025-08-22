@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { getBusinessTypeById } from 'src/constants/buisnessType';
 import { getCountryById, getStateById } from 'src/constants/countries_and_states';
@@ -10,6 +11,7 @@ import useFetch from 'src/hooks/useFetch';
 import Loading from 'src/components/UI/Loading';
 
 const PrivacyPolicy = (prop) => {
+  dayjs.extend(utc);
   useEffect(() => {
     fetchDspList();
   }, []);
@@ -29,7 +31,7 @@ const PrivacyPolicy = (prop) => {
     businessTypeId: '',
     stateId: '',
     country: '',
-    createdAt: moment().utc().startOf('year').format(),
+    createdAt: dayjs().utc().startOf('year').format()
   });
 
  

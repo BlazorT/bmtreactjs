@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-
 import { formValidator } from 'src/helpers/formValidator';
 import { cilEnvelopeClosed } from '@coreui/icons';
-
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomInput from '../InputsComponent/CustomInput';
 import useApi from 'src/hooks/useApi';
 import Button from '../InputsComponent/Button';
@@ -11,6 +10,7 @@ import LoadingBtn from '../UI/LoadingBtn';
 import { useShowToast } from 'src/hooks/useShowToast';
 
 function EmailForgotPassword(prop) {
+  dayjs.extend(utc);
   const { setOnTaskName, setToken, email, setEmail } = prop;
 
   const { data, loading, error, postData } = useApi('/BlazorApi/forgot');
@@ -36,7 +36,7 @@ function EmailForgotPassword(prop) {
         password: '',
         rowVer: 0,
         status: 0,
-        createdAt: moment().utc().add(-5,'y').format(),
+        createdAt: dayjs().utc().subtract(5, 'y').format(),
         createdBy: 0,
       };
       console.log(forgotPassword);

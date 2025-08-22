@@ -1,10 +1,11 @@
-import moment from 'moment';
-
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
 import useFetch from '../useFetch';
 import { useShowToast } from '../useShowToast';
 
 export const useCreateCampaignData = () => {
+  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
@@ -13,7 +14,7 @@ export const useCreateCampaignData = () => {
   const createUpdateCampaign = async (campaignRegData) => {
     const body = {
       ...campaignRegData,
-      lastUpdatedAt: moment().utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
       lastUpdatedBy: user.userId,
       updatedBy: user.userId,
     };

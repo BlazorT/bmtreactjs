@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import CIcon from '@coreui/icons-react';
 import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import { CCol, CRow } from '@coreui/react';

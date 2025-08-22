@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { CCol, CCollapse, CContainer, CRow } from '@coreui/react';
 
 import DriverTripHistory from './DriverTripHistory';

@@ -1,37 +1,50 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/prop-types */
 import React from 'react';
-import { DataGrid, GridPagination, GridOverlay, GridSortModel } from '@mui/x-data-grid';
+import { MutableRefObject } from 'react';
+import {
+  DataGrid,
+  GridPagination,
+  GridOverlay,
+  GridSortModel,
+  GridColDef,
+  GridRowsProp,
+  GridRowParams, useGridApiRef,
+  GridValidRowModel,
+  GridRowId,
+  GridApiCommon,
+} from '@mui/x-data-grid';
+
+import { SxProps, Theme } from '@mui/material/styles';
 import CustomSummary from './DataGridSummary';
 import CustomGridToolbar from './CustomGridToolbar';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/material';
-//import DatagridSkeleton from './DatagridSkeleton';
 
 interface CustomDatagridProps {
-  rows: any[];
-  columns: any[];
+  rows: GridRowsProp;
+  columns: GridColDef[];
   rowHeight?: number | 'auto';
   pagination?: boolean;
-  summary?: any;
-  hiddenCols?: any;
-  toolbar?: any;
+  summary?: unknown;
+  hiddenCols?: null;
+  toolbar?: React.ReactNode;
   loading?: boolean;
   rowSelection?: boolean;
-  onEditCellChange?: (params: any) => void;
+  processRowUpdate?: (
+    newRow: GridValidRowModel,
+    oldRow: GridValidRowModel,
+    params: { rowId: GridRowId }
+  ) => GridValidRowModel | Promise<GridValidRowModel>;
   pageNumber?: number;
   sorting?: GridSortModel;
   canExport?: boolean;
   canPrint?: boolean;
   noRowsMessage?: string;
-  search?: any;
+  search?: unknown;
   footer?: React.ReactNode;
   cellBorder?: boolean;
   isZeroMargin?: boolean;
-  headerProps?: any;
+  headerProps?: Record<string, unknown>;
   isHeader?: boolean;
-  onRowClick?: (params: any) => void;
-  apiRef?: any;
+  onRowClick?: (params: GridRowParams) => void;
+  apiRef?: MutableRefObject<GridApiCommon>;// React.MutableRefObject<GridApiCommon> | null;
 }
 
 const CustomDatagrid: React.FC<CustomDatagridProps> = ({
@@ -41,10 +54,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   pagination,
   summary,
   hiddenCols,
-  toolbar,
   loading,
   rowSelection,
-  onEditCellChange,
+  processRowUpdate,
   pageNumber,
   sorting,
   canExport,
@@ -58,52 +70,38 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   isHeader,
   onRowClick,
   apiRef,
-}: CustomDatagridProps) => {
+}) => {
+ // apiRef = useGridApiRef();
+
   const getRowHeight = (): number | 'auto' => rowHeight || 'auto';
 
-  const getRowClassName = (params: any): string => {
-    let classNames = params.indexRelativeToCurrentPage % 2 === 0 ? 'rdg-row-even' : 'rdg-row-odd';
+  const getRowClassName = (params: GridRowParams): string => {
+    let classNames = 'rdg-row-even';
+      //apiRef.current.indexRelativeToCurrentPage % 2 === 0 ? 'rdg-row-even' : 'rdg-row-odd';
 
-    classNames += ` ${
-      Number.isInteger(params.row.status) && (params.row.status === 4 || params.row.status === 6)
+    classNames += ` ${Number.isInteger(params.row.status) && (params.row.status === 4 || params.row.status === 6)
         ? 'deleted-row-red'
         : ''
-    } ${params.row.group ? 'row-roles-group' : ''} ${
-      params.row.inventoryOf === 2 ? 'vehicle-da-inventory' : ''
-    }`;
+      } ${params.row.group ? 'row-roles-group' : ''} ${params.row.inventoryOf === 2 ? 'vehicle-da-inventory' : ''
+      }`;
 
     return classNames;
   };
 
-  const slotProps: any = {
-    panel: {
-      sx: {
-        top: '-120px !important',
-      },
-    },
-    toolbar: {
-      sx: {
-        marginBottom: '20px !important',
-      },
-    },
+  const slotProps: Record<string, unknown> = {
+    panel: { sx: { top: '-120px !important' } },
+    toolbar: { sx: { marginBottom: '20px !important' } },
   };
 
   const sx: SxProps<Theme> = {
-    '& .MuiDataGrid-columnHeaderDraggableContainer': {
-      all: 'unset !important',
+    '& .MuiDataGrid-columnHeaderDraggableContainer': { all: 'unset !important' },
+    '& .MuiDataGrid-columnSeparator': { display: 'none !important' },
+    '& .MuiButtonBase-root': { backgroundColor: '#0A1A2C' },
+    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell, &.MuiDataGrid-root--densityStandard .MuiDataGrid-cell, &.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+      py: isZeroMargin ? '0' : rowHeight === 'auto' ? '15px' : '0.4rem',
+      px: isZeroMargin ? '0' : rowHeight === 'auto' ? '15px' : '0.4rem',
+      borderRadius: isZeroMargin ? '0.3rem' : '0',
     },
-    '& .MuiDataGrid-columnSeparator': {
-      display: 'none !important',
-    },
-    '& .MuiButtonBase-root': {
-      backgroundColor: '#0A1A2C',
-    },
-    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell, &.MuiDataGrid-root--densityStandard .MuiDataGrid-cell, &.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell':
-      {
-        py: isZeroMargin ? '0' : rowHeight === 'auto' ? '15px' : '0.4rem',
-        px: isZeroMargin ? '0' : rowHeight === 'auto' ? '15px' : '0.4rem',
-        borderRadius: isZeroMargin ? '0.3rem' : '0',
-      },
     '& .MuiDataGrid-cell': {
       borderBottom: 'none',
       ...(cellBorder && {
@@ -121,40 +119,37 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   return (
     <DataGrid
       style={{ color: 'white', borderStyle: 'none' }}
-      // classes={{ columnHeaderDraggableContainer: classes.columnHeaderDraggableContainer }}
       getRowClassName={getRowClassName}
       rows={rows.map((item, index) => ({ id: index + 1, ...item }))}
       getRowHeight={getRowHeight}
-      processRowUpdate={onEditCellChange}
+      processRowUpdate={processRowUpdate}
       columns={columns}
       autoHeight
       checkboxSelection={false}
-      disableColumnMenu={true}
+      disableColumnMenu
       disableRowSelectionOnClick={false}
-      apiRef={apiRef}
-      rowSelection={rowSelection}
+      //apiRef={apiRef ?? undefined}
+      rowSelection={!!rowSelection}
       onRowClick={onRowClick}
-      getRowId={(rows) => rows.id}
+      getRowId={(row: GridValidRowModel) => row.id as GridRowId}
       pageSizeOptions={pageNumber ? [pageNumber] : [10]}
       loading={loading}
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: pageNumber ? pageNumber : 10,
+            pageSize: pageNumber ?? 10,
           },
         },
-        columns: hiddenCols,
-        sorting: {
-          sortModel: sorting,
-        },
+        //columns: hiddenCols,
+        sorting: { sortModel: sorting },
       }}
       slots={{
         footer: () => (
-          <React.Fragment>
-            {footer && footer}
+          <>
+            {footer}
             {summary && <CustomSummary rows={rows} columns={columns} summary={summary} />}
             {pagination && <GridPagination />}
-          </React.Fragment>
+          </>
         ),
         toolbar: () => (
           <CustomGridToolbar
@@ -165,8 +160,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
             isHeader={isHeader}
           />
         ),
-        noRowsOverlay: () => <GridOverlay>{noRowsMessage ? noRowsMessage : 'No Rows'}</GridOverlay>,
-        // loadingOverlay:()=><GridOverlay><DatagridSkeleton/></GridOverlay>
+        noRowsOverlay: () => (
+          <GridOverlay>{noRowsMessage ?? 'No Rows'}</GridOverlay>
+        ),
       }}
       slotProps={slotProps}
       sx={sx}

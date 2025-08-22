@@ -9,7 +9,8 @@ import {
   cilInfo,
 } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import ImagePicker from 'src/components/UI/ImagePicker';
@@ -185,7 +186,8 @@ export const getDaDspsRegisterInputs = (
     placeholder: 'Enter Mailing Address',
     className: 'form-control item',
   },
-];
+  ];
+dayjs.extend(utc);
 export const getInitialDspData = (user) => ({
   id: 0,
   logoPath: '',
@@ -203,5 +205,5 @@ export const getInitialDspData = (user) => ({
   isTermsAccepted: false,
   createdBy: user.userId,
   lastUpdatedBy: user.userId,
-  createdAt: moment().utc().format(),
+  createdAt: dayjs().utc().format(),
 });

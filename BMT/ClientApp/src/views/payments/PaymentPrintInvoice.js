@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import QRCode from 'react-qr-code';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import PropTypes from 'prop-types';
 const PaymentPrintInvoice = ({ isOpen, toggle, data }) => {
+  dayjs.extend(utc);
   const [total, settotal] = useState({ payableamount:0, totalDiscount: 0, totalAmount: 0, tax: 0,dueamount:0,payingamount:0 });
   const [invoiceno, setInvoiceno] = useState('');
   const [timeout, setTimeout] = useState('');
@@ -12,7 +14,7 @@ const PaymentPrintInvoice = ({ isOpen, toggle, data }) => {
   const [totalAmount, setTotalAmount] = useState('');
   const [invoiceCode, setInvoiceCode] = useState('');
 
-  const date = moment(new Date()).format('MM/DD/YYYY H:mm:ss ') 
+  const date = dayjs(new Date()).format('MM/DD/YYYY H:mm:ss '); 
   React.useEffect(() => {    
     if (data.length) {
       setCustomerName((data[0].customername));
@@ -52,7 +54,7 @@ const PaymentPrintInvoice = ({ isOpen, toggle, data }) => {
                   <h6>Invoice No : {invoiceCode}</h6>
                 </div>
                 <div className="col-md-6 text-center">
-                  <h6>Date : {moment(data[0].transactiontime).format('MM/DD/YYYY')}</h6>
+                  <h6>Date : {dayjs(data[0].transactiontime).format('MM/DD/YYYY')}</h6>
                 </div>
 
               </div>
@@ -80,7 +82,7 @@ const PaymentPrintInvoice = ({ isOpen, toggle, data }) => {
                       <td className="text-center">{item.amount}</td>
                       <td className="text-center">{item.paymentmode}</td>
                       <td className="text-center">{item.transactiontypename}</td>
-                      <td className="text-center">{moment(item.transactiontime).format('MM/DD/YYYY H:mm:ss ')}</td>
+                      <td className="text-center">{dayjs(item.transactiontime).utc().format('MM/DD/YYYY H:mm:ss ')}</td>
                     </tr>
                   ))}
                   <tr className="m-inv-total">

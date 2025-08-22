@@ -1,7 +1,6 @@
 import useFetch from '../useFetch';
 import { useShowToast } from '../useShowToast';
 import { useNavigate } from 'react-router-dom';
-//import { uploadimageData } from 'src/components/UI/ImagePicker';
 export const createSchedule = () => {
   const navigate = useNavigate();
   const showToast = useShowToast();

@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import useFetch from 'src/hooks/useFetch';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { cilChevronBottom } from '@coreui/icons';
 import globalutil from 'src/util/globalutil';
 import Loading from 'src/components/UI/Loading';
@@ -18,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 const OrgList = () => {
+  dayjs.extend(utc);
   useEffect(() => {
     fetchOrgList();
   }, []);
@@ -60,6 +62,7 @@ const OrgList = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Organizations',
   );
+  dayjs.extend(utc);
   const navigate = useNavigate();
   const { getOrgs } = useFetchOrgs();
   const [filters, setFilters] = useState({
@@ -68,7 +71,7 @@ const OrgList = () => {
     stateId: '',
     country: '',
     name: '',
-    createdAt: moment().utc().startOf('year').format(),
+    createdAt: dayjs().utc().startOf('year').format(),
   });
   const [showAdvSearch, setshowAdvSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,7 +126,7 @@ const OrgList = () => {
     setFilters({
       keyword: '',
       cityId: 1,
-      createdAt: moment().utc().startOf('year').format(),
+      createdAt: dayjs().utc().startOf('year').format()
     });
     fetchOrgList();
   };
@@ -132,7 +135,7 @@ const OrgList = () => {
     if (date === 'date') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        createdAt: moment(e).utc().format(),
+        createdAt: dayjs(e).utc().format()
       }));
     } else {
       const { name, value } = e.target;

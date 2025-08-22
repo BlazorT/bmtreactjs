@@ -66,11 +66,11 @@ const Products = () => {
         pagination={true}
         loading={loading || !data}
         rowHeight={50}
-        hiddenCols={{
-          columnVisibilityModel: {
-            lastUpdatedAt: false,
-          },
-        }}
+        {/*hiddenCols={{*/}
+        {/*  columnVisibilityModel: {*/}
+        {/*    lastUpdatedAt: false,*/}
+        {/*  },*/}
+        {/*}}*/}
         canExport={pageRoles.canExport}
         canPrint={pageRoles.canPrint}
         sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}

@@ -1,8 +1,10 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 //import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 export const getUserbyRole = async (user, role, fetchUsers, dispatch, filters) => {
+  dayjs.extend(utc);
   const fetchBody = {
     userId: user.userId.toString(),
     roleId: role,
@@ -16,12 +18,13 @@ export const getUserbyRole = async (user, role, fetchUsers, dispatch, filters) =
     stateId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
     status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
     keyword: filters ? filters.keyword : '',
-    createdAt: filters
-      ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-      : moment().subtract(1, 'year').utc().format(),
-    lastUpdatedAt: filters
-      ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-      : moment().utc().format(),
+    createdAt : filters
+      ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+      : dayjs().subtract(1, 'year').utc().format(),
+
+    lastUpdatedAt : filters
+      ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+      : dayjs().utc().format()
   };
 
   // Wrap the fetchUsers call in a Promise
@@ -72,7 +75,7 @@ export const updateUser = async (user, newUserData, createUser, dispatch, naviga
     lastUpdatedBy: user.userId,
     createdBy: newUserData.createdBy || user.dspId,
     createdAt: newUserData.createdAt,
-    lastUpdatedAt: moment().utc().format(),
+    lastUpdatedAt: dayjs().utc().format(),
     remarks: 'created user',
   };
 

@@ -7,9 +7,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs from 'dayjs';
 import CIcon from '@coreui/icons-react';
-import moment from 'moment';
 
 export default function CustomDatePicker(prop) {
+  //dayjs.extend(utc);
   const { icon, label, title, id, name, value, onChange, isRequired, message, max, min, minDate, maxDate,disablePast = false } = prop;
 
   const [error, setError] = React.useState(null);

@@ -1,9 +1,11 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
 import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
 export const useFetchCampaigns = () => {
+  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
@@ -19,11 +21,11 @@ export const useFetchCampaigns = () => {
       networkId: filters ? filters.networkId:0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().subtract(1, 'year').utc().format(),
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format()
     };
    
    // console.log(userBody,'body')

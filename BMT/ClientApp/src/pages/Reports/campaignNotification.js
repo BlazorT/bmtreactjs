@@ -13,16 +13,15 @@ import {
 import CIcon from '@coreui/icons-react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import moment from 'moment';
 import _ from 'lodash';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import { CContainer } from '@coreui/react';
-import utc from 'dayjs/plugin/utc';
 import Loading from 'src/components/UI/Loading';
 import { getUserReportPdf } from 'src/helpers/getUserReportPdf';
 
@@ -67,8 +66,8 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     const filterBody = {
       recipient: filters.recipient,
       deliveryStatus: String(filters.deliveryStatus || ''), // ✅ Always string
-      createdAt: moment(filters.createdAt).utc().format('YYYY-MM-DD'),
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
+      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
     };
 
     getNotiList(filterBody);
@@ -105,8 +104,8 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       Id: 0,
       Status: 1,
       OrgId: user.orgId,
-      createdAt: moment().utc().subtract(1, 'year').format(),
-      lastUpdatedAt: moment().utc().format(),
+      createdAt: dayjs().utc().subtract(1, 'year').format(),
+      lastUpdatedAt: dayjs().utc().format(),
       ...filters,
     };
 
@@ -369,7 +368,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;

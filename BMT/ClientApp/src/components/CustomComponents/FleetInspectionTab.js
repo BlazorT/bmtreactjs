@@ -1,11 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import moment from 'moment';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
 import { updateToast } from 'src/redux/toast/toastSlice';
 import useFetch from 'src/hooks/useFetch';
 import { formatDateTime } from 'src/helpers/formatDate';
@@ -71,7 +68,7 @@ const FleetInspectionTab = ({ vehicleId, fleetVin, setvehicleId }) => {
       if (date === 'lastUpdatedAt' || date === 'createdAt') {
         setFilters((prevFilters) => ({
           ...prevFilters,
-          [date]: moment(e).utc().format(),
+          [date]: dayjs(e).utc().format(),
         }));
       } else {
         const { name, value, type, checked } = e.target;
@@ -92,8 +89,8 @@ const FleetInspectionTab = ({ vehicleId, fleetVin, setvehicleId }) => {
       dspId: user.dspId,
       inspectedBy: filter ? (filters.driverName !== '' ? filters.driverName?.id : 0) : 0,
       reportTypeId: filter ? (filters.status !== '' ? filters.status : 0) : 0,
-      createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD') 
     };
 
     await getVehicleIsnp(
@@ -186,12 +183,7 @@ const FleetInspectionTab = ({ vehicleId, fleetVin, setvehicleId }) => {
               canExport={1}
               canPrint={1}
               sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
-              noRowsMessage={gridMessage}
-              hiddenCols={{
-                columnVisibilityModel: {
-                  lastUpdatedAt: false,
-                },
-              }}
+              noRowsMessage={gridMessage}             
             />
             <AddInspectionModal
               header="Inspection Report"

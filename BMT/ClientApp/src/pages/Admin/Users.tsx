@@ -7,7 +7,6 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import { useSelector } from 'react-redux';
 import { formatDate } from 'src/helpers/formatDate';
 import { getRoleById } from 'src/constants/roles';
-import moment, { MomentInput } from 'moment';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { getUsersListCols } from 'src/configs/ColumnsConfig/usersListCols';
@@ -17,9 +16,10 @@ import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
 import AppContainer from 'src/components/UI/AppContainer';
 import { RootState } from 'src/store';
 
-dayjs.extend(utc);
+
 
 const Users: React.FC = () => {
+  dayjs.extend(utc);
   useEffect(() => {
     fetching();
   }, []);
@@ -48,7 +48,7 @@ const Users: React.FC = () => {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value } = e.target;
@@ -141,12 +141,7 @@ const Users: React.FC = () => {
             noRowsMessage={error ? 'Error Fetching data' : ''}
             sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
             canExport={pageRoles.canExport}
-            canPrint={pageRoles.canPrint}
-            hiddenCols={{
-              columnVisibilityModel: {
-                lastUpdatedAt: false,
-              },
-            }}
+            canPrint={pageRoles.canPrint}          
           />
         )}
       </AppContainer>

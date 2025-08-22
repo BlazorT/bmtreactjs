@@ -15,7 +15,8 @@ import CIcon from '@coreui/icons-react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import useFetch from 'src/hooks/useFetch';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { getInspectionDetailCols } from 'src/configs/ColumnsConfig/inspectionDetailCols';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
@@ -29,6 +30,7 @@ const AddInspectionModal = ({
   fleetVin,
   fetchInspection,
 }) => {
+  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -79,7 +81,7 @@ const AddInspectionModal = ({
             vehicleid: reportField[0].vehicleId,
             status: 1,
             createdAt: field.createdAt,
-            lastUpdatedAt: moment().utc().format(),
+            lastUpdatedAt: dayjs().utc().format() ,
             lastUpdatedBy: user.userId,
             createdBy: field.createdBy,
             inspectionReportId: reportField[0].id,
@@ -117,7 +119,7 @@ const AddInspectionModal = ({
     if (reportField) {
       inspectBody = {
         ...reportField[0],
-        lastUpdatedAt: moment().utc().format(),
+        lastUpdatedAt: dayjs().utc().format(),
         lastUpdatedBy: user.userId,
         dspId: user.dspId,
         inspectedBy: user.userId,
@@ -137,8 +139,8 @@ const AddInspectionModal = ({
     } else {
       inspectBody = {
         id: 0,
-        createdAt: moment().utc().format(),
-        lastUpdatedAt: moment().utc().format(),
+        createdAt: dayjs().utc().format() ,
+        lastUpdatedAt: dayjs().utc().format(),
         createdBy: user.userId,
         lastUpdatedBy: user.userId,
         dspId: user.dspId,
@@ -229,8 +231,8 @@ const AddInspectionModal = ({
           inspectionItemId: field.inspectionItemId ? field.inspectionItemId : field.id,
           vehicleid: field.vehicleid ? field.vehicleid : vehicleId,
           status: 1,
-          createdAt: moment().utc().format(),
-          lastUpdatedAt: moment().utc().format(),
+          createdAt: dayjs().utc().format() ,
+          lastUpdatedAt: dayjs().utc().format() ,
           file: '',
           lastUpdatedBy: user.userId,
           createdBy: user.userId,

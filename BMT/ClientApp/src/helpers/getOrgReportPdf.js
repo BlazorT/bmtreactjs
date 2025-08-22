@@ -1,7 +1,6 @@
 import jsPDF from 'jspdf';
 import globalutil from 'src/util/globalutil';
 import { formatDateTime } from './formatDate';
-import moment from 'moment';
 
 export const getOrgReportPdf = (reportRows, reportField) => {
   const doc = new jsPDF({ orientation:'p', format: 'letter', unit: 'mm' });

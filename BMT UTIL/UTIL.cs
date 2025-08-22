@@ -115,6 +115,8 @@ namespace com.blazor.bmt.util
     }
     public enum USERROLES
     {
+
+
         [Description("Super Admin")]
         SUPERADMIN = 1,
         [Description("Admin")]
