@@ -10,7 +10,6 @@ import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import moment from 'moment';
 import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
 import { updateToast } from 'src/redux/toast/toastSlice';
@@ -164,11 +163,11 @@ const campaignslisting = () => {
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().subtract(1, 'year').utc().format(),
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format(),
       createdBy: 0,
       lastUpdatedBy: 0,
       ...filters,
@@ -254,13 +253,7 @@ const campaignslisting = () => {
                 rowHeight={50}
                 pagination={true}
                 // loading={rows.length < 1 ? true : false}
-                sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}               
-                hiddenCols={{
-                  columnVisibilityModel: {
-                    status: false,
-                    lastUpdatedAt: false,
-                  },
-                }}
+                sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]} 
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
               />

@@ -9,7 +9,6 @@ import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import moment from 'moment';
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
 import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
 import { updateToast } from 'src/redux/toast/toastSlice';
@@ -150,11 +149,11 @@ const recipientslisting = () => {
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
       createdBy: 0,
       lastUpdatedBy: 0,
       ...filters,
@@ -250,8 +249,7 @@ const recipientslisting = () => {
                 // loading={rows.length < 1 ? true : false}
                 sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}               
                 hiddenCols={{
-                  columnVisibilityModel: {
-                    status: false,
+                  columnVisibilityModel: {               
                     lastUpdatedAt: false,
                   },
                 }}

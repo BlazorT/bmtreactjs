@@ -13,7 +13,6 @@ import {
 } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import dayjs from 'dayjs';
-import moment from 'moment';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
@@ -153,7 +152,7 @@ export const getDaAppllyInputs = (
  
 ];
 
-
+dayjs.extend(utc);
 export const getInitialDaData = (user) => ({
   id: 0,
   avatar: '',
@@ -161,7 +160,7 @@ export const getInitialDaData = (user) => ({
   lastName: '',
   middleName: '',
   dspid: '',
-  dob: moment().subtract(21, 'years'),
+  dob: dayjs().subtract(21, 'year').format(),
   primaryContact: '',
   email: '',
   userId: generateRandomNumbers(14),
@@ -171,11 +170,11 @@ export const getInitialDaData = (user) => ({
   licenceNo: '',
   issuingStateId: '',
   status: '',
-  licenseIssueDate: moment().subtract(1, 'day'),
-  licenseExpiryDate: moment().add(1, 'day'),
+  licenseIssueDate: dayjs().subtract(1, 'day'),
+  licenseExpiryDate: dayjs().add(1, 'day'),
   licenceImageFront: '',
   licenceImageBack: '',
   isTermsAccepted: false,
   mailAddress: '',
-  createdAt: moment().utc().format(),
+  createdAt: dayjs().utc().format(),
 });

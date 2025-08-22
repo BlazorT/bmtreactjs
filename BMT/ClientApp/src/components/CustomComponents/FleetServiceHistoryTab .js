@@ -1,5 +1,4 @@
 import React from 'react';
-
 import VehicleCustomeCell from '../DataGridCustomCells/VehicleCustomCell';
 import CategoryCustomCell from '../DataGridCustomCells/CategoryCustomCell';
 import CategoryStatusCell from '../DataGridCustomCells/CategoryStatusCell';

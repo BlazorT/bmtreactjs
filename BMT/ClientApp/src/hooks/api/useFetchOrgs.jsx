@@ -1,9 +1,11 @@
 import useFetch from '../useFetch';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
 import { useShowToast } from '../useShowToast';
 
 export const useFetchOrgs = () => {
+  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
@@ -22,11 +24,12 @@ export const useFetchOrgs = () => {
       status: filters ? (filters?.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
+
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
       createdBy:0,
       lastUpdatedBy:0,
       

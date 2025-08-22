@@ -33,7 +33,7 @@ const CampaignNotification = React.lazy(() => import('./pages/Reports/campaignNo
 //const WorkFlowSubTask = React.lazy(() => import('./pages/Workflow/WorkFlowSubTask'));
 //const WorkFlowFieldMapping = React.lazy(() => import('./pages/Workflow/WorkFlowFieldMapping'));
 const UserRegister = React.lazy(() => import('./pages/Admin/UserRegister'));
-const GlobalPrefrences = React.lazy(() => import('./pages/Admin/GlobalPrefrences'));
+//const GlobalPrefrences = React.lazy(() => import('./pages/Admin/GlobalPrefrences'));
 const Logs = React.lazy(() => import('./pages/Reports/Logs'));
 const UserReport = React.lazy(() => import('./pages/Reports/UserReport'));
 //const DailyPerformanceReport = React.lazy(() => import('./pages/Reports/DailyPerformanceReport'));
@@ -136,7 +136,7 @@ export const rolesRoutes = [
   //{ path: '/WorkFlowSubTask', name: 'WorkFlowSubTask', element: WorkFlowSubTask },
   //{ path: '/ServiceIntegrated', name: 'ServiceIntegrated', element: ServiceIntegrated },
   //{ path: '/InventoryManagement', name: 'InventoryManagement', element: InventoryManagement },
-  { path: '/GlobalPrefrences', name: 'GlobalPrefrences', element: GlobalPrefrences },
+  //{ path: '/globalprefrences', name: 'globalprefrences', element: globalprefrences },
  // { path: '/campaignNotification', name: 'campaignNotification', element: campaignNotification },
   //{ path: '/campaignslisting', name: 'campaignslisting', element: campaignslisting },
   /*{ path: '/stock', name: 'Stock Detail', element: StockRecord },*/

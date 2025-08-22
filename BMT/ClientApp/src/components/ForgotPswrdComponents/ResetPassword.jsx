@@ -11,11 +11,14 @@ import CustomInput from '../InputsComponent/CustomInput';
 import Button from '../InputsComponent/Button';
 import { formValidator } from 'src/helpers/formValidator';
 import { useShowToast } from 'src/hooks/useShowToast';
-import moment from 'moment';
+//import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { CCol, CRow } from '@coreui/react';
 import { checkPasswordStrength } from 'src/helpers/getPasswordStrength';
 
 function ResetPassword(prop) {
+  dayjs.extend(utc);
   const { token, email, setOnTaskName } = prop;
 
   const { data, loading, error, postData } = useApi('/BlazorApi/forgot');
@@ -54,7 +57,7 @@ function ResetPassword(prop) {
           password: btoa(password),
           rowVer: 0,
           status: 0,
-          createdAt: moment().utc().format(),
+          createdAt: dayjs().utc().format(),
           createdBy: 0,
         };
 

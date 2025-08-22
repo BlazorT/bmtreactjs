@@ -11,7 +11,6 @@ import {
   cilCalendar
 } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
-import moment from 'moment';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
@@ -137,7 +136,7 @@ export const getCampaignAddConfig = (
  
 ];
 export const getInitialCampaignData = (user) => {
-  const now = moment();
+  const now = dayjs()
   return {
     id: 0,
     logoPath: '',

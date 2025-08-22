@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import QRCode from 'react-qr-code';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import PropTypes from 'prop-types';
 const PrintInvoice = ({ isOpen, toggle, data }) => {
+  dayjs.extend(utc);
   const [total, settotal] = useState({ payableamount:0, totalDiscount: 0, totalAmount: 0, tax: 0,dueamount:0,payingamount:0 });
   const [invoiceno, setInvoiceno] = useState('');
   const [userdetail, setUserdetail] = useState({name:'',customername:''});
-  const date = moment(new Date()).format('MM/DD/YYYY H:mm:ss ')
+  const date = dayjs(new Date()).format('MM/DD/YYYY H:mm:ss ') 
   //const toggle = () => {
   //  setModalOpen(!modalOpen);
   //};

@@ -37,6 +37,9 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="4dspsDb\**" />
     <Compile Remove="bmtfolder\**" />
+    <Compile Remove="ClientApp\jQuery\example\**" />
+    <Compile Remove="ClientApp\jQuery\test\**" />
+    <Compile Remove="ClientApp\src\pages\Fleet\**" />
     <Compile Remove="ClientApp\src\pages\Inventory\**" />
     <Compile Remove="ClientApp\src\pages\Workflow\**" />
     <Compile Remove="COM.Blazor.API\**" />
@@ -44,12 +47,18 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="4dspsDb\**" />
     <Content Remove="bmtfolder\**" />
+    <Content Remove="ClientApp\jQuery\example\**" />
+    <Content Remove="ClientApp\jQuery\test\**" />
+    <Content Remove="ClientApp\src\pages\Fleet\**" />
     <Content Remove="ClientApp\src\pages\Inventory\**" />
     <Content Remove="ClientApp\src\pages\Workflow\**" />
     <Content Remove="COM.Blazor.API\**" />
     <Content Remove="ServiceAgent\Interfaces\**" />
     <EmbeddedResource Remove="4dspsDb\**" />
     <EmbeddedResource Remove="bmtfolder\**" />
+    <EmbeddedResource Remove="ClientApp\jQuery\example\**" />
+    <EmbeddedResource Remove="ClientApp\jQuery\test\**" />
+    <EmbeddedResource Remove="ClientApp\src\pages\Fleet\**" />
     <EmbeddedResource Remove="ClientApp\src\pages\Inventory\**" />
     <EmbeddedResource Remove="ClientApp\src\pages\Workflow\**" />
     <EmbeddedResource Remove="COM.Blazor.API\**" />
@@ -57,6 +66,9 @@
     <None Remove="$(SpaRoot)**" />
     <None Remove="4dspsDb\**" />
     <None Remove="bmtfolder\**" />
+    <None Remove="ClientApp\jQuery\example\**" />
+    <None Remove="ClientApp\jQuery\test\**" />
+    <None Remove="ClientApp\src\pages\Fleet\**" />
     <None Remove="ClientApp\src\pages\Inventory\**" />
     <None Remove="ClientApp\src\pages\Workflow\**" />
     <None Remove="COM.Blazor.API\**" />
@@ -97,25 +109,37 @@
     <Compile Remove="UTIL.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="ClientApp\src\Blazorhub.js" />
-    <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTab.js" />
-    <None Remove="ClientApp\src\components\CustomComponents\FleetDashboardTabs.js" />
-    <None Remove="ClientApp\src\components\DataGridCustomCells\WorkFlowActionCell.js" />
-    <None Remove="ClientApp\src\components\ModalWindow\qrcode.js" />    
-    <None Remove="ClientApp\src\pages\Admin\DSPSRoles.js" />    
-    <None Remove="ClientApp\src\pages\Admin\GlobalPrefrences.js" />
-    <None Remove="ClientApp\src\pages\Dashboard\FleetDashboard.js" />
-    <None Remove="ClientApp\src\pages\DA\DADspRegister.js" />
-    <None Remove="ClientApp\src\pages\Fleet\FleetServiceIntegrated.js" />
-    <None Remove="ClientApp\src\pages\Inventory\InventoryManagement.js" />
-    <None Remove="ClientApp\src\pages\Reports\DailyPerformanceReport.js" />
-    <None Remove="ClientApp\src\pages\Reports\DispatchmentReport.js" />
-    <None Remove="ClientApp\src\pages\Workflow\WorkFlowFieldMapping.js" />
-    <None Remove="ClientApp\src\pages\Workflow\WorkFlowList.js" />
-    <None Remove="ClientApp\src\pages\Workflow\WorkFlowSubTask.js" />
-    <None Remove="ClientApp\src\pages\Workflow\WorkFlowTask.js" />
-  </ItemGroup>
+  <ItemGroup>    
+    <None Remove="ClientApp\jQuery\test\components\Builder.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Button.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Component\index.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Component\__snapshots__\index.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Form\Input.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Form\Select.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Form\SelectMulti.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Form\Switch.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Form\__snapshots__\Input.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Form\__snapshots__\Select.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Form\__snapshots__\SelectMulti.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Form\__snapshots__\Switch.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Group\index.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Group\__snapshots__\index.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Iterator.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\Boolean.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\FieldSelect.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\Input.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\OperatorSelect.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\Select.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\SelectMulti.test.tsx" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\Boolean.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\FieldSelect.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\Input.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\OperatorSelect.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\Select.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\Widgets\__snapshots__\SelectMulti.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\__snapshots__\Button.test.tsx.snap" />
+    <None Remove="ClientApp\jQuery\test\components\__snapshots__\Iterator.test.tsx.snap" />
+ </ItemGroup>
 
   <ItemGroup>
     <Compile Include="ServiceAgent\Interfaces\IAddressPageService.cs" />
@@ -131,7 +155,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\pages\Fleet\" />
     <Folder Include="ClientApp\src\views\DSP\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="ServiceAgent\Authentication\" />

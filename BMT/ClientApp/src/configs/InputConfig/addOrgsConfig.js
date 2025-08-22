@@ -13,7 +13,7 @@ import {
 } from '@coreui/icons';
 //import { CFormCheck } from '@coreui/react';
 import dayjs from 'dayjs';
-import moment from 'moment';
+import utc from 'dayjs/plugin/utc';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 //import CustomDatePicker from 'src/components/UI/DatePicker';
@@ -446,7 +446,7 @@ export const getDaAppllyBirthInputs = (daIdentificationData, handleDAIdentificat
     message: 'birth certificate copy upload',
   },
 ];
-
+dayjs.extend(utc);
 export const getInitialDaData = (user) => ({
   id: 0,
   currencyId: 1,
@@ -469,9 +469,9 @@ export const getInitialDaData = (user) => ({
   isTermsAccepted: false,
   mailAddress: '',
   paymentDetailId: 0,
-  createdAt: moment().utc().format(),
-  registrationTime: moment().utc().format(),
-  lastUpdatedAt: moment().utc().format(),
+  createdAt: dayjs().utc().format(),
+  registrationTime: dayjs().utc().format(),
+  lastUpdatedAt: dayjs().utc().format(),
   createdBy: user.userId,
   lastUpdatedBy: user.userId,
 });

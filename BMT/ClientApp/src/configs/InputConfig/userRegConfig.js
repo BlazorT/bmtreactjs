@@ -10,7 +10,8 @@ import {
   cilInfo,
 } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import ImagePicker from 'src/components/UI/ImagePicker';
@@ -276,7 +277,8 @@ export const getUserInputFields = (
   //    </span>
   //  ),
   //},
-];
+  ];
+dayjs.extend(utc);
 // Function to get initial user data
 export const getInitialUserData = (user, role) => ({
   id: 0,
@@ -299,8 +301,7 @@ export const getInitialUserData = (user, role) => ({
   rowVer: 1,
   paymentDetailId: 0,
   createdBy: user.userId,
-  createdAt: moment().utc().format(),
-  registrationTime: moment().utc().format(),
-
-  lastUpdatedAt: moment().utc().format(),
+  createdAt: dayjs().utc().format(),
+  registrationTime: dayjs().utc().format(),
+  lastUpdatedAt: dayjs().utc().format()
 });

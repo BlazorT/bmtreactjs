@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { formValidator } from 'src/helpers/formValidator';
 import { cilEnvelopeClosed } from '@coreui/icons';
 
@@ -11,6 +11,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import LoadingBtn from '../UI/LoadingBtn';
 
 function SecurityCode(prop) {
+  dayjs.extend(utc);
   const { setOnTaskName, token, email, setToken } = prop;
   const [securityCode, setSecurityCode] = useState('');
 
@@ -98,7 +99,7 @@ function SecurityCode(prop) {
       password: '',
       rowVer: 0,
       status: 0,
-      createdAt: moment().utc().format(),
+      createdAt: dayjs().utc().format() ,
       createdBy: 0,
     };
 

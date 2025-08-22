@@ -6,12 +6,9 @@ import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
 import { useSelector } from 'react-redux';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
-//import FleetDashboardTabs from '../../components/FleetComponents/FleetDashboardTabs';
-//import CustomInput from 'src/components/InputsComponent/CustomInput';
-//import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-//import NetworkInput from 'src/components/Component/NetworkInputs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs';
-import moment from 'moment';
 import {
   cilUser,
 } from '@coreui/icons';
@@ -22,6 +19,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
 
 const SingleDispatchment = () => {
+  dayjs.extend(utc);
   const [activeTab, setActiveTab] = useState(1);
   const [organization, setOrganization] = useState(1);
   const [tabs,setTabs] =useState( []);
@@ -95,8 +93,8 @@ const SingleDispatchment = () => {
       cityId:0,
       status:1,
       // keyword: filters ? filters.keyword : '',
-      createdAt: moment().subtract(1, 'year').utc().format(),
-      lastUpdatedAt: moment().utc().format('YYYY-MM-DD'),
+      createdAt: dayjs().utc().subtract(1, 'year').format(),         // ISO 8601 string
+      lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
       createdBy: user.userId,
       lastUpdatedBy: user.userId,
     };

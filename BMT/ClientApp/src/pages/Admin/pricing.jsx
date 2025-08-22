@@ -65,7 +65,7 @@ const Products = () => {
         loading={loading || !data}
         rowHeight={50}
         hiddenCols={{
-          columnVisibilityModel: {
+          columnVisibilityModel: {           
             lastUpdatedAt: false,
           },
         }}

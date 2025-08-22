@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Popover from '@mui/material/Popover';
-
 import CIcon from '@coreui/icons-react';
 import { cilReload, cilTrash } from '@coreui/icons';
 import { CFormCheck, CRow } from '@coreui/react';
@@ -10,7 +9,10 @@ import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import ScheduleStatusCell from './ScheduleStatusCell';
 import { useShowToast } from 'src/hooks/useShowToast';
 import Button from '../InputsComponent/Button';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import weekday from 'dayjs/plugin/weekday';
+import isBefore from 'dayjs/plugin/isBefore';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useSelector } from 'react-redux';
 import CustomSearch from '../InputsComponent/CustomSearch';
 
@@ -25,6 +27,9 @@ export default function ScheduleCellPopOver({
   getRoster,
   setSubmitData,
 }) {
+  dayjs.extend(weekday);
+  dayjs.extend(isBefore);
+  dayjs.extend(customParseFormat);
   const user = useSelector((state) => state.user);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [da, setDa] = React.useState('');
@@ -163,18 +168,19 @@ export default function ScheduleCellPopOver({
   };
 
   function getMergedMomentFromWeekRange(weekStartDate, weekEndDate, targetDay) {
-    const startMoment = moment(weekStartDate);
-    const endMoment = moment(weekEndDate);
+    const startDayjs = dayjs(weekStartDate);
+    const endDayjs = dayjs(weekEndDate);
 
     // Find the first occurrence of the target day within the week range
-    let currentMoment = startMoment.clone().startOf('week');
-    while (currentMoment.isBefore(endMoment)) {
-      if (currentMoment.format('ddd, MMM DD') === targetDay) {
-        const extractedYear = currentMoment.year();
-        const mergedMoment = moment(`${targetDay} ${extractedYear}`, 'ddd, MMM DD YYYY');
-        return mergedMoment;
+    let currentDayjs = startDayjs.startOf('week');
+
+    while (currentDayjs.isBefore(endDayjs)) {
+      if (currentDayjs.format('ddd, MMM DD') === targetDay) {
+        const extractedYear = currentDayjs.year();
+        const mergedDayjs = dayjs(`${targetDay} ${extractedYear}`, 'ddd, MMM DD YYYY');
+        return mergedDayjs;
       }
-      currentMoment.add(1, 'day');
+      currentDayjs = currentDayjs.add(1, 'day');
     }
 
     // If no match found, return undefined or handle as needed
@@ -217,7 +223,7 @@ export default function ScheduleCellPopOver({
         ...rest,
         vehicleId: vehicle.id,
         lastUpdatedBy: user.userId,
-        lastUpdatedAt: moment().utc().format(),
+        lastUpdatedAt: dayjs().utc().format()
       },
     ];
     const rosterPlanBody = {
@@ -233,7 +239,7 @@ export default function ScheduleCellPopOver({
       lastUpdatedBy: user.userId,
       createdBy: roster.createdBy,
       createdAt: roster.createdAt,
-      lastUpdatedAt: moment().utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
       rowVer: 1,
       // fleetPlans: fleetPlans,
     };

@@ -12,19 +12,16 @@ import {
 import CIcon from '@coreui/icons-react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 //import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 //import globalutil from 'src/util/globalutil';
-import dayjs from 'dayjs';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-
-import utc from 'dayjs/plugin/utc';
 
 const AuditLogs = () => {
   dayjs.extend(utc);
-
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Audit Log',
   );
@@ -43,7 +40,7 @@ const AuditLogs = () => {
     keyValue: '',
     keyword: '',
     oldValue: '',
-    createdAt: moment().utc().startOf('year').format(),
+    createdAt: dayjs().utc().startOf('year').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
@@ -52,7 +49,7 @@ const AuditLogs = () => {
       keyword: filters.keyword,
       keyValue: filters.keyValue,
       oldValue: filters.oldValue,
-      createdAt: moment(filters.createdAt).utc().startOf('month').format(),
+      createdAt: dayjs(filters.createdAt).utc().startOf('month').format(),
     };
 
     getLogList(filterBody);
@@ -80,9 +77,8 @@ const AuditLogs = () => {
       newValue: '',
       keyValue: '',
       createdBy: 0,
-      createdAt: moment().utc().subtract(1, 'year').format(),
-      ...filters,
-      //logTime: moment().utc().startOf('year').format(),
+      createdAt: dayjs().utc().subtract(1, 'year').format(),
+      ...filters,      
     };
 
     await GetLog(
@@ -206,7 +202,7 @@ const AuditLogs = () => {
     if (date === 'createdAt' || date === 'createdBy') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;

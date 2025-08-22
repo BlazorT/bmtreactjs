@@ -11,8 +11,10 @@ import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput'
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { CFormCheck } from '@coreui/react';
+//import { dayjs } from '@coreui/react';
+import dayjs from 'dayjs';
+
 //import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs'
-import moment from 'moment';
 import {
   cilUser,
   cilCloudDownload,
@@ -38,6 +40,7 @@ const NetworkInputs = (prop) => {
   const { header, networkId, setNetworkList, networkList } = prop
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const now = dayjs().utc();
   const [networkState, SetNetworkState] = useState({
     id:0,
     orgId: user.orgId,
@@ -61,10 +64,10 @@ const NetworkInputs = (prop) => {
     status: 1,
     createBy: user.Id,
     lastUpdatedBy: user.Id,
-    startTime: moment().utc().format(),
-    finishTime: moment().utc().format(),
-    createdAt: moment().utc().startOf('month').format(),
-    lastUpdatedAt: moment().utc().format(),
+    startTime: now.format(),
+    finishTime: now.format(),
+    createdAt: now.startOf('month').format() ,// dayjs().utc().startOf('month').format(),
+    lastUpdatedAt: now.format() //dayjs().utc().format()
   })
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);

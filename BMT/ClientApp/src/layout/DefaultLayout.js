@@ -1,8 +1,6 @@
 import React from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { updateToast, selectToast } from '../redux/toast/toastSlice';
-
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
 import CustomSnackbar from 'src/components/UI/CustomSnackbar';
 import ConfirmationModal from 'src/components/Modals/ConfirmationModal';

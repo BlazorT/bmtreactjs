@@ -8,8 +8,6 @@ import useFetch from 'src/hooks/useFetch';
 
 import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import moment from 'moment';
-
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Loading from 'src/components/UI/Loading';
@@ -159,11 +157,11 @@ const organizationsusers = () => {
       rowVer: 0,
       cityId: filters?.state ? filters.state : 0,
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(1, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().subtract(1, 'year').utc().format(),
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format(),
       createdBy: 0,
       lastUpdatedBy: 0,
       ...filters,
@@ -260,12 +258,12 @@ const organizationsusers = () => {
                 //    aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
                 //  },
                 //]}
-                hiddenCols={{
-                  columnVisibilityModel: {
-                    status: false,
-                    lastUpdated: false,
-                  },
-                }}
+                //hiddenCols={{
+                //  columnVisibilityModel: {
+                //    status: false,
+                //    lastUpdated: false,
+                //  },
+                //}}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
               />

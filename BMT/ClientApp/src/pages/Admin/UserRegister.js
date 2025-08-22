@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CCol, CRow, CFormCheck } from '@coreui/react';
@@ -42,6 +43,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import {} from 'src/components/UI/ImagePicker';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 const UserRegister = () => {
+  dayjs.extend(utc);
   const location = useLocation();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ const UserRegister = () => {
     console.log({ state });
     if (state !== null) {
       const userData = state.user[0];
-      console.log({ userData });
+      //console.log({ userData });
       setUserData({
         ...userData,
         roleId: userData.roleId === 0 ? '' : userData.roleId ?? '',
@@ -145,7 +147,7 @@ const UserRegister = () => {
       password: btoa(UserData.password),
       orgId: parseInt(UserData.orgId),
       lastUpdatedBy: user.userId,
-      lastUpdatedAt: moment().utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
       remarks: 'created user',
     };
     setIsLoading(false);
@@ -160,7 +162,7 @@ const UserRegister = () => {
       formData.append('name', avatar.name);
       formData.append('fileName', avatar.name);
       formData.append('createdBy', user.userId);
-      formData.append('createdAt', moment().utc().format());
+      formData.append('createdAt', dayjs().utc().format());
 
       // for (const entry of formData.entries()) {
       //   console.log(entry[0], entry[1]);

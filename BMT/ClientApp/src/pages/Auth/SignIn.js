@@ -1,9 +1,7 @@
 // React and third-party libraries
 import React, { useState } from 'react';
-
 //import CIcon from '@coreui/icons-react';
 import Carousel from 'react-bootstrap/Carousel';
-//import moment from 'moment';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { cilChevronRight } from '@coreui/icons';
 
 import globalutil from '../../util/globalutil';
-
 // local imports
 import Loading from '../../components/UI/Loading';
 import Fotter from 'src/layout/AppFooter.js';

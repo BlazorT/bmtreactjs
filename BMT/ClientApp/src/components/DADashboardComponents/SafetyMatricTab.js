@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CCollapse } from '@coreui/react';
-
 import BlazorTabs from '../CustomComponents/BlazorTabs';
 import MatricDeepTabs from './MatricDeepTabs';
 

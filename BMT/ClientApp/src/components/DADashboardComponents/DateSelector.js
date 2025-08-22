@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { CCol, CRow } from '@coreui/react';
 import { CButtonGroup, CFormCheck } from '@coreui/react';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { cilCalendar } from '@coreui/icons';
 const DateSelector = (prop) => {
+  dayjs.extend(utc);
   const { date, onDateChange } = prop;
   const [selectedOptionweek, setSelectedOptionweek] = useState('week');
   const [selectedOptionday, setSelectedOptionday] = useState('day');
 
   const handlePrevDay = () => {
-    const increasedDate = moment(date).subtract(1, 'days');
+    const increasedDate = dayjs(date).subtract(1, 'day'); 
     onDateChange(increasedDate);
   };
 
   const handleNextDay = () => {
-    const increasedDate = moment(date).add(1, 'days');
-    onDateChange(increasedDate);
+    const increasedDate = dayjs(date).add(1, 'day');     onDateChange(increasedDate);
   };
 
   return (

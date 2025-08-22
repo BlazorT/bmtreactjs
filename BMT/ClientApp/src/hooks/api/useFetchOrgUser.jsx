@@ -1,11 +1,12 @@
-import moment from 'moment';
-
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
 
 import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
 export const useFetchOrgUser = () => {
+  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
@@ -28,17 +29,16 @@ export const useFetchOrgUser = () => {
       rowVer: 0,
       genderId: 0,
       securityToken: '',
-      // dob: moment().utc().format(),
-      registrationTime: moment().utc().format(),
+      registrationTime: dayjs().utc().format(),
       cityId: filters ? (filters.cityId === '' ? 0 : filters.cityId) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
-        ? moment(filters.createdAt).utc().format('YYYY-MM-DD')
-        : moment().subtract(2, 'year').utc().format(),
+        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().subtract(2, 'year').format('YYYY-MM-DD'),
       lastUpdatedAt: filters
-        ? moment(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : moment().utc().format(),
+        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD')
     };
     console.log(OrgUserBody,'body')
     const res = await postData(OrgUserBody);

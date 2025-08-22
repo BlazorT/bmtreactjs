@@ -16,7 +16,6 @@ import VehicleActionCell from '../DataGridCustomCells/VehicleActionCell';
 import { cilChevronBottom, cilFlagAlt, cilUser } from '@coreui/icons';
 import { CCol, CRow } from '@coreui/react';
 import CustomInput from '../InputsComponent/CustomInput';
-import moment from 'moment';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import globalutil from 'src/util/globalutil';
 import AddVehicleModal from '../Modals/AddVehicleModal';
@@ -55,7 +54,7 @@ function FleetVehicleTab({ daList, setActiveTab, setvehicleId, setFleetVin }) {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;
@@ -70,8 +69,8 @@ function FleetVehicleTab({ daList, setActiveTab, setvehicleId, setFleetVin }) {
     const getVehicleBody = {
       dspid: user.dspId,
       color: '',
-      createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
       stateId: 0,
       id: 0,
       status: filter ? (filters.status === '' ? 0 : filters.status) : 0,

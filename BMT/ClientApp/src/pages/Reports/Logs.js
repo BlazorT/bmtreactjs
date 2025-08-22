@@ -12,15 +12,14 @@ import {
 import CIcon from '@coreui/icons-react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import moment from 'moment';
+
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import dayjs from 'dayjs';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-
 import utc from 'dayjs/plugin/utc';
+import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import Loading from 'src/components/UI/Loading';
 
 const Logs = () => {
@@ -52,8 +51,8 @@ const Logs = () => {
     const filterBody = {
       keyword: filters.keyword,
       menuId: filters.menuId === '' ? 0 : filters.menuId,
-      logTime: moment(filters.logTime).utc().format().toString().split('T')[0],
-      logTimeTo: moment(filters.logTimeTo).utc().format().toString().split('T')[0],
+      logTime: dayjs(filters.logTime).utc().format().split('T')[0],
+      logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0]
     };
 
     getLogList(filterBody);
@@ -77,8 +76,7 @@ const Logs = () => {
       logDesc: '',
       menuId: 0,
       actionType: 0,
-      ...filters,
-      //logTime: moment().utc().startOf('year').format(),
+      ...filters,     
     };
     //alert(JSON.stringify(fetchBody));
     await GetLog(
@@ -198,7 +196,7 @@ const Logs = () => {
     if (date === 'logTimeTo' || date === 'logTime') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;

@@ -1,9 +1,10 @@
-import moment from 'moment';
-
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
 export const useToggleCampaignStatus = () => {
+  dayjs.extend(utc);
   const { data, error, loading, postData } = useApi('/Compaigns/updatecompaign');
 
   const updateStatus = async (user, status) => {
@@ -13,9 +14,8 @@ export const useToggleCampaignStatus = () => {
       createdBy: user[0].createdBy,
       createdAt: user[0].createdAt,
       lastUpdatedBy: user[0].lastUpdatedBy,
-      lastUpdatedAt: moment().utc().format(),
-      rowVer: user[0].rowVer,
-
+      lastUpdatedAt: dayjs().utc().format(),
+      rowVer: user[0].rowVer
     };
 
     const response = await postData(deleteBody);

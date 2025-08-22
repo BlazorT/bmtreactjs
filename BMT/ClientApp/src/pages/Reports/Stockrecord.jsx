@@ -26,7 +26,6 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import dayjs from 'dayjs';
-import moment from 'moment';
 import utc from 'dayjs/plugin/utc';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -74,8 +73,8 @@ const StockRecord = ({ reportField, fetchInspection, value },prop) => {
       categoryId: filters.categoryId === '' ? 0 : filters.categoryId,
       manufactureCountryId: filters.businessEntityId === '' ? 0 : filters.businessEntityId,
       businessEntityId: filters.businessEntityId === '' ? 0 : filters.businessEntityId,
-      createdAt: moment(filters.createdAt).utc().format().toString().split('T')[0],
-      lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
+      createdAt: dayjs(filters.createdAt).utc().format().split('T')[0],
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format().split('T')[0]
     };
     getInventory(filterBody);
   };
@@ -269,7 +268,7 @@ const StockRecord = ({ reportField, fetchInspection, value },prop) => {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: moment(e).utc().format(),
+        [date]: dayjs(e).utc().format(),
       }));
     } else {
       const { name, value, type, checked } = e.target;
