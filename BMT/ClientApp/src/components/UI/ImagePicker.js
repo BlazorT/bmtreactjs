@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import IconButton from '@mui/material/IconButton';
 import CIcon from '@coreui/icons-react';
 import { cilUser } from '@coreui/icons';
 import useFetch from 'src/hooks/useFetch';
@@ -9,6 +8,7 @@ import utc from 'dayjs/plugin/utc';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { logo } from '../../assets/brand/logo';
+import Button from './Button';
 
 const ImagePicker = (prop) => {
   dayjs.extend(utc);
@@ -57,7 +57,7 @@ const ImagePicker = (prop) => {
       fileName: '',
       remarks: '',
       createdBy: user.userId,
-      lastUpdatedAt: dayjs().utc().format() ,
+      lastUpdatedAt: dayjs().utc().format(),
       lastUpdatedBy: user.userId,
     });
 
@@ -125,10 +125,10 @@ const ImagePicker = (prop) => {
           />
         ) : (
           <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-            <IconButton component="span" onClick={handleIconButtonClick}>
+            <Button onClick={handleIconButtonClick}>
               <img src="Profile-pic.jpg" className="w-100 h-100 object-fit-cover rounded-circle" />
               <CIcon className="stock-toggle-icon mandatory-control" icon={cilUser}></CIcon>
-            </IconButton>
+            </Button>
           </label>
         )}
       </div>

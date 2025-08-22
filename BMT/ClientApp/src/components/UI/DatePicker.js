@@ -1,16 +1,24 @@
 import * as React from 'react';
-
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import dayjs from 'dayjs';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import CIcon from '@coreui/icons-react';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function CustomDatePicker(prop) {
-  //dayjs.extend(utc);
-  const { icon, label, title, id, name, value, onChange, isRequired, message, max, min, minDate, maxDate,disablePast = false } = prop;
+  const {
+    icon,
+    label,
+    title,
+    id,
+    name,
+    value,
+    onChange,
+    isRequired,
+    message,
+    maxDate,
+    minDate,
+    disablePast = false,
+  } = prop;
 
   const [error, setError] = React.useState(null);
 
@@ -25,45 +33,45 @@ export default function CustomDatePicker(prop) {
       }
     }
   }, [error]);
-  console.log({minDate, maxDate})
+
+  const handleChange = (date) => {
+    // Validate date against minDate and maxDate
+    if (isRequired && !date) {
+      setError('required');
+    } else if (minDate && date < minDate) {
+      setError('minDate');
+    } else if (maxDate && date > maxDate) {
+      setError('maxDate');
+    } else {
+      setError(null);
+    }
+    onChange(date, label); // Pass raw JS Date
+  };
+
   return (
-    <div className="text-start mt-2">
-      <label htmlFor={id} className="login_label labelName">
-        {label}
-      </label>
-      <div className="form-outline text-start">
-        <div className="input-group position-relative">
-          <span className="input-group-addon" title={title}>
-            <CIcon
-              className={isRequired ? 'mandatory-control' : 'stock-toggle-icon '}
-              icon={icon}
-            ></CIcon>
+    <div>
+      {label && <label htmlFor={id}>{label}</label>}
+      <div className="input-group ">
+        {icon && (
+          <span className="input-group-addon">
+            <CIcon icon={icon} />
           </span>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              value={value ? dayjs(value) : dayjs()}
-              onChange={(e) => {
-                onChange(e.$d, label); // pass raw JS Date
-              }}
-              format="MM/DD/YYYY"
-              name={name}
-              className="form-control item"
-              defaultValue={dayjs()}
-              onError={isRequired ? (newError) => setError(newError) : () => ''}
-              slotProps={{
-                textField: {
-                  helperText: errorMessage,
-                },
-              }}
-              maxDate={maxDate || ''}
-              minDate={minDate || ''}
-              //disablePast={disablePast ?? false}  // default true if not provided
-
-            />
-
-          </LocalizationProvider>
-        </div>
+        )}
+        <DatePicker
+          id={id}
+          name={name}
+          selected={value || null}
+          onChange={handleChange}
+          dateFormat="MM/dd/yyyy"
+          className="form-control item date-picker-custom" // Apply styles to the input
+          calendarClassName="date-picker-custom-calendar" // Apply styles to the calendar
+          placeholderText="MM/DD/YYYY"
+          minDate={minDate || (disablePast ? new Date() : null)}
+          maxDate={maxDate || null}
+          required={isRequired}
+        />
       </div>
+      {errorMessage && <div className="text-danger">{errorMessage}</div>}
     </div>
   );
 }

@@ -78,7 +78,7 @@ const AuditLogs = () => {
       keyValue: '',
       createdBy: 0,
       createdAt: dayjs().utc().subtract(1, 'year').format(),
-      ...filters,      
+      ...filters,
     };
 
     await GetLog(
@@ -122,9 +122,9 @@ const AuditLogs = () => {
 
   const [columns, setColumns] = useState([
     {
-      field: 'entityName',
+      key: 'entityName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Entity',
+      name: 'Entity',
       /* flex: 1,*/
       width: 120,
       editable: false,
@@ -132,9 +132,9 @@ const AuditLogs = () => {
     },
 
     {
-      field: 'fieldName',
+      key: 'fieldName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Field Name',
+      name: 'Field Name',
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -143,9 +143,9 @@ const AuditLogs = () => {
       disableColumnMenu: false,
     },
     {
-      field: 'oldValue',
+      key: 'oldValue',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Previous Value ',
+      name: 'Previous Value ',
       flex: 1,
       width: 120,
       editable: false,
@@ -153,9 +153,9 @@ const AuditLogs = () => {
       //align: 'center',
     },
     {
-      field: 'newValue',
+      key: 'newValue',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'New Value',
+      name: 'New Value',
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -163,9 +163,9 @@ const AuditLogs = () => {
       // align: 'center',
     },
     {
-      field: 'userName',
+      key: 'userName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Updated By',
+      name: 'Updated By',
       /*flex: 1,*/
       minWidth: 120,
       editable: false,
@@ -173,8 +173,8 @@ const AuditLogs = () => {
     },
 
     {
-      field: 'createdAt',
-      headerName: 'Updated At',
+      key: 'createdAt',
+      name: 'Updated At',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -238,10 +238,10 @@ const AuditLogs = () => {
                     type="text"
                     id="keyword"
                     name="keyword"
-                    placeholder="entity name, field name, old value"
+                    placeholder="entity name, key name, old value"
                     className="form-control item"
                     isRequired={false}
-                    title=" Using By entity name,field name, old value"
+                    title=" Using By entity name,key name, old value"
                     // message="Enter Buisness Name"
                   />
                 </div>
@@ -277,7 +277,7 @@ const AuditLogs = () => {
         ) : null}
       </div>
       <div className="bg_Div mb-2 d-flex flex-column">
-        <DataGridHeader exportFn={() => ''} title="Log Viewer" />
+        <DataGridHeader exportFn={() => ''} title="Log Viewer" filterDisable />
 
         <div className="show-stock">
           <div className="row ">
@@ -285,10 +285,10 @@ const AuditLogs = () => {
               <CustomDatagrid
                 rows={rows}
                 columns={columns}
-                rowHeight={'45'}
+                rowHeight={45}
                 pagination={true}
-               // canExport={pageRoles.canExport}
-               // canPrint={pageRoles.canPrint}
+                // canExport={pageRoles.canExport}
+                // canPrint={pageRoles.canPrint}
                 summary={[
                   {
                     field: 'createdAt',

@@ -1,14 +1,14 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { Button } from '@mui/material'; // or any button component you're using
+import Button from './Button';
 
 const sampleContacts = [
   { Contact: '923001234567' },
   { Contact: '923451234567' },
   { Contact: '923101234567' },
   { Contact: '923211234567' },
-  { Contact: '923331234567' }
+  { Contact: '923331234567' },
 ];
 
 const DownloadContactsTemplate = () => {
@@ -24,10 +24,10 @@ const DownloadContactsTemplate = () => {
     } else if (type === 'excel') {
       const excelBuffer = XLSX.write(workbook, {
         bookType: 'xlsx',
-        type: 'array'
+        type: 'array',
       });
       const blob = new Blob([excelBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
       saveAs(blob, 'contacts_template.xlsx');
     }
@@ -35,14 +35,23 @@ const DownloadContactsTemplate = () => {
 
   return (
     <div style={{ marginTop: 10 }}>
-      <Button variant="outlined" color="primary" onClick={() => downloadFile('csv')} style={{ marginRight: 8 }}>
+      <Button onClick={() => downloadFile('csv')} style={{ marginRight: 8 }}>
         Download CSV
       </Button>
-      <Button variant="outlined" color="secondary" onClick={() => downloadFile('excel')}>
-        Download Excel
-      </Button>
-      <p style={{ marginTop: '10px', fontStyle: 'italic', fontSize: '14px', color: 'rgb(199 187 187)' }}>
-        <strong>Note:</strong> Download excel or csv file and fill network contacts for campaign purpose. For import, you need to select a file and then press <strong>Import Contacts</strong>. For final save, click the bottom <strong>&quot;Save&quot;</strong> button. A detailed message will appear showing saved and imported contacts.
+      <Button onClick={() => downloadFile('excel')}>Download Excel</Button>
+      <p
+        style={{
+          marginTop: '10px',
+          fontStyle: 'italic',
+          fontSize: '14px',
+          color: 'rgb(199 187 187)',
+        }}
+      >
+        <strong>Note:</strong> Download excel or csv file and fill network contacts for campaign
+        purpose. For import, you need to select a file and then press{' '}
+        <strong>Import Contacts</strong>. For final save, click the bottom{' '}
+        <strong>&quot;Save&quot;</strong> button. A detailed message will appear showing saved and
+        imported contacts.
       </p>
     </div>
   );

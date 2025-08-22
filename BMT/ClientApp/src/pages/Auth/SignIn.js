@@ -15,7 +15,6 @@ import Fotter from 'src/layout/AppFooter.js';
 import useFetch from 'src/hooks/useFetch.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
-import CustomSnackbar from 'src/components/UI/CustomSnackbar';
 import { setUserData } from 'src/redux/user/userSlice';
 //import { getCountryById } from 'src/constants/countries_and_states';
 import { transformData } from 'src/navItem';
@@ -39,8 +38,7 @@ function SignIn() {
     response: menuRes,
     error: menuErr,
     loading: menuLoading,
-    fetchData: fetchMenus, 
-
+    fetchData: fetchMenus,
   } = useFetch();
 
   const {
@@ -54,7 +52,7 @@ function SignIn() {
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [userDetail, setuserDetail] = useState({
     fullName: '',
     password: '',
@@ -90,22 +88,21 @@ function SignIn() {
     globalutil.setalerts(data.alerts);
     globalutil.setpackages(data.packages);
     globalutil.setCurrencies(data.currencies);
-    globalutil.setPostTypes(data.postTypes);    
-    globalutil.setmenus(data.menus);  
+    globalutil.setPostTypes(data.postTypes);
+    globalutil.setmenus(data.menus);
     globalutil.setservicetypes(data.servicetypes);
     globalutil.setcommonstatuses(data.commonstatuses);
-    globalutil.setauditentities(data.auditentities);  
+    globalutil.setauditentities(data.auditentities);
     globalutil.setuserroles(data.userroles);
     globalutil.setbusinessentitiess(data.businessentities);
     globalutil.setbusinesstypes(data.businesstypes);
-
   };
 
   const getUtils = async () => {
     await fetchUtils('/Common/lovs');
 
     if (utilRes?.current?.status === true) {
-      console.log(utilRes.current.data,'util');
+      console.log(utilRes.current.data, 'util');
       addGlobalUtils(utilRes.current.data);
     } /*else {
       dispatch(
@@ -119,7 +116,7 @@ function SignIn() {
   };
   const getMenus = async () => {
     const menuBody = {
-      roleId: loginRes && loginRes.current?.data.roleId.toString()
+      roleId: loginRes && loginRes.current?.data.roleId.toString(),
     };
     console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
@@ -150,13 +147,13 @@ function SignIn() {
         `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`,
         { method: 'POST' },
       );
-     // console.log(loginRes.current, loginErr);
+      // console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
-       // console.log((loginRes.current),'login');
+        // console.log((loginRes.current),'login');
         getUtils();
         getMenus();
-       // console.log(getMenus(),'menuss');
-       // console.log(getUtils(),'utilss');
+        // console.log(getMenus(),'menuss');
+        // console.log(getUtils(),'utilss');
         setModalOpen(true);
         ClickProceed();
         navigate('/dashboard');
@@ -170,7 +167,7 @@ function SignIn() {
         );
         setIsLoading(false);
       } else {
-        alert(JSON.stringify(loginRes.current));
+        // alert(JSON.stringify(loginRes.current));
         setErrorMessage(loginRes.current.message);
         setIsLoading(false);
       }
@@ -197,26 +194,7 @@ function SignIn() {
       }),
     );
   };
-  
 
-  const addUserToCookies = () => {
-    // Set the cookie expiration date to 7 days from the current date
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 7);
-
-    // Construct the cookie string with the user's email and expiration date
-    const usernameCookie = `loggedInUser=${encodeURIComponent(
-      userDetail.userName,
-    )}; expires=${expirationDate.toUTCString()};path=/`;
-    const orgIdCookie = `orgId=${encodeURIComponent(
-      userDetail.orgId,
-    )}; expires=${expirationDate.toUTCString()};path=/`;
-
-    // Set the cookies
-    document.cookie = usernameCookie;
-    document.cookie = orgIdCookie;
-    // Set the cookie
-  };
   return (
     <>
       {isLoading && (
@@ -232,9 +210,13 @@ function SignIn() {
           <div className="LoginCardOverlayImg2ndView">
             <div className="card-body p-3 text-center">
               {/*<img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />*/}
-             {/* <br />*/}
-              <div><strong className="signin-text-style labelName"> Blazor Media Toolkit </strong></div> 
-              <div className="pt-2"><strong className="signin-text-style labelName"> BMT </strong></div>
+              {/* <br />*/}
+              <div>
+                <strong className="signin-text-style labelName"> Blazor Media Toolkit </strong>
+              </div>
+              <div className="pt-2">
+                <strong className="signin-text-style labelName"> BMT </strong>
+              </div>
               <form>
                 <div className="form-outline mb-2 mt-2 text-start">
                   <label htmlFor="" className="login_label mb-1 labelName">
@@ -295,17 +277,14 @@ function SignIn() {
             </div>
           </div>
           <div className="LoginCardOverlayImg3ndView">
-          {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
+            {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
             <div className="text-center Copyrights-labelName mt-2">
               © 2020{' '}
               <a onClick={toggleModal} className="underline Copyrights-labelName">
                 Blazor Media Toolkit(BMT).
               </a>
             </div>
-            <p className="pt-1 Copyrights-labelName">
-              {' '}
-               all rights reserved
-            </p>
+            <p className="pt-1 Copyrights-labelName"> all rights reserved</p>
           </div>
         </div>
         <div className="ContainerView">
@@ -313,11 +292,7 @@ function SignIn() {
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
               <Carousel data-bs-theme="dark">
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="BDMT.jpg"
-                    alt="First slide"
-                  />
+                  <img className="d-block w-100 carousalImg" src="BDMT.jpg" alt="First slide" />
                   <Carousel.Caption>
                     <h5>Tips for the Amazon</h5>
                     <p>
@@ -357,14 +332,21 @@ function SignIn() {
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
               <h5 className="MainHeading pb-2">Social Media Campaign</h5>
               <p className="lineHeight">
-                Blazor Media Toolkit Campaign plays nice with others and integrates with over 700 apps and services like whatsapp,facebook,tweeter,messenger,youtube etc. From accounting to CMS and analytics applications, all the way to services that are focused on sales, support and lead generation. Visit their website and try out their platform for free to find out if Blazor Media Campaign(BMC) is the right solution to help grow your ....
+                Blazor Media Toolkit Campaign plays nice with others and integrates with over 700
+                apps and services like whatsapp,facebook,tweeter,messenger,youtube etc. From
+                accounting to CMS and analytics applications, all the way to services that are
+                focused on sales, support and lead generation. Visit their website and try out their
+                platform for free to find out if Blazor Media Campaign(BMC) is the right solution to
+                help grow your ....
               </p>
             </div>
           </div>
           <div className="SeprateDiv"> </div>
           <div className="CarousalMainDiv row py-3 d-flex align-items-center">
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
-              <h2><span className="txtColor">Blazor</span> Media Toolkit </h2>
+              <h2>
+                <span className="txtColor">Blazor</span> Media Toolkit{' '}
+              </h2>
               {/*<h5 className="MainHeading pb-2">Partnership With Momentum</h5>*/}
               <ul className="liFontsize">
                 <li>Facebook</li>
@@ -381,17 +363,10 @@ function SignIn() {
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
               <Carousel data-bs-theme="dark">
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="email.jpg"
-                    alt="First slide"
-                  />
+                  <img className="d-block w-100 carousalImg" src="email.jpg" alt="First slide" />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                      {' '}
-                      Email
-                    </p>
+                    <p> Email</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -402,9 +377,7 @@ function SignIn() {
                   />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                   Whatsapp
-                    </p>
+                    <p>Whatsapp</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -415,9 +388,7 @@ function SignIn() {
                   />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                      Instagram
-                    </p>
+                    <p>Instagram</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -428,9 +399,7 @@ function SignIn() {
                   />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                     LinkedIn
-                    </p>
+                    <p>LinkedIn</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -441,22 +410,14 @@ function SignIn() {
                   />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                     Twitter
-                    </p>
+                    <p>Twitter</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="tiktok.jpg"
-                    alt="Fifth slide"
-                  />
+                  <img className="d-block w-100 carousalImg" src="tiktok.jpg" alt="Fifth slide" />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                     Tiktok
-                    </p>
+                    <p>Tiktok</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -467,23 +428,15 @@ function SignIn() {
                   />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                      Snapchat
-                    </p>
+                    <p>Snapchat</p>
                   </Carousel.Caption>
                 </Carousel.Item>
 
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="fb.jpg"
-                    alt="sixth slide"
-                  />
+                  <img className="d-block w-100 carousalImg" src="fb.jpg" alt="sixth slide" />
                   <Carousel.Caption>
                     <h5>Blazor Media Toolkit</h5>
-                    <p>
-                      Facebook
-                    </p>
+                    <p>Facebook</p>
                   </Carousel.Caption>
                 </Carousel.Item>
               </Carousel>
@@ -541,7 +494,7 @@ function SignIn() {
               <div className="row pb-2 pt-2">
                 <div className="col-lg-12 col-md-12">
                   <div className="sec-heading center" style={{ textAlign: 'center' }}>
-                    <h2 className="sec-heading center" >Our Endorsements</h2>
+                    <h2 className="sec-heading center">Our Endorsements</h2>
                   </div>
                 </div>
               </div>
@@ -553,13 +506,15 @@ function SignIn() {
                       src="Michael-Azran.jpg"
                       alt="Michael-Azran"
                     />
-                  
                   </div>
                   <div className="card-body clientBodyBackgroundClr">
-                    <span className="card-title AdvisorName">Michael-Azran</span><br />
+                    <span className="card-title AdvisorName">Michael-Azran</span>
+                    <br />
                     <p className="ClientPost">Michael-Azran, BDN, Canada</p>
-                    <p className="card-text ClientReview">Excellent performance.It was pleasure to work with Blazor.Knowledgeable and helpful professionals!.</p>
-
+                    <p className="card-text ClientReview">
+                      Excellent performance.It was pleasure to work with Blazor.Knowledgeable and
+                      helpful professionals!.
+                    </p>
                   </div>
                 </div>
                 <div className="card clientCardPadding">
@@ -571,10 +526,13 @@ function SignIn() {
                     />
                   </div>
                   <div className="card-body clientBodyBackgroundClr">
-                    <span className="card-title AdvisorName">Abdul Razaq</span><br />
-                    <p className="ClientPost">Abdul Razaq, Barcelona,Spain  </p>
-                    <p className="card-text ClientReview">When i had a problem,recieved quick, prompted and issue resolving response from Blazor</p>
-
+                    <span className="card-title AdvisorName">Abdul Razaq</span>
+                    <br />
+                    <p className="ClientPost">Abdul Razaq, Barcelona,Spain </p>
+                    <p className="card-text ClientReview">
+                      When i had a problem,recieved quick, prompted and issue resolving response
+                      from Blazor
+                    </p>
                   </div>
                 </div>
                 <div className="card clientCardPadding">
@@ -586,33 +544,23 @@ function SignIn() {
                     />
                   </div>
                   <div className="card-body clientBodyBackgroundClr">
-                    <span className="card-title AdvisorName">Youngs Merchant Club</span><br />
+                    <span className="card-title AdvisorName">Youngs Merchant Club</span>
+                    <br />
                     <p className="ClientPost">Taymullah Abdul Rehman, Co-Founder, YMC LLC</p>
-                    <p className="card-text ClientReview">Excellent work,dedication, delivered beyond expected,iam highly satisfy with them,will continue working with Blazor team for sure!!!</p>
-
+                    <p className="card-text ClientReview">
+                      Excellent work,dedication, delivered beyond expected,iam highly satisfy with
+                      them,will continue working with Blazor team for sure!!!
+                    </p>
                   </div>
                 </div>
-
               </div>
             </div>
           </section>
-         
+
           <div className="SeprateDiv"> </div>
           <Fotter />
         </div>
       </section>
-      <CustomSnackbar
-        message={toast.toastMessage}
-        variant={toast.toastVariant}
-        open={toast.isToastOpen}
-        setOpen={() =>
-          dispatch(
-            updateToast({
-              isToastOpen: false,
-            }),
-          )
-        }
-      />
     </>
   );
 }

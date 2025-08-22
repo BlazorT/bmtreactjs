@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 
 import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CCol, CRow } from '@coreui/react';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 import InventoryProductModal from '../Modals/InventoryProductModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 import useFetch from 'src/hooks/useFetch';
-import Tooltip from '@mui/material/Tooltip';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import ActionButton from '../UI/ActionButton';
@@ -87,7 +86,7 @@ const ProductActionCell = (prop) => {
             <CRow>
               {canUpdate === 1 && (
                 <CCol>
-                  <Tooltip title="Edit Product">
+                  <CTooltip content="Edit Product">
                     <CIcon
                       onClick={() => {
                         toggleEditProducutModal();
@@ -95,7 +94,7 @@ const ProductActionCell = (prop) => {
                       className="stock-toggle-icon"
                       icon={cilPencil}
                     />
-                  </Tooltip>
+                  </CTooltip>
                 </CCol>
               )}
               {canDelete === 1 && (

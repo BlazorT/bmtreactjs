@@ -1,13 +1,7 @@
 // <reference path="../../components/component/downloadcontactstemplate .js" />
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Sms from '@mui/icons-material/Sms';
-import WhatsApp from '@mui/icons-material/WhatsApp';
-import Email from '@mui/icons-material/Email';
-import Facebook from '@mui/icons-material/Facebook';
-import LinkedIn from '@mui/icons-material/LinkedIn';
-import Twitter from '@mui/icons-material/Twitter';
-import Instagram from '@mui/icons-material/Instagram';
+
 import { CCard, CTooltip, CCol, CRow } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
@@ -24,24 +18,34 @@ import Loading from 'src/components/UI/Loading';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { CPopover } from "@coreui/react";
-
+import { CPopover } from '@coreui/react';
+import {
+  cibFacebook,
+  cibGmail,
+  cibInstagram,
+  cibLinkedin,
+  cibSnapchat,
+  cibTiktok,
+  cibTwitter,
+  cibWhatsapp,
+  cilShortText,
+} from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
 
 const campaignContacts = () => {
   // let state;
   const user = useSelector((state) => state.user);
-  console.log("user data", user);
+  console.log('user data', user);
   const navigate = useNavigate();
-  
 
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
- 
-  const allNetworkNames = globalutil.networks().map(n => n.name);
 
-  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames??[]);
+  const allNetworkNames = globalutil.networks().map((n) => n.name);
+
+  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
   const [importedData, setImportedData] = useState({}); // { Twitter: ['abc', 'xyz'], ... }
   const [selectedFiles, setSelectedFiles] = useState({}); // { Twitter: File }
   const [cityData, setCityData] = useState([]); // Your table data
@@ -49,7 +53,6 @@ const campaignContacts = () => {
   const [groupedContacts, setGroupedContacts] = useState([]);
   const [showTableModal, setShowTableModal] = useState(false);
 
- 
   const handleCampaignAddContacts = (e, networkId) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -57,7 +60,7 @@ const campaignContacts = () => {
     const allowedTypes = [
       'text/csv',
       'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     ];
     const fileName = file.name.toLowerCase();
     const fileExt = fileName.split('.').pop();
@@ -74,19 +77,18 @@ const campaignContacts = () => {
 
     showToast(`File "${file.name}" selected successfully.`, 'success');
 
-    setSelectedFiles(prev => ({
+    setSelectedFiles((prev) => ({
       ...prev,
-      [networkId]: file
+      [networkId]: file,
     }));
   };
-  
+
   const tableRef = useRef(null);
-  
+
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
   const confirmationModal = () => {
-
     setConfirmationModalOpen(!confirmationModalOpen);
   };
   const goToAnotherPage = () => {
@@ -94,35 +96,34 @@ const campaignContacts = () => {
     navigate('/Dashboard');
   };
   const icons = {
-    Tiktock: Email,
-    Snapchat: Email,
-    Facebook: Facebook,
-    Sms: Sms,
-    Linkedin: LinkedIn,
-    Twitter: Twitter,
-    Instagram: Instagram,
-    Whatsapp: WhatsApp, // Assuming WhatsApp is your component for WhatsApp icon
-    Email: Email // Assuming Email is your component for Email icon
+    Tiktock: cibTiktok,
+    Snapchat: cibSnapchat,
+    Facebook: cibFacebook,
+    Sms: cilShortText,
+    Linkedin: cibLinkedin,
+    Twitter: cibTwitter,
+    Instagram: cibInstagram,
+    Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
+    Email: cibGmail, // Assuming Email is your component for Email icon
   };
 
- 
   if (isLoading) {
     return <Loading />;
   }
- 
-  const [recipientInput, setRecipientInput] = useState({});  // current input text
-  const [recipientsList, setRecipientsList] = useState({});  // network-wise array
+
+  const [recipientInput, setRecipientInput] = useState({}); // current input text
+  const [recipientsList, setRecipientsList] = useState({}); // network-wise array
 
   const handleCheckboxChange = (network) => {
     if (selectedNetworks.includes(network)) {
-      setSelectedNetworks(selectedNetworks.filter(n => n !== network));
+      setSelectedNetworks(selectedNetworks.filter((n) => n !== network));
     } else {
       setSelectedNetworks([...selectedNetworks, network]);
     }
   };
 
   const handleInputChange = (network, value) => {
-    setRecipientInput(prev => ({ ...prev, [network]: value }));
+    setRecipientInput((prev) => ({ ...prev, [network]: value }));
   };
   const validateRecipient = (network, value) => {
     if (!value) return false;
@@ -166,7 +167,7 @@ const campaignContacts = () => {
 
         showToast(
           `❌ "${value}" is not a valid ${label}. Correct format: ${correctFormatExample}`,
-          'error'
+          'error',
         );
         return;
       }
@@ -178,26 +179,24 @@ const campaignContacts = () => {
       }
 
       // ✅ Add value to current network
-      setRecipientsList(prev => ({
+      setRecipientsList((prev) => ({
         ...prev,
-        [network]: [...currentList, value]
+        [network]: [...currentList, value],
       }));
 
       // Clear input field
-      setRecipientInput(prev => ({
+      setRecipientInput((prev) => ({
         ...prev,
-        [network]: ''
+        [network]: '',
       }));
     }
   };
-
-
 
   const handleDeleteRecipient = (network, index) => {
     const updated = [...recipientsList[network]];
     updated.splice(index, 1);
 
-    setRecipientsList(prev => ({ ...prev, [network]: updated }));
+    setRecipientsList((prev) => ({ ...prev, [network]: updated }));
 
     // 👇 Hide dropdown if last item removed
     if (updated.length === 0) {
@@ -207,7 +206,7 @@ const campaignContacts = () => {
   };
   const handleImportClick = async (networkKey, networkId) => {
     const selectedFile = selectedFiles[networkId];
-    const selectedNetworkId =networkId;
+    const selectedNetworkId = networkId;
     console.log('Selected Network ID:', networkId);
     console.log('Selected File:', selectedFile);
 
@@ -216,12 +215,12 @@ const campaignContacts = () => {
       return;
     }
     const formData = new FormData();
-    formData.append("files", selectedFile);          // actual File object
-    formData.append("netowrkid", selectedNetworkId); // keep key same as in C#
+    formData.append('files', selectedFile); // actual File object
+    formData.append('netowrkid', selectedNetworkId); // keep key same as in C#
     try {
       const response = await fetch('/Compaigns/ImportFileData', {
         method: 'POST',
-        body: formData
+        body: formData,
       });
       if (!response.ok) {
         const errorText = await response.text();
@@ -231,9 +230,9 @@ const campaignContacts = () => {
       console.log('Server Response:', result);
 
       if (result.status === true && result.data) {
-        setImportedData(prev => ({
+        setImportedData((prev) => ({
           ...prev,
-          [networkKey]: result.data
+          [networkKey]: result.data,
         }));
         showToast('Contacts imported successfully.', 'success');
       } else {
@@ -244,9 +243,9 @@ const campaignContacts = () => {
       showToast('Error during import.', 'error');
     }
   };
-  console.log("Selected Networks:", selectedNetworks);
-  console.log("Recipients List:", recipientsList);
-  console.log("importedData List:", importedData);
+  console.log('Selected Networks:', selectedNetworks);
+  console.log('Recipients List:', recipientsList);
+  console.log('importedData List:', importedData);
 
   const buildCampaignPayload = () => {
     const payload = [];
@@ -255,11 +254,11 @@ const campaignContacts = () => {
     // Combine keys from both sources
     const allNetworkKeys = new Set([
       ...Object.keys(recipientsList || {}),
-      ...Object.keys(importedData || {})
+      ...Object.keys(importedData || {}),
     ]);
 
     allNetworkKeys.forEach((networkKey) => {
-      const networkObj = allNetworks.find(n => n.name === networkKey);
+      const networkObj = allNetworks.find((n) => n.name === networkKey);
       if (!networkObj) return;
 
       const networkId = parseInt(networkObj.id);
@@ -271,21 +270,21 @@ const campaignContacts = () => {
         console.log(`No contacts for network ID: ${networkId}`);
         return;
       }
-      console.log("allContacts", allContacts);
+      console.log('allContacts', allContacts);
       payload.push({
         Id: 0,
         OrgId: user.orgId,
         NetworkId: networkId,
         Contentlst: allContacts,
-        Desc: "",
+        Desc: '',
         CreatedBy: user.userId,
         CreatedAt: new Date(),
         LastUpdatedAt: new Date(),
-        RowVer: 1
+        RowVer: 1,
       });
     });
 
-    console.log("payload", payload);
+    console.log('payload', payload);
     return payload;
   };
 
@@ -294,7 +293,7 @@ const campaignContacts = () => {
     console.log(JSON.stringify(payload));
 
     if (payload.length === 0) {
-      showToast("No contacts to send.", "error");
+      showToast('No contacts to send.', 'error');
       return;
     }
 
@@ -302,13 +301,13 @@ const campaignContacts = () => {
       const response = await fetch('/Compaigns/postCompaignContactData', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorResult = await response.json().catch(() => ({}));
-        console.error("Response not OK:", response.status, errorResult);
-        showToast(errorResult.message || "Server error occurred.", "error");
+        console.error('Response not OK:', response.status, errorResult);
+        showToast(errorResult.message || 'Server error occurred.', 'error');
         return;
       }
 
@@ -316,7 +315,7 @@ const campaignContacts = () => {
       console.log('Server response:', result);
 
       if (result.status) {
-        showToast(result.message, "success");
+        showToast(result.message, 'success');
 
         // First: group contacts you sent per network
         const networksList = globalutil.networks();
@@ -329,7 +328,7 @@ const campaignContacts = () => {
           contactArray.forEach((contact) => {
             flatPayload.push({
               networkId: p.NetworkId,
-              contact: contact
+              contact: contact,
             });
           });
         });
@@ -339,16 +338,16 @@ const campaignContacts = () => {
 
         flatPayload.forEach((p) => {
           if (!networkGroups[p.networkId]) {
-            const networkName = networksList.find(n => n.id === p.networkId)?.name || 'Unknown';
+            const networkName = networksList.find((n) => n.id === p.networkId)?.name || 'Unknown';
             networkGroups[p.networkId] = {
               networkName,
-              contacts: []
+              contacts: [],
             };
           }
 
           networkGroups[p.networkId].contacts.push({
             contact: p.contact,
-            found: false
+            found: false,
           });
         });
 
@@ -357,63 +356,56 @@ const campaignContacts = () => {
           result.data.forEach((item) => {
             const contactId = item.contentId;
             if (networkGroups[item.networkId]) {
-              networkGroups[item.networkId].contacts = networkGroups[item.networkId].contacts.map((c) => ({
-                ...c,
-                found: c.contact === contactId || c.found // preserve already found ones
-              }));
+              networkGroups[item.networkId].contacts = networkGroups[item.networkId].contacts.map(
+                (c) => ({
+                  ...c,
+                  found: c.contact === contactId || c.found, // preserve already found ones
+                }),
+              );
             }
           });
         }
 
         // Step 4: Convert to array for rendering
         const groupedData = Object.values(networkGroups);
-        console.log("Grouped data to display:", groupedData);
+        console.log('Grouped data to display:', groupedData);
         setGroupedContacts(groupedData);
         setShowTableModal(true); // Show the modal immediately
         setTimeout(() => {
           tableRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, 100); // slight delay to ensure rendering
-
-       
-      }
- else {
-        showToast(result.message || "Submission failed.", "error");
+      } else {
+        showToast(result.message || 'Submission failed.', 'error');
       }
     } catch (error) {
-      console.error("Submit error:", error);
-      showToast("Error while submitting contacts.", "error");
+      console.error('Submit error:', error);
+      showToast('Error while submitting contacts.', 'error');
     }
   };
 
-
   return (
     <Form name="dsp-reg-form">
-    
       <CContainer fluid className="mt-4">
         <DownloadContactsTemplate />
 
-          <React.Fragment>
-            <AppContainer>
-              <DataGridHeader
-                title="Networks"
-                filterDisable={false}
-              />
-            </AppContainer>
+        <React.Fragment>
+          <AppContainer>
+            <DataGridHeader title="Networks" filterDisable={false} />
+          </AppContainer>
           {globalutil.networks().map((network, index) => {
             const networkKey = network.name;
             const networkId = network.id;
             const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
-            const IconComponent = icons[IconName];
             const isChecked = selectedNetworks.includes(networkKey);
             const recipientCount = (recipientsList[networkKey] || []).length;
             return (
               <CCol md={12} key={index}>
                 <ul className="inlinedisplay">
                   <li className="divCircle">
-                    <IconComponent className="BlazorIcon neticons" fontSize="large" color="success" />
+                    <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
                   </li>
 
-                  <li className='network-checkbox-animate networksListWidth'>
+                  <li className="network-checkbox-animate networksListWidth">
                     <CFormCheck
                       id={IconName}
                       name={IconName}
@@ -442,8 +434,6 @@ const campaignContacts = () => {
                       }
                       placement="top"
                     >
-
-
                       <div>
                         <CustomInput
                           disabled={isChecked}
@@ -455,7 +445,6 @@ const campaignContacts = () => {
                         />
                       </div>
                     </CTooltip>
-
 
                     {recipientCount > 0 && (
                       <CPopover
@@ -481,7 +470,6 @@ const campaignContacts = () => {
                         <span className="recipient-count">{recipientCount}</span>
                       </CPopover>
                     )}
-
                   </li>
 
                   <li>
@@ -500,20 +488,21 @@ const campaignContacts = () => {
                     />
                   )}
 
-
-
                   <li>
-                    <button onClick={() => handleImportClick(networkKey, networkId)} disabled={!selectedFiles[networkId]}>Import</button>
-
+                    <button
+                      onClick={() => handleImportClick(networkKey, networkId)}
+                      disabled={!selectedFiles[networkId]}
+                    >
+                      Import
+                    </button>
                   </li>
                 </ul>
               </CCol>
             );
           })}
 
-
-            <React.Fragment>
-              <div className="CenterAlign pt-2">
+          <React.Fragment>
+            <div className="CenterAlign pt-2">
               <button
                 onClick={() => setConfirmationModalOpen(true)}
                 type="button"
@@ -529,8 +518,6 @@ const campaignContacts = () => {
               >
                 Save
               </button>
-            
-
             </div>
             {/* Modal */}
             {showTableModal && (
@@ -566,17 +553,23 @@ const campaignContacts = () => {
                                   <td className="text-center">{group.networkName}</td>
                                   <td className="text-center">{contactObj.contact}</td>
                                   <td className="text-center">
-                                    {contactObj.found ? 'Inserted Recipients' : 'Duplicate Recipients'}
+                                    {contactObj.found
+                                      ? 'Inserted Recipients'
+                                      : 'Duplicate Recipients'}
                                   </td>
                                 </tr>
-                              ))
+                              )),
                             )}
                           </tbody>
                         </table>
                       </div>
                     </div>
                     <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" onClick={() => setShowTableModal(false)}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setShowTableModal(false)}
+                      >
                         Close
                       </button>
                     </div>
@@ -584,16 +577,10 @@ const campaignContacts = () => {
                 </div>
               </div>
             )}
-
-            </React.Fragment>
           </React.Fragment>
-     
-       
-       
+        </React.Fragment>
       </CContainer>
 
-
-    
       <ConfirmationModal
         header="Confirmation!"
         body="Are you sure you want to cancel?"
@@ -601,7 +588,7 @@ const campaignContacts = () => {
         onYes={goToAnotherPage}
         onNo={confirmationModal}
       />
-     
+
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>
   );

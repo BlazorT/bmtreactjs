@@ -9,8 +9,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Network Name',
-    field: 'name',
+    name: 'Network Name',
+    key: 'name',
     editable: false,
   },
 
@@ -21,8 +21,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Pricing Unit',
-    field: 'unitName',
+    name: 'Pricing Unit',
+    key: 'unitName',
     editable: false,
   },
   {
@@ -32,8 +32,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Unit Price',
-    field: 'unitPrice',
+    name: 'Unit Price',
+    key: 'unitPrice',
     editable: false,
   },
   {
@@ -43,8 +43,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Discount',
-    field: 'discount',
+    name: 'Discount',
+    key: 'discount',
     editable: false,
   },
   {
@@ -54,8 +54,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Free Quota',
-    field: 'freeAllowed',
+    name: 'Free Quota',
+    key: 'freeAllowed',
     editable: false,
   },
   {
@@ -65,8 +65,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Applicable Date',
-    field: 'startTime',
+    name: 'Applicable Date',
+    key: 'startTime',
     editable: false,
   },
   //{
@@ -76,8 +76,8 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   //  filterable: true,
   //  sortable: true,
   //  disableColumnMenu: false,
-  //  headerName: 'Action',
-  //  field: 'status',
+  //  name: 'Action',
+  //  key: 'status',
   //  editable: false,
   //  renderCell: (params) => (
   //    <ProductActionCell

@@ -9,8 +9,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: ' Name',
-    field: 'name',
+    name: ' Name',
+    key: 'name',
     editable: false,
   },
 
@@ -21,8 +21,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Fee',
-    field: 'fee',
+    name: 'Fee',
+    key: 'fee',
     editable: false,
   },
   {
@@ -32,8 +32,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Early Bird Disc(%)',
-    field: 'earlyBirdDiscount',
+    name: 'Early Bird Disc(%)',
+    key: 'earlyBirdDiscount',
     editable: false,
   },
   {
@@ -43,8 +43,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Discount',
-    field: 'discount',
+    name: 'Discount',
+    key: 'discount',
     editable: false,
   },
   {
@@ -54,8 +54,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
-    headerName: 'Validity Time (Days)',
-    field: 'packageInDays',
+    name: 'Validity Time (Days)',
+    key: 'packageInDays',
     editable: false,
   },
   //{
@@ -65,8 +65,8 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   //  filterable: true,
   //  sortable: true,
   //  disableColumnMenu: false,
-  //  headerName: 'Action',
-  //  field: 'status',
+  //  name: 'Action',
+  //  key: 'status',
   //  editable: false,
   //  renderCell: (params) => (
   //    <ProductActionCell

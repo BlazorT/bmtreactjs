@@ -30,7 +30,7 @@ import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 
 const UserReport = ({ reportField, fetchInspection, value }) => {
   dayjs.extend(utc);
- // console.log(JSON.stringify(globalutil.userroles()));
+  // console.log(JSON.stringify(globalutil.userroles()));
   //const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
   //  (item) => item.name === 'Users Report',
   //);
@@ -41,14 +41,17 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     const reportRows = makeGroupingRows(rows);
     const doc = getUserReportPdf(reportRows, reportField);
     doc.output('dataurlnewwindow');
-   // console.log(reportRows, 'repoertdata');
+    // console.log(reportRows, 'repoertdata');
   };
 
   useEffect(() => {
     applyFilters();
   }, []);
   const [activeTab, setActiveTab] = useState(1);
-  const tabs = [{ id: 1, name: 'Users' }, { id: 2, name: 'Summary' }];
+  const tabs = [
+    { id: 1, name: 'Users' },
+    { id: 2, name: 'Summary' },
+  ];
   const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
 
@@ -56,7 +59,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   const initialFilter = {
     orgId: user.orgId,
     keyword: '',
-    status:0,
+    status: 0,
     createdAt: dayjs().utc().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
@@ -66,11 +69,10 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       keyword: filters.keyword,
       status: filters.status === '' ? 0 : filters.status,
       createdAt: dayjs(filters.createdAt).utc().format().split('T')[0],
-      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format().split('T')[0]
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format().split('T')[0],
     };
 
     getLogList(filterBody);
-
   };
   const {
     response: GetLogRes,
@@ -100,7 +102,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       status: 0,
       genderId: 0,
       rowVer: 0,
-     //licenseExpiryDate: moment().utc().startOf('year').format(),
+      //licenseExpiryDate: moment().utc().startOf('year').format(),
       createdAt: dayjs().utc().subtract(1, 'year').format(),
       lastUpdatedAt: dayjs().utc().format(),
       ...filters,
@@ -115,12 +117,12 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res,'user responce');
+        console.log(res, 'user responce');
         if (res.status === true) {
           const mappedArray = res.data.map((data) => ({
             id: data.id,
             roleName: data.roleName,
-           // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
+            // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
             //userId: data.userId,
             //dspid: user.dspId.toString(),
             //userRole: data.userRole,
@@ -132,7 +134,6 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
               ? formatDate(data.createdAt)
               : formatDate(data.createdAt),
             //  lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
-
           }));
           setRows(mappedArray);
         } else {
@@ -154,46 +155,46 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
 
   const [columns, setColumns] = useState([
     {
-      field: 'userName',
+      key: 'userName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Name',
+      name: 'Name',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
     {
-      field: 'roleName',
+      key: 'roleName',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Role',
+      name: 'Role',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
     {
-      field: 'contact',
+      key: 'contact',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Contact',
+      name: 'Contact',
       flex: 1,
       width: 100,
       editable: false,
       filterable: true,
     },
     {
-      field: 'email',
+      key: 'email',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Email',
-     // flex: 1,
+      name: 'Email',
+      // flex: 1,
       width: 190,
       editable: false,
       filterable: true,
     },
 
     {
-      field: 'status',
+      key: 'status',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Current Status',
+      name: 'Current Status',
       flex: 1,
       minWidth: 120,
       editable: false,
@@ -204,9 +205,9 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     },
 
     {
-      field: 'createdAt',
+      key: 'createdAt',
       headerClassName: 'custom-header-data-grid',
-      headerName: 'Date',
+      name: 'Date',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -233,7 +234,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
           updatedData.push(item);
         });
     });
-    const mappedArray = data.map((field, index) => {
+    const mappedArray = data.map((key, index) => {
       let mappedObject;
 
       if (index == 0) {
@@ -243,29 +244,33 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
           contact: 'Contact',
           email: 'Email',
           status: 'status',
-          createdAt: 'Date Of Joining'
-        }
-
-      }
-      else {
+          createdAt: 'Date Of Joining',
+        };
+      } else {
         mappedObject = {
-          userName: field.userName,
-          roleName: field.roleName,
-          contact: field.contact,
-          email: field.email,
-          status: field.status,
-          createdAt: field.createdAt,
-        }
+          userName: key.userName,
+          roleName: key.roleName,
+          contact: key.contact,
+          email: key.email,
+          status: key.status,
+          createdAt: key.createdAt,
+        };
       }
       return mappedObject;
     });
 
     const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [item.userName, item.roleName, item.contact, item.email, item.status.toString(), item.createdAt];
+      const rowData = [
+        item.userName,
+        item.roleName,
+        item.contact,
+        item.email,
+        item.status.toString(),
+        item.createdAt,
+      ];
       return [rowData];
-
     });
-   // console.log({ grouping });
+    // console.log({ grouping });
     return grouping;
   };
 
@@ -297,8 +302,8 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
-      <CContainer fluid className="mt-4">       
-        {tabs.find(s => s.id === 1).id === activeTab && (
+      <CContainer fluid className="mt-4">
+        {tabs.find((s) => s.id === 1).id === activeTab && (
           <div className="">
             <div className="bg_Div mb-2 d-flex flex-column">
               <div className="dashboard-stock-header dashboard-drop">
@@ -391,21 +396,20 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
               ) : null}
             </div>
             <div className="bg_Div mb-2 d-flex flex-column">
-              <DataGridHeader exportFn={() => generatePdf()} title="Users" />
+              <DataGridHeader exportFn={() => generatePdf()} title="Users" filterDisable />
               <div className="show-stock">
                 <div className="row ">
                   <div className="col-md-12 col-xl-12">
                     <CustomDatagrid
                       rows={rows}
                       columns={columns}
-                      rowHeight={'normal'}
                       pagination={true}
-                     // canExport={pageRoles.canExport}
-                     // canPrint={pageRoles.canPrint}
+                      // canExport={pageRoles.canExport}
+                      // canPrint={pageRoles.canPrint}
                       summary={
                         [
                           //{
-                          //  field: 'status',
+                          //  key: 'status',
                           //  aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
                           //},
                         ]
@@ -426,7 +430,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             </div>
           </div>
         )}
-        {tabs.find(s => s.id === 2).id === activeTab && <h1>User Summary</h1>}
+        {tabs.find((s) => s.id === 2).id === activeTab && <h1>User Summary</h1>}
       </CContainer>
     </>
   );

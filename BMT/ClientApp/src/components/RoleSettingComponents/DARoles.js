@@ -11,8 +11,8 @@ const DARoles = (prop) => {
 
   const sortedData = rolesData !== undefined ? rolesData.sort((a, b) => a.id - b.id) : [];
   const menus = organizeData(sortedData);
-  console.table("sortedData", sortedData);
-  console.log("menus", menus);
+  console.table('sortedData', sortedData);
+  console.log('menus', menus);
   const [rolesRow, setRolesRow] = useState(() =>
     menus.flatMap((parent) => [
       {
@@ -28,11 +28,11 @@ const DARoles = (prop) => {
         : [{ group: '', screen: 'Dashboard', select: 'Dashboard' }]),
     ]),
   );
-  console.log("rolesRow", rolesRow);
+  console.log('rolesRow', rolesRow);
   const roles_grid_cols = [
     {
-      field: 'group',
-      headerName: 'Group',
+      key: 'group',
+      name: 'Group',
       headerClassName: 'custom-header-data-grid',
       width: 130,
       editable: false,
@@ -56,8 +56,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'select',
-      headerName: 'Full',
+      key: 'select',
+      name: 'Full',
       headerClassName: 'custom-header-data-grid',
       width: 40,
       editable: false,
@@ -76,8 +76,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'screen',
-      headerName: 'Screen / Right',
+      key: 'screen',
+      name: 'Screen / Right',
       headerClassName: 'custom-header-data-grid',
       width: 180,
       editable: false,
@@ -86,8 +86,8 @@ const DARoles = (prop) => {
       disableColumnMenu: true,
     },
     {
-      field: 'view',
-      headerName: 'View',
+      key: 'view',
+      name: 'View',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -107,8 +107,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'add',
-      headerName: 'Add',
+      key: 'add',
+      name: 'Add',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -128,8 +128,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'edit',
-      headerName: 'Edit',
+      key: 'edit',
+      name: 'Edit',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -149,8 +149,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'delete',
-      headerName: 'Delete',
+      key: 'delete',
+      name: 'Delete',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -170,8 +170,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'print',
-      headerName: 'Print',
+      key: 'print',
+      name: 'Print',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
@@ -191,8 +191,8 @@ const DARoles = (prop) => {
         ),
     },
     {
-      field: 'export',
-      headerName: 'Export',
+      key: 'export',
+      name: 'Export',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,

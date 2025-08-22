@@ -54,24 +54,26 @@ const Packages = () => {
 
   return (
     <AppContainer>
-      <DataGridHeader
-        title="Packages List"
-        addBtnClick={toggleAddPackageModal}
-      />
       <CustomDatagrid
+        isHeader
+        headerProps={{
+          title: 'Packages List',
+          addBtnClick: toggleAddPackageModal,
+          filterDisable: true,
+        }}
         rows={packageRows}
         columns={packagesCols}
         pagination={true}
         loading={loading || !data}
         rowHeight={50}
         hiddenCols={{
-          columnVisibilityModel: {          
+          columnVisibilityModel: {
             lastUpdatedAt: false,
           },
         }}
         canExport={pageRoles.canExport}
         canPrint={pageRoles.canPrint}
-        sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
+        sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
       />
     </AppContainer>
   );

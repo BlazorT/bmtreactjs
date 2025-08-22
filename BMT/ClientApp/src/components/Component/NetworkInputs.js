@@ -37,26 +37,26 @@ import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
 const NetworkInputs = (prop) => {
-  const { header, networkId, setNetworkList, networkList } = prop
+  const { header, networkId, setNetworkList, networkList } = prop;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const now = dayjs().utc();
   const [networkState, SetNetworkState] = useState({
-    id:0,
+    id: 0,
     orgId: user.orgId,
     name: '',
-   // attachment: '',
-   // excelAttachment: '',
+    // attachment: '',
+    // excelAttachment: '',
     buisnessId: '',
-    url: "",
-    apiuri: "",
-    sender: "",
-    port:0,
-    apikey: "",
-    password: "",
+    url: '',
+    apiuri: '',
+    sender: '',
+    port: 0,
+    apikey: '',
+    password: '',
     autoReplyAllowed: 1,
-    autoReplyContent: "",
-    replyAttachment: "",
+    autoReplyContent: '',
+    replyAttachment: '',
     postTypeId: 1,
     virtualAccount: 0,
     networkId: networkId,
@@ -66,9 +66,9 @@ const NetworkInputs = (prop) => {
     lastUpdatedBy: user.Id,
     startTime: now.format(),
     finishTime: now.format(),
-    createdAt: now.startOf('month').format() ,// dayjs().utc().startOf('month').format(),
-    lastUpdatedAt: now.format() //dayjs().utc().format()
-  })
+    createdAt: now.startOf('month').format(), // dayjs().utc().startOf('month').format(),
+    lastUpdatedAt: now.format(), //dayjs().utc().format()
+  });
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,39 +80,37 @@ const NetworkInputs = (prop) => {
     fetchData: createNetworkSetting,
   } = useFetch();
   const handleNetworkSetting = (e, label) => {
-   // console.log("Label", label); 
+    // console.log("Label", label);
     if (label == 'startTime' || label == 'finishTime') {
-     // alert(label);
+      // alert(label);
       SetNetworkState((prev) => ({
         ...prev,
         [label]: e,
       }));
     } else {
       //// || name == 'unitId' || name == 'port') && value !=='')
-      const { name, value, type, checked } = e.target
+      const { name, value, type, checked } = e.target;
       if (type == 'checkbox') {
-       // alert(type);
+        // alert(type);
         SetNetworkState((prev) => ({
           ...prev,
-          [name]:  checked ,
+          [name]: checked,
         }));
-      } else if (type == "number" && value !== '')
-      {
-      // alert(name);
+      } else if (type == 'number' && value !== '') {
+        // alert(name);
         SetNetworkState((prev) => ({
           ...prev,
           [name]: parseInt(value),
         }));
       } else {
-       // alert(type);
+        // alert(type);
         SetNetworkState((prev) => ({
           ...prev,
           [name]: value,
         }));
       }
-
-    }//else {
-  }
+    } //else {
+  };
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
@@ -155,29 +153,28 @@ const NetworkInputs = (prop) => {
     const form = document.querySelector('.service-integration-form');
     formValidator();
     if (form.checkValidity()) {
-      setNetworkList((prev) => [...prev, networkState])
+      setNetworkList((prev) => [...prev, networkState]);
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage:"Note : To complete network changes, you need to submit",
+          toastMessage: 'Note : To complete network changes, you need to submit',
           toastVariant: 'success',
         }),
       );
     }
 
     console.log({ networkList });
-   // console.log('test');
-   // setIsLoading(createNetworkSettingLoading.current);
-  }
+    // console.log('test');
+    // setIsLoading(createNetworkSettingLoading.current);
+  };
   const onSubmit = async () => {
-   // alert(JSON.stringify(networkList));
+    // alert(JSON.stringify(networkList));
     if (networkList.length > 0) {
-     //alert(JSON.stringify(networkList));
+      //alert(JSON.stringify(networkList));
       await createNetworkSetting('/Organization/addupdatenetworksettings', {
         method: 'POST',
         body: JSON.stringify(networkList),
       });
-
     }
     console.log(createNetworkSettingRes);
     if (createNetworkSettingRes.current?.status === true) {
@@ -204,434 +201,418 @@ const NetworkInputs = (prop) => {
 
       setIsLoading(createNetworkSettingLoading.current);
     }
-  }
-   
-     
+  };
+
   //};
 
-
-  return <React.Fragment>
-    {/*<div className="networkTitle mt-2">*/}
-    {/*  <h3>{ header}</h3>*/}
-    {/*</div>*/}
-    <CRow>
-      <CCol className="" md={6}>
-        <CustomInput
-          label="Recipients"
-          icon={cilUser}
-          value={networkState.name}
-          onChange={handleNetworkSetting}
-          placeholder="Input Recipients Name"
-          type="text"
-          id="name"
-          name="name"
-          className="form-control item"
-          isRequired={true}
-          title="Input Recipients Name"
-          message="Enter Recipients Name" 
-        />
-      </CCol>
-      <CCol className="" md={6}>
-        <CustomInput
-          label="Email Excel Bulk Upload"
-          icon={cilUser}
-          value={networkState.attachment}
-          onChange={handleNetworkSetting}
-          type="file"
-          id="attachment"
-          name="attachment"
-          placeholder="Email Excel Bulk Upload"
-          className="form-control item"
-          isRequired={false}
-          title="Email Excel Bulk Upload"
-        // message="Enter Buisness Name"
-        />
-      </CCol>
-    </CRow>
-    <CRow>
-   
-      {/*<CCol className="" md={2}>*/}
-      {/*  <div className="input-group-append mt-4">*/}
-      {/*    <input className="importFilebtn" id="upload" type="file" accept="image/*"  />*/}
-      {/*  </div>*/}
-      {/*</CCol>*/}
-    </CRow>
-
-    <AppContainer>
-    <DataGridHeader
-      title="Message Template"
-        onClick={toggleStock}
-
-      otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
-      filterDisable={true}
-    />
-    {showFilters && (
+  return (
+    <React.Fragment>
+      {/*<div className="networkTitle mt-2">*/}
+      {/*  <h3>{ header}</h3>*/}
+      {/*</div>*/}
       <CRow>
-        <CCol className="" md={12}>
+        <CCol className="" md={6}>
           <CustomInput
-            label="Attachment"
+            label="Recipients"
             icon={cilUser}
-            value={networkState.excelAttachment }
+            value={networkState.name}
+            onChange={handleNetworkSetting}
+            placeholder="Input Recipients Name"
+            type="text"
+            id="name"
+            name="name"
+            className="form-control item"
+            isRequired={true}
+            title="Input Recipients Name"
+            message="Enter Recipients Name"
+          />
+        </CCol>
+        <CCol className="" md={6}>
+          <CustomInput
+            label="Email Excel Bulk Upload"
+            icon={cilUser}
+            value={networkState.attachment}
+            onChange={handleNetworkSetting}
             type="file"
-            id="excelAttachment"
-            name="excelAttachment"
+            id="attachment"
+            name="attachment"
+            placeholder="Email Excel Bulk Upload"
             className="form-control item"
             isRequired={false}
-            title="Choose Image For Attachment "
-          // message="Enter Buisness Name"
+            title="Email Excel Bulk Upload"
+            // message="Enter Buisness Name"
           />
         </CCol>
-
       </CRow>
-      )}
-    </AppContainer>
-    <AppContainer>
-    <DataGridHeader
-        title="Integration Setting"
-        onClick={showIntegrationfn}
-      otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
-      filterDisable={true}
-    />
-    {showIntegration && (
       <CRow>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Business Id"
-            icon={cilUser}
-            value={networkState.buisnessId}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="buisnessId"
-            name="buisnessId"
-            placeholder="Business Id e.g(19288)"
-            className="form-control item"
-            isRequired={false}
-            title="Business Id e.g(19288)"
-          // message="Enter Buisness Name"
-          />
- 
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Key"
-            icon={cilUser}
-            value={networkState.apiKeySecret}
-            onChange={handleNetworkSetting}
-            type="text"
-              id="apikeySecret"
-              name="apikeySecret" 
-              placeholder="API Key Secret e.g(uk08l00**)"
-            className="form-control item"
-            isRequired={false}
-            title="API Key Secret e.g(uk08l00**)"
-            message="Enter API Key Secret"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="API Url"
-            icon={cilUser}
-            value={networkState.apiuri}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="apiuri"
-            name="apiuri"
-            placeholder="API Url e.g(https:/api.example.com)"
-            className="form-control item"
-            isRequired={false}
-            title="API Url e.g(https:/api.example.com)"
-            message="Enter API Url"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Url"
-            icon={cilUser}
-            value={networkState.url}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="url"
-            name="url"
-            placeholder="Url e.g (https:/api.example.com)"
-            className="form-control item"
-            isRequired={false}
-              title="Url e.g (https:/api.example.com) "
-            message="Enter Url"
-          />
-        </CCol>
-       
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Unit"
-            icon={cilUser}
-            value={networkState.unitId}
-            onChange={handleNetworkSetting}
-            type="number"
-            id="unitId"
-            name="unitId" 
-            placeholder="Enter Unit e.g (40)"
-            className="form-control item"
-            isRequired={false}
-            title="Enter Unit e.g (40)"
-            message="Enter Unit "
-          />
-        </CCol>
-      
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Quota"
-            icon={cilUser}
-            value={networkState.purchasedQouta}
-            onChange={handleNetworkSetting}
-            type="number"
-            id="purchasedQouta"
-            name="purchasedQouta"
-            placeholder="Purchased Qouta e.g (1000)"
-            className="form-control item"
-            isRequired={false}
-            title="Purchased Qouta e.g (1000 Quantity Purchased)"
-            message="Enter Purchased Qouta"
-          />
-        </CCol>
-        {networkId == 3 && (
-          <>
-         
-        <CCol className="" md={6}>
-          <CustomInput
-            label="SMTP Server"
-            icon={cilUser}
-            value={networkState.buisnessId}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="buisnessId"
-            name="buisnessId"
-            placeholder="SMTP Server"
-            className="form-control item"
-            isRequired={false}
-            title="SMTP Server "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="POP Server"
-            icon={cilUser}
-            value={networkState.popServer}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="popServer"
-            name="popServer"
-            placeholder="POP Server"
-            className="form-control item"
-            isRequired={false}
-            title="POP Server"
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Port"
-            icon={cilUser}
-            value={networkState.port}
-            onChange={handleNetworkSetting}
-            type="number"
-            id="port"
-            name="port"
-            placeholder="Port"
-            className="form-control item"
-            isRequired={false}
-            title="Port ex. 9003 "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Sender"
-            icon={cilUser}
-            value={networkState.sender}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="sender"
-            name="sender"
-            placeholder="Sender Email Account"
-            className="form-control item"
-            isRequired={false}
-            title="Sender Email Account "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label="Mail Server Email Account"
-            icon={cilUser}
-            value={networkState.serverEmail}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="serverEmail"
-            name="serverEmail"
-            placeholder="Mail Server Email Account"
-            className="form-control item"
-            isRequired={false}
-            title="Mail Server Email Account "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomInput
-            label=" Password"
-            icon={cilUser}
-            value={networkState.password}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="password"
-            name="password"
-            placeholder="Account Password"
-            className="form-control item"
-            isRequired={false}
-            title="Account Password "
-          // message="Enter Buisness Name"
-          />
-            </CCol>
-          </>
-        )}
-        <CCol className="" md={6}>
-          <CustomDatePicker
-            icon={cilCalendar}
-            label="Date From "
-            id="EmaildtpFrom"
-            name="startTime"
-            value={networkState.startTime}
-            title="Date From "
-            onChange={(e) => handleNetworkSetting(e,'startTime')}
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomDatePicker
-            icon={cilCalendar}
-            label="Date To "
-            id="finishTime"
-            name="finishTime"
-            value={networkState.finishTime}
-            title="Date To "
-            onChange={(e) => handleNetworkSetting(e, 'finishTime')}
-
-          />
-        </CCol>
-        <CCol className="mg-topset" md={3}>
-          <CFormCheck
-            className=""
-            id="autoReplyAllowed"
-            label="Auto Reply Message"
-            defaultChecked
-            value={networkState.autoReplyAllowed}
-            name="autoReplyAllowed"
-          />
-
-        </CCol>
-        <CCol className="" md={3}>
-          <CustomInput
-            label="Auto Reply Message"
-            icon={cilUser}
-            value={networkState.autoReplyContent}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="autoReplyContent"
-            name="autoReplyContent"
-            placeholder="Auto Reply Message"
-            className="form-control item"
-            isRequired={false}
-            title="Auto Reply Message"
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        <CCol className="" md={6}>
-          <CustomSelectInput
-            label="Auto Reply Attachment"
-            icon={cilUser}
-            value={networkState.replyAttachment}
-            onChange={handleNetworkSetting}
-            type="text"
-            id="replyAttachment"
-            name="replyAttachment"
-            placeholder="Auto Reply Attachment"
-            disableOption='Select Auto Reply Attachment'
-            className="form-control item"
-            isRequired={false}
-            title="Auto Reply Attachment "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-        
-        <CCol className="" md={6}>
-          <CustomSelectInput
-            label="Post Type"
-            icon={cilUser}
-            value={networkState.postTypeId}
-            onChange={handleNetworkSetting}
-            options={globalutil.postTypes()}
-            type="text"
-            id="postTypeId"
-            name="postTypeId"
-            placeholder="Post Type"
-            className="form-control item"
-            disableOption= 'Select Post Type'
-            isRequired={false}
-            title="Post Type "
-          // message="Enter Buisness Name"
-          />
-        </CCol>
-          
-          <CCol className="mg-topset" md={3}>
-          <CFormCheck
-            className=""
-            value={networkState.virtualAccount}
-           // onChange={handleNetworkSetting}
-            id="virtualAccount"
-            name="virtualAccount"
-            label="Virtual Account"
-            defaultChecked
-          />
-          </CCol>
-          <CCol className="mg-topset" md={3}>
-            <CFormCheck
-              className=""
-              id="status"
-              label="Status"
-              defaultChecked
-              value={networkState.status}
-              name="status"
-            />
-          </CCol>
+        {/*<CCol className="" md={2}>*/}
+        {/*  <div className="input-group-append mt-4">*/}
+        {/*    <input className="importFilebtn" id="upload" type="file" accept="image/*"  />*/}
+        {/*  </div>*/}
+        {/*</CCol>*/}
       </CRow>
-      )}
-    </AppContainer>
-    <div className="CenterAlign pt-2">
-      <button
-        onClick={() => onCancel()}
-        type="button"
-        className="btn btn_Default m-2 sales-btn-style"
-      >
-        Cancel
-      </button>
 
-      <button
-        onClick={onSave}
-        type="submit"
-        className="btn btn_Default m-2 sales-btn-style"
-      >
-        Save
-      </button>
-      <button
-        type="submit"
-        className="btn btn_Default sales-btn-style m-2"
-        onClick={onSubmit}
-      >
-        Submit
-      </button>
-    </div>
+      <AppContainer>
+        <DataGridHeader
+          title="Message Template"
+          onClick={toggleStock}
+          otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+          filterDisable={true}
+        />
+        {showFilters && (
+          <CRow>
+            <CCol className="" md={12}>
+              <CustomInput
+                label="Attachment"
+                icon={cilUser}
+                value={networkState.excelAttachment}
+                type="file"
+                id="excelAttachment"
+                name="excelAttachment"
+                className="form-control item"
+                isRequired={false}
+                title="Choose Image For Attachment "
+                // message="Enter Buisness Name"
+              />
+            </CCol>
+          </CRow>
+        )}
+      </AppContainer>
+      <AppContainer>
+        <DataGridHeader
+          title="Integration Setting"
+          onClick={showIntegrationfn}
+          otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
+          filterDisable={true}
+        />
+        {showIntegration && (
+          <CRow>
+            <CCol className="" md={6}>
+              <CustomInput
+                label="Business Id"
+                icon={cilUser}
+                value={networkState.buisnessId}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="buisnessId"
+                name="buisnessId"
+                placeholder="Business Id e.g(19288)"
+                className="form-control item"
+                isRequired={false}
+                title="Business Id e.g(19288)"
+                // message="Enter Buisness Name"
+              />
+            </CCol>
+            <CCol className="" md={6}>
+              <CustomInput
+                label="Key"
+                icon={cilUser}
+                value={networkState.apiKeySecret}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="apikeySecret"
+                name="apikeySecret"
+                placeholder="API Key Secret e.g(uk08l00**)"
+                className="form-control item"
+                isRequired={false}
+                title="API Key Secret e.g(uk08l00**)"
+                message="Enter API Key Secret"
+              />
+            </CCol>
+            <CCol className="" md={6}>
+              <CustomInput
+                label="API Url"
+                icon={cilUser}
+                value={networkState.apiuri}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="apiuri"
+                name="apiuri"
+                placeholder="API Url e.g(https:/api.example.com)"
+                className="form-control item"
+                isRequired={false}
+                title="API Url e.g(https:/api.example.com)"
+                message="Enter API Url"
+              />
+            </CCol>
+            <CCol className="" md={6}>
+              <CustomInput
+                label="Url"
+                icon={cilUser}
+                value={networkState.url}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="url"
+                name="url"
+                placeholder="Url e.g (https:/api.example.com)"
+                className="form-control item"
+                isRequired={false}
+                title="Url e.g (https:/api.example.com) "
+                message="Enter Url"
+              />
+            </CCol>
 
-  </React.Fragment>
-}
+            <CCol className="" md={6}>
+              <CustomInput
+                label="Unit"
+                icon={cilUser}
+                value={networkState.unitId}
+                onChange={handleNetworkSetting}
+                type="number"
+                id="unitId"
+                name="unitId"
+                placeholder="Enter Unit e.g (40)"
+                className="form-control item"
+                isRequired={false}
+                title="Enter Unit e.g (40)"
+                message="Enter Unit "
+              />
+            </CCol>
 
-export default NetworkInputs
+            <CCol className="" md={6}>
+              <CustomInput
+                label="Quota"
+                icon={cilUser}
+                value={networkState.purchasedQouta}
+                onChange={handleNetworkSetting}
+                type="number"
+                id="purchasedQouta"
+                name="purchasedQouta"
+                placeholder="Purchased Qouta e.g (1000)"
+                className="form-control item"
+                isRequired={false}
+                title="Purchased Qouta e.g (1000 Quantity Purchased)"
+                message="Enter Purchased Qouta"
+              />
+            </CCol>
+            {networkId == 3 && (
+              <>
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label="SMTP Server"
+                    icon={cilUser}
+                    value={networkState.buisnessId}
+                    onChange={handleNetworkSetting}
+                    type="text"
+                    id="buisnessId"
+                    name="buisnessId"
+                    placeholder="SMTP Server"
+                    className="form-control item"
+                    isRequired={false}
+                    title="SMTP Server "
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label="POP Server"
+                    icon={cilUser}
+                    value={networkState.popServer}
+                    onChange={handleNetworkSetting}
+                    type="text"
+                    id="popServer"
+                    name="popServer"
+                    placeholder="POP Server"
+                    className="form-control item"
+                    isRequired={false}
+                    title="POP Server"
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label="Port"
+                    icon={cilUser}
+                    value={networkState.port}
+                    onChange={handleNetworkSetting}
+                    type="number"
+                    id="port"
+                    name="port"
+                    placeholder="Port"
+                    className="form-control item"
+                    isRequired={false}
+                    title="Port ex. 9003 "
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label="Sender"
+                    icon={cilUser}
+                    value={networkState.sender}
+                    onChange={handleNetworkSetting}
+                    type="text"
+                    id="sender"
+                    name="sender"
+                    placeholder="Sender Email Account"
+                    className="form-control item"
+                    isRequired={false}
+                    title="Sender Email Account "
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label="Mail Server Email Account"
+                    icon={cilUser}
+                    value={networkState.serverEmail}
+                    onChange={handleNetworkSetting}
+                    type="text"
+                    id="serverEmail"
+                    name="serverEmail"
+                    placeholder="Mail Server Email Account"
+                    className="form-control item"
+                    isRequired={false}
+                    title="Mail Server Email Account "
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+                <CCol className="" md={6}>
+                  <CustomInput
+                    label=" Password"
+                    icon={cilUser}
+                    value={networkState.password}
+                    onChange={handleNetworkSetting}
+                    type="text"
+                    id="password"
+                    name="password"
+                    placeholder="Account Password"
+                    className="form-control item"
+                    isRequired={false}
+                    title="Account Password "
+                    // message="Enter Buisness Name"
+                  />
+                </CCol>
+              </>
+            )}
+            <CCol className="" md={6}>
+              <CustomDatePicker
+                icon={cilCalendar}
+                label="Date From "
+                id="EmaildtpFrom"
+                name="startTime"
+                value={networkState.startTime}
+                title="Date From "
+                onChange={(e) => handleNetworkSetting(e, 'startTime')}
+              />
+            </CCol>
+            <CCol className="" md={6}>
+              <CustomDatePicker
+                icon={cilCalendar}
+                label="Date To "
+                id="finishTime"
+                name="finishTime"
+                value={networkState.finishTime}
+                title="Date To "
+                onChange={(e) => handleNetworkSetting(e, 'finishTime')}
+              />
+            </CCol>
+            <CCol className="mg-topset" md={3}>
+              <CFormCheck
+                className=""
+                id="autoReplyAllowed"
+                label="Auto Reply Message"
+                defaultChecked
+                value={networkState.autoReplyAllowed}
+                name="autoReplyAllowed"
+              />
+            </CCol>
+            <CCol className="" md={3}>
+              <CustomInput
+                label="Auto Reply Message"
+                icon={cilUser}
+                value={networkState.autoReplyContent}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="autoReplyContent"
+                name="autoReplyContent"
+                placeholder="Auto Reply Message"
+                className="form-control item"
+                isRequired={false}
+                title="Auto Reply Message"
+                // message="Enter Buisness Name"
+              />
+            </CCol>
+            <CCol className="" md={6}>
+              <CustomSelectInput
+                label="Auto Reply Attachment"
+                icon={cilUser}
+                value={networkState.replyAttachment}
+                onChange={handleNetworkSetting}
+                type="text"
+                id="replyAttachment"
+                name="replyAttachment"
+                placeholder="Auto Reply Attachment"
+                disableOption="Select Auto Reply Attachment"
+                className="form-control item"
+                isRequired={false}
+                title="Auto Reply Attachment "
+                // message="Enter Buisness Name"
+              />
+            </CCol>
+
+            <CCol className="" md={6}>
+              <CustomSelectInput
+                label="Post Type"
+                icon={cilUser}
+                value={networkState.postTypeId}
+                onChange={handleNetworkSetting}
+                options={globalutil.postTypes()}
+                type="text"
+                id="postTypeId"
+                name="postTypeId"
+                placeholder="Post Type"
+                className="form-control item"
+                disableOption="Select Post Type"
+                isRequired={false}
+                title="Post Type "
+                // message="Enter Buisness Name"
+              />
+            </CCol>
+
+            <CCol className="mg-topset" md={3}>
+              <CFormCheck
+                className=""
+                value={networkState.virtualAccount}
+                // onChange={handleNetworkSetting}
+                id="virtualAccount"
+                name="virtualAccount"
+                label="Virtual Account"
+                defaultChecked
+              />
+            </CCol>
+            <CCol className="mg-topset" md={3}>
+              <CFormCheck
+                className=""
+                id="status"
+                label="Status"
+                defaultChecked
+                value={networkState.status}
+                name="status"
+              />
+            </CCol>
+          </CRow>
+        )}
+      </AppContainer>
+      <div className="CenterAlign pt-2">
+        <button
+          onClick={() => onCancel()}
+          type="button"
+          className="btn btn_Default m-2 sales-btn-style"
+        >
+          Cancel
+        </button>
+
+        <button onClick={onSave} type="submit" className="btn btn_Default m-2 sales-btn-style">
+          Save
+        </button>
+        <button type="submit" className="btn btn_Default sales-btn-style m-2" onClick={onSubmit}>
+          Submit
+        </button>
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default NetworkInputs;

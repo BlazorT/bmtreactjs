@@ -22,7 +22,7 @@ const AppContent = () => {
         item.to === roleRoute.path,
     ),
   );
-
+  console.log({ routes });
   return (
     <Suspense fallback={<Loading />}>
       <Routes>

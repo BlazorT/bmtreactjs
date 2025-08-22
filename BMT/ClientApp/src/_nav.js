@@ -39,6 +39,7 @@ import {
   cilRuble,
 } from '@coreui/icons';
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
+import { href, useNavigate } from 'react-router-dom';
 
 const getIcon = (iconName) => {
   switch (iconName) {
@@ -114,7 +115,8 @@ const getIcon = (iconName) => {
 };
 
 export const mapNavItem = (data) => {
-  console.log(data)
+  console.log(data);
+  const navigate = useNavigate();
   return data.map((item) => {
     return {
       component: item.component === 'CNavGroup' ? CNavGroup : CNavItem,
@@ -129,6 +131,7 @@ export const mapNavItem = (data) => {
                 component: CNavItem,
                 name: subItem.name,
                 to: subItem.to,
+                onClick: () => navigate(subItem.to?.includes('/') ? subItem.to : '/' + subItem.to),
                 className: 'group-nav-items',
                 icon: subItem.icon ? (
                   <CIcon icon={getIcon(subItem.icon)} customClassName="nav-icon" />
@@ -140,6 +143,7 @@ export const mapNavItem = (data) => {
             })
           : null,
       href: item.href ? item.href : null,
+      onClick: () => (item?.to === 'Dashboard' ? navigate('/' + item.to) : undefined),
     };
   });
 };
