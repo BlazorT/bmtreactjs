@@ -8,14 +8,28 @@ import Button from '../UI/Button';
 import useApi from 'src/hooks/useApi';
 import { useNotification } from 'src/hooks/useNotification';
 import LoadingBtn from '../UI/LoadingBtn';
+import { useDispatch, useSelector } from 'react-redux';
+import useFetch from 'src/hooks/useFetch';
+import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
+import { transformData } from 'src/navItem';
 
 const BmtRolesModal = (prop) => {
   dayjs.extend(utc);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const { isOpen, toggle, roleId, rolesData, header, canUpdate } = prop;
-   console.log({ rolesData });
+  console.log({ rolesData });
+  console.log({ user });
   const { showSnackbar, showConfirmation } = useNotification();
 
   const { loading, postData: postRoles } = useApi('/Common/submitgrouprights');
+
+  const {
+    response: menuRes,
+    error: menuErr,
+    loading: menuLoading,
+    fetchData: fetchMenus,
+  } = useFetch();
 
   const [rolesSetting, setRoleSetting] = useState([]);
 
@@ -39,14 +53,14 @@ const BmtRolesModal = (prop) => {
               const updatedPrivileges =
                 right === 'allRights'
                   ? {
-                    allRights: value,
-                    edit: value,
-                    add: value,
-                    delete: value,
-                    view: value,
-                    print: value,
-                    export: value,
-                  }
+                      allRights: value,
+                      edit: value,
+                      add: value,
+                      delete: value,
+                      view: value,
+                      print: value,
+                      export: value,
+                    }
                   : { ...child.privileges, [right]: value };
 
               const allRightsChecked = Object.keys(updatedPrivileges).every(
@@ -133,7 +147,7 @@ const BmtRolesModal = (prop) => {
           if (frontendItem && frontendItem.childs && frontendItem.childs.length > 0) {
             // If frontend data is found and has children, update child-specific values
             const childPrivileges = frontendItem.childs.find((child) => child.page === item.name);
-            console.log('childPrivileges',{ childPrivileges, item });
+            console.log('childPrivileges', { childPrivileges, item });
             if (childPrivileges) {
               const newItem = {
                 id: item.assignmentId,
@@ -150,8 +164,8 @@ const BmtRolesModal = (prop) => {
                 rowVer: 1,
                 status: 1,
                 lastUpdatedBy: 1,
-                lastUpdatedAt: dayjs().format() ,
-                createdAt: dayjs().format() 
+                lastUpdatedAt: dayjs().format(),
+                createdAt: dayjs().format(),
                 // Add other keys as needed
               };
 
@@ -166,16 +180,30 @@ const BmtRolesModal = (prop) => {
     };
 
     const body = updatePrivileges(rolesData, rolesSetting);
-    console.log("updatePrivileges",JSON.stringify(body.filter((b)=>b.id!=0)));
+    console.log('updatePrivileges', JSON.stringify(body.filter((b) => b.id != 0)));
     const res = await postRoles(body);
-    console.log("res", res);
+    console.log('res', res);
     if (res?.status === true) {
       showSnackbar(res?.message, 'success');
-      
       toggle();
       setRoleSetting([]);
+      getMenus();
     } else {
       showSnackbar(res?.message, 'error');
+    }
+  };
+
+  const getMenus = async () => {
+    const menuBody = {
+      roleId: user?.roleId?.toString(),
+    };
+    console.log(menuBody, 'menusbody');
+    await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
+    console.log(menuRes, 'menusRes');
+    console.log(menuRes.current, menuErr);
+    if (menuRes?.current?.status === true) {
+      dispatch(setPageRoles(menuRes?.current.data));
+      dispatch(setNavItems(transformData(menuRes?.current.data)));
     }
   };
 

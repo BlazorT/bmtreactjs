@@ -65,9 +65,11 @@ const Logs = () => {
     error: createServiceError,
     fetchData: GetLog,
   } = useFetch();
+
   useEffect(() => {
     getLogList();
   }, []);
+
   const getLogList = async (filters) => {
     const fetchBody = {
       id: 0,
@@ -78,7 +80,8 @@ const Logs = () => {
       actionType: 0,
       ...filters,
     };
-    //alert(JSON.stringify(fetchBody));
+    console.log(JSON.stringify(fetchBody));
+
     await GetLog(
       '/Log/applog',
       {
@@ -111,13 +114,12 @@ const Logs = () => {
           );
           setRows([]);
         }
-        setIsLoading(LogLoading.current);
       },
     );
   };
   const [rows, setRows] = useState([]);
 
-  const [columns, setColumns] = useState([
+  const columns = [
     {
       key: 'entityName',
       headerClassName: 'custom-header-data-grid',
@@ -127,16 +129,6 @@ const Logs = () => {
       editable: false,
       filterable: true,
     },
-
-    //{
-    //  key: 'key',
-    //  headerClassName: 'custom-header-data-grid',
-    //  name: 'Field',
-    //  /*flex: 1,*/
-    //  minWidth: 120,
-    //  editable: false,
-    //  filterable: true,
-    //},
     {
       key: 'logDesc',
       headerClassName: 'custom-header-data-grid',
@@ -157,15 +149,6 @@ const Logs = () => {
       editable: false,
       filterable: true,
     },
-    //{
-    //  key: 'service',
-    //  headerClassName: 'custom-header-data-grid',
-    //  name: 'Service',
-    //  flex: 1,
-    //  minWidth: 150,
-    //  editable: false,
-    //  filterable: true,
-    //},
     {
       key: 'logTime',
       name: 'Log Time',
@@ -177,17 +160,9 @@ const Logs = () => {
       sortable: true,
       disableColumnMenu: true,
       type: 'timestamp',
-      //   renderCell: (params) => <EditFeildMapping value={params} />,
     },
-  ]);
+  ];
   const [showStock, setShowStock] = useState(false);
-  //const [filters, setFilters] = useState({
-  //  keyword: '',
-  //  status: '',
-  //  lastUpdatedAt: moment().utc().format(),
-  //  createdAt: moment().utc().startOf('year').format(),
-  //  dsp: '',
-  //});
 
   const toggleStock = () => {
     setShowStock((prev) => !prev);
@@ -206,9 +181,11 @@ const Logs = () => {
       }));
     }
   };
-  if (isLoading) {
-    return <Loading />;
-  }
+
+  console.log(LogLoading.current);
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
   return (
     <div>
       <div className="bg_Div mb-2 d-flex flex-column">
@@ -310,7 +287,8 @@ const Logs = () => {
               <CustomDatagrid
                 rows={rows}
                 columns={columns}
-                rowHeight={'normal'}
+                loading={LogLoading?.current}
+                // rowHeight={'normal'}
                 pagination={true}
                 summary={[
                   {

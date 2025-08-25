@@ -69,53 +69,51 @@ const CustomSearch = (prop) => {
   };
 
   return (
-    <div className={`search-bar-product ${className}`}>
-      <div className="form-outline text-start mt-2">
-        <label htmlFor={id} className="login_label labelName">
-          {label}
-        </label>
-        <div className="form-outline text-start">
-          <div className="input-group position-relative">
-            {icon && (
-              <span className="input-group-addon" title={title}>
-                <CIcon
-                  className={isRequired ? 'mandatory-control' : 'stock-toggle-icon'}
-                  icon={icon}
-                />
-              </span>
-            )}
-            <Select
-              options={data}
-              getOptionLabel={(option) =>
-                getOptionLabel
-                  ? getOptionLabel(option)
-                  : name === 'driverName'
-                    ? `${option.firstName} ${option.lastName}`
-                    : name === 'dispatchDa'
-                      ? `${option.firstName.toUpperCase()} ${option.lastName.toUpperCase()}, ${option.issuingstate.toUpperCase()} ${hashUserId(option.userId)}`
-                      : name === 'vehicleName'
-                        ? `${option.name}, ${option.numberPlate}`
-                        : name === 'name'
-                          ? `${option.name}`
-                          : name === 'fieldName'
-                            ? `${option.columnName}, ${option.tableName}`
-                            : `${option.name || option.productName}, ${option.shortCode || option.shortcode}`
-              }
-              getOptionValue={(option) => option.id}
-              onChange={(selectedOption) => onChange(selectedOption, name)}
-              value={value === '' ? null : value}
-              placeholder={placeholder}
-              isDisabled={disabled}
-              isClearable={false}
-              styles={customStyles}
-              noOptionsMessage={() => 'No Result Found'}
-              autoFocus
-              classNames={'react-select-container'}
-              className="react-select-container"
-              classNamePrefix="react-select"
-            />
-            {isRequired && <div className="invalid-tooltip">{message}</div>}
-          </div>
+    <div className="form-outline text-start mt-2">
+      <label htmlFor={id} className="login_label labelName">
+        {label}
+      </label>
+      <div className="form-outline text-start">
+        <div className="input-group position-relative">
+          {icon && (
+            <span className="input-group-addon" title={title}>
+              <CIcon
+                className={isRequired ? 'mandatory-control' : 'stock-toggle-icon'}
+                icon={icon}
+              />
+            </span>
+          )}
+          <Select
+            options={data}
+            getOptionLabel={(option) =>
+              getOptionLabel
+                ? getOptionLabel(option)
+                : name === 'driverName'
+                  ? `${option.firstName} ${option.lastName}`
+                  : name === 'dispatchDa'
+                    ? `${option.firstName.toUpperCase()} ${option.lastName.toUpperCase()}, ${option.issuingstate.toUpperCase()} ${hashUserId(option.userId)}`
+                    : name === 'vehicleName'
+                      ? `${option.name}, ${option.numberPlate}`
+                      : name === 'name'
+                        ? `${option.name}`
+                        : name === 'fieldName'
+                          ? `${option.columnName}, ${option.tableName}`
+                          : `${option.name || option.productName}, ${option.shortCode || option.shortcode}`
+            }
+            getOptionValue={(option) => option.id}
+            onChange={(selectedOption) => onChange(selectedOption, name)}
+            value={value === '' ? null : value}
+            placeholder={placeholder}
+            isDisabled={disabled}
+            isClearable={false}
+            styles={customStyles}
+            noOptionsMessage={() => 'No Result Found'}
+            autoFocus
+            classNames={'react-select-container'}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+          {isRequired && <div className="invalid-tooltip">{message}</div>}
         </div>
       </div>
     </div>

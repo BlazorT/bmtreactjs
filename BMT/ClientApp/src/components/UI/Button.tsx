@@ -8,6 +8,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   icon?: ReactNode;
+  children?: ReactNode;
   loading?: boolean;
   loadingTitle?: string;
 }
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   loading = false,
   loadingTitle = '',
+  children,
 }: ButtonProps) => {
   return loading ? (
     <LoadingBtn title={loadingTitle} className={''} />
@@ -29,10 +31,16 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${className} btn_Default sales-btn-style`}
+      className={` btn_Default sales-btn-style ${className}`}
     >
-      {icon && icon}
-      {title}
+      {children ? (
+        children
+      ) : (
+        <>
+          {icon && icon}
+          {title}
+        </>
+      )}
     </button>
   );
 };

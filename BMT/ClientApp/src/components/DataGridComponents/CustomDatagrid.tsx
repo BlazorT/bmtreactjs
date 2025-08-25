@@ -15,7 +15,14 @@ import CustomSummary from './DataGridSummary';
 import DataGridHeader from './DataGridHeader';
 import DatagridSkeleton from './DatagridSkeleton';
 import CIcon from '@coreui/icons-react';
-import { cilInbox } from '@coreui/icons';
+import {
+  cilChevronDoubleLeft,
+  cilChevronDoubleRight,
+  cilChevronLeft,
+  cilChevronRight,
+  cilInbox,
+} from '@coreui/icons';
+import { CTooltip } from '@coreui/react';
 
 interface CustomDatagridProps {
   rows: any[];
@@ -203,42 +210,62 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     const endItem = Math.min((currentPage + 1) * pageSize, sortedRows.length);
 
     return (
-      <div className="d-flex justify-content-between align-items-center p-2 bg-dark-color text-white">
+      <div className="d-flex justify-content-between align-items-center p-1 bg-dark-color text-white">
         <div>
           Showing {startItem} to {endItem} of {sortedRows.length} entries
         </div>
         <div className="d-flex align-items-center gap-2">
-          <button
-            className="btn btn-sm btn-outline-light"
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(0)}
-          >
-            First
-          </button>
-          <button
-            className="btn btn-sm btn-outline-light"
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Previous
-          </button>
+          <CTooltip content="First">
+            <span
+              style={{
+                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 0 ? 0.5 : 1,
+              }}
+              onClick={() => currentPage > 0 && setCurrentPage(0)}
+            >
+              <CIcon icon={cilChevronDoubleLeft} />
+            </span>
+          </CTooltip>
+
+          <CTooltip content="Previous">
+            <span
+              style={{
+                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 0 ? 0.5 : 1,
+              }}
+              onClick={() => currentPage > 0 && setCurrentPage(currentPage - 1)}
+            >
+              <CIcon icon={cilChevronLeft} />
+            </span>
+          </CTooltip>
+
           <span className="mx-2">
             Page {currentPage + 1} of {totalPages}
           </span>
-          <button
-            className="btn btn-sm btn-outline-light"
-            disabled={currentPage >= totalPages - 1}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-          <button
-            className="btn btn-sm btn-outline-light"
-            disabled={currentPage >= totalPages - 1}
-            onClick={() => setCurrentPage(totalPages - 1)}
-          >
-            Last
-          </button>
+
+          <CTooltip content="Next">
+            <span
+              style={{
+                cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
+              }}
+              onClick={() => currentPage < totalPages - 1 && setCurrentPage(currentPage + 1)}
+            >
+              <CIcon icon={cilChevronRight} />
+            </span>
+          </CTooltip>
+
+          <CTooltip content="Last">
+            <span
+              style={{
+                cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
+              }}
+              onClick={() => currentPage < totalPages - 1 && setCurrentPage(totalPages - 1)}
+            >
+              <CIcon icon={cilChevronDoubleRight} />
+            </span>
+          </CTooltip>
         </div>
       </div>
     );

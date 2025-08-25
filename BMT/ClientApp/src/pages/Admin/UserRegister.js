@@ -320,19 +320,22 @@ const UserRegister = () => {
                         id="male"
                         name="genderId"
                         value={0}
+                        inline
                         label="Male"
                         checked={UserData.genderId.toString() === '0'}
                         onChange={handleUserInput}
-                        className="me-3"
+                        className="me-3 d-flex"
                       />
                       <CFormCheck
                         type="radio"
                         id="female"
                         name="genderId"
+                        inline
                         value={1}
                         label="Female"
                         checked={UserData.genderId.toString() === '1'}
                         onChange={handleUserInput}
+                        className="d-flex"
                       />
                     </div>
                   </CForm>

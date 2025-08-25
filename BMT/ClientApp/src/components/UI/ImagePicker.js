@@ -125,9 +125,9 @@ const ImagePicker = (prop) => {
           />
         ) : (
           <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-            <Button onClick={handleIconButtonClick}>
+            <Button onClick={handleIconButtonClick} className="w-100 h-100 bg-primary">
               <img src="Profile-pic.jpg" className="w-100 h-100 object-fit-cover rounded-circle" />
-              <CIcon className="stock-toggle-icon mandatory-control" icon={cilUser}></CIcon>
+              {/* <CIcon className="stock-toggle-icon mandatory-control" icon={cilUser}></CIcon> */}
             </Button>
           </label>
         )}

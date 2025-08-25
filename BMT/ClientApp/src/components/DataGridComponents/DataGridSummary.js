@@ -162,22 +162,23 @@ const CustomSummary = ({ rows, columns, summary }) => {
   }
 
   return (
-    <div className="mt-0 p-2 bg-dark-color text-white">
+    <div className="summary-container mt-0 p-1 bg-dark-color text-white ">
       <div className="grid-footer-summary">
-        {calculatedSummary.map((summaryItem) => (
-          <div key={summaryItem.field} className="align-self-start">
-            <ul className="m-0 p-2 grid-footer-summary list-unstyled">
-              {Object.entries(summaryItem)
-                .filter(([key]) => key !== 'field') // Exclude 'field' from displaying
-                .map(([aggregate, value]) => (
+        {calculatedSummary.map((summaryItem) => {
+          const entries = Object.entries(summaryItem).filter(([key]) => key !== 'field');
+
+          return (
+            <div key={summaryItem.field} className="align-self-start">
+              <ul className="m-0 p-2 grid-footer-summary list-unstyled">
+                {entries.map(([aggregate, value], sIndex) => (
                   <li className="p-1 d-inline-block" key={aggregate}>
                     {value !== undefined
                       ? aggregate === 'statusCount'
                         ? Object.entries(value).map(([status, count], index, array) => (
                             <span key={status}>
-                              <span className="">{`${status} : ${count.toLocaleString()}`}</span>
+                              <span>{`${status} : ${count.toLocaleString()}`}</span>
                               {index < array.length - 1 && (
-                                <span className="me-2 ms-2 border-end"></span>
+                                <span className="me-1 ms-1 border-end"></span>
                               )}
                             </span>
                           ))
@@ -185,12 +186,15 @@ const CustomSummary = ({ rows, columns, summary }) => {
                           ? value
                           : String(value)
                       : 'N/A'}
-                    {aggregate !== 'statusCount' && <span className="me-3 ms-1 text-muted">|</span>}
+
+                    {/* ✅ Use entries.length here instead of summaryItem.length */}
+                    {sIndex < entries.length - 1 && <span className="me-1 ms-1 text-muted">|</span>}
                   </li>
                 ))}
-            </ul>
-          </div>
-        ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

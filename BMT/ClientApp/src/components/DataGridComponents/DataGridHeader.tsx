@@ -49,7 +49,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`d-flex flex-column w-100 mb-3 ${className}`}>
+    <div className={`d-flex flex-column w-100 ${className}`}>
       <CRow className="w-100 p-0 align-self-center">
         <CCol className="d-flex justify-content-start align-items-center p-0">
           <div
