@@ -390,7 +390,7 @@ const campaignContacts = () => {
 
         <React.Fragment>
           <AppContainer>
-            <DataGridHeader title="Networks" filterDisable={false} />
+            <DataGridHeader title="Networks" filterDisable />
           </AppContainer>
           {globalutil.networks().map((network, index) => {
             const networkKey = network.name;

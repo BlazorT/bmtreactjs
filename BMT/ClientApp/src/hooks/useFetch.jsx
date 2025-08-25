@@ -23,6 +23,7 @@ function useFetch() {
   };
 
   const fetchData = async (url, customOptions, callback) => {
+    loading.current = true;
     // Cleanup previous abort controller
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -35,16 +36,15 @@ function useFetch() {
     console.log(fullUrl);
 
     try {
-      loading.current = true;
       const options = {
         ...initialOptions,
         ...customOptions,
         signal: abortController.signal, // Pass the signal to the options
       };
       //console.log(url, GetNotificationReportData);
-     // alert('fetch started' + url);
+      // alert('fetch started' + url);
       const res = await fetch(url, options);
-    //  console.log({ res });
+      //  console.log({ res });
       const json = await res.json();
       console.log(json);
       response.current = json;

@@ -23,6 +23,7 @@ const SingleDispatchment = () => {
   const [tabs, setTabs] = useState([]);
   const dispatch = useDispatch();
   const [networkList, setNetworkList] = useState([]);
+  const [orglist, setOrgList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
   const orgId = user.orgId;
@@ -40,6 +41,7 @@ const SingleDispatchment = () => {
   useEffect(() => {
     getNetworksList();
   }, []);
+
   const getNetworksList = async () => {
     await GetNetworks(
       '/Admin/networks',
@@ -74,9 +76,11 @@ const SingleDispatchment = () => {
     error: GetOrgError,
     fetchData: GetOrg,
   } = useFetch();
+
   useEffect(() => {
     getOrganizationLst();
   }, []);
+
   const getOrganizationLst = async () => {
     const orgBody = {
       id: 0,
@@ -98,27 +102,22 @@ const SingleDispatchment = () => {
       '/BlazorApi/orgsfulldata',
       { method: 'POST', body: JSON.stringify(orgBody) },
       (res) => {
-        // console.log(res, 'orgs');
-        setIsLoading(OrgLoading.current);
+        if (Array.isArray(res?.data) && res?.data?.length > 0) {
+          setOrgList(res?.data);
+        }
       },
     );
   };
   useEffect(() => {
-    if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data;
-      const findUserOrg = orgData?.find((item) => item.id === orgId);
-      console.log(findUserOrg, 'findUserOrg');
+    if (orglist?.length > 0) {
+      const findUserOrg = orglist?.find((item) => item.id === orgId);
 
       if (findUserOrg) {
         setOrganization(findUserOrg); // store the whole object or just label/value depending on CustomSearch
       }
     }
-  }, [GetOrgRes?.current?.data, orgId]);
-  const orglist = React.useMemo(() => {
-    return GetOrgRes?.current?.data ?? [];
-  }, [GetOrgRes?.current?.data]);
-
-  console.log(orglist, 'org listt');
+  }, [orglist, orgId]);
+  // console.log({ orglist });
   return (
     <AppContainer>
       <form
@@ -133,7 +132,8 @@ const SingleDispatchment = () => {
               icon={cilUser}
               type="text"
               id="name"
-              onChange={(e, value) => setOrganization(value)}
+              value={organization}
+              onChange={(e, value) => setOrganization(e)}
               placeholder="Organization"
               name="name"
               data={orglist}

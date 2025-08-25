@@ -8,18 +8,21 @@ export default function calculateTime(timestamps) {
   const minTimestamp = new Date(Math.min(...parsedTimestamps));
   const maxTimestamp = new Date(Math.max(...parsedTimestamps));
 
-  // Format the timestamps back to the original format
+  // Format options for UTC
   const formatOptions = {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC',
   };
 
-  const minTime = minTimestamp.toLocaleDateString('en-US', formatOptions);
-  const maxTime = maxTimestamp.toLocaleDateString('en-US', formatOptions);
+  const formatter = new Intl.DateTimeFormat('en-US', formatOptions);
+
+  const minTime = formatter.format(minTimestamp);
+  const maxTime = formatter.format(maxTimestamp);
 
   return { min: minTime, max: maxTime };
 }

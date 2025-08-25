@@ -1,6 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-import ProductActionCell from 'src/components/DataGridCustomCells/ProductActionCell';
-
 export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     flex: 1,
@@ -58,24 +55,4 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     key: 'packageInDays',
     editable: false,
   },
-  //{
-  //  flex: 1,
-  //  minWidth: 130,
-  //  headerClassName: 'custom-header-data-grid',
-  //  filterable: true,
-  //  sortable: true,
-  //  disableColumnMenu: false,
-  //  name: 'Action',
-  //  key: 'status',
-  //  editable: false,
-  //  renderCell: (params) => (
-  //    <ProductActionCell
-  //      value={params}
-  //      getProducts={getProducts}
-  //      productData={products.find((item) => item.id === params.row.id)}
-  //      canUpdate={pageRoles.canUpdate}
-  //      canDelete={pageRoles.canDelete}
-  //    />
-  //  ),
-  //},
 ];
