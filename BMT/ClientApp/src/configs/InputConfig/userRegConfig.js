@@ -30,7 +30,7 @@ export const getUserInputFields = (
   dspsListRes,
   TermsModal,
   onBlur,
-  cityList
+  cityList,
 ) => [
   {
     component: ImagePicker,
@@ -50,7 +50,7 @@ export const getUserInputFields = (
     placeholder: 'First Name',
     className: 'form-control item',
     isRequired: true,
-    maxLength: 10,
+    maxLength: 50,
     // pattern: '.*[A-Z].*',
     inputRef: inputRef,
     autoFocus: true,
@@ -68,7 +68,7 @@ export const getUserInputFields = (
     placeholder: 'Middle Name',
     className: 'form-control item',
     isRequired: false,
-    maxLength: 10,
+    maxLength: 50,
     // pattern: '.*[A-Z].*',
     message: 'Enter Middle Name',
   },
@@ -84,7 +84,7 @@ export const getUserInputFields = (
     placeholder: 'Last Name',
     className: 'form-control item',
     isRequired: true,
-    maxLength: 10,
+    maxLength: 50,
     // pattern: '.*[A-Z].*',
     message: 'Enter Last Name',
   },
@@ -100,7 +100,6 @@ export const getUserInputFields = (
     placeholder: 'Instant message Id',
     className: 'form-control item',
     isRequired: false,
-    
   },
   {
     component: CustomInput,
@@ -201,8 +200,7 @@ export const getUserInputFields = (
     isRequired: false,
     disableOption: UserData.country === '' ? 'Select Country First' : 'Select City',
     message: 'Please select your city',
-    options: cityList
-     
+    options: cityList,
   },
   {
     component: CustomSelectInput,
@@ -277,7 +275,7 @@ export const getUserInputFields = (
   //    </span>
   //  ),
   //},
-  ];
+];
 dayjs.extend(utc);
 // Function to get initial user data
 export const getInitialUserData = (user, role) => ({
@@ -296,12 +294,12 @@ export const getInitialUserData = (user, role) => ({
   password: '',
   userName: '',
   ims: '',
-  securityToken: '',      
+  securityToken: '',
   userCode: '',
   rowVer: 1,
   paymentDetailId: 0,
   createdBy: user.userId,
   createdAt: dayjs().utc().format(),
   registrationTime: dayjs().utc().format(),
-  lastUpdatedAt: dayjs().utc().format()
+  lastUpdatedAt: dayjs().utc().format(),
 });

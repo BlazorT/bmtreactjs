@@ -1,12 +1,9 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateToast, selectToast } from '../redux/toast/toastSlice';
+import { useSelector } from 'react-redux';
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
 import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 
 const DefaultLayout = () => {
-  const dispatch = useDispatch();
-  const toast = useSelector(selectToast);
   const confirMdl = useSelector((state) => state.confirMdl);
 
   const divElem = document.querySelector('body > div');

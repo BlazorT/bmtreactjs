@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/react-in-jsx-scope */
-import React from 'react';
 import UsersActionCell from 'src/components/DataGridCustomCells/UsersActionCell';
 
 // Profile Image Renderer Component
@@ -14,6 +13,10 @@ const ProfileImageRenderer = ({ row }) => (
       height: '32px',
       borderRadius: '50%',
       objectFit: 'cover',
+    }}
+    onError={(e) => {
+      e.currentTarget.onerror = null; // prevents infinite loop if fallback also fails
+      e.currentTarget.src = 'nouser.jpg';
     }}
   />
 );
