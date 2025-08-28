@@ -9,7 +9,8 @@ import 'react-data-grid/lib/styles.css';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
 /*import Blazorhub from './Blazorhub';*/
-import { selectToast } from './redux/toast/toastSlice';
+import { CToast, CToastBody, CToastClose } from '@coreui/react';
+import ToastNotification from './layout/ToastNotification';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));
 
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <React.Fragment>
+      <ToastNotification />
       <HashRouter>
         <Suspense fallback={<Loading />}>
           <Routes>

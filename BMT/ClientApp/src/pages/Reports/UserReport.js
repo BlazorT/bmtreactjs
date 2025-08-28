@@ -343,7 +343,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
                           icon={cilFlagAlt}
                           disableOption="Select Status"
                           id="status"
-                          options={globalutil.commonstatuses()}
+                          options={globalutil.statuses()}
                           className="form-control item form-select"
                           value={filters.status}
                           name="status"

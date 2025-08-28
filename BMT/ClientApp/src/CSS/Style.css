@@ -192,9 +192,45 @@ p {
   border-bottom: 1px solid #ffffff !important;
 }
 
+.react-datepicker__header--time {
+  background: #0c355f !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+}
+
+.react-datepicker__time-list-item {
+  background: #0c355f !important;
+  color: #ffffff !important;
+}
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list
+  li.react-datepicker__time-list-item--selected {
+  background-color: #ffffff !important;
+  color: #0c355f !important;
+}
 /* Ensure day names in the header are white */
 .date-picker-custom-calendar .react-datepicker__day-name {
   color: #ffffff !important;
+}
+.react-datepicker__current-month {
+  color: #ffffff !important;
+}
+.react-datepicker-time__header {
+  color: #ffffff !important;
+}
+.react-datepicker__navigation-icon--next {
+  left: 1px !important;
+}
+.react-datepicker__navigation-icon--previous {
+  right: 1px !important;
+}
+.react-datepicker__navigation-icon {
+  position: relative !important;
+  top: 1px !important;
+  font-size: 20px !important;
+  width: 0 !important;
 }
 
 /* Ensure month and year dropdowns in the header are white */
@@ -654,7 +690,7 @@ button[type='button']:hover {
 .custom-header-data-grid {
   font-weight: bold;
   font-size: 16px;
-  background-color: #0a1a2c;
+  /* background-color: #0a1a2c; */
 }
 
 .Mui-hovered {

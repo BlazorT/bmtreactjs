@@ -171,6 +171,8 @@ const UserRegister = () => {
         const res = await createUpdateUser(userBody);
         if (res.status === true) {
           navigate('/Users');
+        } else if (res.errorCode) {
+          showToast(res?.message || res?.errorCode, 'danger');
         }
       }
     } else {
@@ -178,6 +180,9 @@ const UserRegister = () => {
       console.log({ res });
       if (res.status === true) {
         navigate('/Users');
+      } else if (res.errorCode) {
+        console.log('first');
+        showToast(res?.message || res?.errorCode, 'danger');
       }
     }
   };

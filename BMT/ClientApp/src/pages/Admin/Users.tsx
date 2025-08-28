@@ -136,7 +136,7 @@ const Users: React.FC = () => {
           <CustomDatagrid
             rows={rows}
             columns={usersListCols}
-            rowHeight={50}
+            // rowHeight={50}
             pagination={true}
             rowSelection={false}
             loading={loading || !data}
