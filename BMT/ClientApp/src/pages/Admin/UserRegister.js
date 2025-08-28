@@ -327,7 +327,7 @@ const UserRegister = () => {
                         value={0}
                         inline
                         label="Male"
-                        checked={UserData.genderId.toString() === '0'}
+                        checked={UserData?.genderId?.toString() === '0'}
                         onChange={handleUserInput}
                         className="me-3 d-flex"
                       />
@@ -338,7 +338,7 @@ const UserRegister = () => {
                         inline
                         value={1}
                         label="Female"
-                        checked={UserData.genderId.toString() === '1'}
+                        checked={UserData?.genderId?.toString() === '1'}
                         onChange={handleUserInput}
                         className="d-flex"
                       />
