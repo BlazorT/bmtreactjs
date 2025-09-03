@@ -61,7 +61,7 @@ const OrgActionCell = (prop) => {
 
   const editUser = () => {
     handleClose();
-    navigate('/UserRegister', { state: { id: value.row.id, user: user } });
+    navigate('/organizationadd', { state: { id: value.row.id, user: user } });
   };
 
   if (loading) {

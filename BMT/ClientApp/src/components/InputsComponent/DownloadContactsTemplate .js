@@ -35,7 +35,7 @@ const DownloadContactsTemplate = () => {
 
   return (
     <div style={{ marginTop: 10 }}>
-      <Button onClick={() => downloadFile('csv')} title="Download CSV" className="w-auto" />
+      <Button onClick={() => downloadFile('csv')} title="Download CSV" className="w-auto me-2" />
       <Button onClick={() => downloadFile('excel')} title="Download Excel" className="w-auto" />
       <p
         style={{

@@ -171,6 +171,8 @@ const UserRegister = () => {
         const res = await createUpdateUser(userBody);
         if (res.status === true) {
           navigate('/Users');
+        } else if (res.errorCode) {
+          showToast(res?.message || res?.errorCode, 'danger');
         }
       }
     } else {
@@ -178,6 +180,9 @@ const UserRegister = () => {
       console.log({ res });
       if (res.status === true) {
         navigate('/Users');
+      } else if (res.errorCode) {
+        console.log('first');
+        showToast(res?.message || res?.errorCode, 'danger');
       }
     }
   };
@@ -322,7 +327,7 @@ const UserRegister = () => {
                         value={0}
                         inline
                         label="Male"
-                        checked={UserData.genderId.toString() === '0'}
+                        checked={UserData?.genderId?.toString() === '0'}
                         onChange={handleUserInput}
                         className="me-3 d-flex"
                       />
@@ -333,7 +338,7 @@ const UserRegister = () => {
                         inline
                         value={1}
                         label="Female"
-                        checked={UserData.genderId.toString() === '1'}
+                        checked={UserData?.genderId?.toString() === '1'}
                         onChange={handleUserInput}
                         className="d-flex"
                       />
