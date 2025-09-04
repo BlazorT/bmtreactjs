@@ -29,7 +29,8 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<CompaignsViewModel>> GetCompaignsData(CompaignsViewModel model);
         Task<IEnumerable<NetworkViewModel>> GetNetworkData(int status = 1);
         Task<IEnumerable<CampaignNotificationViewModel>> GetCampaignNotificationData(CampaignNotificationViewModel cModel);
-       // Task<BlazorResponseViewModel> postCompaignContactData(List<CompaignrecipientModel> lst);
+        // Task<BlazorResponseViewModel> postCompaignContactData(List<CompaignrecipientModel> lst);
+        Task<IEnumerable<BundlingpackagedetailViewModel>> LoadOrgBundlingPackagesData(int orgid = 0, int networkId = 0);
         Task<BlazorResponseViewModel> postCompaignContactData(List<CompaignrecipientModel> lst);
     }
 }

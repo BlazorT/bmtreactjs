@@ -1163,7 +1163,9 @@ WHERE c.OrgId = @p_OrgId
                                 mdl.unitName = "" + sts["unitName"];
                                 mdl.CurrentApplied = Convert.ToInt32(sts["CurrentApplied"]);
                                 mdl.FreeAllowed = Convert.ToInt32(sts["FreeAllowed"]);
-                                mdl.UnitPrice = Convert.ToInt32(sts["UnitPrice"]);
+                                mdl.UnitPrice = Convert.ToDouble(sts["UnitPrice"]);
+                                mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
+                                mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
                                 mdl.UnitId = Convert.ToInt32(sts["UnitId"]);
                                 mdl.Status = Convert.ToInt32(sts["Status"]);
                                 mdl.BundlingAllowed = Convert.ToInt32(sts["BundlingAllowed"]);
@@ -1174,6 +1176,71 @@ WHERE c.OrgId = @p_OrgId
                                 mdl.FinishTime = Convert.ToDateTime(sts["FinishTime"]);
                                 mdl.StartTime = Convert.ToDateTime(sts["StartTime"]);
                                 mdl.ApprovalTime = Convert.ToDateTime(sts["ApprovalTime"]);                            
+                                mdl.LastUpdatedAt = Convert.ToDateTime(sts["LastUpdatedAt"]);
+                                ls.Add(mdl);
+                            }
+                            sts.Close();
+                        }
+
+                    }
+                    connection.Close();
+                }// Using
+            }// Try
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return ls;
+        }
+        public async Task<IEnumerable<BundlingpackagedetailViewModel>> LoadOrgBundlingPackagesData(int orgid = 0, int networkId = 0)
+        {
+            List<BundlingpackagedetailViewModel> ls = new List<BundlingpackagedetailViewModel>();
+            try
+            {
+
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pNetworkId = new MySqlParameter("p_networkId", MySqlDbType.Int32);
+                        pNetworkId.Value = networkId;
+                        parameters.Add(pNetworkId);
+                        MySqlParameter pOrgId = new MySqlParameter("p_orgid", MySqlDbType.Int32);
+                        pOrgId.Value = orgid;
+                        parameters.Add(pOrgId);
+                        command.CommandText = "spGetOrgBundlingDetailList";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddRange(parameters.ToArray());
+                        using (DbDataReader sts = command.ExecuteReader())
+                        {
+                            while (sts.Read())
+                            {
+                                //bndl.FreeAllowed, bndl.LastUpdatedAt, bndl.NetworkId, bndl.StartTime, bndl.Tax, bndl.UnitId,bndl.UnitPrice
+                                //,ntwrks.Name networkName, unts.Name unitName, bndl.[Status]
+                                BundlingpackagedetailViewModel mdl = new BundlingpackagedetailViewModel();
+                                mdl.Id = Convert.ToInt32(sts["Id"]);
+                                mdl.Name = "" + sts["networkName"];
+                                mdl.unitName = "" + sts["unitName"];
+                               // mdl.CurrentApplied = Convert.ToInt32(sts["CurrentApplied"]);
+                               // mdl.FreeAllowed = Convert.ToInt32(sts["FreeAllowed"]);
+                                mdl.UnitPrice = Convert.ToDouble(sts["UnitPrice"]);
+                                mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
+                                mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
+                                mdl.UnitId = Convert.ToInt32(sts["UnitId"]);
+                                mdl.Status = Convert.ToInt32(sts["Status"]);
+                                mdl.AutoReplyAllowed = Convert.ToInt32(sts["AutoReplyAllowed"]);
+                                mdl.Status = Convert.ToInt32(sts["Status"]);
+                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
+                                mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);
+                                mdl.HashTags = ""+sts["HashTags"];
+                                mdl.VirtualAccount = Convert.ToInt32(sts["VirtualAccount"]);
+                                
+                                mdl.FinishTime = Convert.ToDateTime(sts["FinishTime"]);
+                                mdl.StartTime = Convert.ToDateTime(sts["StartTime"]);
+                                //mdl.ApprovalTime = Convert.ToDateTime(sts["ApprovalTime"]);
                                 mdl.LastUpdatedAt = Convert.ToDateTime(sts["LastUpdatedAt"]);
                                 ls.Add(mdl);
                             }

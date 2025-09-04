@@ -221,10 +221,10 @@ namespace com.blazor.bmt.controllers
         }
         [HttpPost("submitmycompaign")]
         //[HttpGet("submitmycompaign")]
-        //[Route("submitmycompaign")]
+        [Route("submitmycompaign")]
         public async Task<ActionResult> PostMyCompaignData([FromBody] CompaignsViewModel model)
         {
-            // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
             BlazorResponseViewModel response = new BlazorResponseViewModel();
             try
             {

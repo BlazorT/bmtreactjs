@@ -102,7 +102,7 @@ namespace com.blazor.bmt.controllers
         [HttpGet("custombundlingdetails")]
         [HttpPost("custombundlingdetails")]
         [Route("custombundlingdetails")]
-        public async Task<ActionResult> GetCustomBundlingDetails()
+        public async Task<ActionResult> GetCustomBundlingDetails([FromBody] WebApiFilters filters)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
@@ -110,7 +110,8 @@ namespace com.blazor.bmt.controllers
             {
                 //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
                 blazorApiResponse.status = true;
-                blazorApiResponse.data = await _blazorRepoPageService.LoadCustomBundlingPackagesData(0);
+                // blazorApiResponse.data = await _blazorRepoPageService.LoadCustomBundlingPackagesData(0);
+                blazorApiResponse.data = await _blazorRepoPageService.LoadOrgBundlingPackagesData(Convert.ToInt32(filters.orgId), Convert.ToInt32(filters.id));
 
             }
             catch (Exception ex)
