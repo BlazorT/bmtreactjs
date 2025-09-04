@@ -15,11 +15,14 @@ public partial class BundlingpackagedetailViewModel
     public double? Discount { get; set; }
 
     public double? Tax { get; set; }
-
+    public double? purchasedQouta { get; set; }
+    public double? usedQuota { get; set; }
     public int? FreeAllowed { get; set; }
-
+    public int? AutoReplyAllowed { get; set; }
+    public string? HashTags { get; set; }
     public int? CurrentApplied { get; set; }
-
+    
+    public int VirtualAccount { get; set; }
     public int BundlingAllowed { get; set; }
 
     public int? CreatedBy { get; set; }

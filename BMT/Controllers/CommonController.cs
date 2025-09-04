@@ -168,48 +168,7 @@ namespace com.blazor.bmt.controllers
         [HttpGet("submitbasicconfigurations")]
         [HttpPost("submitbasicconfigurations")]
         [Route("submitbasicconfigurations")]
-        //public async Task<ActionResult> submitBasicConfigurations([FromBody] BasicConfigurationModel model)
-        //{
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-        //    BlazorApiResponse response = new BlazorApiResponse();
-        //    try
-        //    {
-        //        //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
-
-        //        BasicConfigurationModel dbModel = await  _basicconfigurationsService.GetBasicConfigurstionByIdAsync(model.Id);
-        //        dbModel.LastUpdatedBy = model.LastUpdatedBy;// = GlobalUTIL.CurrentDateTime,
-        //        dbModel.LastUpdatedAt = model.LastUpdatedAt;
-        //        dbModel.SmtpServer = model.SmtpServer;
-        //        dbModel.SmtpUser = model.SmtpUser;
-        //        dbModel.SmsPassword = model.SmsPassword;
-
-        //        dbModel.SmtpUser = model.SmtpUser;
-        //        dbModel.Sslenabled = model.Sslenabled;
-        //        dbModel.SmsServiceUrl = model.SmsServiceUrl;
-
-        //        dbModel.Smtpport = model.Smtpport;
-        //        dbModel.SmsQouta = model.SmsQouta;
-        //        dbModel.SmsServiceUser = model.SmsServiceUser;
-        //        dbModel.SmtpSenderEmail = model.SmtpSenderEmail;
-        //        dbModel.SmtpUserPwd = model.SmtpUserPwd;
-               
-        //        model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-        //        // Update BasicconfigurationModel
-        //        await _basicconfigurationsService.Update(dbModel);
-        //        response.status = true;
-        //        response.message= string.Format(BlazorConstant.UPDATED_SUCCESS, model.DefaultDspname, GlobalUTIL.CurrentDateTime);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.status = false;
-        //        response.errorCode = "408";
-        //        response.message = ex.Message;
-        //        _logger.LogError(ex.StackTrace);
-        //    }
-        //    return Ok(response);
-        //    // .ToArray();
-        //}
+     
         [HttpPost("lovs")]
         [HttpGet("lovs")]
         [Route("lovs")]
