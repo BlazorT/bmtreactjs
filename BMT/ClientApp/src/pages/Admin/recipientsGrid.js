@@ -19,9 +19,6 @@ import globalutil from 'src/util/globalutil';
 const recipientslisting = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user);
-  useEffect(() => {
-    getRecipientsList();
-  }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Recipients',
@@ -44,12 +41,17 @@ const recipientslisting = () => {
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-  console.log(filters, 'filters');
+
+  useEffect(() => {
+    getRecipientsList(filters);
+  }, []);
+
   const [rows, setRows] = useState([]);
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const getRecipientsList = async (filters) => {
     console.log(filters, 'filtersfilters');
     const recipientsList = await getRecipientList(filters);
+    console.log({ recipientsList });
     setRecipientsData(recipientsList);
     const networks = globalutil.networks(); // assuming it returns an array of { id, name }
 
