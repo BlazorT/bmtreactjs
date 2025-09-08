@@ -1211,7 +1211,7 @@ WHERE c.OrgId = @p_OrgId
                         MySqlParameter pOrgId = new MySqlParameter("p_orgid", MySqlDbType.Int32);
                         pOrgId.Value = orgid;
                         parameters.Add(pOrgId);
-                        command.CommandText = "spGetOrgBundlingDetailList";
+                        command.CommandText = "spGetOrgBundlingNetworks";
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddRange(parameters.ToArray());
                         using (DbDataReader sts = command.ExecuteReader())
@@ -1221,27 +1221,15 @@ WHERE c.OrgId = @p_OrgId
                                 //bndl.FreeAllowed, bndl.LastUpdatedAt, bndl.NetworkId, bndl.StartTime, bndl.Tax, bndl.UnitId,bndl.UnitPrice
                                 //,ntwrks.Name networkName, unts.Name unitName, bndl.[Status]
                                 BundlingpackagedetailViewModel mdl = new BundlingpackagedetailViewModel();
-                                mdl.Id = Convert.ToInt32(sts["Id"]);
-                                mdl.Name = "" + sts["networkName"];
-                                mdl.unitName = "" + sts["unitName"];
+                               
+                                mdl.Name = "" + sts["networkName"];                               
                                 // mdl.CurrentApplied = Convert.ToInt32(sts["CurrentApplied"]);
                                 // mdl.FreeAllowed = Convert.ToInt32(sts["FreeAllowed"]);
                                 mdl.UnitPrice = 0;// Convert.ToDouble(sts["UnitPrice"]);
                                 mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
-                                mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
-                                mdl.UnitId = Convert.ToInt32(sts["UnitId"]);
-                                mdl.Status = Convert.ToInt32(sts["Status"]);
-                                mdl.AutoReplyAllowed = Convert.ToInt32(sts["AutoReplyAllowed"]);
-                                mdl.Status = Convert.ToInt32(sts["Status"]);
-                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
-                                mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);
-                                mdl.HashTags = ""+sts["HashTags"];
-                                mdl.VirtualAccount = Convert.ToInt32(sts["VirtualAccount"]);
-                                
-                                mdl.FinishTime = Convert.ToDateTime(sts["FinishTime"]);
-                                mdl.StartTime = Convert.ToDateTime(sts["StartTime"]);
-                                //mdl.ApprovalTime = Convert.ToDateTime(sts["ApprovalTime"]);
-                                mdl.LastUpdatedAt = Convert.ToDateTime(sts["LastUpdatedAt"]);
+                                mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);                                
+                                mdl.Status = Convert.ToInt32(sts["Status"]);                              
+                                mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]); 
                                 ls.Add(mdl);
                             }
                             sts.Close();
