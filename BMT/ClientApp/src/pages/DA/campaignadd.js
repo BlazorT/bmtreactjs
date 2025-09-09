@@ -3,8 +3,10 @@ import { CCol, CContainer, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/r
 
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import useFetch from 'src/hooks/useFetch';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateToast } from 'src/redux/toast/toastSlice';
 import LocationSelector from 'src/components/Component/LocationMarker';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -50,17 +52,17 @@ const campaignadd = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const dispatch = useDispatch();
 
   const [interestSearch, setInterestSearch] = useState('');
-
+  const [networksList, setNetworksList] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
 
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
   const [schedulerows, setScheduleRows] = useState([]);
-  const allNetworkNames = globalutil.networks().map((n) => n.name);
-
-  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
+ 
+  const [selectedNetworks, setSelectedNetworks] = useState( []);
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
 
   const tabs = [
@@ -114,6 +116,52 @@ const campaignadd = () => {
   //    });
   //  }
   //}, [location.state]);
+  const {
+    response: GetNetworkRes,
+    loading: NetworkLoading,
+    error: createNetworkError,
+    fetchData: GetNetworks,
+  } = useFetch();
+  useEffect(() => {
+    getNetworksList();
+  }, []);
+  const fetchBody = {
+    orgId: String(user.orgId),   // ✅ convert to string
+    userId: String(user.userId), // ✅ convert to string
+    roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
+    dateto: new Date().toISOString(), // same as C#: DateTime.Now
+  };
+  console.log(JSON.stringify(fetchBody));
+  const getNetworksList = async () => {
+    await GetNetworks(
+      '/Admin/custombundlingdetails',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+        console.log(res, 'networkssList');
+        if (res.status === true) {
+          // ✅ save filtered networks in state
+          const filtered = (res.data || []).filter(n => n.purchasedQouta > 0);
+          setNetworksList(filtered);
+          setSelectedNetworks(filtered.map((n) => n.name));
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          setNetworksList([]); // empty if error
+        }
+        // setIsLoading(NetworkLoading.current);
+      },
+    );
+  };
+
   const handleCampaignAddForm = (e, label) => {
     const now = dayjs();
 
@@ -187,14 +235,20 @@ const campaignadd = () => {
     // ✅ GENERIC INPUT HANDLING
     if (e?.target) {
       const { name, value, type, checked, files } = e.target;
-      const inputValue =
-        type === 'checkbox'
-          ? checked
-          : type === 'file'
-            ? files[0]
-            : name === 'status'
-              ? parseInt(value)
-              : value;
+
+      let inputValue;
+
+      if (type === 'checkbox') {
+        inputValue = checked;
+      } else if (type === 'file') {
+        inputValue = files[0];
+      } else if (name === 'status') {
+        inputValue = parseInt(value);
+      } else if (name === 'genderId') {
+        inputValue = Number(value); // ✅ Fix for radios
+      } else {
+        inputValue = value;
+      }
 
       setCampaignRegData((prevData) => ({
         ...prevData,
@@ -202,6 +256,7 @@ const campaignadd = () => {
       }));
       return;
     }
+
 
     // ❌ UNHANDLED CASE
     console.warn('Unhandled input in handleCampaignAddForm:', { e, label });
@@ -598,24 +653,19 @@ const campaignadd = () => {
               <DataGridHeader title="Networks" filterDisable={false} />
             </AppContainer>
             <CRow>
-              {globalutil.networks().map((network, index) => {
-                const displayLabel = network.name;
-                const IconName =
-                  network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase(); // icon key lookup
-
+              {globalutil.networks().filter((network) =>networksList.some((apiNet) => apiNet.name === network.name))
+                .map((network, index) => {
+                  const displayLabel = network.name;
+                  const IconName =
+                    network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
                 let postTypeIds = [];
                 try {
                   postTypeIds = JSON.parse(network.desc || '[]');
                 } catch (err) {
                   console.warn('Invalid desc format in network:', network.desc);
                 }
-
-                const postTypeList = globalutil
-                  .postTypes()
-                  .filter((pt) => postTypeIds.includes(pt.id));
-
+                const postTypeList = globalutil.postTypes().filter((pt) => postTypeIds.includes(pt.id));
                 const isSelected = selectedNetworks.includes(network.name);
-
                 // Auto-select/deselect single post type
                 if (postTypeList.length === 1) {
                   const singleTypeId = postTypeList[0].id;

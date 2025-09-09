@@ -56,43 +56,47 @@ const UsersActionCell = (prop) => {
       ) : (
         <CRow>
           {userStatus === 6 ? (
-            <CCol>
-              <CTooltip content="Re-Activate User">
-                <CIcon
-                  onClick={() => toggleStatus(5)}
-                  className="stock-toggle-icon"
-                  icon={cilReload}
-                />
-              </CTooltip>
+            <CCol className="d-flex justify-content-center">
+              <div className="d-flex align-items-center justify-content-center gap-4">
+                <CTooltip content="Re-Activate User">
+                  <CIcon
+                    onClick={() => toggleStatus(5)}
+                    className="stock-toggle-icon"
+                    icon={cilReload}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              </div>
             </CCol>
           ) : (
-            <>
-              <CCol>
+            <CCol className="d-flex justify-content-center">
+              <div className="d-flex align-items-center justify-content-center gap-4">
                 <CTooltip content="Edit User">
                   <CIcon
                     onClick={() => editUser(params.id)}
                     className="stock-toggle-icon"
                     icon={cilPencil}
+                    style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
-              </CCol>
 
-              {canDelete === 1 && (
-                <CCol>
+                {canDelete === 1 && (
                   <CTooltip content="Delete User">
                     <CIcon
-                      className="stock-toggle-icon"
+                      className="stock-toggle-icon IconColorRed"
                       onClick={() => toggleStatus(4)}
                       icon={cilTrash}
+                      style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>
-                </CCol>
-              )}
-            </>
+                )}
+              </div>
+            </CCol>
           )}
         </CRow>
       )}
     </>
+
   );
 };
 export default UsersActionCell;

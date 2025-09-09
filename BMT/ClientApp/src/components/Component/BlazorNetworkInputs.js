@@ -33,6 +33,8 @@ import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 const BlazorNetworkInputs = (prop) => {
   dayjs.extend(utc);
   const { header, networkId, setNetworkList, networkList } = prop;
@@ -69,7 +71,7 @@ const BlazorNetworkInputs = (prop) => {
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const {
     response: createNetworkSettingRes,
     loading: createNetworkSettingLoading,
@@ -132,6 +134,8 @@ const BlazorNetworkInputs = (prop) => {
   };
   const onYesConfirm = () => {
     /* toggle();*/
+    navigate('/Dashboard');
+
     dispatch(
       setConfirmation({
         isOpen: false,

@@ -15,9 +15,10 @@ import { CCol, CFormCheck, CRow } from '@coreui/react';
 import React, { useEffect, useState } from 'react';
 import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-
+import { updateToast } from 'src/redux/toast/toastSlice';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import useFetch from 'src/hooks/useFetch';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -129,13 +130,31 @@ const AddScheduleModel = (prop) => {
   //  return networkBudgets;
   //};
 
-  const calculateBudget = (networks, selectedDays) => {
-    console.log(networks);
+  const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
+    console.log("Networksss:", networks);
+    console.log("SelectedDaysss:", selectedDays);
+    console.log("Startss:", startDate?.toString());
+    console.log("Endss:", endDate?.toString());
+    console.log("StartTimes:", startTime?.toString());
+    console.log("FinishTimes:", finishTime?.toString());
 
     const networkCount = networks?.length ?? 0;
-    const dayCount = selectedDays.length;
+    const dayCount = selectedDays?.length ?? 0;
 
-    const scheduleCount = networkCount * (dayCount || 1); // Avoid multiplying by 0
+    // ✅ calculate number of days between startDate and endDate
+    const dateDiff =
+      startDate && endDate
+        ? Math.max(1, Math.ceil((endDate.valueOf() - startDate.valueOf()) / (1000 * 60 * 60 * 24)))
+        : 1;
+
+    // ✅ calculate number of hours between startTime and finishTime
+    const hoursDiff =
+      startTime && finishTime
+        ? Math.max(1, Math.ceil((finishTime.valueOf() - startTime.valueOf()) / (1000 * 60 * 60)))
+        : 1;
+
+    // ✅ combine all factors
+    const scheduleCount = networkCount * (dayCount || 1) * dateDiff * hoursDiff;
     const gTotal = scheduleCount * 10;
     const gTotalMess = scheduleCount * 100;
 
@@ -170,13 +189,56 @@ const AddScheduleModel = (prop) => {
   const [scheduleJson, setScheduleJson] = useState([]);
   const [jsonRates, setJsonRates] = useState([]);
   const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
-
+  const [networksList, setNetworksList] = useState([]);
   useEffect(() => {
     if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
       setInitialVisibleNetworks([...selectedNetworks]);
     }
   }, [selectedNetworks]);
-
+  const {
+    response: GetNetworkRes,
+    loading: NetworkLoading,
+    error: createNetworkError,
+    fetchData: GetNetworks,
+  } = useFetch();
+  useEffect(() => {
+    getNetworksList();
+  }, []);
+  const fetchBody = {
+    orgId: String(user.orgId),   // ✅ convert to string
+    userId: String(user.userId), // ✅ convert to string
+    roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
+    dateto: new Date().toISOString(), // same as C#: DateTime.Now
+  };
+  console.log(JSON.stringify(fetchBody));
+  const getNetworksList = async () => {
+    await GetNetworks(
+      '/Admin/custombundlingdetails',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fetchBody),
+      },
+      (res) => {
+        console.log(res, 'networkssList');
+        if (res.status === true) {
+          // ✅ save filtered networks in state
+          const filtered = (res.data || []).filter(n => n.purchasedQouta > 0);
+          setNetworksList(filtered);
+        } else {
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: res.message,
+              toastVariant: 'error',
+            }),
+          );
+          setNetworksList([]); // empty if error
+        }
+        // setIsLoading(NetworkLoading.current);
+      },
+    );
+  };
   // Effect: select/unselect days based on intervalTypeId
   useEffect(() => {
     if (campaignRegData.intervalTypeId === 2) {
@@ -316,17 +378,26 @@ const AddScheduleModel = (prop) => {
           : [...prevSelected, networkName], // add if checked
     );
   };
-
   useEffect(() => {
-    calculateBudget(selectedNetworks, campaignRegData.selectedDays);
+    console.log("🔥 useEffect triggered");
+
+    calculateBudget(
+      selectedNetworks,
+      campaignRegData.selectedDays,
+      campaignRegData.startDate,
+      campaignRegData.endDate,
+      campaignRegData.startTime,
+      campaignRegData.finishTime
+    );
   }, [
-    selectedNetworks,
-    campaignRegData.selectedDays,
-    campaignRegData.startDate,
-    campaignRegData.endDate,
-    campaignRegData.startTime,
-    campaignRegData.finishTime,
+    selectedNetworks.join("|"),                       // ✅ detect network changes
+    (campaignRegData.selectedDays || []).join("|"),   // ✅ detect days changes
+    campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0,   // ✅ convert to timestamp
+    campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
+    campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0,
+    campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0,
   ]);
+
 
   const onSave = () => {
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
