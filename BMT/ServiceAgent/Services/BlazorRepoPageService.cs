@@ -1226,6 +1226,7 @@ WHERE c.OrgId = @p_OrgId
                                 mdl.Name = "" + sts["networkName"];                              
   
                                 mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
+                                mdl.UnitPrice = Convert.ToDouble(sts["unitprice"]); 
                                 mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
                                 mdl.Status = Convert.ToInt32(sts["Status"]);                                
                                 mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);
