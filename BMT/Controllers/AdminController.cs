@@ -104,7 +104,7 @@ namespace com.blazor.bmt.controllers
         [Route("custombundlingdetails")]
         public async Task<ActionResult> GetCustomBundlingDetails([FromBody] WebApiFilters filters)
         {
-            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+           // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             try
             {

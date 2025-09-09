@@ -233,7 +233,7 @@ const BmtRolesModal = (prop) => {
             <LoadingBtn title="Submitting" />
           ) : (
             <React.Fragment>
-              <Button title="Cancel" onClick={onCancel} />
+                <Button className="mr-2" title="Cancel" onClick={onCancel} />
               {canUpdate === 1 && <Button title="Save" onClick={onSave} />}
             </React.Fragment>
           )}

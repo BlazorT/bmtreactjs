@@ -72,44 +72,50 @@ const OrgActionCell = (prop) => {
     <React.Fragment>
       {value.row.status === 4 ? (
         <CRow>
-          <CCol>
-            <CTooltip content="Re-Activate Organization ">
-              <CIcon
-                onClick={() => toggleStatus(5)}
-                className="stock-toggle-icon"
-                icon={cilReload}
-              />
-            </CTooltip>
+          <CCol className="d-flex justify-content-center">
+            <div className="d-flex align-items-center justify-content-center gap-4">
+              <CTooltip content="Re-Activate Organization">
+                <CIcon
+                  onClick={() => toggleStatus(5)}
+                  className="stock-toggle-icon"
+                  icon={cilReload}
+                  style={{ cursor: 'pointer' }}
+                />
+              </CTooltip>
+            </div>
           </CCol>
         </CRow>
       ) : (
         <CRow>
-          {canUpdate === 1 && (
-            <CCol>
-              <CTooltip content="Edit Organization ">
-                <CIcon
-                  onClick={() => editUser(value.row.id)}
-                  className="stock-toggle-icon"
-                  icon={cilPencil}
-                />
-              </CTooltip>
-            </CCol>
-          )}
+          <CCol className="d-flex justify-content-center">
+            <div className="d-flex align-items-center justify-content-center gap-4">
+              {canUpdate === 1 && (
+                <CTooltip content="Edit Organization">
+                  <CIcon
+                    onClick={() => editUser(value.row.id)}
+                    className="stock-toggle-icon"
+                    icon={cilPencil}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              )}
 
-          {canDelete === 1 && (
-            <CCol>
-              <CTooltip content="Delete Organization ">
-                <CIcon
-                  className="stock-toggle-icon"
-                  icon={cilTrash}
-                  onClick={() => toggleStatus(4)}
-                />
-              </CTooltip>
-            </CCol>
-          )}
+              {canDelete === 1 && (
+                <CTooltip content="Delete Organization">
+                  <CIcon
+                    className="stock-toggle-icon IconColorRed"
+                    icon={cilTrash}
+                    onClick={() => toggleStatus(4)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              )}
+            </div>
+          </CCol>
         </CRow>
       )}
     </React.Fragment>
+
   );
 };
 export default OrgActionCell;
