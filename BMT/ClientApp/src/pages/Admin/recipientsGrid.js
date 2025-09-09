@@ -72,29 +72,27 @@ const recipientslisting = () => {
     setRows(mappedArray);
   };
 
-  const changeFilter = (event, date, label) => {
-    let colName = date;
-
-    // Handle date filters like createdAt or lastUpdatedAt
-    if (date === 'createdAt' || date === 'lastUpdatedAt') {
+  const changeFilter = (event, key, label) => {
+    // Handle date filters
+    if (key === 'createdAt' || key === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [colName]: event, // directly use selected date
+        [key]: event,
       }));
     }
 
-    // Handle filters like autocomplete or custom dropdowns where value is passed directly
+    // Handle autocomplete/custom dropdowns
     else if (label === 'name') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [colName]: event,
+        [key]: event,
       }));
     }
 
-    // Handle standard input elements with event.target
+    // Handle normal input fields
     else if (event && event.target) {
       const { name, value, type, checked } = event.target;
-      colName = name === 'networks' ? 'networkId' : name;
+      const colName = name === 'networks' ? 'networkId' : name;
 
       setFilters((prevData) => ({
         ...prevData,
@@ -102,7 +100,6 @@ const recipientslisting = () => {
       }));
     }
 
-    // Safety fallback: if nothing matches, do nothing or log warning
     else {
       console.warn('Invalid event passed to changeFilter:', event);
     }
@@ -123,7 +120,6 @@ const recipientslisting = () => {
       orgId: user.orgId,
       rowVer: 0,
       networkId: 0,
-      //  name: '',
       status: 0,
       createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
