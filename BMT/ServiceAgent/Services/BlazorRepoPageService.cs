@@ -956,6 +956,7 @@ WHERE c.OrgId = @p_OrgId
                                 org.Instagram = ""+ (reader["Instagram"]);
                                 org.WhatsApp = "" + (reader["WhatsApp"]);
                                 org.Fb = "" + (reader["FB"]);
+                                org.LogoAvatar = "" + (reader["logoAvatar"]);
                                 org.IbanorWireTransferId = "" + (reader["IBANOrWireTransferId"]);
                                 org.Address = "" + (reader["Address"]);
                                 org.Email = "" + (reader["Email"]);
@@ -1225,6 +1226,7 @@ WHERE c.OrgId = @p_OrgId
                                 mdl.Name = "" + sts["networkName"];                              
   
                                 mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
+                                mdl.UnitPrice = Convert.ToDouble(sts["unitprice"]); 
                                 mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
                                 mdl.Status = Convert.ToInt32(sts["Status"]);                                
                                 mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);

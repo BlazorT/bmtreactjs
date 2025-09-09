@@ -577,7 +577,7 @@ namespace com.blazor.bmt.controllers
             return response;
         }
         [HttpPost]
-        [Route("uploadattachment")]
+        [Route("uploadsingleattachment")]
         [RequestSizeLimit(209715200)]
         [RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
         [Consumes("multipart/form-data")]
