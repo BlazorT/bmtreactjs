@@ -1084,7 +1084,7 @@ WHERE c.OrgId = @p_OrgId
                         pUserId.Value = Convert.ToInt32(model.LastUpdatedBy);
                         parameters.Add(pUserId);
                         command.CommandText = "spWebApiPOSGetCompaigns";
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddRange(parameters.ToArray());
                         using (DbDataReader dr = await command.ExecuteReaderAsync())
                         {
@@ -1103,6 +1103,7 @@ WHERE c.OrgId = @p_OrgId
                                     Title = "" + (dr["Compaigntitle"]),
                                     NetworkName = "" + (dr["NetworkName"]),
                                     Description = "" + (dr["CompaignDesc"]),
+                                    targetaudiance = "" + (dr["targetaudiance"]),
                                     Contact = "" + (dr["Contact"]),
                                     logoAvatar = "" + (dr["logoAvatar"]),
                                     compaignsdetails = "" + (dr["compaignsdetails"]),
