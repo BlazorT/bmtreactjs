@@ -1,6 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
 import BmtRolesCustomCell from 'src/components/DataGridCustomCells/BmtRolesCustomCell';
-
 export const getRolesCols = (pageRoles) => [
   {
     key: 'id',
@@ -13,6 +12,9 @@ export const getRolesCols = (pageRoles) => [
     disableColumnMenu: true,
     name: 'id',
     hidable: false,
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
   },
   {
     key: 'roleName',
@@ -24,6 +26,9 @@ export const getRolesCols = (pageRoles) => [
     sortable: true,
     disableColumnMenu: false,
     name: 'RoleName',
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
   },
   {
     key: 'status',
@@ -35,6 +40,9 @@ export const getRolesCols = (pageRoles) => [
     sortable: true,
     disableColumnMenu: false,
     name: 'Status',
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
   },
   {
     key: 'lastUpdate',
@@ -46,6 +54,9 @@ export const getRolesCols = (pageRoles) => [
     sortable: true,
     disableColumnMenu: false,
     name: 'Last Update Time',
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
   },
   {
     key: 'imageUrl',
@@ -58,11 +69,14 @@ export const getRolesCols = (pageRoles) => [
     sortable: false,
     disableColumnMenu: true,
     name: 'Action',
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
     renderCell: (params) => (
       <BmtRolesCustomCell
         value={params}
-        // canUpdate={pageRoles.canUpdate}
-        canUpdate={1}
+        canUpdate={pageRoles.canUpdate}
+        //canUpdate={1}
       />
     ),
   },

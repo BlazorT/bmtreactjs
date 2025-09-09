@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import OrgActionCell from 'src/components/DataGridCustomCells/OrgActionCell';
 
-export const getDADspsListCols = (fetchOrgList, orgsList, pageRoles) => [
+export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
   {
     key: 'name',
     name: 'Organization Name',

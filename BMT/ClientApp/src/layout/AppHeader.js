@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CListGroup, CListGroupItem } from '@coreui/react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,13 +35,28 @@ const AppHeader = (phoneNumber) => {
     fetchData: userLogout,
   } = useFetch();
 
-  const divElem = document.querySelector('body > div');
-  const resizeObserver = new ResizeObserver((entries) => {
-    for (let entry of entries) {
-      if (entry.target.handleResize) entry.target.handleResize(entry);
-    }
-  });
-  resizeObserver.observe(divElem);
+  // ✅ ResizeObserver inside useEffect
+  useEffect(() => {
+    const divElem = document.querySelector('body > div');
+    if (!divElem) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        if (entry.target.handleResize) {
+          requestAnimationFrame(() => {
+            entry.target.handleResize(entry);
+          });
+        }
+      }
+    });
+
+    resizeObserver.observe(divElem);
+
+    // ✅ Cleanup on unmount
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   const Logout = () => {
     dispatch(

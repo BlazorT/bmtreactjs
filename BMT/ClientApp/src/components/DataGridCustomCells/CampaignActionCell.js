@@ -114,71 +114,71 @@ const CampaignActionCell = (prop) => {
     <React.Fragment>
       {value.row.status === 4 ? (
         <CRow>
-          <CCol>
-            <CTooltip content="Re-Activate Campaign">
-              <CIcon
-                onClick={() => toggleStatus(5)}
-                className="stock-toggle-icon"
-                icon={cilReload}
-                style={{ cursor: 'pointer' }}
-              />
-            </CTooltip>
+          <CCol className="d-flex justify-content-center">
+            <div className="d-flex align-items-center justify-content-center gap-4">
+              <CTooltip content="Re-Activate Campaign">
+                <CIcon
+                  onClick={() => toggleStatus(5)}
+                  className="stock-toggle-icon"
+                  icon={cilReload}
+                  style={{ cursor: 'pointer' }}
+                />
+              </CTooltip>
+            </div>
           </CCol>
         </CRow>
       ) : (
         <CRow>
-          {/*   {canUpdate === 1 && (*/}
-          <CCol>
-            <CTooltip content="Edit Campaign">
-              <CIcon
-                onClick={() => editCampaign(value.row.id)}
-                className="stock-toggle-icon"
-                icon={cilPencil}
-                style={{ cursor: 'pointer' }}
-              />
-            </CTooltip>
-          </CCol>
-          {/*  )}*/}
-
-          {/* Pause Campaign */}
-          <CCol>
-            <CTooltip content="Pause Campaign">
-              <CIcon
-                onClick={() => toggleStatus(6)} // Assuming 6 = Pause
-                className="stock-toggle-icon"
-                icon={cilMediaPause}
-                style={{ cursor: 'pointer' }}
-              />
-            </CTooltip>
-          </CCol>
-
-          {/* Stop Campaign */}
-          <CCol>
-            <CTooltip content="Stop Campaign">
-              <CIcon
-                onClick={() => toggleStatus(7)} // Assuming 7 = Stop
-                className="stock-toggle-icon"
-                icon={cilMediaStop}
-                style={{ cursor: 'pointer' }}
-              />
-            </CTooltip>
-          </CCol>
-
-          {canDelete === 1 && (
-            <CCol>
-              <CTooltip content="Delete Campaign">
+          <CCol className="d-flex justify-content-center">
+            <div className="d-flex align-items-center justify-content-center gap-4">
+              {/* Edit Campaign */}
+              <CTooltip content="Edit Campaign">
                 <CIcon
+                  onClick={() => editCampaign(value.row.id)}
                   className="stock-toggle-icon"
-                  icon={cilTrash}
-                  onClick={() => toggleStatus(4)}
+                  icon={cilPencil}
                   style={{ cursor: 'pointer' }}
                 />
               </CTooltip>
-            </CCol>
-          )}
+
+              {/* Pause Campaign */}
+              <CTooltip content="Pause Campaign">
+                <CIcon
+                  onClick={() => toggleStatus(6)} // 6 = Pause
+                  className="stock-toggle-icon"
+                  icon={cilMediaPause}
+                  style={{ cursor: 'pointer' }}
+                />
+              </CTooltip>
+
+              {/* Stop Campaign */}
+              <CTooltip content="Stop Campaign">
+                <CIcon
+                  onClick={() => toggleStatus(7)} // 7 = Stop
+                  className="stock-toggle-icon"
+                  icon={cilMediaStop}
+                  style={{ cursor: 'pointer' }}
+                />
+              </CTooltip>
+
+              {/* Delete Campaign */}
+              {canDelete === 1 && (
+                <CTooltip content="Delete Campaign">
+                  <CIcon
+                    className="stock-toggle-icon IconColorRed"
+                    icon={cilTrash}
+                    onClick={() => toggleStatus(4)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              )}
+            </div>
+          </CCol>
         </CRow>
       )}
     </React.Fragment>
+
+
   );
 };
 export default CampaignActionCell;

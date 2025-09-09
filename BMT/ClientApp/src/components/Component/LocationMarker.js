@@ -186,7 +186,7 @@ export default function LocationSelector({
         </div>
       </CCol>
 
-      <CCol md="2" className="mt-4">
+      <CCol md="2" className="locationSetMgTop">
         <CButton
           color="primary"
           size="sm"
