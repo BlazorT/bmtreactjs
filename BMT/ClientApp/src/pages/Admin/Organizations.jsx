@@ -10,7 +10,7 @@ import globalutil from 'src/util/globalutil';
 import Loading from 'src/components/UI/Loading';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import { getDADspsListCols } from 'src/configs/ColumnsConfig/daDspsListCols';
+import { getOrgListCols } from 'src/configs/ColumnsConfig/daDspsListCols';
 import { getDaDspsFiltersFields } from 'src/configs/FiltersConfig/daDspsFilterConfig';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
@@ -145,7 +145,7 @@ const OrgList = () => {
     }
   };
 
-  const daDspsListCols = getDADspsListCols(fetchOrgList, orgsList, pageRoles);
+  const orgsListCols = getOrgListCols(fetchOrgList, orgsList, pageRoles);
   const daDspsFiltersFields = getDaDspsFiltersFields(
     filters,
     changeFilter,
@@ -191,7 +191,7 @@ const OrgList = () => {
                 filterDisable: true,
               }}
               rows={rows}
-              columns={daDspsListCols}
+                columns={orgsListCols}
               rowHeight={50}
               pagination={true}
               loading={isLoading}

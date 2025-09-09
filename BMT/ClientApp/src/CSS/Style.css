@@ -3992,3 +3992,9 @@ fieldset.legend {
 .fw-bold {
   cursor: pointer;
 }
+.IconColorRed{
+    color:red;
+}
+.locationSetMgTop {
+  margin-top: 2.3em;
+}

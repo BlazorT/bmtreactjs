@@ -5,12 +5,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 //import { CFormCheck } from '@coreui/react';
-
 // Icons
 import { cilChevronBottom } from '@coreui/icons';
-
 // Custom Components
-
 import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 //import Loading from 'src/components/UI/Loading';
@@ -18,10 +15,8 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import Form from 'src/components/UI/Form';
-
 // Hooks and Helpers
 import useFetch from 'src/hooks/useFetch';
-
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
 //import { setUserData } from 'src/redux/user/userSlice';
@@ -29,7 +24,6 @@ import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { updateToast } from 'src/redux/toast/toastSlice';
-
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
