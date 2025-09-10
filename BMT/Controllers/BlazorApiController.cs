@@ -514,8 +514,34 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-
         [HttpPost]
+        [Route("dashboard")]
+        public async Task<ActionResult>  GetDashboardData([FromBody] DashboardViewModel dbvm)
+        {
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            // List<User> cstrs = new List<User>();
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            try
+            {
+
+                var data = await _blazorRepoPageService.GetDashboardData(dbvm);
+                
+                blazorApiResponse.data = data;
+
+                blazorApiResponse.message = string.Format("Dashboard data fetched successfully", data?.Count());
+                blazorApiResponse.status = true;
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
         [Route("uploadattachments")]
         [RequestSizeLimit(209715200)]
         [RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
