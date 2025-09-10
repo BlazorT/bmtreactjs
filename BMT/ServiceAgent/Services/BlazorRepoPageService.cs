@@ -515,6 +515,7 @@ WHERE c.OrgId = @p_OrgId
                                     OrgId = Convert.ToInt32(dr["OrgId"] == null ? GlobalBasicConfigurationsViewModel.DefaultOrgid : dr["OrgId"]),
                                     FullName = "" + dr["FullName"],
                                     Email = "" + dr["Email"],
+                                    Avatar = "" + dr["Avatar"],                                    
                                     LoginTime = Convert.ToDateTime(dr["LoginTime"]),
                                     UserStatus = Convert.ToInt32(dr["UserStatus"]),
                                     AlreadyLoginStatus = Convert.ToInt32(dr["AlreadyLoginStatus"]),
