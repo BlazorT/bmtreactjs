@@ -13,7 +13,7 @@ export const getRecipientsFilterConfig = (filters, changeFilter, orgs,Role) => [
     component: CustomSearch,
     label: 'Organization',
     value: filters.name,
-    onChange: (e) => changeFilter(e, 'name'),
+    onChange: (e) => changeFilter(e, 'name', 'name'),  // ✅ fixed
     icon: cilUser,
     type: 'text',
     id: 'name',
@@ -22,8 +22,7 @@ export const getRecipientsFilterConfig = (filters, changeFilter, orgs,Role) => [
     placeholder: 'Organization',
     isRequired: false,
     title: 'Name Of Organization',
-    disabled: Role !== 1 // <-- This disables unless roleId is 1
-
+    disabled: Role !== 1
   },
   {
     component: CustomSelectInput,

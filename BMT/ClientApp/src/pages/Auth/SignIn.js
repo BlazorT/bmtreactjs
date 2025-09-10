@@ -143,10 +143,14 @@ function SignIn() {
       return;
     } else {
       setIsLoading(true);
-      await userLogin(
-        `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`,
-        { method: 'POST' },
-      );
+      const requestUrl = `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`;
+      const requestOptions = { method: 'POST' };
+
+      // 🔍 log it in readable JSON
+      console.log('Login Request:', JSON.stringify({ requestUrl, requestOptions }, null, 2));
+
+      await userLogin(requestUrl, requestOptions);
+
       // console.log(loginRes.current, loginErr);
       if (loginRes.current?.status === true) {
         // console.log((loginRes.current),'login');
