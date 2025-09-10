@@ -9,6 +9,8 @@
         public DateTime LoginTime { get; set; }
         public string LoginMachineIp { get; set; }
         public string UserRole { get; set; }
+        public string? Avatar { get; set; }
+        
         public int RoleId { get; set; }
         public int? OrgId  { get; set; }
         public int UserStatus { get; set; }
