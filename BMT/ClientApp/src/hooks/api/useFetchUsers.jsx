@@ -19,7 +19,8 @@ export const useFetchUsers = () => {
       orgId: user.orgId === 1 ? 0 : user.orgId,
       email: '',
       userCode: '',
-      userName: '',
+      //userName: '',
+      //userName: filters ? (filters.userName === '' ? '' : filters.userName) : '',
       lastName: '',
       firstName: '',
       password: '',
@@ -30,7 +31,7 @@ export const useFetchUsers = () => {
        registrationTime: dayjs().utc().format(),
      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
-     // keyword: filters ? filters.keyword : '',
+      userName: filters ? filters.UserName : '',
       createdAt: filters
         ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
         : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),

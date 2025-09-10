@@ -26,6 +26,7 @@ const CustomInput = ({
   onKeyDown,
   autoFocus,
   onBlur,
+  onPaste,   // ✅ add here
   accept,
 }) => {
   return (
@@ -65,6 +66,7 @@ const CustomInput = ({
             readOnly={!!readOnly}
             pattern={pattern}
             onKeyDown={onKeyDown}
+            onPaste={onPaste}
             maxLength={maxLength}
             defaultValue={defaultValue}
             onBlur={onBlur}

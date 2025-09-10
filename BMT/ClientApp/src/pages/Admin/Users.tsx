@@ -33,12 +33,12 @@ const Users: React.FC = () => {
   );
 
   const [filters, setFilters] = useState({
-    keyword: '',
+    UserName: '',
     status: '',
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
     createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
-    dsp: '',
   });
+  console.log("filters", filters);
 
   const [showFilters, setshowFilters] = useState(false);
   const [showUserGrid, setshowUserGrid] = useState(true);
@@ -93,11 +93,10 @@ const Users: React.FC = () => {
 
   const handleReset = () => {
     setFilters({
-      keyword: '',
+      UserName: '',
       status: '',
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
       createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
-      dsp: '',
     });
     fetching();
   };
@@ -109,7 +108,7 @@ const Users: React.FC = () => {
     <React.Fragment>
       <AppContainer>
         <DataGridHeader
-          title="Advance Search"
+          title="Users -> Advance Search"
           onClick={toggleStock}
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}

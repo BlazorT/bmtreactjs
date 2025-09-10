@@ -50,7 +50,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
 }) => {
   return (
     <div className={`d-flex flex-column w-100 ${className}`}>
-      <CRow className="w-100 p-0 align-self-center">
+      <CRow className="w-100 pb-2 align-self-center">
         <CCol className="d-flex justify-content-start align-items-center p-0">
           <div
             className={`pointer ${onClick ? 'text-primary' : ''}`}

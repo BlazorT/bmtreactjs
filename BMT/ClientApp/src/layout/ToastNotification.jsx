@@ -11,17 +11,24 @@ const ToastNotification = () => {
     dispatch(updateToast({ isToastOpen: false, toastMessage: '' }));
   };
 
+  // Map toastVariant → bg + text color
+  const toastVariants = {
+    success: 'bg-success text-white',
+    error: 'bg-danger text-white',
+    warning: 'bg-warning text-dark',
+    info: 'bg-info text-white',
+  };
+
   return (
     <CToaster placement="bottom-end" className="p-3">
       <CToast
-        autohide={true}
+        autohide
         visible={isToastOpen}
-        color={toastVariant}
-        className="align-items-center"
         onClose={handleClose}
+        className={`${toastVariants[toastVariant] || 'bg-dark text-white'} align-items-center`}
       >
         <div className="d-flex">
-          <CToastBody className="text-white">
+          <CToastBody>
             {/* Render HTML safely */}
             <div dangerouslySetInnerHTML={{ __html: toastMessage }} />
           </CToastBody>

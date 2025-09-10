@@ -71,8 +71,9 @@ const recipientslisting = () => {
     // console.log(mappedArray, 'recipients data');
     setRows(mappedArray);
   };
-
+  console.log("filters", filters);
   const changeFilter = (event, key, label) => {
+    console.log({ event, key, label })
     // Handle date filters
     if (key === 'createdAt' || key === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
@@ -86,6 +87,7 @@ const recipientslisting = () => {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [key]: event,
+        orgId:event?.id||1      
       }));
     }
 
@@ -221,7 +223,7 @@ const recipientslisting = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Advance Search"
+              title="Recipients Grid -> Advance Search"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

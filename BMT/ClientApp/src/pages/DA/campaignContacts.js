@@ -135,7 +135,7 @@ const campaignContacts = () => {
     const lowerNetwork = network.toLowerCase();
 
     if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
-      return onlyDigits.test(value) && value.length >= 7;
+      return onlyDigits.test(value) && value.length >= 7 && value.length <= 15;
     }
 
     if (lowerNetwork === 'email') {
@@ -145,52 +145,96 @@ const campaignContacts = () => {
     return idPattern.test(value);
   };
 
+  // ✅ Common add function with validation + duplicate check
+  const addRecipient = (value, network) => {
+    const lowerNetwork = network.toLowerCase();
+    const currentList = recipientsList[network] || [];
+
+    if (!validateRecipient(network, value)) {
+      let label = 'ID';
+      let correctFormatExample = 'e.g., 123456';
+
+      if (lowerNetwork === 'email') {
+        label = 'email address';
+        correctFormatExample = 'e.g., user@example.com';
+      } else if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
+        label = 'contact number (min 7 digits)';
+        correctFormatExample = 'e.g., 03001234567';
+      }
+
+      showToast(
+        `❌ "${value}" is not a valid ${label}. Correct format: ${correctFormatExample}`,
+        'error'
+      );
+      return false;
+    }
+
+    if (currentList.includes(value)) {
+      showToast(`"${value}" is already added to ${network}.`, 'error');
+      return false;
+    }
+
+    setRecipientsList((prev) => ({
+      ...prev,
+      [network]: [...currentList, value],
+    }));
+
+    return true;
+  };
+
+  // ✅ Handle Enter or Comma
   const handleKeyDown = (e, network) => {
-    const value = recipientInput[network]?.trim();
-    if (e.key === 'Enter' && value) {
+    let value = recipientInput[network]?.trim();
+
+    if ((e.key === 'Enter' || e.key === ',') && value) {
       e.preventDefault();
 
-      const lowerNetwork = network.toLowerCase();
-      const currentList = recipientsList[network] || [];
-
-      if (!validateRecipient(network, value)) {
-        let label = 'ID';
-        let correctFormatExample = 'e.g., 123456';
-
-        if (lowerNetwork === 'email') {
-          label = 'email address';
-          correctFormatExample = 'e.g., user@example.com';
-        } else if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
-          label = 'contact number (min 7 digits)';
-          correctFormatExample = 'e.g., 03001234567';
-        }
-
-        showToast(
-          `❌ "${value}" is not a valid ${label}. Correct format: ${correctFormatExample}`,
-          'error',
-        );
-        return;
+      if (value.endsWith(',')) {
+        value = value.slice(0, -1).trim();
       }
+      if (!value) return;
 
-      // ❌ Block duplicate in same network only
-      if (currentList.includes(value)) {
-        showToast(`"${value}" is already added to ${network}.`, 'error');
-        return;
-      }
+      addRecipient(value, network);
 
-      // ✅ Add value to current network
-      setRecipientsList((prev) => ({
-        ...prev,
-        [network]: [...currentList, value],
-      }));
-
-      // Clear input field
+      // Always clear input after attempt
       setRecipientInput((prev) => ({
         ...prev,
         [network]: '',
       }));
     }
   };
+
+  // ✅ Handle Paste → instantly consume & clear input
+  const handlePaste = (e, network) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text');
+
+    console.log("📋 Raw pasteData:", pasteData);
+
+    if (!pasteData) return;
+
+    const values = pasteData
+      .split(/[\s,;]+/) // ✅ handles spaces too
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+
+    console.log("🔎 Parsed values:", values);
+
+    values.forEach((val) => {
+      console.log(`➡️ Trying to add recipient: "${val}" for network: ${network}`);
+      const added = addRecipient(val, network);
+      console.log("✅ Added?", added);
+    });
+
+    setRecipientInput((prev) => ({
+      ...prev,
+      [network]: '',
+    }));
+
+    console.log("✅ Input cleared for network:", network);
+  };
+
+
 
   const handleDeleteRecipient = (network, index) => {
     const updated = [...recipientsList[network]];
@@ -442,10 +486,12 @@ const campaignContacts = () => {
                           disabled={isChecked}
                           type="text"
                           value={recipientInput[networkKey] || ''}
-                          placeholder="Enter recipient and press Enter"
+                          placeholder="Enter recipient and press Enter, Comma, or Paste"
                           onChange={(e) => handleInputChange(networkKey, e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, networkKey)}
+                          onPaste={(e) => handlePaste(e, networkKey)} // ✅ Add paste handler
                         />
+
                       </div>
                     </CTooltip>
 

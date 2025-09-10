@@ -1094,7 +1094,7 @@ WHERE c.OrgId = @p_OrgId
                                 var compaign = new CompaignsViewModel
                                 {
                                     Id = Convert.ToInt64(dr["id"]),
-                                    //NetworkId = Convert.ToInt32(dr["NetworkId"]),
+                                    NetworkId = Convert.ToInt32(dr["NetworkId"]),
                                     OrgId = Convert.ToInt32(dr["OrgId"]),
                                     Name = "" + (dr["CompaignName"]),
                                     OrgName = "" + (dr["orgName"]),                                    
@@ -1117,8 +1117,9 @@ WHERE c.OrgId = @p_OrgId
                                     Discount = Convert.ToDouble(dr["Discount"]),                                    
                                     TotalBudget = Convert.ToDouble(dr["TotalBudget"]),
                                     FinishTime = Convert.ToDateTime(dr["FinishTime"]),
-                                    Status = Convert.ToInt16(dr["Status"])
-                                };
+                                    Status = Convert.ToInt16(dr["Status"]),
+                                   
+                            };
                                 compaigns.Add(compaign);
                             }//while (dr.Read())
 

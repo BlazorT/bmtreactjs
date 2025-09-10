@@ -10,7 +10,7 @@ export const useFetchPricing = () => {
   const fetchPricing = async () => {
 
     const res = await postData();
-   //alert(JSON.stringify(res));
+    console.log(JSON.stringify(res));
     if (res?.status === true) {
       return res?.data;
     } else {

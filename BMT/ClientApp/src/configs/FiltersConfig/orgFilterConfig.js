@@ -50,16 +50,29 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
     min: dayjs(filters.createdAt),
     message: 'Enter Valid To Date',
   },
+  //{
+  //  component: CustomInput,
+  //  label: ' #Tag',
+  //  value: filters.HashTags,
+  //  onChange: changeFilter,
+  //  icon: cilFlagAlt,
+  //  id: 'HashTags',
+  //  name: 'HashTags',
+  //  placeholder:'# hash tags',
+  //  className: 'form-control item',
+  //  title: '# tags',
+  //},
   {
     component: CustomInput,
-    label: ' #Tag',
-    value: filters.tags,
-    onChange: changeFilter,
+    label: '#Tag',
+    value: filters.HashTags,
+    onChange: (e) => changeFilter(e, 'HashTags'), // ✅ pass fieldName
     icon: cilFlagAlt,
-    id: 'tags',
-    name: 'tags',
-    placeholder:'# hash tags',
+    id: 'HashTags',
+    name: 'HashTags',
+    placeholder: '# hash tags',
     className: 'form-control item',
     title: '# tags',
-  },
+  }
+
 ];
