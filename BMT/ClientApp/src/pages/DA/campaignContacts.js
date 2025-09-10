@@ -382,7 +382,10 @@ const campaignContacts = () => {
       showToast('Error while submitting contacts.', 'error');
     }
   };
-
+  const handleCloseModal = () => {
+    setShowTableModal(false);
+    navigate('/recipientsGrid'); // navigate when modal hides
+  };
   return (
     <Form name="dsp-reg-form">
       <CContainer fluid className="mt-4">
@@ -568,7 +571,8 @@ const campaignContacts = () => {
                       <button
                         type="button"
                         className="btn btn-secondary"
-                        onClick={() => setShowTableModal(false)}
+                        // onClick={() => setShowTableModal(false)}
+                        onClick={handleCloseModal} // ⬅️ Updated
                       >
                         Close
                       </button>

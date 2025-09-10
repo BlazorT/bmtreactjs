@@ -38,25 +38,25 @@ export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
     headerClassName: 'custom-header-data-grid',
   },
 
-  {
-    key: 'imageUrl',
-    name: 'Action',
-    flex: 1,
-    minWidth: 50,
-    // maxWidth: 100,
-    editable: false,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    headerClassName: 'custom-header-data-grid',
-    renderCell: (params) => (
-      <RecipientsActionCell
-        value={params}
-        fetching={daRes}
-        user={daRes.filter((item) => item.id === params.row.id)}
-        //  canUpdate={pageRoles.canUpdate}
-        //  canDelete={pageRoles.canDelete}
-      />
-    ),
-  },
+  //{
+  //  key: 'imageUrl',
+  //  name: 'Action',
+  //  flex: 1,
+  //  minWidth: 50,
+  //  // maxWidth: 100,
+  //  editable: false,
+  //  filterable: false,
+  //  sortable: false,
+  //  disableColumnMenu: true,
+  //  headerClassName: 'custom-header-data-grid',
+  //  renderCell: (params) => (
+  //    <RecipientsActionCell
+  //      value={params}
+  //      fetching={daRes}
+  //      user={daRes.filter((item) => item.id === params.row.id)}
+  //      //  canUpdate={pageRoles.canUpdate}
+  //      //  canDelete={pageRoles.canDelete}
+  //    />
+  //  ),
+  //},
 ];
