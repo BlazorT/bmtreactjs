@@ -42,10 +42,12 @@ const campaignslisting = () => {
     rowVer: 0,
     networkId: 0,
     name: '',
+    HashTags: '',
     status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
+  console.log("filters", filters);
 
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
@@ -94,12 +96,14 @@ const campaignslisting = () => {
 
   const changeFilter = (event, fieldName, label) => {
     let colName = fieldName;
+
     if (fieldName === 'name') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         name: event,
+        orgId: event?.id || 0, // ✅ update orgId here too
       }));
-    } else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt' || label === 'name') {
+    } else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt') {
       // Custom value or date picker
       setFilters((prevFilters) => ({
         ...prevFilters,
@@ -156,6 +160,7 @@ const campaignslisting = () => {
       orgId: 0,
       email: '',
       name: '',
+      HashTags: '',
       contact: '',
       rowVer: 0,
       cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
@@ -221,7 +226,7 @@ const campaignslisting = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Advance Search"
+              title="Campaigns Listing -> Advance Search"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

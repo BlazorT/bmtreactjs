@@ -17,8 +17,9 @@ export const useFetchCampaigns = () => {
     const compaignsBody = {
       id: 0,       
       orgId: filters ? filters.orgId : 0, 
-      rowVer: filters ? filters.rowVer : 0 ,
+      rowVer: filters ? filters.rowVer : 0,
       networkId: filters ? filters.networkId:0,
+      HashTags: filters ? filters.HashTags :'',
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters
         ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
