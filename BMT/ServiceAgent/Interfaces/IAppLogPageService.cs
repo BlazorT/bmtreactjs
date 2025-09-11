@@ -13,6 +13,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<AppLogViewModel> GetAppLogById(long logId);
         Task<IEnumerable<AppLogViewModel>> GetAppLogByUser(int userId);       
         Task CreateAppLog(AppLogViewModel AppLogViewModel);
+        Task<AppLogViewModel> GetAppLogByAllFilters(AppLogViewModel vmodel);
         Task ProcessLoginActivity(int UserId,int OrgId, LOGIN_ACTIVITY activity, string remoteMachineIp);
         Task UpdateAppLog(AppLogViewModel AppLogViewModel);
         Task DeleteAppLog(AppLogViewModel AppLogViewModel);

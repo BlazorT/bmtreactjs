@@ -56,8 +56,9 @@ namespace com.blazor.bmt.controllers
               
                     try
                     {
-                        response.data= await _appLogPageService.GetAppLogByUser(vm.UserId);                   
-                        response.status = true;
+                    // response.data= await _appLogPageService.GetAppLogByUser(vm.UserId);                   
+                    response.data = await _appLogPageService.GetAppLogByAllFilters(vm);
+                    response.status = true;
                     }
                     catch (Exception ex)
                     {
