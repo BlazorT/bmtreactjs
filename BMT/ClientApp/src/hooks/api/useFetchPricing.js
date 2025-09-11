@@ -8,8 +8,16 @@ export const useFetchPricing = () => {
   const { data, error, loading, postData } = useApi('/Admin/custombundlingdetails','GET');
 
   const fetchPricing = async () => {
-
-    const res = await postData();
+    const bodyData = {
+      orgId: '',
+      name: '',
+      email: '',
+      filters: '', // ✅ required field
+      datefrom: new Date(Date.now() - 86400000).toISOString(),
+      dateto: new Date().toISOString(),
+      status: '',
+    };
+    const res = await postData(bodyData);
     console.log(JSON.stringify(res));
     if (res?.status === true) {
       return res?.data;
