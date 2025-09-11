@@ -17,4 +17,8 @@
     <Compile Remove="Repositories\IPriceRepository.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BMT ViewModels\BMT ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>
