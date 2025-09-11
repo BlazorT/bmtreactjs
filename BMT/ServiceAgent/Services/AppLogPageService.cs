@@ -44,10 +44,10 @@ namespace Blazor.Web.UI.Services
         //  var mapped = _mapper.Map<IEnumerable<PriceViewModel>>(list);
             return retEntity;
         }
-        public async Task<AppLogViewModel> GetAppLogByAllFilters(AppLogViewModel vmodel)
+        public async Task<IEnumerable<AppLogViewModel>> GetAppLogByAllFilters(AppLogViewModel vmodel)
         {
             var entity = await _appLogService.GetAppLogAllFiltersDetails(vmodel);
-            var retEntity = _mapper.Map<AppLogViewModel>(entity);
+            var retEntity = _mapper.Map<IEnumerable<AppLogViewModel>>(entity);
             //  var mapped = _mapper.Map<IEnumerable<PriceViewModel>>(list);
             return retEntity;
         }
