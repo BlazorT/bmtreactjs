@@ -40,12 +40,12 @@ const BlazorNetworkInputs = (prop) => {
   const { header, networkId, setNetworkList, networkList } = prop;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [networkState, SetNetworkState] = useState({
+  const [networkState, setNetworkState] = useState({
     id: 0,
     orgId: user.orgId,
     name: '',
-    // attachment: '',
-    // excelAttachment: '',
+     attachment: '',
+     excelAttachment: '',
     buisnessId: '',
     url: '',
     apiuri: '',
@@ -79,45 +79,47 @@ const BlazorNetworkInputs = (prop) => {
     fetchData: createNetworkSetting,
   } = useFetch();
   const handleNetworkSetting = (e, label) => {
-    // Case: time picker or custom value
     if (label === 'startTime' || label === 'finishTime') {
-      SetNetworkState((prev) => ({
+      setNetworkState((prev) => ({
         ...prev,
-        [label]: e, // e is the actual value, not event
+        [label]: e,
       }));
       return;
     }
 
-    // Case: normal DOM event
-    const { name, value, type, checked } = e.target;
-
-    if (name === 'posttypejson') {
+    const { name, value, type, checked, files } = e.target;
+    console.log({ name, value, type, checked, files })
+    if (type === 'file') {
+      setNetworkState((prev) => ({
+        ...prev,
+        [name]: files?.[0]||null, // store actual File object
+      }));
+    } else if (name === 'posttypejson') {
       const postTypeId = parseInt(value);
-      SetNetworkState((prev) => {
+      setNetworkState((prev) => {
         const selected = Array.isArray(prev.posttypejson) ? prev.posttypejson : [];
         const updated = checked
-          ? [...selected, postTypeId] // Add
-          : selected.filter((id) => id !== postTypeId); // Remove
+          ? [...selected, postTypeId]
+          : selected.filter((id) => id !== postTypeId);
         return { ...prev, posttypejson: updated };
       });
     } else if (type === 'checkbox') {
-      SetNetworkState((prev) => ({
+      setNetworkState((prev) => ({
         ...prev,
         [name]: checked,
       }));
     } else if (type === 'number' && value !== '') {
-      SetNetworkState((prev) => ({
+      setNetworkState((prev) => ({
         ...prev,
         [name]: parseInt(value),
       }));
     } else {
-      SetNetworkState((prev) => ({
+      setNetworkState((prev) => ({
         ...prev,
         [name]: value,
       }));
     }
   };
-
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
@@ -146,7 +148,7 @@ const BlazorNetworkInputs = (prop) => {
         isOpen: false,
       }),
     );
-    SetNetworkState([]);
+    setNetworkState([]);
   };
 
   const onNoConfirm = () => {
@@ -240,7 +242,7 @@ const BlazorNetworkInputs = (prop) => {
           <CustomInput
             label="Email Excel Bulk Upload"
             icon={cilUser}
-            value={networkState.attachment}
+           // value={networkState.attachment}
             onChange={handleNetworkSetting}
             type="file"
             id="attachment"
@@ -248,8 +250,9 @@ const BlazorNetworkInputs = (prop) => {
             placeholder="Email Excel Bulk Upload"
             className="form-control item"
             isRequired={false}
+            src={networkState?.attachment?.src}
+            helperText={networkState?.attachment?.name}
             title="Email Excel Bulk Upload"
-            // message="Enter Buisness Name"
           />
         </CCol>
       </CRow>
@@ -272,17 +275,22 @@ const BlazorNetworkInputs = (prop) => {
           <CRow>
             <CCol className="" md={12}>
               <CustomInput
-                label="Attachment"
+                label="Email Excel Bulk Upload"
+               // value={networkState.attachment.name}
                 icon={cilUser}
-                value={networkState.excelAttachment}
+                onChange={handleNetworkSetting}
                 type="file"
-                id="excelAttachment"
-                name="excelAttachment"
+                id="attachment"
+                name="attachment"
+                placeholder="Email Excel Bulk Upload"
                 className="form-control item"
+                src={networkState?.attachment?.src}
+                helperText={networkState?.attachment?.name}
                 isRequired={false}
-                title="Choose Image For Attachment "
-                // message="Enter Buisness Name"
+                title="Email Excel Bulk Upload"
               />
+
+
             </CCol>
           </CRow>
         )}
@@ -319,8 +327,8 @@ const BlazorNetworkInputs = (prop) => {
                 value={networkState.apiKeySecret}
                 onChange={handleNetworkSetting}
                 type="text"
-                id="apikeySecret"
-                name="apikeySecret"
+                id="apiKeySecret"
+                name="apiKeySecret"
                 placeholder="API Key Secret e.g(uk08l00**)"
                 className="form-control item"
                 isRequired={false}

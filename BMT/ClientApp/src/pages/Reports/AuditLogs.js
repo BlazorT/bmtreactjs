@@ -37,19 +37,19 @@ const AuditLogs = () => {
   const initialFilter = {
     orgId: user.orgId,
     businessEntityId: '',
-    keyValue: '',
+    KeyValue: '',
     keyword: '',
     oldValue: '',
-    createdAt: dayjs().utc().startOf('year').format(),
+    createdAt: dayjs().utc().subtract(2, 'year').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
     const filterBody = {
       orgId: user.orgId,
       keyword: filters.keyword,
-      keyValue: filters.keyValue,
+      KeyValue: filters.KeyValue,
       oldValue: filters.oldValue,
-      createdAt: dayjs(filters.createdAt).utc().startOf('month').format(),
+      createdAt: dayjs(filters.createdAt).utc().subtract(2, 'year').format(),
     };
 
     getLogList(filterBody);
@@ -75,9 +75,9 @@ const AuditLogs = () => {
       userName: '',
       oldValue: '',
       newValue: '',
-      keyValue: '',
+      KeyValue: '',
       createdBy: 0,
-      createdAt: dayjs().utc().subtract(1, 'year').format(),
+      createdAt: dayjs().utc().subtract(2, 'year').format(),
       ...filters,
     };
 
@@ -88,9 +88,9 @@ const AuditLogs = () => {
         if (res.status === true) {
           const mappedArray = res.data.map((data, index) => ({
             id: data.id,
-            entityName: data.entityName,
+            attributeName: data.attributeName,
             orgId: data.orgId,
-            userName: data.userName,
+            username: data.username,
             fieldName: data.fieldName,
             keyValue: data.keyValue,
             oldValue: data.oldValue,
@@ -118,26 +118,26 @@ const AuditLogs = () => {
 
   const [columns, setColumns] = useState([
     {
-      key: 'entityName',
+      key: 'attributeName',
       headerClassName: 'custom-header-data-grid',
-      name: 'Entity',
+      name: 'Attribute',
       /* flex: 1,*/
       width: 120,
       editable: false,
       filterable: true,
     },
 
-    {
-      key: 'fieldName',
-      headerClassName: 'custom-header-data-grid',
-      name: 'Field Name',
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-    },
+    //{
+    //  key: 'fieldName',
+    //  headerClassName: 'custom-header-data-grid',
+    //  name: 'Field Name',
+    //  flex: 1,
+    //  minWidth: 150,
+    //  editable: false,
+    //  sortable: false,
+    //  filterable: true,
+    //  disableColumnMenu: false,
+    //},
     {
       key: 'oldValue',
       headerClassName: 'custom-header-data-grid',
@@ -159,7 +159,7 @@ const AuditLogs = () => {
       // align: 'center',
     },
     {
-      key: 'userName',
+      key: 'username',
       headerClassName: 'custom-header-data-grid',
       name: 'Updated By',
       /*flex: 1,*/
@@ -213,7 +213,7 @@ const AuditLogs = () => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-           Audit Logs → Advance Search
+           Audit Logs → Advance Search (atribute name, Previous Value, New value, Update Date)
           </div>
           <CIcon
             className="stock-toggle-icon"
@@ -228,16 +228,16 @@ const AuditLogs = () => {
                 <div className="col-md-6">
                   <CustomInput
                     label="Keyword"
-                    value={filters.keyword}
+                    value={filters.KeyValue}
                     onChange={changeFilter}
                     icon={cilUser}
                     type="text"
-                    id="keyword"
-                    name="keyword"
-                    placeholder="entity name, key name, old value"
+                    id="KeyValue"
+                    name="KeyValue"
+                    placeholder="Attribute name, Previous value, New value"
                     className="form-control item"
                     isRequired={false}
-                    title=" Using By entity name,key name, old value"
+                    title=" Using By Attribute name,Previous value, New value"
                     // message="Enter Buisness Name"
                   />
                 </div>

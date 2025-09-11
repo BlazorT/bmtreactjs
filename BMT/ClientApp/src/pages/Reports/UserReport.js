@@ -310,7 +310,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             <div className="bg_Div mb-2 d-flex flex-column">
               <div className="dashboard-stock-header dashboard-drop">
                 <div className="pointer" onClick={() => toggleStock()}>
-                User Report → Advance Search
+                User Report → Advance Search (Name, Contact, Status, Date To, Date From)
                 </div>
                 <CIcon
                   className="stock-toggle-icon"

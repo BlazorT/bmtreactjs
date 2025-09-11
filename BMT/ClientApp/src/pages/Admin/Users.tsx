@@ -108,7 +108,7 @@ const Users: React.FC = () => {
     <React.Fragment>
       <AppContainer>
         <DataGridHeader
-          title="Users -> Advance Search"
+          title="Users -> Advance Search (Name, Contact, Email, Status, Date From, Date To)"
           onClick={toggleStock}
           otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
           filterDisable={true}
