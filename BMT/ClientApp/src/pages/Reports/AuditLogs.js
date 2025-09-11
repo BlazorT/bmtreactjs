@@ -81,12 +81,8 @@ const AuditLogs = () => {
       ...filters,
     };
 
-    await GetLog(
-      '/Log/auditlogdetails',
-      {
-        method: 'POST',
-        body: JSON.stringify(fetchBody),
-      },
+    await GetLog('/Log/auditlogdetails',
+      {method: 'POST',body: JSON.stringify(fetchBody),},
       (res) => {
         console.log(res, 'res');
         if (res.status === true) {
@@ -217,7 +213,7 @@ const AuditLogs = () => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-            Advance Search
+           Audit Logs → Advance Search
           </div>
           <CIcon
             className="stock-toggle-icon"

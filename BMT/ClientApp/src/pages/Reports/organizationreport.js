@@ -51,9 +51,8 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
   const initialFilter = {
     orgId: user.orgId,
     name: '',
-    keyword: '',
     status: 0,
-    createdAt: dayjs().utc().startOf('month').format(),
+    createdAt: dayjs().subtract(1, 'year').utc().startOf('year').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
@@ -61,7 +60,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     const filterBody = {
       name: filters.name,
       status: filters.status === '' ? 0 : filters.status,
-      createdAt: dayjs(filters.createdAt).utc().format('YYYY-MM-DD'),
+      createdAt: dayjs(filters.createdAt).utc().format().split('T')[0],
       lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD'),
     };
 
@@ -96,9 +95,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       status: 0,
       genderId: 0,
       rowVer: 0,
-      createdAt: dayjs(filters?.createdAt ?? dayjs())
-        .utc()
-        .format('YYYY-MM-DD'),
+      createdAt: dayjs().utc().subtract(1, 'year').format(),
       lastUpdatedAt: dayjs(filters?.lastUpdatedAt ?? dayjs())
         .utc()
         .format('YYYY-MM-DD'),
@@ -321,7 +318,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-            Advance Search
+           Organization Report → Advance Search
           </div>
           <CIcon
             className="stock-toggle-icon"

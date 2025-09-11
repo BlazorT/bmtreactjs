@@ -35,28 +35,16 @@ const AppHeader = (phoneNumber) => {
     fetchData: userLogout,
   } = useFetch();
 
-  // ✅ ResizeObserver inside useEffect
-  useEffect(() => {
-    const divElem = document.querySelector('body > div');
-    if (!divElem) return;
+  //// ✅ ResizeObserver inside useEffect
+  //const divElem = document.querySelector('body > div');
+  ///*  *********** Handel Resize observer ************ */
+  //const resizeObserver = new ResizeObserver((entries) => {
+  //  for (let entry of entries) {
+  //    if (entry.target.handleResize) entry.target.handleResize(entry);
+  //  }
+  //});
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        if (entry.target.handleResize) {
-          requestAnimationFrame(() => {
-            entry.target.handleResize(entry);
-          });
-        }
-      }
-    });
-
-    resizeObserver.observe(divElem);
-
-    // ✅ Cleanup on unmount
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
+  //resizeObserver.observe(divElem);
 
   const Logout = () => {
     dispatch(

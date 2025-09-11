@@ -79,14 +79,19 @@ const BlazorNetworkInputs = (prop) => {
     fetchData: createNetworkSetting,
   } = useFetch();
   const handleNetworkSetting = (e, label) => {
-    const { name, value, type, checked } = e.target;
-
+    // Case: time picker or custom value
     if (label === 'startTime' || label === 'finishTime') {
       SetNetworkState((prev) => ({
         ...prev,
-        [label]: e,
+        [label]: e, // e is the actual value, not event
       }));
-    } else if (name === 'posttypejson') {
+      return;
+    }
+
+    // Case: normal DOM event
+    const { name, value, type, checked } = e.target;
+
+    if (name === 'posttypejson') {
       const postTypeId = parseInt(value);
       SetNetworkState((prev) => {
         const selected = Array.isArray(prev.posttypejson) ? prev.posttypejson : [];

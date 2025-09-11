@@ -38,13 +38,12 @@ const Logs = () => {
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId,
+    dspid: user.orgId,
     keyword: '',
     businessEntityId: '',
     menuId: '',
     status: '0',
     LogTime: dayjs().utc().startOf('year').format(),
-    LogTimeTo: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
@@ -52,7 +51,7 @@ const Logs = () => {
       keyword: filters.keyword,
       menuId: filters.menuId === '' ? 0 : filters.menuId,
       logTime: dayjs(filters.logTime).utc().format().split('T')[0],
-      logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0],
+     // logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0],
     };
 
     getLogList(filterBody);
@@ -190,9 +189,10 @@ const Logs = () => {
     <div>
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
-          <div className="pointer" onClick={() => toggleStock()}>
-            Advance Search
+          <div className="pointer" onClick={toggleStock}>
+            Log → Advance Search
           </div>
+
           <CIcon
             className="stock-toggle-icon"
             onClick={() => toggleStock()}

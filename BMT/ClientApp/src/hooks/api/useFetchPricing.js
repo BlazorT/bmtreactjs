@@ -1,15 +1,17 @@
 import useApi, { ApiPostDataType } from '../useApi';
 import { useShowToast } from '../useShowToast';
+import { useSelector } from 'react-redux';
 
 
 export const useFetchPricing = () => {
   const showToast = useShowToast();
-
-  const { data, error, loading, postData } = useApi('/Admin/custombundlingdetails','GET');
+  const user = useSelector((state) => state.user);
+ // const { data, error, loading, postData } = useApi('/Admin/custombundlingdetails','GET');
+  const { data, error, loading, postData } = useApi('/Admin/custombundlingdetails');
 
   const fetchPricing = async () => {
     const bodyData = {
-      orgId: '',
+      orgId: String(user.orgId === 1 ? 0 : user.orgId),
       name: '',
       email: '',
       filters: '', // ✅ required field
@@ -17,6 +19,7 @@ export const useFetchPricing = () => {
       dateto: new Date().toISOString(),
       status: '',
     };
+    console.log(JSON.stringify(bodyData));
     const res = await postData(bodyData);
     console.log(JSON.stringify(res));
     if (res?.status === true) {
