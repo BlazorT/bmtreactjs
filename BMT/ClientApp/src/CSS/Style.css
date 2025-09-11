@@ -19,6 +19,7 @@
 .summary-container {
   border-bottom: 1px solid #05223f;
 }
+/* Fix ResizeObserver loop limit exceeded */
 
 .sidebar-nav {
   --cui-sidebar-nav-link-color: #ffffff; /* your custom color */

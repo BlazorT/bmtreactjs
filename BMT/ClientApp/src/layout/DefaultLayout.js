@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
 import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
@@ -6,15 +6,23 @@ import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 const DefaultLayout = () => {
   const confirMdl = useSelector((state) => state.confirMdl);
 
-  const divElem = document.querySelector('body > div');
-  /*  *********** Handel Resize observer ************ */
-  const resizeObserver = new ResizeObserver((entries) => {
-    for (let entry of entries) {
-      if (entry.target.handleResize) entry.target.handleResize(entry);
-    }
-  });
+  //useEffect(() => {
+  //  const divElem = document.querySelector('body > div');
+  //  if (!divElem) return;
 
-  resizeObserver.observe(divElem);
+  //  const resizeObserver = new ResizeObserver((entries) => {
+  //    for (let entry of entries) {
+  //      // If you want to do something when body > div resizes:
+  //      console.log('Resized:', entry.contentRect);
+  //    }
+  //  });
+
+  //  resizeObserver.observe(divElem);
+
+  //  return () => {
+  //    resizeObserver.disconnect();
+  //  };
+  //}, []);
   return (
     <div>
       <ConfirmationModal

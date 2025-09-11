@@ -136,15 +136,15 @@ const StockRecord = ({ reportField, fetchInspection, value },prop) => {
 
   const navigate = useNavigate();
 
-  const divElem = document.querySelector('body > div');
+  //const divElem = document.querySelector('body > div');
 
-  const resizeObserver = new ResizeObserver((entries) => {
-    for (let entry of entries) {
-      if (entry.target.handleResize) entry.target.handleResize(entry);
-    }
-  });
+  //const resizeObserver = new ResizeObserver((entries) => {
+  //  for (let entry of entries) {
+  //    if (entry.target.handleResize) entry.target.handleResize(entry);
+  //  }
+  //});
 
-  resizeObserver.observe(divElem);
+  //resizeObserver.observe(divElem);
 
   // window.ResizeObserver = resizeObserver;
 
