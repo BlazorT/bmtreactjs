@@ -318,7 +318,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-           Organization Report → Advance Search
+           Organization Report → Advance Search (Name, Contact, Email, Status, Date To, Date From)
           </div>
           <CIcon
             className="stock-toggle-icon"

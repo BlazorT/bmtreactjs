@@ -223,7 +223,7 @@ const recipientslisting = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Recipients Grid -> Advance Search"
+              title="Recipients Grid -> Advance Search (Organization, Network, Recipients, Date(>=))"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

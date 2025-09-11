@@ -65,11 +65,11 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
   {
     component: CustomInput,
     label: '#Tag',
-    value: filters.HashTags,
-    onChange: (e) => changeFilter(e, 'HashTags'), // ✅ pass fieldName
+    value: filters.Name,
+    onChange: (e) => changeFilter(e, 'Name'), // ✅ pass fieldName
     icon: cilFlagAlt,
-    id: 'HashTags',
-    name: 'HashTags',
+    id: 'Name',
+    name: 'Name',
     placeholder: '# hash tags',
     className: 'form-control item',
     title: '# tags',
