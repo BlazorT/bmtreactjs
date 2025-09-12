@@ -44,8 +44,8 @@ const BlazorNetworkInputs = (prop) => {
     id: 0,
     orgId: user.orgId,
     name: '',
-     attachment: '',
-     excelAttachment: '',
+    attachment: '',
+    excelAttachment: '',
     buisnessId: '',
     url: '',
     apiuri: '',
@@ -88,13 +88,50 @@ const BlazorNetworkInputs = (prop) => {
     }
 
     const { name, value, type, checked, files } = e.target;
-    console.log({ name, value, type, checked, files })
+    console.log({ name, value, type, checked, files });
+
     if (type === 'file') {
+      const file = files?.[0] || null;
+
+      if (name === "excelAttachment" && file) {
+        // Allowed Excel MIME types
+        const allowedTypes = [
+          "application/vnd.ms-excel", // .xls
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+        ];
+        const isExcel = allowedTypes.includes(file.type) ||
+          file.name.endsWith(".xls") ||
+          file.name.endsWith(".xlsx");
+
+        if (!isExcel) {
+          // ❌ Show toast and reject the file
+          dispatch(
+            updateToast({
+              isToastOpen: true,
+              toastMessage: "Only Excel files (.xls, .xlsx) are allowed!",
+              toastVariant: "error",
+            })
+          );
+
+          // Reset file input so wrong file doesn’t stay selected
+          e.target.value = null;
+          return;
+        }
+      }
+
       setNetworkState((prev) => ({
         ...prev,
-        [name]: files?.[0]||null, // store actual File object
+        [name]: file
+          ? {
+            file,                        // raw File object
+            name: file.name,             // display name
+            src: URL.createObjectURL(file), // preview
+          }
+          : null,
       }));
-    } else if (name === 'posttypejson') {
+    }
+
+    else if (name === "posttypejson") {
       const postTypeId = parseInt(value);
       setNetworkState((prev) => {
         const selected = Array.isArray(prev.posttypejson) ? prev.posttypejson : [];
@@ -103,23 +140,27 @@ const BlazorNetworkInputs = (prop) => {
           : selected.filter((id) => id !== postTypeId);
         return { ...prev, posttypejson: updated };
       });
-    } else if (type === 'checkbox') {
+    }
+    else if (type === "checkbox") {
       setNetworkState((prev) => ({
         ...prev,
         [name]: checked,
       }));
-    } else if (type === 'number' && value !== '') {
+    }
+    else if (type === "number" && value !== "") {
       setNetworkState((prev) => ({
         ...prev,
         [name]: parseInt(value),
       }));
-    } else {
+    }
+    else {
       setNetworkState((prev) => ({
         ...prev,
         [name]: value,
       }));
     }
   };
+
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
@@ -159,60 +200,201 @@ const BlazorNetworkInputs = (prop) => {
     );
   };
 
+  //const onSave = () => {
+  //  //alert('onsave');
+  //  const form = document.querySelector('.service-integration-form');
+  //  formValidator();
+  //  if (form.checkValidity()) {
+  //    setNetworkList((prev) => [...prev, networkState]);
+  //    dispatch(
+  //      updateToast({
+  //        isToastOpen: true,
+  //        toastMessage: 'Note : To complete network changes, you need to submit finally',
+  //        toastVariant: 'success',
+  //      }),
+  //    );
+  //  }
+
+  //  console.log('networkState', networkState);
+  //  // console.log('test');
+  //  // setIsLoading(createNetworkSettingLoading.current);
+  //};
+
   const onSave = () => {
-    //alert('onsave');
-    const form = document.querySelector('.service-integration-form');
     formValidator();
+    const form = document.querySelector('.service-integration-form');
+
     if (form.checkValidity()) {
-      setNetworkList((prev) => [...prev, networkState]);
+      const updatedState = { ...networkState };
+
+      // Append networkId to file names (if files exist)
+      if (updatedState.attachment?.name) {
+        const ext = updatedState.attachment.name.split('.').pop();
+        const base = updatedState.attachment.name.replace(/\.[^/.]+$/, '');
+        updatedState.attachment = {
+          ...updatedState.attachment,
+          name: `${base}_${updatedState.networkId}.${ext}`,
+        };
+      }
+
+      if (updatedState.excelAttachment?.name) {
+        const ext = updatedState.excelAttachment.name.split('.').pop();
+        const base = updatedState.excelAttachment.name.replace(/\.[^/.]+$/, '');
+        updatedState.excelAttachment = {
+          ...updatedState.excelAttachment,
+          name: `${base}_${updatedState.networkId}.${ext}`,
+        };
+      }
+
+      // Save with updated names
+      setNetworkList((prev) => [...prev, updatedState]);
+
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: 'Note : To complete network changes, you need to submit finally',
+          toastMessage:
+            'Note : To complete network changes, you need to submit finally',
           toastVariant: 'success',
         }),
       );
-    }
 
-    console.log('networkState', networkState);
-    // console.log('test');
-    // setIsLoading(createNetworkSettingLoading.current);
+      console.log('Updated Network State', updatedState);
+    }
   };
   const onSubmit = async () => {
-    // alert(JSON.stringify(networkList));
-    if (networkList.length > 0) {
-      //alert(JSON.stringify(networkList));
-      await createNetworkSetting('/Organization/addupdatenetworksettings', {
-        method: 'POST',
-        body: JSON.stringify(networkList),
-      });
-    }
-    //console.log(createNetworkSettingRes);
-    if (createNetworkSettingRes.current?.status === true) {
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: createNetworkSettingRes.current.message,
-          toastVariant: 'success',
-        }),
-      );
-      //navigate('/ServiceIntegrated');
-      //getServices();
-      //setSetNetworkState();
-      // toggle();
-    } else {
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: createNetworkSettingRes.current?.message,
-          toastVariant: 'error',
-          //  `${JSON.stringify(createUserRes.current.message)}`,
-        }),
-      );
+    try {
+      console.group('onSubmit - start');
+      console.log('networkList (to be POSTed):', networkList);
 
-      setIsLoading(createNetworkSettingLoading.current);
+      if (networkList.length > 0) {
+        console.log('Posting networkList JSON to /Organization/addupdatenetworksettings ...');
+        await createNetworkSetting('/Organization/addupdatenetworksettings', {
+          method: 'POST',
+          body: JSON.stringify(networkList),
+        });
+        console.log('createNetworkSetting called (awaited).');
+      } else {
+        console.log('No networks to submit (networkList.length === 0).');
+      }
+
+      console.log('createNetworkSettingRes.current:', createNetworkSettingRes.current);
+
+      if (createNetworkSettingRes.current?.status === true) {
+        const GlobalPreferenceId = createNetworkSettingRes.current.data;
+        const userId = user.userId;
+        console.log('Backend returned GlobalPreferenceId:', GlobalPreferenceId, ' userId:', userId);
+
+        // Upload attachments for each network
+        for (const net of networkList) {
+          const formData = new FormData();
+          formData.append('CompaignId', GlobalPreferenceId);
+          formData.append('CreatedBy', userId);
+
+          const filesToUpload = [];
+          if (net.attachment?.file) filesToUpload.push(net.attachment.file);
+          if (net.excelAttachment?.file) filesToUpload.push(net.excelAttachment.file);
+
+          console.log(
+            `networkId=${net.networkId}, filesToUpload count=${filesToUpload.length}`,
+            filesToUpload
+          );
+
+          if (filesToUpload.length === 0) {
+            console.log("⚠️ No files to upload for this network, skipping fetch.");
+            continue;
+          }
+
+          filesToUpload.forEach((f) => {
+            const extension = f.name.includes(".") ? f.name.substring(f.name.lastIndexOf(".")) : "";
+            const baseName = f.name.replace(extension, "");
+            const renamed = `${baseName}_${net.networkId}${extension}`;
+            console.log(`📎 Renaming ${f.name} → ${renamed}`);
+
+            formData.append("files", f, renamed);
+          });
+
+          try {
+            console.log("⬆️ Uploading files for", net.name);
+            const res = await fetch("/BlazorApi/uploadattachments", {
+              method: "POST",
+              body: formData,
+            });
+            const result = await res.json();
+            console.log("✅ Upload result:", result);
+          } catch (err) {
+            console.error("❌ File upload failed for network:", net.networkId, err);
+          }
+        }
+
+        dispatch(
+          updateToast({
+            isToastOpen: true,
+            toastMessage: createNetworkSettingRes.current.message,
+            toastVariant: 'success',
+          }),
+        );
+        console.log('All uploads attempted. Success toast dispatched.');
+      } else {
+        console.warn('createNetworkSetting returned status !== true:', createNetworkSettingRes.current);
+        dispatch(
+          updateToast({
+            isToastOpen: true,
+            toastMessage: createNetworkSettingRes.current?.message,
+            toastVariant: 'error',
+          }),
+        );
+        setIsLoading(createNetworkSettingLoading.current);
+      }
+    } catch (outerErr) {
+      console.error('onSubmit unexpected error:', outerErr);
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: 'An unexpected error occurred while submitting networks.',
+          toastVariant: 'error',
+        }),
+      );
+    } finally {
+      console.groupEnd();
+      console.log('onSubmit - end');
     }
   };
+
+  //const onSubmit = async () => {
+  //   console.log(JSON.stringify(networkList));
+  //  if (networkList.length > 0) {
+  //    //alert(JSON.stringify(networkList));
+  //    await createNetworkSetting('/Organization/addupdatenetworksettings', {
+  //      method: 'POST',
+  //      body: JSON.stringify(networkList),
+  //    });
+  //  }
+  //  //console.log(createNetworkSettingRes);
+  //  if (createNetworkSettingRes.current?.status === true) {
+  //    dispatch(
+  //      updateToast({
+  //        isToastOpen: true,
+  //        toastMessage: createNetworkSettingRes.current.message,
+  //        toastVariant: 'success',
+  //      }),
+  //    );
+  //    //navigate('/ServiceIntegrated');
+  //    //getServices();
+  //    //setSetNetworkState();
+  //    // toggle();
+  //  } else {
+  //    dispatch(
+  //      updateToast({
+  //        isToastOpen: true,
+  //        toastMessage: createNetworkSettingRes.current?.message,
+  //        toastVariant: 'error',
+  //        //  `${JSON.stringify(createUserRes.current.message)}`,
+  //      }),
+  //    );
+
+  //    setIsLoading(createNetworkSettingLoading.current);
+  //  }
+  //};
 
   //};
 
@@ -240,19 +422,19 @@ const BlazorNetworkInputs = (prop) => {
         </CCol>
         <CCol className="" md={6}>
           <CustomInput
-            label="Email Excel Bulk Upload"
+            label=" File Upload"
             icon={cilUser}
            // value={networkState.attachment}
             onChange={handleNetworkSetting}
             type="file"
             id="attachment"
             name="attachment"
-            placeholder="Email Excel Bulk Upload"
+            placeholder="File Upload"
             className="form-control item"
             isRequired={false}
             src={networkState?.attachment?.src}
             helperText={networkState?.attachment?.name}
-            title="Email Excel Bulk Upload"
+            title="File Upload"
           />
         </CCol>
       </CRow>
@@ -275,19 +457,19 @@ const BlazorNetworkInputs = (prop) => {
           <CRow>
             <CCol className="" md={12}>
               <CustomInput
-                label="Email Excel Bulk Upload"
-               // value={networkState.attachment.name}
+                label=" Excel Upload"
+               // value={networkState.excelAttachment.name}
                 icon={cilUser}
                 onChange={handleNetworkSetting}
                 type="file"
-                id="attachment"
-                name="attachment"
-                placeholder="Email Excel Bulk Upload"
+                id="excelAttachment"
+                name="excelAttachment"
+                placeholder="Email Excel  Upload"
                 className="form-control item"
-                src={networkState?.attachment?.src}
-                helperText={networkState?.attachment?.name}
+                src={networkState?.excelAttachment?.src}
+                helperText={networkState?.excelAttachment?.name}
                 isRequired={false}
-                title="Email Excel Bulk Upload"
+                title=" Excel Bulk Upload"
               />
 
 
@@ -507,7 +689,7 @@ const BlazorNetworkInputs = (prop) => {
               <CustomDatePicker
                 icon={cilCalendar}
                 label="Date From "
-                id="EmaildtpFrom"
+                id="startTime"
                 name="startTime"
                 value={networkState.startTime}
                 title="Date From "
