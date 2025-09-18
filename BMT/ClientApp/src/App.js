@@ -27,6 +27,14 @@ const Page401 = React.lazy(() => import('./pages/Error/Page401'));
 
 const App = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  // index.tsx or index.js
+  const ignoreResizeObserverError = (e: ErrorEvent) => {
+    if (e.message === "ResizeObserver loop completed with undelivered notifications") {
+      e.stopImmediatePropagation();
+    }
+  };
+
+  window.addEventListener("error", ignoreResizeObserverError);
 
   return (
     <React.Fragment>

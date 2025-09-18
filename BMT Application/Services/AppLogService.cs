@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Blazor.Web.Application.Interfaces;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.core;
 using com.blazor.bmt.core.interfaces;
 using com.blazor.bmt.core.repositories;
+using com.blazor.bmt.viewmodels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,6 +41,13 @@ namespace com.blazor.bmt.application.services
         {
             var entity = _mapper.Map<Applog>(AppLogModel);
             var list = await _appLogRepository.GetAppLogDetailsAsync(entity);
+            var mapped = _mapper.Map<IEnumerable<ApplogModel>>(list);
+            return mapped;
+        }
+        public async Task<IEnumerable<ApplogModel>> GetAppLogAllFiltersDetails(AppLogViewModel AppLogModel)
+        {
+           // var entity = _mapper.Map<Applog>(AppLogModel);
+            var list = await _appLogRepository.GetAppLogAllFiltersAsync(AppLogModel);
             var mapped = _mapper.Map<IEnumerable<ApplogModel>>(list);
             return mapped;
         }

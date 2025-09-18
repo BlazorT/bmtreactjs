@@ -1,6 +1,8 @@
 ﻿using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositories;
+using com.blazor.bmt.viewmodels;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +44,12 @@ namespace com.blazor.bmt.infrastructure.repositories
                 .ToListAsync();
            
         }
-  
+        public async Task<IEnumerable<Applog>> GetAppLogAllFiltersAsync(AppLogViewModel model)
+        {
+            return await _dbContext.Applogs.AsNoTracking()
+                .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrgId == (Convert.ToInt32(model.OrgId) == 0 ? x.OrgId : model.OrgId)  && x.LogDesc.Contains("" + x.LogDesc) && x.LogTime >= model.LogTimeFrom && x.LogTime <= model.LogTimeTo)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Applog>> GetAppLogByUserAsync(int userId)
         {
             return await _dbContext.Applogs.AsNoTracking()

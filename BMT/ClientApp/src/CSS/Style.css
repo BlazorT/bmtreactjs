@@ -19,6 +19,7 @@
 .summary-container {
   border-bottom: 1px solid #05223f;
 }
+/* Fix ResizeObserver loop limit exceeded */
 
 .sidebar-nav {
   --cui-sidebar-nav-link-color: #ffffff; /* your custom color */
@@ -4003,4 +4004,8 @@ fieldset.legend {
 }
 .css-15jzsix-control {
   background-color: #e9ecef00!important;
+}
+.input-file-image-preview{
+    width:50px!important;
+    height:50px!important;
 }

@@ -38,20 +38,21 @@ const Logs = () => {
 
   const dispatch = useDispatch();
   const initialFilter = {
-    dspid: user.dspId,
-    keyword: '',
+    OrgId: user.orgId,
+    LogDesc: '',
     businessEntityId: '',
     menuId: '',
     status: '0',
-    LogTime: dayjs().utc().startOf('year').format(),
-    LogTimeTo: dayjs().utc().startOf('day').format(),
+    logTimeFrom: dayjs().subtract(1, 'year').utc().startOf('year').format(),
+    logTimeTo: dayjs().utc().format().split('T')[0],
+
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
     const filterBody = {
-      keyword: filters.keyword,
+      LogDesc: filters.LogDesc,
       menuId: filters.menuId === '' ? 0 : filters.menuId,
-      logTime: dayjs(filters.logTime).utc().format().split('T')[0],
+      logTimeFrom: dayjs(filters.logTimeFrom).subtract(1, 'year').utc().format().split('T')[0],
       logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0],
     };
 
@@ -74,10 +75,13 @@ const Logs = () => {
     const fetchBody = {
       id: 0,
       userId: 0,
-      dspid: user.dspId,
-      logDesc: '',
+      OrgId: user.orgId,
+      LogDesc: '',
       menuId: 0,
       actionType: 0,
+      logTimeFrom: dayjs().subtract(1, 'year').utc().startOf('year').format(),
+      logTimeTo: dayjs().utc().format().split('T')[0],
+
       ...filters,
     };
     console.log(JSON.stringify(fetchBody));
@@ -100,7 +104,7 @@ const Logs = () => {
             menuId: data.menuId,
             machineIp: data.machineIp,
             actionType: data.actionType,
-            logTime: formatDateTime(data.logTime),
+            logTimeFrom: formatDateTime(data.logTime),
           }));
 
           setRows(mappedArray);
@@ -120,15 +124,15 @@ const Logs = () => {
   const [rows, setRows] = useState([]);
 
   const columns = [
-    {
-      key: 'entityName',
-      headerClassName: 'custom-header-data-grid',
-      name: 'Entity',
-      /* flex: 1,*/
-      width: 100,
-      editable: false,
-      filterable: true,
-    },
+    //{
+    //  key: 'entityName',
+    //  headerClassName: 'custom-header-data-grid',
+    //  name: 'Entity',
+    //  /* flex: 1,*/
+    //  width: 100,
+    //  editable: false,
+    //  filterable: true,
+    //},
     {
       key: 'logDesc',
       headerClassName: 'custom-header-data-grid',
@@ -150,7 +154,7 @@ const Logs = () => {
       filterable: true,
     },
     {
-      key: 'logTime',
+      key: 'logTimeFrom',
       name: 'Log Time',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
@@ -168,19 +172,20 @@ const Logs = () => {
     setShowStock((prev) => !prev);
   };
   const changeFilter = (e, date) => {
-    if (date === 'logTimeTo' || date === 'logTime') {
+    if (date === 'logTimeTo' || date === 'logTimeFrom') {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [date]: dayjs(e).utc().format(),
       }));
     } else {
-      const { name, value, type, checked } = e.target;
+      const { name, value } = e.target;
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [name]: value,
+        [name]: value, // ✅ now matches LogDesc
       }));
     }
   };
+
 
   console.log(LogLoading.current);
   // if (isLoading) {
@@ -190,9 +195,10 @@ const Logs = () => {
     <div>
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
-          <div className="pointer" onClick={() => toggleStock()}>
-            Advance Search
+          <div className="pointer" onClick={toggleStock}>
+            Log → Advance Search ( Log name, Date From, Date To)
           </div>
+
           <CIcon
             className="stock-toggle-icon"
             onClick={() => toggleStock()}
@@ -203,48 +209,48 @@ const Logs = () => {
           <div className="show-stock">
             <div className="mb-0 dashboard-table padLeftRight">
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <CustomInput
                     label="Keyword"
-                    value={filters.keyword}
+                    value={filters.LogDesc}
                     onChange={changeFilter}
                     icon={cilUser}
                     type="text"
-                    id="keyword"
-                    name="keyword"
-                    placeholder="entity name, log name"
+                    id="LogDesc"
+                    name="LogDesc"
+                    placeholder=" log name"
                     className="form-control item"
                     isRequired={false}
                     title=" using by entity name, log name "
-                    // message="Enter Buisness Name"
                   />
+
                 </div>
 
-                <div className="col-md-6">
-                  <CustomSelectInput
-                    label="Business Entity"
-                    icon={cilFlagAlt}
-                    id="menuId"
-                    disableOption="Select Business Entity"
-                    // options={globalutil.businessentities()}
-                    className="form-control item form-select"
-                    value={filters.menuId}
-                    name="menuId"
-                    title=" Business Entity"
-                    onChange={(e) => changeFilter(e)}
-                  />
-                </div>
+                {/*<div className="col-md-6">*/}
+                {/*  <CustomSelectInput*/}
+                {/*    label="Business Entity"*/}
+                {/*    icon={cilFlagAlt}*/}
+                {/*    id="menuId"*/}
+                {/*    disableOption="Select Business Entity"*/}
+                {/*    // options={globalutil.businessentities()}*/}
+                {/*    className="form-control item form-select"*/}
+                {/*    value={filters.menuId}*/}
+                {/*    name="menuId"*/}
+                {/*    title=" Business Entity"*/}
+                {/*    onChange={(e) => changeFilter(e)}*/}
+                {/*  />*/}
+                {/*</div>*/}
               </div>
               <div className="row">
                 <div className="col-md-6 mt-2">
                   <CustomDatePicker
                     icon={cilCalendar}
                     label="Date From "
-                    id="logTime"
-                    name="logTime"
-                    value={filters.logTime}
+                    id="logTimeFrom"
+                    name="logTimeFrom"
+                    value={filters.logTimeFrom}
                     title=" Log login time date from"
-                    onChange={(e) => changeFilter(e, 'logTime')}
+                    onChange={(e) => changeFilter(e, 'logTimeFrom')}
                   />
                 </div>
                 <div className="col-md-6 mt-2">

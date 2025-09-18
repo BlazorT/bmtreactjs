@@ -59,6 +59,8 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'videoAttachment',
     name: 'videoAttachment',
+    src: campaignRegData?.videoAttachment?.src,
+    helperText: campaignRegData?.videoAttachment?.name,
     className: 'form-control item',
     isRequired: false,
     accept: 'video/*',
@@ -72,6 +74,8 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'imageAttachment',
     name: 'imageAttachment',
+    src:  campaignRegData?.imageAttachment?.src, 
+    helperText: campaignRegData?.imageAttachment?.name ,
     className: 'form-control item',
     isRequired: false,
     accept: 'image/*',
@@ -85,10 +89,13 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'pdfAttachment',
     name: 'pdfAttachment',
+    src: campaignRegData?.pdfAttachment?.src,
+    helperText: campaignRegData?.pdfAttachment?.name,
     className: 'form-control item',
     isRequired: false,
     accept: 'application/pdf',
   },
+
 
   {
     component: CustomDatePicker,

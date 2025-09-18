@@ -9,10 +9,9 @@ namespace com.blazor.bmt
         public BlazorProfile()
         {
             CreateMap<UserModel, UserViewModel>();        
-            CreateMap<StateModel, StatesViewModel>();
-           
-            CreateMap<CountryModel, CountryViewModel>();
-          CreateMap<BundlingpackagedetailModel, Bundlingpackagedetail>();
+            CreateMap<StateModel, StatesViewModel>();           
+            CreateMap<CountryModel, CountryViewModel>();            
+            CreateMap<BundlingpackagedetailModel, Bundlingpackagedetail>();
             CreateMap<PackageModel, Package>();
             CreateMap<CityModel, CityViewModel>();
             CreateMap<CompaignModel, CompaignsViewModel>();
@@ -49,6 +48,8 @@ namespace com.blazor.bmt
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<Applog, ApplogModel>().ReverseMap();
             CreateMap<Auditlog, AuditLogModel>().ReverseMap();
+            CreateMap<AuditLogModel, AuditLogViewModel>().ReverseMap();
+            CreateMap<ApplogModel, AppLogViewModel>().ReverseMap();
             CreateMap<Globalnetworkdetail, GlobalnetworkdetailModel>().ReverseMap();
             CreateMap<Organization, OrganizationModel>().ReverseMap(); //;           
             CreateMap<Onlineuser, OnlineuserModel>().ReverseMap();

@@ -53,7 +53,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     recipient: '',
     deliveryStatus: '6',
     status: 0,
-    createdAt: dayjs().utc().startOf('month').format(),
+    createdAt: dayjs().subtract(1, 'year').utc().startOf('year').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
@@ -389,7 +389,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           <div className="bg_Div mb-2 d-flex flex-column">
             <div className="dashboard-stock-header dashboard-drop">
               <div className="pointer" onClick={() => toggleStock()}>
-                Advance Search
+               Campaign Notification → Advance Search (Recipients, Delivery Status, Date To, Date From)
               </div>
               <CIcon
                 className="stock-toggle-icon"
