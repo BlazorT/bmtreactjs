@@ -7,7 +7,7 @@
 
     public int UserId { get; set; }
 
-    public int? Dspid { get; set; }
+    public int? OrgId { get; set; }
 
     public int? MenuId { get; set; }
 
@@ -18,4 +18,7 @@
     public DateTime? LogTime { get; set; }
 
     public string? Synccode { get; set; }
+    public DateTime? LogTimeTo { get; set; }
+    public DateTime? LogTimeFrom { get; set; }
+
 }

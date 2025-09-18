@@ -41,7 +41,7 @@ const campaignslisting = () => {
     orgId: user.orgId,
     rowVer: 0,
     networkId: 0,
-    name: '',
+    Name: '',
     HashTags: '',
     status: 0,
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
@@ -93,30 +93,29 @@ const campaignslisting = () => {
     setRows(groupedRows);
     console.log(groupedRows, 'Grouped ONLY by name');
   };
-
   const changeFilter = (event, fieldName, label) => {
     let colName = fieldName;
 
-    if (fieldName === 'name') {
+    if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        name: event,
-        orgId: event?.id || 0, // ✅ update orgId here too
-      }));
-    } else if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt') {
-      // Custom value or date picker
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [colName]: event,
+        [colName]: dayjs(event).utc().format(),
       }));
     } else if (event?.target) {
-      // DOM input event
+      // 👉 Normal text input
       const { name, value } = event.target;
       colName = name === 'networks' ? 'networkId' : name;
 
       setFilters((prevData) => ({
         ...prevData,
         [colName]: value,
+      }));
+    } else if (fieldName === 'Name') {
+      // 👉 Handle autocomplete / object case
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        //name: typeof event === 'string' ? event : event?.label || '',
+        orgId: event?.id || 0,
       }));
     } else {
       console.warn('Unsupported event type:', event);
@@ -226,7 +225,7 @@ const campaignslisting = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Campaigns Listing -> Advance Search"
+              title="Campaigns Listing -> Advance Search (Organization, Network, Date To, #Tag)"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

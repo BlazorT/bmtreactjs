@@ -1231,9 +1231,13 @@ WHERE c.OrgId = @p_OrgId
                                 mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
                                 mdl.UnitPrice = Convert.ToDouble(sts["unitprice"]); 
                                 mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
+                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
+                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
+                                mdl.FreeAllowed = Convert.ToInt32(sts["FreeAllowed"]);
                                 mdl.Status = Convert.ToInt32(sts["Status"]);                                
                                 mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);
-                               
+                                mdl.StartTime = Convert.ToDateTime(sts["StartTime"]);
+
                                 ls.Add(mdl);
                             }
                             sts.Close();

@@ -19,6 +19,7 @@ export const useFetchCampaigns = () => {
       orgId: filters ? filters.orgId : 0, 
       rowVer: filters ? filters.rowVer : 0,
       networkId: filters ? filters.networkId:0,
+      Name: filters ? filters.Name :'',
       HashTags: filters ? filters.HashTags :'',
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,  
       createdAt: filters

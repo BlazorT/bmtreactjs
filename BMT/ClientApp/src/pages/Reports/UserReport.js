@@ -58,16 +58,18 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   const dispatch = useDispatch();
   const initialFilter = {
     orgId: user.orgId,
-    keyword: '',
+    UserName: '',
     status: 0,
-    createdAt: dayjs().utc().startOf('month').format(),
+    createdAt: dayjs().subtract(1, 'year').utc().startOf('year').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
     const filterBody = {
-      keyword: filters.keyword,
+      UserName: filters.UserName === '' ? '' : filters.UserName,
       status: filters.status === '' ? 0 : filters.status,
+      //createdAt: dayjs(filters.createdAt).subtract(1, 'year').utc().format().split('T')[0],
+
       createdAt: dayjs(filters.createdAt).utc().format().split('T')[0],
       lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format().split('T')[0],
     };
@@ -96,7 +98,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       lastName: '',
       password: '',
       primaryContact: '',
-      userName: '',
+      UserName: '',
       performance: '',
       violations: 0,
       status: 0,
@@ -109,7 +111,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       //logTime: moment().utc().startOf('year').format(),
     };
 
-    //console.log(JSON.stringify(fetchBody));
+    console.log(JSON.stringify(fetchBody));
     await GetLog(
       '/BlazorApi/users',
       {
@@ -308,7 +310,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             <div className="bg_Div mb-2 d-flex flex-column">
               <div className="dashboard-stock-header dashboard-drop">
                 <div className="pointer" onClick={() => toggleStock()}>
-                  Advance Search
+                User Report → Advance Search (Name, Contact, Status, Date To, Date From)
                 </div>
                 <CIcon
                   className="stock-toggle-icon"
@@ -323,13 +325,13 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
                       <div className="col-md-6">
                         <CustomInput
                           label="Keyword"
-                          value={filters.keyword}
+                          value={filters.UserName}
                           onChange={changeFilter}
                           icon={cilUser}
                           type="text"
-                          id="keyword"
-                          name="keyword"
-                          placeholder="user code,user name,contact"
+                          id="UserName"
+                          name="UserName"
+                          placeholder="Name,Contact"
                           className="form-control item"
                           isRequired={false}
                           title="using by user code,user name,contact "
