@@ -20,9 +20,6 @@ import _ from 'lodash';
 const campaignslisting = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user);
-  useEffect(() => {
-    getCampaignsList();
-  }, []);
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Campaigns Listing',
@@ -47,10 +44,15 @@ const campaignslisting = () => {
     createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-  console.log("filters", filters);
+  console.log('filters', filters);
 
   const [rows, setRows] = useState([]);
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
+
+  useEffect(() => {
+    getCampaignsList(filters);
+  }, []);
+
   const getCampaignsList = async (filters) => {
     const campaignsList = await getCompaignsList(filters);
     setCampaignData(campaignsList);

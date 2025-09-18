@@ -107,10 +107,6 @@ const campaignContacts = () => {
     Email: cibGmail, // Assuming Email is your component for Email icon
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   const [recipientInput, setRecipientInput] = useState({}); // current input text
   const [recipientsList, setRecipientsList] = useState({}); // network-wise array
 
@@ -164,7 +160,7 @@ const campaignContacts = () => {
 
       showToast(
         `❌ "${value}" is not a valid ${label}. Correct format: ${correctFormatExample}`,
-        'error'
+        'error',
       );
       return false;
     }
@@ -209,7 +205,7 @@ const campaignContacts = () => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text');
 
-    console.log("📋 Raw pasteData:", pasteData);
+    console.log('📋 Raw pasteData:', pasteData);
 
     if (!pasteData) return;
 
@@ -218,12 +214,12 @@ const campaignContacts = () => {
       .map((v) => v.trim())
       .filter((v) => v.length > 0);
 
-    console.log("🔎 Parsed values:", values);
+    console.log('🔎 Parsed values:', values);
 
     values.forEach((val) => {
       console.log(`➡️ Trying to add recipient: "${val}" for network: ${network}`);
       const added = addRecipient(val, network);
-      console.log("✅ Added?", added);
+      console.log('✅ Added?', added);
     });
 
     setRecipientInput((prev) => ({
@@ -231,10 +227,8 @@ const campaignContacts = () => {
       [network]: '',
     }));
 
-    console.log("✅ Input cleared for network:", network);
+    console.log('✅ Input cleared for network:', network);
   };
-
-
 
   const handleDeleteRecipient = (network, index) => {
     const updated = [...recipientsList[network]];
@@ -334,14 +328,15 @@ const campaignContacts = () => {
 
   const handleSubmitCampaignContacts = async () => {
     const payload = buildCampaignPayload();
+    console.log({ payload });
     console.log(JSON.stringify(payload));
 
     if (payload.length === 0) {
       showToast('No contacts to send.', 'error');
       return;
     }
-
     try {
+      setIsLoading(true);
       const response = await fetch('/Compaigns/postCompaignContactData', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,211 +419,220 @@ const campaignContacts = () => {
     } catch (error) {
       console.error('Submit error:', error);
       showToast('Error while submitting contacts.', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleCloseModal = () => {
     setShowTableModal(false);
     navigate('/recipientsGrid'); // navigate when modal hides
   };
+
   return (
     <Form name="dsp-reg-form">
       <CContainer fluid className="mt-4">
-        <DownloadContactsTemplate />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <DownloadContactsTemplate />
 
-        <React.Fragment>
-          <AppContainer>
-            <DataGridHeader title="Networks" filterDisable />
-          </AppContainer>
-          {globalutil.networks().map((network, index) => {
-            const networkKey = network.name;
-            const networkId = network.id;
-            const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
-            const isChecked = selectedNetworks.includes(networkKey);
-            const recipientCount = (recipientsList[networkKey] || []).length;
-            return (
-              <CCol md={12} key={index}>
-                <ul className="inlinedisplay">
-                  <li className="divCircle">
-                    <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                  </li>
+            <React.Fragment>
+              <AppContainer>
+                <DataGridHeader title="Networks" filterDisable />
+              </AppContainer>
+              {globalutil.networks().map((network, index) => {
+                const networkKey = network.name;
+                const networkId = network.id;
+                const IconName =
+                  networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
+                const isChecked = selectedNetworks.includes(networkKey);
+                const recipientCount = (recipientsList[networkKey] || []).length;
+                return (
+                  <CCol md={12} key={index}>
+                    <ul className="inlinedisplay">
+                      <li className="divCircle">
+                        <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
+                      </li>
 
-                  <li className="network-checkbox-animate networksListWidth">
-                    <CFormCheck
-                      id={IconName}
-                      name={IconName}
-                      label={networkKey}
-                      checked={!isChecked}
-                      onChange={() => handleCheckboxChange(networkKey)}
-                    />
-                  </li>
-
-                  <li style={{ position: 'relative' }}>
-                    <CTooltip
-                      content={
-                        networkKey.toLowerCase() === 'email'
-                          ? 'Valid email format like: user@example.com'
-                          : networkKey.toLowerCase() === 'tiktock'
-                            ? 'Enter your TikTok username or URL'
-                            : networkKey.toLowerCase() === 'linkedin'
-                              ? 'Enter your LinkedIn profile URL'
-                              : networkKey.toLowerCase() === 'facebook'
-                                ? 'Enter your Facebook profile or page URL'
-                                : networkKey.toLowerCase() === 'instagram'
-                                  ? 'Enter your Instagram username or URL'
-                                  : networkKey.toLowerCase() === 'twitter'
-                                    ? 'Enter your Twitter handle or profile URL'
-                                    : 'Valid contact format like: 923331234567 (min 7 digits)'
-                      }
-                      placement="top"
-                    >
-                      <div>
-                        <CustomInput
-                          disabled={isChecked}
-                          type="text"
-                          value={recipientInput[networkKey] || ''}
-                          placeholder="Enter recipient and press Enter, Comma, or Paste"
-                          onChange={(e) => handleInputChange(networkKey, e.target.value)}
-                          onKeyDown={(e) => handleKeyDown(e, networkKey)}
-                          onPaste={(e) => handlePaste(e, networkKey)} // ✅ Add paste handler
+                      <li className="network-checkbox-animate networksListWidth">
+                        <CFormCheck
+                          id={IconName}
+                          name={IconName}
+                          label={networkKey}
+                          checked={!isChecked}
+                          onChange={() => handleCheckboxChange(networkKey)}
                         />
+                      </li>
 
-                      </div>
-                    </CTooltip>
-
-                    {recipientCount > 0 && (
-                      <CPopover
-                        content={
-                          <div className="popover-recipient-list">
-                            {(recipientsList[networkKey] || []).map((rec, idx) => (
-                              <div key={idx} className="recipient-tag">
-                                {rec}
-                                <span
-                                  className="delete-icon"
-                                  onClick={() => handleDeleteRecipient(networkKey, idx)}
-                                >
-                                  &times;
-                                </span>
-                              </div>
-                            ))}
+                      <li style={{ position: 'relative' }}>
+                        <CTooltip
+                          content={
+                            networkKey.toLowerCase() === 'email'
+                              ? 'Valid email format like: user@example.com'
+                              : networkKey.toLowerCase() === 'tiktock'
+                                ? 'Enter your TikTok username or URL'
+                                : networkKey.toLowerCase() === 'linkedin'
+                                  ? 'Enter your LinkedIn profile URL'
+                                  : networkKey.toLowerCase() === 'facebook'
+                                    ? 'Enter your Facebook profile or page URL'
+                                    : networkKey.toLowerCase() === 'instagram'
+                                      ? 'Enter your Instagram username or URL'
+                                      : networkKey.toLowerCase() === 'twitter'
+                                        ? 'Enter your Twitter handle or profile URL'
+                                        : 'Valid contact format like: 923331234567 (min 7 digits)'
+                          }
+                          placement="top"
+                        >
+                          <div>
+                            <CustomInput
+                              disabled={isChecked}
+                              type="text"
+                              value={recipientInput[networkKey] || ''}
+                              placeholder="Enter recipient and press Enter, Comma, or Paste"
+                              onChange={(e) => handleInputChange(networkKey, e.target.value)}
+                              onKeyDown={(e) => handleKeyDown(e, networkKey)}
+                              onPaste={(e) => handlePaste(e, networkKey)} // ✅ Add paste handler
+                            />
                           </div>
-                        }
-                        placement="left" // you can change to 'bottom', 'top', etc.
-                        trigger="click"
-                        className="recipient-popover"
-                      >
-                        <span className="recipient-count">{recipientCount}</span>
-                      </CPopover>
-                    )}
-                  </li>
+                        </CTooltip>
 
-                  <li>
-                    <CustomInput
-                      type="file"
-                      accept=".csv, .xls, .xlsx"
-                      disabled={isChecked}
-                      onChange={(e) => handleCampaignAddContacts(e, networkId)}
-                    />
-                  </li>
-                  {importedData[networkKey]?.length > 0 && (
-                    <ImportContactsListData
-                      networkKey={networkKey}
-                      importedData={importedData}
-                      setImportedData={setImportedData}
-                    />
-                  )}
+                        {recipientCount > 0 && (
+                          <CPopover
+                            content={
+                              <div className="popover-recipient-list">
+                                {(recipientsList[networkKey] || []).map((rec, idx) => (
+                                  <div key={idx} className="recipient-tag">
+                                    {rec}
+                                    <span
+                                      className="delete-icon"
+                                      onClick={() => handleDeleteRecipient(networkKey, idx)}
+                                    >
+                                      &times;
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            }
+                            placement="left" // you can change to 'bottom', 'top', etc.
+                            trigger="click"
+                            className="recipient-popover"
+                          >
+                            <span className="recipient-count">{recipientCount}</span>
+                          </CPopover>
+                        )}
+                      </li>
 
-                  <li>
-                    <button
-                      onClick={() => handleImportClick(networkKey, networkId)}
-                      disabled={!selectedFiles[networkId]}
-                    >
-                      Import
-                    </button>
-                  </li>
-                </ul>
-              </CCol>
-            );
-          })}
+                      <li>
+                        <CustomInput
+                          type="file"
+                          accept=".csv, .xls, .xlsx"
+                          disabled={isChecked}
+                          onChange={(e) => handleCampaignAddContacts(e, networkId)}
+                        />
+                      </li>
+                      {importedData[networkKey]?.length > 0 && (
+                        <ImportContactsListData
+                          networkKey={networkKey}
+                          importedData={importedData}
+                          setImportedData={setImportedData}
+                        />
+                      )}
 
-          <React.Fragment>
-            <div className="CenterAlign pt-2">
-              <button
-                onClick={() => setConfirmationModalOpen(true)}
-                type="button"
-                className="btn btn_Default m-2 sales-btn-style"
-              >
-                Cancel
-              </button>
+                      <li>
+                        <button
+                          onClick={() => handleImportClick(networkKey, networkId)}
+                          disabled={!selectedFiles[networkId]}
+                        >
+                          Import
+                        </button>
+                      </li>
+                    </ul>
+                  </CCol>
+                );
+              })}
 
-              <button
-                onClick={handleSubmitCampaignContacts}
-                type="button"
-                className="btn btn_Default sales-btn-style m-2"
-              >
-                Save
-              </button>
-            </div>
-            {/* Modal */}
-            {showTableModal && (
-              <div className="modal show fade d-block" tabIndex="-1" role="dialog">
-                <div className="modal-dialog modal-lg" role="document">
-                  <div className="modal-content">
-                    <div className="modal-header">
-                      <h5 className="modal-title">Contact Status</h5>
-                      {/*<button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>*/}
-                    </div>
-                    <div className="modal-body">
-                      <div className="table-responsive">
-                        <table className="table table-bordered">
-                          <thead className="table-light">
-                            <tr>
-                              <th className="text-center">#</th>
-                              <th className="text-center">Network</th>
-                              <th className="text-center">Contact</th>
-                              <th className="text-center">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {groupedContacts.flatMap((group, groupIndex) =>
-                              group.contacts.map((contactObj, i) => (
-                                <tr
-                                  key={`${groupIndex}-${i}`}
-                                  style={{
-                                    backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
-                                    color: contactObj.found ? '#155724' : '#721c24',
-                                  }}
-                                >
-                                  <td className="text-center">{i + 1}</td>
-                                  <td className="text-center">{group.networkName}</td>
-                                  <td className="text-center">{contactObj.contact}</td>
-                                  <td className="text-center">
-                                    {contactObj.found
-                                      ? 'Inserted Recipients'
-                                      : 'Duplicate Recipients'}
-                                  </td>
+              <React.Fragment>
+                <div className="CenterAlign pt-2">
+                  <button
+                    onClick={() => setConfirmationModalOpen(true)}
+                    type="button"
+                    className="btn btn_Default m-2 sales-btn-style"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={handleSubmitCampaignContacts}
+                    type="button"
+                    className="btn btn_Default sales-btn-style m-2"
+                  >
+                    Save
+                  </button>
+                </div>
+                {/* Modal */}
+                {showTableModal && (
+                  <div className="modal show fade d-block" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog modal-lg" role="document">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h5 className="modal-title">Contact Status</h5>
+                          {/*<button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>*/}
+                        </div>
+                        <div className="modal-body">
+                          <div className="table-responsive">
+                            <table className="table table-bordered">
+                              <thead className="table-light">
+                                <tr>
+                                  <th className="text-center">#</th>
+                                  <th className="text-center">Network</th>
+                                  <th className="text-center">Contact</th>
+                                  <th className="text-center">Status</th>
                                 </tr>
-                              )),
-                            )}
-                          </tbody>
-                        </table>
+                              </thead>
+                              <tbody>
+                                {groupedContacts.flatMap((group, groupIndex) =>
+                                  group.contacts.map((contactObj, i) => (
+                                    <tr
+                                      key={`${groupIndex}-${i}`}
+                                      style={{
+                                        backgroundColor: contactObj.found ? '#d4edda' : '#f8d7da',
+                                        color: contactObj.found ? '#155724' : '#721c24',
+                                      }}
+                                    >
+                                      <td className="text-center">{i + 1}</td>
+                                      <td className="text-center">{group.networkName}</td>
+                                      <td className="text-center">{contactObj.contact}</td>
+                                      <td className="text-center">
+                                        {contactObj.found
+                                          ? 'Inserted Recipients'
+                                          : 'Duplicate Recipients'}
+                                      </td>
+                                    </tr>
+                                  )),
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div className="modal-footer">
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            // onClick={() => setShowTableModal(false)}
+                            onClick={handleCloseModal} // ⬅️ Updated
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="modal-footer">
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        // onClick={() => setShowTableModal(false)}
-                        onClick={handleCloseModal} // ⬅️ Updated
-                      >
-                        Close
-                      </button>
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
-          </React.Fragment>
-        </React.Fragment>
+                )}
+              </React.Fragment>
+            </React.Fragment>
+          </>
+        )}
       </CContainer>
 
       <ConfirmationModal

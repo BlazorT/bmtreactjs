@@ -59,7 +59,7 @@ const organizationsusers = () => {
   const Role = user.roleId;
   // alert(Role);
   const getOrgsList = async (filter) => {
-    const orgUsersList = await getUserbyRole(6, filter);
+    const orgUsersList = await getUserbyRole(0, filter);
 
     console.log({ orgUsersList });
     setOrgData(orgUsersList);
