@@ -45,32 +45,6 @@ const OrganizationAdd = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   //alert(JSON.stringify(pageRoles));
-  useEffect(() => {
-    if (pageRoles == null || pageRoles.canAdd === 0) {
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: `You dont have a rights of setting up of organization, please contact admin for access`,
-          toastVariant: 'warning',
-        }),
-      );
-    }
-    formValidator();
-    const state = location.state;
-    if (state !== null) {
-      const daData = state.user[0];
-      const initialData = {
-        ...daData,
-        isWhatsAppAsso: daData.secondaryContact ? true : false,
-        mailAddress: daData.address,
-        dspId: daData.dspid,
-      };
-
-      //  console.log({ initialData });
-      setDaApplyFormData(initialData);
-    }
-    setIsLoading(false);
-  }, []);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -91,6 +65,36 @@ const OrganizationAdd = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
+
+  useEffect(() => {
+    if (pageRoles == null || pageRoles.canAdd === 0) {
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: `You dont have a rights of setting up of organization, please contact admin for access`,
+          toastVariant: 'warning',
+        }),
+      );
+
+      navigate(-1);
+      return;
+    }
+    formValidator();
+    const state = location.state;
+    if (state !== null) {
+      const daData = state.user[0];
+      const initialData = {
+        ...daData,
+        isWhatsAppAsso: daData.secondaryContact ? true : false,
+        mailAddress: daData.address,
+        dspId: daData.dspid,
+      };
+
+      //  console.log({ initialData });
+      setDaApplyFormData(initialData);
+    }
+    setIsLoading(false);
+  }, []);
 
   const { createUpdateOrg } = useUpdateOrg();
 

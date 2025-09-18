@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import { CPopover } from "@coreui/react";
-//import "bootstrap/dist/css/bootstrap.min.css"; // CoreUI requires Bootstrap CSS
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { CPopover } from '@coreui/react';
 
-const ImportedContactDropdown = (prop) => {
-  const { networkKey, importedData, setImportedData } = prop;
+const ImportedContactDropdown = ({ networkKey, importedData, setImportedData }) => {
   const [visible, setVisible] = useState(false);
   const items = importedData[networkKey] || [];
 
   const handleDeleteAll = () => {
-    setImportedData(prev => ({
+    setImportedData((prev) => ({
       ...prev,
-      [networkKey]: []
+      [networkKey]: [],
     }));
     setVisible(false);
   };
@@ -20,41 +19,50 @@ const ImportedContactDropdown = (prop) => {
   const popoverContent = (
     <div
       style={{
-        backgroundColor: "#002b5b",
-        color: "white",
-        padding: "10px",
-        borderRadius: "8px",
-        width: "240px",
-        maxHeight: "240px",
+        backgroundColor: '#002b5b',
+        color: 'white',
+        padding: '10px',
+        borderRadius: '8px',
+        width: '280px',
+        maxHeight: '560px',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {/* List Items */}
-      <ul style={{ padding: 0, margin: 0 }}>
-        {items.map((item, idx) => (
-          <li
-            key={idx}
+      {/* Scrollable List */}
+      <div
+        style={{
+          maxHeight: '500px', // same height as before
+          overflowY: 'auto',
+          border: '1px solid #1c4b82',
+          borderRadius: '4px',
+        }}
+      >
+        {items.map((item, index) => (
+          <div
+            key={index}
             style={{
-              listStyle: "none",
-              padding: "6px 0",
-              borderBottom: "1px solid #1c4b82"
+              padding: '6px 10px',
+              borderBottom: '1px solid #1c4b82',
+              backgroundColor: index % 2 === 0 ? '#003366' : '#002b5b',
             }}
           >
-            <strong>{idx + 1}:</strong> {item}
-          </li>
+            <strong>{index + 1}:</strong> {item}
+          </div>
         ))}
-      </ul>
+      </div>
 
       {/* Delete All Button */}
-      <div style={{ textAlign: "center", marginTop: "12px" }}>
+      <div style={{ textAlign: 'center', marginTop: '12px' }}>
         <button
           onClick={handleDeleteAll}
           style={{
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            cursor: "pointer"
+            backgroundColor: '#dc3545',
+            color: 'white',
+            border: 'none',
+            padding: '6px 12px',
+            borderRadius: '4px',
+            cursor: 'pointer',
           }}
         >
           Delete All
@@ -72,19 +80,19 @@ const ImportedContactDropdown = (prop) => {
       placement="bottom"
       trigger="click"
     >
-    <li>
-      <button
-        onClick={() => setVisible(!visible)}
-        style={{
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          padding: "6px 10px",
-          cursor: "pointer"
-        }}
-      >
-        Imported ({items.length})
+      <li>
+        <button
+          onClick={() => setVisible(!visible)}
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            padding: '6px 10px',
+            cursor: 'pointer',
+          }}
+        >
+          Imported ({items.length})
         </button>
       </li>
     </CPopover>

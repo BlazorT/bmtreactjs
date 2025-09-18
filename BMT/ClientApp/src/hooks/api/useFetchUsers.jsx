@@ -15,8 +15,8 @@ export const useFetchUsers = () => {
     const userBody = {
       // userCode: user.userId.toString(),
       id: 0,
-      roleId: role,     
-      orgId: user.orgId === 1 ? 0 : user.orgId,
+      roleId: role,
+      orgId: user.roleId === 1 ? 0 : user.orgId,
       email: '',
       userCode: '',
       //userName: '',
@@ -24,12 +24,12 @@ export const useFetchUsers = () => {
       lastName: '',
       firstName: '',
       password: '',
-     // contact: "",
+      // contact: "",
       rowVer: 0,
       genderId: 0,
-      securityToken: '',     
-       registrationTime: dayjs().utc().format(),
-     cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
+      securityToken: '',
+      registrationTime: dayjs().utc().format(),
+      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       userName: filters ? filters.UserName : '',
       createdAt: filters
@@ -38,11 +38,11 @@ export const useFetchUsers = () => {
 
       lastUpdatedAt: filters
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
     };
-   // console.log(userBody,'body')
+    console.log({ userBody });
     const res = await postData(userBody);
-     console.log( res,'new user' );
+    console.log(res, 'new user');
     if (res.status) {
       return res.data;
     } else {

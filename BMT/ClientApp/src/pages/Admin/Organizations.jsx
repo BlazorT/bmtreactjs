@@ -191,7 +191,7 @@ const OrgList = () => {
                 filterDisable: true,
               }}
               rows={rows}
-                columns={orgsListCols}
+              columns={orgsListCols}
               rowHeight={50}
               pagination={true}
               loading={isLoading}
@@ -199,13 +199,13 @@ const OrgList = () => {
                 columnVisibilityModel: {
                   country: isMobile ? false : true,
                   state: isMobile ? false : true,
-                  lastUpdatedAt: false,
+                  createdAt: false,
                 },
               }}
               canPrint={pageRoles.canPrint}
               canExport={pageRoles.canExport}
               rowSelection={false}
-              sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+              sorting={[{ columnKey: 'createdAt', direction: 'DESC' }]}
             />
           </AppContainer>
         </React.Fragment>
