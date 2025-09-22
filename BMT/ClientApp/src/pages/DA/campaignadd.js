@@ -61,8 +61,8 @@ const campaignadd = () => {
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
   const [schedulerows, setScheduleRows] = useState([]);
- 
-  const [selectedNetworks, setSelectedNetworks] = useState( []);
+
+  const [selectedNetworks, setSelectedNetworks] = useState([]);
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
 
   const tabs = [
@@ -126,12 +126,11 @@ const campaignadd = () => {
     getNetworksList();
   }, []);
   const fetchBody = {
-    orgId: String(user.orgId),   // ✅ convert to string
+    orgId: String(user.orgId), // ✅ convert to string
     userId: String(user.userId), // ✅ convert to string
     roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
     dateto: new Date().toISOString(), // same as C#: DateTime.Now
   };
-  console.log(JSON.stringify(fetchBody));
   const getNetworksList = async () => {
     await GetNetworks(
       '/Admin/custombundlingdetails',
@@ -141,10 +140,11 @@ const campaignadd = () => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res, 'networkssList');
+        console.log({ fetchBody });
+        console.log({ res });
         if (res.status === true) {
           // ✅ save filtered networks in state
-          const filtered = (res.data || []).filter(n => n.purchasedQouta > 0);
+          const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
           setNetworksList(filtered);
           setSelectedNetworks(filtered.map((n) => n.name));
         } else {
@@ -212,7 +212,7 @@ const campaignadd = () => {
         showToast(`${label} cannot be in the past.`, 'error');
         return;
       }
-
+      // console.log({ selectedDate, fieldKey, save: selectedDate.format('YYYY-MM-DD') });
       setCampaignRegData((prev) => ({
         ...prev,
         [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
@@ -256,7 +256,6 @@ const campaignadd = () => {
       }));
       return;
     }
-
 
     // ❌ UNHANDLED CASE
     console.warn('Unhandled input in handleCampaignAddForm:', { e, label });
@@ -418,7 +417,7 @@ const campaignadd = () => {
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
-
+  console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
@@ -653,67 +652,78 @@ const campaignadd = () => {
               <DataGridHeader title="Networks" filterDisable={false} />
             </AppContainer>
             <CRow>
-              {globalutil.networks().filter((network) =>networksList.some((apiNet) => apiNet.name === network.name))
+              {globalutil
+                .networks()
+                .filter((network) =>
+                  networksList.some(
+                    (apiNet) =>
+                      apiNet?.name?.toLowerCase()?.trim() === network.name?.toLowerCase()?.trim(),
+                  ),
+                )
                 .map((network, index) => {
                   const displayLabel = network.name;
                   const IconName =
                     network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                let postTypeIds = [];
-                try {
-                  postTypeIds = JSON.parse(network.desc || '[]');
-                } catch (err) {
-                  console.warn('Invalid desc format in network:', network.desc);
-                }
-                const postTypeList = globalutil.postTypes().filter((pt) => postTypeIds.includes(pt.id));
-                const isSelected = selectedNetworks.includes(network.name);
-                // Auto-select/deselect single post type
-                if (postTypeList.length === 1) {
-                  const singleTypeId = postTypeList[0].id;
-
-                  if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
-                    handlePostTypeToggle(network.name, singleTypeId); // select
-                  } else if (
-                    !isSelected &&
-                    selectedPostTypes[network.name]?.includes(singleTypeId)
-                  ) {
-                    handlePostTypeToggle(network.name, singleTypeId); // unselect
+                  let postTypeIds = [];
+                  try {
+                    postTypeIds = JSON.parse(network.desc || '[]');
+                  } catch (err) {
+                    console.warn('Invalid desc format in network:', network.desc);
                   }
-                }
+                  const postTypeList = globalutil
+                    .postTypes()
+                    .filter((pt) => postTypeIds.includes(pt.id));
+                  const isSelected = selectedNetworks.includes(network.name);
+                  // Auto-select/deselect single post type
+                  if (postTypeList.length === 1) {
+                    const singleTypeId = postTypeList[0].id;
 
-                return (
-                  <CCol md={4} key={index} className="mb-4">
-                    <ul className="inlinedisplay">
-                      <li className="divCircle">
-                        <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                      </li>
-                      <li className="network-checkbox-animate">
-                        <CFormCheck
-                          id={IconName}
-                          name={IconName}
-                          label={displayLabel}
-                          checked={isSelected}
-                          onChange={() => handleCheckboxChange(network.name)}
-                        />
-                      </li>
-                    </ul>
+                    if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
+                      handlePostTypeToggle(network.name, singleTypeId); // select
+                    } else if (
+                      !isSelected &&
+                      selectedPostTypes[network.name]?.includes(singleTypeId)
+                    ) {
+                      handlePostTypeToggle(network.name, singleTypeId); // unselect
+                    }
+                  }
 
-                    <div className="mt-2 displayFlex">
-                      {postTypeList.length > 1 &&
-                        postTypeList.map((pt) => (
+                  return (
+                    <CCol md={4} key={index} className="mb-4">
+                      <ul className="inlinedisplay">
+                        <li className="divCircle">
+                          <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
+                        </li>
+                        <li className="network-checkbox-animate">
                           <CFormCheck
-                            key={`${IconName}-${pt.id}`}
-                            id={`${IconName}-${pt.id}`}
-                            name={`${IconName}-${pt.id}`}
-                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()}
-                            checked={selectedPostTypes[network.name]?.includes(pt.id) || false}
-                            onChange={() => handlePostTypeToggle(network.name, pt.id)}
-                            className="mb-1 form-checksub"
+                            id={IconName}
+                            name={IconName}
+                            label={displayLabel}
+                            checked={isSelected}
+                            onChange={() => handleCheckboxChange(network.name)}
                           />
-                        ))}
-                    </div>
-                  </CCol>
-                );
-              })}
+                        </li>
+                      </ul>
+
+                      <div className="mt-2 displayFlex">
+                        {postTypeList.length > 1 &&
+                          postTypeList.map((pt) => (
+                            <CFormCheck
+                              key={`${IconName}-${pt.id}`}
+                              id={`${IconName}-${pt.id}`}
+                              name={`${IconName}-${pt.id}`}
+                              label={
+                                pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()
+                              }
+                              checked={selectedPostTypes[network.name]?.includes(pt.id) || false}
+                              onChange={() => handlePostTypeToggle(network.name, pt.id)}
+                              className="mb-1 form-checksub"
+                            />
+                          ))}
+                      </div>
+                    </CCol>
+                  );
+                })}
             </CRow>
             <React.Fragment>
               <div className="CenterAlign pt-2">

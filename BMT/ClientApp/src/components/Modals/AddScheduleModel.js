@@ -131,12 +131,12 @@ const AddScheduleModel = (prop) => {
   //};
 
   const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
-    console.log("Networksss:", networks);
-    console.log("SelectedDaysss:", selectedDays);
-    console.log("Startss:", startDate?.toString());
-    console.log("Endss:", endDate?.toString());
-    console.log("StartTimes:", startTime?.toString());
-    console.log("FinishTimes:", finishTime?.toString());
+    console.log('Networksss:', networks);
+    console.log('SelectedDaysss:', selectedDays);
+    console.log('Startss:', startDate?.toString());
+    console.log('Endss:', endDate?.toString());
+    console.log('StartTimes:', startTime?.toString());
+    console.log('FinishTimes:', finishTime?.toString());
 
     const networkCount = networks?.length ?? 0;
     const dayCount = selectedDays?.length ?? 0;
@@ -205,7 +205,7 @@ const AddScheduleModel = (prop) => {
     getNetworksList();
   }, []);
   const fetchBody = {
-    orgId: String(user.orgId),   // ✅ convert to string
+    orgId: String(user.orgId), // ✅ convert to string
     userId: String(user.userId), // ✅ convert to string
     roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
     dateto: new Date().toISOString(), // same as C#: DateTime.Now
@@ -223,7 +223,7 @@ const AddScheduleModel = (prop) => {
         console.log(res, 'networkssList');
         if (res.status === true) {
           // ✅ save filtered networks in state
-          const filtered = (res.data || []).filter(n => n.purchasedQouta > 0);
+          const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
           setNetworksList(filtered);
         } else {
           dispatch(
@@ -307,7 +307,7 @@ const AddScheduleModel = (prop) => {
         showToast('Start time cannot be later than end time.', 'error');
         return;
       }
-
+      // console.log({ newTime });
       setCampaignRegData((prev) => ({
         ...prev,
         [label]: newTime,
@@ -379,7 +379,7 @@ const AddScheduleModel = (prop) => {
     );
   };
   useEffect(() => {
-    console.log("🔥 useEffect triggered");
+    console.log('🔥 useEffect triggered');
 
     calculateBudget(
       selectedNetworks,
@@ -387,17 +387,16 @@ const AddScheduleModel = (prop) => {
       campaignRegData.startDate,
       campaignRegData.endDate,
       campaignRegData.startTime,
-      campaignRegData.finishTime
+      campaignRegData.finishTime,
     );
   }, [
-    selectedNetworks.join("|"),                       // ✅ detect network changes
-    (campaignRegData.selectedDays || []).join("|"),   // ✅ detect days changes
-    campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0,   // ✅ convert to timestamp
+    selectedNetworks.join('|'), // ✅ detect network changes
+    (campaignRegData.selectedDays || []).join('|'), // ✅ detect days changes
+    campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0, // ✅ convert to timestamp
     campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
     campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0,
     campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0,
   ]);
-
 
   const onSave = () => {
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
@@ -434,9 +433,9 @@ const AddScheduleModel = (prop) => {
     // Log the campaign start/end date and time
     const startDate = campaignRegData.startDate; // dayjs object
     const endDate = campaignRegData.endDate; // dayjs object
-    const startTime = dayjs(campaignRegData.startTime);
-    const endTime = dayjs(campaignRegData.finishTime);
-
+    const startTime = dayjs(campaignRegData.startTime).local();
+    const endTime = dayjs(campaignRegData.finishTime).local();
+    console.log({ startTime, endTime });
     // Combine start date + time
     const combinedStart = dayjs(startDate)
       .hour(startTime.hour())
@@ -451,8 +450,8 @@ const AddScheduleModel = (prop) => {
       .second(0)
       .millisecond(0);
 
-    console.log('✔️ Correct StartTime:', combinedStart.format());
-    console.log('✔️ Correct FinishTime:', combinedEnd.format());
+    console.log('✔️ Correct StartTime:', combinedStart.format('YYYY-MM-DDTHH:mm:ss'));
+    console.log('✔️ Correct FinishTime:', combinedEnd.format('YYYY-MM-DDTHH:mm:ss'));
 
     const schedulePayload = [];
     for (let ntwk of selectedNetworkObjects) {
@@ -460,8 +459,8 @@ const AddScheduleModel = (prop) => {
         id: 0,
         NetworkId: ntwk.NetworkId,
         CompaignDetailId: 0,
-        StartTime: combinedStart.toISOString(),
-        FinishTime: combinedEnd.toISOString(),
+        StartTime: combinedStart.format('YYYY-MM-DDTHH:mm:ss'),
+        FinishTime: combinedEnd.format('YYYY-MM-DDTHH:mm:ss'),
         Intervalval: parseFloat(campaignRegData.intervalval),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
