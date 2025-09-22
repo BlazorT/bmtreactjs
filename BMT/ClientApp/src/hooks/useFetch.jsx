@@ -2,7 +2,6 @@
 import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { initialOptions } from 'src/constants/initialOptionsApi';
-import { updateToast } from 'src/redux/toast/toastSlice';
 
 function useFetch() {
   const dispatch = useDispatch();
@@ -32,9 +31,6 @@ function useFetch() {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
-    const fullUrl = `${process.env.REACT_APP_API_BASE_URL || ''}${url}`;
-    console.log(fullUrl);
-
     try {
       const options = {
         ...initialOptions,
@@ -46,7 +42,6 @@ function useFetch() {
       const res = await fetch(url, options);
       //  console.log({ res });
       const json = await res.json();
-      console.log(json);
       response.current = json;
 
       if (callback && typeof callback === 'function') {

@@ -101,7 +101,6 @@ const addorganization = () => {
   const { checkUserAvailability } = useUserAvailability();
 
   const handleDAFormData = (event, label = '') => {
-    
     if (label === 'avatar') {
       console.log({ event });
       setDaApplyFormData((prevdaApplyFormData) => ({
@@ -169,7 +168,6 @@ const addorganization = () => {
     getCityList();
   }, []);
   const getCityList = async () => {
-
     await GetCity(
       '/Common/cities',
       {
@@ -190,7 +188,6 @@ const addorganization = () => {
           //  actionType: data.actionType,
           //  logTime: formatDateTime(data.logTime),
           //}));
-
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -385,7 +382,7 @@ const addorganization = () => {
     emailMessage,
     pageRoles.canAdd,
     onBlur,
-    GetCityRes?.current?.data ? GetCityRes.current.data : []
+    GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
   const daAppllySsnInputs = getDaAppllySsnInputs(daIdentificationData, handleDAIdentification);
   const daAppllyIDInputs = getDaAppllyIDInputs(daIdentificationData, handleDAIdentification);
@@ -406,7 +403,6 @@ const addorganization = () => {
           <React.Fragment>
             <Form name="apply-da-form">
               <Inputs inputFields={daApplyInputs} yesFn={goToAnotherPage} submitFn={submitDA}>
-
                 <CFormCheck
                   className="mt-3 d-flex flex-row justify-content-center"
                   title="Are you agree for this?"
