@@ -124,14 +124,14 @@ const campaignContacts = () => {
   const validateRecipient = (network, value) => {
     if (!value) return false;
 
-    const onlyDigits = /^\d+$/;
+    const phonePattern = /^\+?\d+$/; // ✅ allows digits with optional leading +
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const idPattern = /^[a-zA-Z0-9_]+$/;
 
     const lowerNetwork = network.toLowerCase();
 
     if (lowerNetwork === 'sms' || lowerNetwork === 'whatsapp') {
-      return onlyDigits.test(value) && value.length >= 7 && value.length <= 15;
+      return phonePattern.test(value) && value.length >= 7 && value.length <= 15;
     }
 
     if (lowerNetwork === 'email') {

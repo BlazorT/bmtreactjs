@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from 'react';
-//import { CFormSwitch } from '@coreui/react';
-import { CCol, CContainer, CRow } from '@coreui/react';
-import useFetch from 'src/hooks/useFetch';
-import { formValidator } from 'src/helpers/formValidator';
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import { useSelector } from 'react-redux';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import CustomDatePicker from 'src/components/UI/DatePicker';
-import { CFormCheck } from '@coreui/react';
+import { cilCalendar, cilChevronBottom, cilFace, cilUser } from '@coreui/icons';
+import { CCol, CFormCheck, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import {
-  cilUser,
-  cilCloudDownload,
-  cilCalendar,
-  cilChevronBottom,
-  cilFlagAlt,
-} from '@coreui/icons';
-//import { useShowToast } from 'src/hooks/useShowToast';
-//import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
-//import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-//import CustomSearch from 'src/components/InputsComponent/CustomSearch';
-//import Loading from 'src/components/UI/Loading';
-//import DaNewAssignment from 'src/components/Component/DaNewAssignment';
-//import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
-import Button from 'src/components/InputsComponent/Button';
-//import LoadingBtn from 'src/components/UI/LoadingBtn';
-import AppContainer from 'src/components/UI/AppContainer';
+import { useSelector } from 'react-redux';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import CustomDatePicker from 'src/components/UI/DatePicker';
+import { formValidator } from 'src/helpers/formValidator';
+import useFetch from 'src/hooks/useFetch';
+import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AppContainer from 'src/components/UI/AppContainer';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
-import { useLocation, useNavigate } from 'react-router-dom';
+import RichTextEditor from '../UI/rich-text-editor';
+import Button from '../UI/Button';
 
 const BlazorNetworkInputs = (prop) => {
   dayjs.extend(utc);
   const { header, networkId, setNetworkList, networkList } = prop;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  // console.log({ networkList });
   const [networkState, setNetworkState] = useState({
     id: 0,
     orgId: user.orgId,
@@ -61,8 +46,9 @@ const BlazorNetworkInputs = (prop) => {
     networkId: networkId,
     rowVer: 0,
     status: 1,
-    createBy: user.Id,
-    lastUpdatedBy: user.Id,
+    Custom1: '',
+    createdBy: user.userId,
+    lastUpdatedBy: user.userId,
     startTime: dayjs().utc().format(),
     finishTime: dayjs().utc().format(),
     createdAt: dayjs().utc().startOf('month').format(),
@@ -70,7 +56,7 @@ const BlazorNetworkInputs = (prop) => {
   });
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const {
     response: createNetworkSettingRes,
@@ -78,6 +64,16 @@ const BlazorNetworkInputs = (prop) => {
     error: createNetworkSettingError,
     fetchData: createNetworkSetting,
   } = useFetch();
+  const loading = createNetworkSettingLoading?.current;
+  const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
+
+  useEffect(() => {
+    {
+      if (!foundSavedId) return;
+
+      setNetworkState(foundSavedId);
+    }
+  }, [foundSavedId]);
   const handleNetworkSetting = (e, label) => {
     if (label === 'startTime' || label === 'finishTime') {
       setNetworkState((prev) => ({
@@ -88,29 +84,30 @@ const BlazorNetworkInputs = (prop) => {
     }
 
     const { name, value, type, checked, files } = e.target;
-    console.log({ name, value, type, checked, files });
+    // console.log({ name, value, type, checked, files });
 
     if (type === 'file') {
       const file = files?.[0] || null;
 
-      if (name === "excelAttachment" && file) {
+      if (name === 'excelAttachment' && file) {
         // Allowed Excel MIME types
         const allowedTypes = [
-          "application/vnd.ms-excel", // .xls
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+          'application/vnd.ms-excel', // .xls
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
         ];
-        const isExcel = allowedTypes.includes(file.type) ||
-          file.name.endsWith(".xls") ||
-          file.name.endsWith(".xlsx");
+        const isExcel =
+          allowedTypes.includes(file.type) ||
+          file.name.endsWith('.xls') ||
+          file.name.endsWith('.xlsx');
 
         if (!isExcel) {
           // ❌ Show toast and reject the file
           dispatch(
             updateToast({
               isToastOpen: true,
-              toastMessage: "Only Excel files (.xls, .xlsx) are allowed!",
-              toastVariant: "error",
-            })
+              toastMessage: 'Only Excel files (.xls, .xlsx) are allowed!',
+              toastVariant: 'error',
+            }),
           );
 
           // Reset file input so wrong file doesn’t stay selected
@@ -123,15 +120,13 @@ const BlazorNetworkInputs = (prop) => {
         ...prev,
         [name]: file
           ? {
-            file,                        // raw File object
-            name: file.name,             // display name
-            src: URL.createObjectURL(file), // preview
-          }
+              file, // raw File object
+              name: file.name, // display name
+              src: URL.createObjectURL(file), // preview
+            }
           : null,
       }));
-    }
-
-    else if (name === "posttypejson") {
+    } else if (name === 'posttypejson') {
       const postTypeId = parseInt(value);
       setNetworkState((prev) => {
         const selected = Array.isArray(prev.posttypejson) ? prev.posttypejson : [];
@@ -140,20 +135,17 @@ const BlazorNetworkInputs = (prop) => {
           : selected.filter((id) => id !== postTypeId);
         return { ...prev, posttypejson: updated };
       });
-    }
-    else if (type === "checkbox") {
+    } else if (type === 'checkbox') {
       setNetworkState((prev) => ({
         ...prev,
         [name]: checked,
       }));
-    }
-    else if (type === "number" && value !== "") {
+    } else if (type === 'number' && value !== '') {
       setNetworkState((prev) => ({
         ...prev,
         [name]: parseInt(value),
       }));
-    }
-    else {
+    } else {
       setNetworkState((prev) => ({
         ...prev,
         [name]: value,
@@ -246,14 +238,25 @@ const BlazorNetworkInputs = (prop) => {
         };
       }
 
-      // Save with updated names
-      setNetworkList((prev) => [...prev, updatedState]);
+      // Save with update OR insert
+      setNetworkList((prev) => {
+        const index = prev.findIndex((n) => n.networkId === updatedState.networkId);
+
+        if (index !== -1) {
+          // Replace existing
+          const newList = [...prev];
+          newList[index] = updatedState;
+          return newList;
+        }
+
+        // Otherwise add new
+        return [...prev, updatedState];
+      });
 
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage:
-            'Note : To complete network changes, you need to submit finally',
+          toastMessage: 'Note : To complete network changes, you need to submit finally',
           toastVariant: 'success',
         }),
       );
@@ -261,13 +264,25 @@ const BlazorNetworkInputs = (prop) => {
       console.log('Updated Network State', updatedState);
     }
   };
+
   const onSubmit = async () => {
     try {
       console.group('onSubmit - start');
       console.log('networkList (to be POSTed):', networkList);
-
+      if (networkList.length === 0) {
+        dispatch(
+          updateToast({
+            isToastOpen: true,
+            toastMessage: 'Save atleast one netrwork settings to submit.',
+            toastVariant: 'error',
+          }),
+        );
+        return;
+      }
       if (networkList.length > 0) {
         console.log('Posting networkList JSON to /Organization/addupdatenetworksettings ...');
+        console.log({ createNetworkSettingLoading });
+
         await createNetworkSetting('/Organization/addupdatenetworksettings', {
           method: 'POST',
           body: JSON.stringify(networkList),
@@ -276,6 +291,7 @@ const BlazorNetworkInputs = (prop) => {
       } else {
         console.log('No networks to submit (networkList.length === 0).');
       }
+      console.log({ createNetworkSettingLoading });
 
       console.log('createNetworkSettingRes.current:', createNetworkSettingRes.current);
 
@@ -296,33 +312,33 @@ const BlazorNetworkInputs = (prop) => {
 
           console.log(
             `networkId=${net.networkId}, filesToUpload count=${filesToUpload.length}`,
-            filesToUpload
+            filesToUpload,
           );
 
           if (filesToUpload.length === 0) {
-            console.log("⚠️ No files to upload for this network, skipping fetch.");
+            console.log('⚠️ No files to upload for this network, skipping fetch.');
             continue;
           }
 
           filesToUpload.forEach((f) => {
-            const extension = f.name.includes(".") ? f.name.substring(f.name.lastIndexOf(".")) : "";
-            const baseName = f.name.replace(extension, "");
+            const extension = f.name.includes('.') ? f.name.substring(f.name.lastIndexOf('.')) : '';
+            const baseName = f.name.replace(extension, '');
             const renamed = `${baseName}_${net.networkId}${extension}`;
             console.log(`📎 Renaming ${f.name} → ${renamed}`);
 
-            formData.append("files", f, renamed);
+            formData.append('files', f, renamed);
           });
 
           try {
-            console.log("⬆️ Uploading files for", net.name);
-            const res = await fetch("/BlazorApi/uploadattachments", {
-              method: "POST",
+            console.log('⬆️ Uploading files for', net.name);
+            const res = await fetch('/BlazorApi/uploadattachments', {
+              method: 'POST',
               body: formData,
             });
             const result = await res.json();
-            console.log("✅ Upload result:", result);
+            console.log('✅ Upload result:', result);
           } catch (err) {
-            console.error("❌ File upload failed for network:", net.networkId, err);
+            console.error('❌ File upload failed for network:', net.networkId, err);
           }
         }
 
@@ -335,7 +351,10 @@ const BlazorNetworkInputs = (prop) => {
         );
         console.log('All uploads attempted. Success toast dispatched.');
       } else {
-        console.warn('createNetworkSetting returned status !== true:', createNetworkSettingRes.current);
+        console.warn(
+          'createNetworkSetting returned status !== true:',
+          createNetworkSettingRes.current,
+        );
         dispatch(
           updateToast({
             isToastOpen: true,
@@ -343,7 +362,6 @@ const BlazorNetworkInputs = (prop) => {
             toastVariant: 'error',
           }),
         );
-        setIsLoading(createNetworkSettingLoading.current);
       }
     } catch (outerErr) {
       console.error('onSubmit unexpected error:', outerErr);
@@ -359,44 +377,6 @@ const BlazorNetworkInputs = (prop) => {
       console.log('onSubmit - end');
     }
   };
-
-  //const onSubmit = async () => {
-  //   console.log(JSON.stringify(networkList));
-  //  if (networkList.length > 0) {
-  //    //alert(JSON.stringify(networkList));
-  //    await createNetworkSetting('/Organization/addupdatenetworksettings', {
-  //      method: 'POST',
-  //      body: JSON.stringify(networkList),
-  //    });
-  //  }
-  //  //console.log(createNetworkSettingRes);
-  //  if (createNetworkSettingRes.current?.status === true) {
-  //    dispatch(
-  //      updateToast({
-  //        isToastOpen: true,
-  //        toastMessage: createNetworkSettingRes.current.message,
-  //        toastVariant: 'success',
-  //      }),
-  //    );
-  //    //navigate('/ServiceIntegrated');
-  //    //getServices();
-  //    //setSetNetworkState();
-  //    // toggle();
-  //  } else {
-  //    dispatch(
-  //      updateToast({
-  //        isToastOpen: true,
-  //        toastMessage: createNetworkSettingRes.current?.message,
-  //        toastVariant: 'error',
-  //        //  `${JSON.stringify(createUserRes.current.message)}`,
-  //      }),
-  //    );
-
-  //    setIsLoading(createNetworkSettingLoading.current);
-  //  }
-  //};
-
-  //};
 
   return (
     <React.Fragment>
@@ -424,7 +404,7 @@ const BlazorNetworkInputs = (prop) => {
           <CustomInput
             label=" File Upload"
             icon={cilUser}
-           // value={networkState.attachment}
+            // value={networkState.attachment}
             onChange={handleNetworkSetting}
             type="file"
             id="attachment"
@@ -456,9 +436,17 @@ const BlazorNetworkInputs = (prop) => {
         {showFilters && (
           <CRow>
             <CCol className="" md={12}>
-              <CustomInput
+              <RichTextEditor
+                value={networkState.excelAttachment.Custom1} // Ensure value is a string
+                onChange={(e) => {
+                  // console.log({ e });
+                  setNetworkState((prev) => ({ ...prev, Custom1: e }));
+                }}
+                placeholder="Provide a detailed description of the product..."
+              />
+              {/* <CustomInput
                 label=" Excel Upload"
-               // value={networkState.excelAttachment.name}
+                // value={networkState.excelAttachment.name}
                 icon={cilUser}
                 onChange={handleNetworkSetting}
                 type="file"
@@ -470,9 +458,7 @@ const BlazorNetworkInputs = (prop) => {
                 helperText={networkState?.excelAttachment?.name}
                 isRequired={false}
                 title=" Excel Bulk Upload"
-              />
-
-
+              /> */}
             </CCol>
           </CRow>
         )}
@@ -793,13 +779,22 @@ const BlazorNetworkInputs = (prop) => {
           </CRow>
         )}
       </AppContainer>
-      <div className="CenterAlign pt-2">
-        <button
+      <div className="CenterAlign pt-2 gap-4">
+        <Button title="Cancel" onClick={onCancel} disabled={loading} />
+        <Button title="Save" onClick={onSave} disabled={loading} />
+        <Button
+          type="submit"
+          title="Submit"
+          onClick={onSubmit}
+          loading={loading}
+          loadingTitle="Submitting..."
+        />
+
+        {/* <button
           onClick={() => onCancel()}
           type="button"
           className="btn btn_Default m-2 sales-btn-style"
         >
-          Cancel
         </button>
 
         <button onClick={onSave} type="submit" className="btn btn_Default m-2 sales-btn-style">
@@ -807,7 +802,7 @@ const BlazorNetworkInputs = (prop) => {
         </button>
         <button type="submit" className="btn btn_Default sales-btn-style m-2" onClick={onSubmit}>
           Submit
-        </button>
+        </button> */}
       </div>
     </React.Fragment>
   );
