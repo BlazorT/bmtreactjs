@@ -66,7 +66,6 @@ const SingleDispatchment = () => {
           );
           /*   setRows([]);*/
         }
-        setIsLoading(NetworkLoading.current);
       },
     );
   };
