@@ -3,3 +3,6 @@
 
 758rX+7S0pjqr5gygDX9j5JYh/K2/WWlJZ5j32Gcz40GNVeg3yBMI0pNcS/24CA0uzkqJktnKB7EiXh8es+SHQeYs/y362JE9g3EyMqzcVm4VKCCVRdueTSrhCNcP1AZRB1SeyYLso2B2wqclcFRVI2AkVoW6hBC2nO350RDM4gvU1jYWvb61KPhxT/z/YpHV+2MTOkS/jRt/6Bn29nezQ==
 
+
+server=db5018273009.hosting-data.io;port=3306;user=dbu131582;password=Blazor@024();database=dbs14489726
+
