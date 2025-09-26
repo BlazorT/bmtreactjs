@@ -28,7 +28,7 @@ namespace com.blazor.bmt.infrastructure.repositories
 
         public async Task<IEnumerable<Compaigntemplate>> GetCompaigntemplatesAllFiltersList(Compaigntemplate model) {
 			return await _dbContext.Compaigntemplates.AsNoTracking()
-				   .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.NetworkId == ((model.NetworkId == 0 || model.NetworkId==null )? x.Id : model.NetworkId)  && (x.Name.Contains(""+model.Title) || x.Title.Contains(("" + model.Title).Trim())) && x.Status == (model.Status == 0 ? x.Status : model.Status)  ).OrderBy(x => x.CreatedAt)
+				   .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.NetworkId == ((model.NetworkId == 0 || model.NetworkId==null )? x.NetworkId : model.NetworkId)  && (x.Name.Contains(""+model.Title) || x.Title.Contains(("" + model.Title).Trim())) && x.Status == (model.Status == 0 ? x.Status : model.Status)  ).OrderBy(x => x.CreatedAt)
 				   .ToListAsync();
 		}
 
