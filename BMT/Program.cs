@@ -167,7 +167,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 //4dspsContext cntxt= new spsContext
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
