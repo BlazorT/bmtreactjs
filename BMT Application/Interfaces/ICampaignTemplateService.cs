@@ -8,9 +8,14 @@ namespace Blazor.Web.Application.Interfaces
     public interface ICampaignTemplateService
     {
         Task<IEnumerable<CompaigntemplateModel>> GetCampaignTemplatesByNetworkList(int NetworkId);
-     
-       // Task<IEnumerable<CompaigntemplateModel>> GetCitiesList(string details);
-        //Task<IEnumerable<CityModel>> GetCitiesListByState(int state);
+		Task<CompaigntemplateModel> GetCampaignTemplatesById(int id);
 
-    }
+		Task<CompaigntemplateModel> Create(CompaigntemplateModel model);
+		//Task Update(CompaigntemplateModel model);
+		//Task Delete(CompaigntemplateModel model);
+
+		// Task<IEnumerable<CompaigntemplateModel>> GetCitiesList(string details);
+		//Task<IEnumerable<CityModel>> GetCitiesListByState(int state);
+
+	}
 }

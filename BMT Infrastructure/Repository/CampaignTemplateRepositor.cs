@@ -25,29 +25,13 @@ namespace com.blazor.bmt.infrastructure.repositories
             // second way
             // return await GetAllAsync();
         }
-        public async Task<IEnumerable<City>> GetCitiesListByState(int stateId)
-        {
-            return await _dbContext.Cities.AsNoTracking()
-              .Where(x => x.StateId == (stateId == 0 ? x.StateId : stateId)).OrderBy(x => x.Name)
-                .ToListAsync();
-
-            // second way
-            // return await GetAllAsync();
-        }
-        public async Task<IEnumerable<City>> GetCitiesList(string name)
+      
+		
+        public async Task<Compaigntemplate> GetCompaignTemplateByIdAsnc(Int32 id)
         {
             //var spec = new UsersWithRoleSpecification(name);
             //return await GetAsync(spec);
-            return await _dbContext.Cities.AsNoTracking()
-               .Where(x => x.Name.ToLower().Contains(name.ToLower())).OrderBy(x => x.Name)
-                .ToListAsync();
-           
-        }
-        public async Task<City> GetCityByIdAsnc(Int32 id)
-        {
-            //var spec = new UsersWithRoleSpecification(name);
-            //return await GetAsync(spec);
-            return await _dbContext.Cities.AsNoTracking()
+            return await _dbContext.Compaigntemplates.AsNoTracking()
                .Where(x => x.Id== id)
                 .FirstOrDefaultAsync();
 

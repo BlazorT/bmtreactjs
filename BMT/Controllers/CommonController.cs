@@ -1,17 +1,17 @@
 ﻿using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.EntityFrameworkCore;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
-using com.blazor.bmt.ui.interfaces;
 using com.blazor.bmt.application.interfaces;
-using com.blazor.bmt.application.model;
+
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.UI.Interfaces;
-using com.blazor.bmt.core;
+
 using Blazor.Web.Application.Interfaces;
+using com.blazor.bmt.application.model;
+using com.blazor.bmt.infrastructure.repositories;
 
 namespace com.blazor.bmt.controllers
 {
@@ -25,8 +25,9 @@ namespace com.blazor.bmt.controllers
         private readonly IAppLogPageService _appLogPageService;
         private readonly IConfigurationsService _configurationsService;
        private readonly IStatesService _stateService;
-        private readonly ICitiesService _citiesService; 
-        private readonly INotificationPageService _notificationPageService;  
+        private readonly ICitiesService _citiesService;
+		//private readonly ICampaignTemplateService _citiesService;
+		private readonly INotificationPageService _notificationPageService;  
         private readonly IBlazorRepoPageService _blazorRepoPageService;      
         private readonly IBlazorUtilPageService _blazorUtilPageService;
         private readonly ICampaignTemplateService _campaignTemplateService;
@@ -165,7 +166,35 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        [HttpGet("submitbasicconfigurations")]
+		[HttpPost("submitcampaigntemplate")]
+		[Route("submitcampaigntemplate")]
+		public async Task<ActionResult> SubmitCampaignTemplateData([FromBody] CompaigntemplateModel cm)
+		{
+
+			BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+			if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+			try
+			{
+
+				//var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+				
+				//ConfigurationModel mdl = new ConfigurationModel(); //{ id= cvm.id };
+				blazorApiResponse.data=await _campaignTemplateService.Create(cm);
+				blazorApiResponse.status = true;
+				//GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
+				blazorApiResponse.message = string.Format(BlazorConstant.INSERTED_SUCCESS, cm.Name, GlobalUTIL.CurrentDateTime.ToLongDateString());
+			}
+			catch (Exception ex)
+			{
+				blazorApiResponse.status = false;
+				blazorApiResponse.errorCode = "408";
+				blazorApiResponse.message = ex.Message;
+				_logger.LogError(ex.StackTrace);
+			}
+			return Ok(blazorApiResponse);
+			// .ToArray();
+		}
+		[HttpGet("submitbasicconfigurations")]
         [HttpPost("submitbasicconfigurations")]
         [Route("submitbasicconfigurations")]
      
