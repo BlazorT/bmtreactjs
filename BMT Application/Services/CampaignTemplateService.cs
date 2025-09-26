@@ -33,7 +33,8 @@ namespace com.blazor.bmt.application.services
 		//Task<IEnumerable<CompaigntemplateModel>> GetCompaigntemplatesAllFiltersList(CompaigntemplateModel model);
 		public async Task<IEnumerable<CompaigntemplateModel>> GetCompaigntemplatesAllFiltersList(CompaigntemplateModel model)
 		{
-			var List = await _campaignTemplateRepository.GetCompaigntemplatesAllFiltersList(model);
+			var cmodel = _mapper.Map<Compaigntemplate>(model);
+			var List = await _campaignTemplateRepository.GetCompaigntemplatesAllFiltersList(cmodel);
 			var mapped = _mapper.Map<IEnumerable<CompaigntemplateModel>>(List);
 			return mapped;
 		}

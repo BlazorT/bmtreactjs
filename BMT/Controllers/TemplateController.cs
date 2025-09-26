@@ -62,7 +62,30 @@ namespace com.blazor.bmt.controllers
             }
             return Ok(blazorApiResponse);
             // .ToArray();
-        } 
+        }
+		[HttpGet("campaigntemplatesallnetworks")]
+		[HttpPost("campaigntemplatesallnetworks")]
+		[Route("campaigntemplatesallnetworks")]
+		public async Task<ActionResult> GetCampaignAllnetworksTemplates([FromBody] CompaigntemplateModel filter)
+		{
+			if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+			BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+			try
+			{
+				//var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+				blazorApiResponse.status = true;
+				blazorApiResponse.data = await _campaignTemplateService.GetCompaigntemplatesAllFiltersList(filter);
+			}
+			catch (Exception ex)
+			{
+				blazorApiResponse.status = false;
+				blazorApiResponse.errorCode = "408";
+				blazorApiResponse.message = ex.Message;
+				_logger.LogError(ex.StackTrace);
+			}
+			return Ok(blazorApiResponse);
+			// .ToArray();
+		}
 		[HttpPost("submitcampaigntemplate")]
 		[Route("submitcampaigntemplate")]
 		public async Task<ActionResult> SubmitCampaignTemplateData([FromBody] CompaigntemplateModel cm)
@@ -72,10 +95,20 @@ namespace com.blazor.bmt.controllers
 			if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
 			try
 			{
-				blazorApiResponse.data=await _campaignTemplateService.Create(cm);
-				blazorApiResponse.status = true;
-				//GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
-				blazorApiResponse.message = string.Format(BlazorConstant.INSERTED_SUCCESS, cm.Name, GlobalUTIL.CurrentDateTime.ToLongDateString());
+                if (cm.id <= 0)
+                {
+                    blazorApiResponse.data = await _campaignTemplateService.Create(cm);
+                    blazorApiResponse.status = true;
+                    //GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
+                    blazorApiResponse.message = string.Format(BlazorConstant.INSERTED_SUCCESS, cm.Name, GlobalUTIL.CurrentDateTime.ToLongDateString());
+                }
+                else {
+				    await _campaignTemplateService.Update(cm);
+                    blazorApiResponse.data = cm;
+					blazorApiResponse.status = true;
+					//GlobalUTIL.loadConfigurations(GlobalSettings.DefaultOrgId);
+					blazorApiResponse.message = string.Format(BlazorConstant.UPDATED_SUCCESS, cm.Name, GlobalUTIL.CurrentDateTime.ToLongDateString());
+				}
 			}
 			catch (Exception ex)
 			{
