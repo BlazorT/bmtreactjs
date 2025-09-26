@@ -24,6 +24,12 @@ import {
   cilUnderline,
 } from '@coreui/icons';
 
+function decodeHtml(html) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  return txt.value;
+}
+
 const RichTextEditor = (prop) => {
   const { value, onChange, placeholder } = prop;
   const editor = useEditor({
@@ -59,8 +65,13 @@ const RichTextEditor = (prop) => {
   });
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value, false);
+    if (editor && value) {
+      const decoded = decodeHtml(value);
+      if (decoded !== editor.getHTML()) {
+        editor.commands.setContent(decoded, false, {
+          preserveWhitespace: 'full',
+        });
+      }
     }
   }, [editor, value]);
 

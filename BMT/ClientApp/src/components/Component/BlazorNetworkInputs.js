@@ -18,6 +18,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
 import RichTextEditor from '../UI/rich-text-editor';
 import Button from '../UI/Button';
+import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 
 const BlazorNetworkInputs = (prop) => {
   dayjs.extend(utc);
@@ -436,14 +437,25 @@ const BlazorNetworkInputs = (prop) => {
         {showFilters && (
           <CRow>
             <CCol className="" md={12}>
-              <RichTextEditor
-                value={networkState.excelAttachment.Custom1} // Ensure value is a string
-                onChange={(e) => {
-                  // console.log({ e });
-                  setNetworkState((prev) => ({ ...prev, Custom1: e }));
-                }}
-                placeholder="Provide a detailed description of the product..."
-              />
+              {networkState?.networkId !== 3 ? (
+                <SocialMediaTextEditor
+                  value={networkState.Custom1} // Ensure value is a string
+                  onChange={(e) => {
+                    setNetworkState((prev) => ({ ...prev, Custom1: e }));
+                  }}
+                  placeholder="Message Template..."
+                />
+              ) : (
+                <RichTextEditor
+                  value={networkState.Custom1} // Ensure value is a string
+                  onChange={(e) => {
+                    // console.log({ e });
+                    setNetworkState((prev) => ({ ...prev, Custom1: e }));
+                  }}
+                  placeholder="Email Template..."
+                />
+              )}
+
               {/* <CustomInput
                 label=" Excel Upload"
                 // value={networkState.excelAttachment.name}
