@@ -59,7 +59,7 @@ namespace com.blazor.bmt.application.services
 		}
 		public async Task Update(CompaigntemplateModel model)
 		{
-			await ValidateProductIfExist(model);
+			//await ValidateProductIfExist(model);
 
 			var mappedEntity = _mapper.Map<CompaigntemplateModel, Compaigntemplate>(model);
 			if (mappedEntity == null)
