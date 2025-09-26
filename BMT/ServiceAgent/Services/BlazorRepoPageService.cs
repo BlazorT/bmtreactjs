@@ -1517,7 +1517,7 @@ WHERE c.OrgId = @p_OrgId
                             MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
                         pUserId.Value = UserId;
                         command.Parameters.Add(pUserId);
-                            MySqlParameter pNetworkSettingsJSON = new MySqlParameter("p_NetworkSettingsJSON", MySqlDbType.LongText, 4000);
+                            MySqlParameter pNetworkSettingsJSON = new MySqlParameter("p_NetworkSettingsJSON", MySqlDbType.JSON);
                         pNetworkSettingsJSON.Value = NetworkJSON;
                         command.Parameters.Add(pNetworkSettingsJSON);                        
                         command.CommandText = "spUpdateNetworkSettingData";
