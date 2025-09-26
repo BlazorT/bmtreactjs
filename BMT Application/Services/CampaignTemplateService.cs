@@ -30,7 +30,13 @@ namespace com.blazor.bmt.application.services
 			var newMappedEntity = _mapper.Map<CompaigntemplateModel>(newEntity);
 			return newMappedEntity;
 		}
-
+		//Task<IEnumerable<CompaigntemplateModel>> GetCompaigntemplatesAllFiltersList(CompaigntemplateModel model);
+		public async Task<IEnumerable<CompaigntemplateModel>> GetCompaigntemplatesAllFiltersList(CompaigntemplateModel model)
+		{
+			var List = await _campaignTemplateRepository.GetCompaigntemplatesAllFiltersList(model);
+			var mapped = _mapper.Map<IEnumerable<CompaigntemplateModel>>(List);
+			return mapped;
+		}
 		public async Task<IEnumerable<CompaigntemplateModel>> GetCampaignTemplatesByNetworkList(int NetworkId) {
             var List = await _campaignTemplateRepository.GetCompaigntemplatesByNetworkList(NetworkId);
             var mapped = _mapper.Map<IEnumerable<CompaigntemplateModel>>(List);
@@ -50,7 +56,23 @@ namespace com.blazor.bmt.application.services
 			var newMappedEntity = _mapper.Map<CompaigntemplateModel>(newEntity);
 			return newMappedEntity;
 		}
+		public async Task Update(CompaigntemplateModel model)
+		{
+			await ValidateProductIfExist(model);
 
+			var mappedEntity = _mapper.Map<CompaigntemplateModel, Compaigntemplate>(model);
+			if (mappedEntity == null)
+				throw new ApplicationException($"Entity could not be mapped.");
+
+			 await _campaignTemplateRepository.UpdateAsync(mappedEntity);			
+			//return newMappedEntity;
+		}
+		private async Task ValidateProductIfExist(CompaigntemplateModel model)
+		{
+			var existingEntity = await _campaignTemplateRepository.GetByIdAsync(model.id);
+			if (existingEntity != null)
+				throw new ApplicationException($"{model.ToString()} with this id already exists");
+		}
 		//public async Task<IEnumerable<CityModel>> GetCitiesByStatusList(int status)
 		//{
 		//    var list = await _cityRepository.GetCitiesByStatusList(status);          
