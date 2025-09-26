@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // Import Record for type definition
+import { useEffect, useState } from 'react'; // Import Record for type definition
 
 import { initialOptions } from 'src/constants/initialOptionsApi';
 import { useShowToast } from './useShowToast';
@@ -17,7 +17,7 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
   const [data, setData] = useState<T | null>(initialData || null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
- // alert(url);
+  // alert(url);
   const showToast = useShowToast();
 
   const postData = async (postData?: ApiPostDataType<T>) => {
@@ -35,19 +35,14 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
           ? undefined // Let the browser set the Content-Type for FormData
           : initialOptions.headers,
       });
-      console.log({ initialOptions });
-     console.log({ response });
-      console.log({ error });
       if (!response.ok) {
         showToast(`API error: ${response.statusText}`);
       }
-      
 
       const responseData = await response.json();
       setData(responseData);
       return responseData;
     } catch (error) {
-      console.log({ error });
       setError(error as Error);
       showToast('Error Making Request', 'error');
       // throw error; // Re-throw for error handling in components

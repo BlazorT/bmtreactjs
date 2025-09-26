@@ -257,10 +257,11 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder }) => {
         onChange={(e) => onChange(e.target.value)}
         className="form-control border-0 p-3"
         style={{
-          minHeight: '150px',
-          maxHeight: '300px',
+          minHeight: '250px',
+          maxHeight: '600px',
           overflowY: 'auto',
         }}
+        required
         placeholder={placeholder || 'Type your social media post here...'}
       />
     </div>

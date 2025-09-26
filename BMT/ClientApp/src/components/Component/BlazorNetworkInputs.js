@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { cilCalendar, cilChevronBottom, cilFace, cilUser } from '@coreui/icons';
+import { cilCalendar, cilChevronBottom, cilUser } from '@coreui/icons';
 import { CCol, CFormCheck, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { formValidator } from 'src/helpers/formValidator';
 import useFetch from 'src/hooks/useFetch';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import AppContainer from 'src/components/UI/AppContainer';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
-import RichTextEditor from '../UI/rich-text-editor';
 import Button from '../UI/Button';
 import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
+import EmailTextEditor from '../UI/email-editor';
 
 const BlazorNetworkInputs = (prop) => {
   dayjs.extend(utc);
@@ -48,6 +47,7 @@ const BlazorNetworkInputs = (prop) => {
     rowVer: 0,
     status: 1,
     Custom1: '',
+    Custom2: '',
     createdBy: user.userId,
     lastUpdatedBy: user.userId,
     startTime: dayjs().utc().format(),
@@ -65,6 +65,7 @@ const BlazorNetworkInputs = (prop) => {
     error: createNetworkSettingError,
     fetchData: createNetworkSetting,
   } = useFetch();
+
   const loading = createNetworkSettingLoading?.current;
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
 
@@ -75,6 +76,7 @@ const BlazorNetworkInputs = (prop) => {
       setNetworkState(foundSavedId);
     }
   }, [foundSavedId]);
+
   const handleNetworkSetting = (e, label) => {
     if (label === 'startTime' || label === 'finishTime') {
       setNetworkState((prev) => ({
@@ -193,77 +195,64 @@ const BlazorNetworkInputs = (prop) => {
     );
   };
 
-  //const onSave = () => {
-  //  //alert('onsave');
-  //  const form = document.querySelector('.service-integration-form');
-  //  formValidator();
-  //  if (form.checkValidity()) {
-  //    setNetworkList((prev) => [...prev, networkState]);
-  //    dispatch(
-  //      updateToast({
-  //        isToastOpen: true,
-  //        toastMessage: 'Note : To complete network changes, you need to submit finally',
-  //        toastVariant: 'success',
-  //      }),
-  //    );
-  //  }
-
-  //  console.log('networkState', networkState);
-  //  // console.log('test');
-  //  // setIsLoading(createNetworkSettingLoading.current);
-  //};
-
   const onSave = () => {
-    formValidator();
-    const form = document.querySelector('.service-integration-form');
-
-    if (form.checkValidity()) {
-      const updatedState = { ...networkState };
-
-      // Append networkId to file names (if files exist)
-      if (updatedState.attachment?.name) {
-        const ext = updatedState.attachment.name.split('.').pop();
-        const base = updatedState.attachment.name.replace(/\.[^/.]+$/, '');
-        updatedState.attachment = {
-          ...updatedState.attachment,
-          name: `${base}_${updatedState.networkId}.${ext}`,
-        };
-      }
-
-      if (updatedState.excelAttachment?.name) {
-        const ext = updatedState.excelAttachment.name.split('.').pop();
-        const base = updatedState.excelAttachment.name.replace(/\.[^/.]+$/, '');
-        updatedState.excelAttachment = {
-          ...updatedState.excelAttachment,
-          name: `${base}_${updatedState.networkId}.${ext}`,
-        };
-      }
-
-      // Save with update OR insert
-      setNetworkList((prev) => {
-        const index = prev.findIndex((n) => n.networkId === updatedState.networkId);
-
-        if (index !== -1) {
-          // Replace existing
-          const newList = [...prev];
-          newList[index] = updatedState;
-          return newList;
-        }
-
-        // Otherwise add new
-        return [...prev, updatedState];
-      });
-
+    if (networkState?.name === '') {
+      console.log({ networkState });
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: 'Note : To complete network changes, you need to submit finally',
-          toastVariant: 'success',
+          toastMessage: 'Template name is required.',
+          toastVariant: 'error',
         }),
       );
-
-      console.log('Updated Network State', updatedState);
+      return;
     }
+
+    const updatedState = { ...networkState };
+
+    // Append networkId to file names (if files exist)
+    if (updatedState.attachment?.name) {
+      const ext = updatedState.attachment.name.split('.').pop();
+      const base = updatedState.attachment.name.replace(/\.[^/.]+$/, '');
+      updatedState.attachment = {
+        ...updatedState.attachment,
+        name: `${base}_${updatedState.networkId}.${ext}`,
+      };
+    }
+
+    if (updatedState.excelAttachment?.name) {
+      const ext = updatedState.excelAttachment.name.split('.').pop();
+      const base = updatedState.excelAttachment.name.replace(/\.[^/.]+$/, '');
+      updatedState.excelAttachment = {
+        ...updatedState.excelAttachment,
+        name: `${base}_${updatedState.networkId}.${ext}`,
+      };
+    }
+
+    // Save with update OR insert
+    setNetworkList((prev) => {
+      const index = prev.findIndex((n) => n.networkId === updatedState.networkId);
+
+      if (index !== -1) {
+        // Replace existing
+        const newList = [...prev];
+        newList[index] = updatedState;
+        return newList;
+      }
+
+      // Otherwise add new
+      return [...prev, updatedState];
+    });
+
+    dispatch(
+      updateToast({
+        isToastOpen: true,
+        toastMessage: 'Note : To complete network changes, you need to submit finally',
+        toastVariant: 'success',
+      }),
+    );
+
+    console.log('Updated Network State', updatedState);
   };
 
   const onSubmit = async () => {
@@ -286,7 +275,7 @@ const BlazorNetworkInputs = (prop) => {
 
         await createNetworkSetting('/Organization/addupdatenetworksettings', {
           method: 'POST',
-          body: JSON.stringify(networkList),
+          body: JSON.stringify(networkList?.map((nl) => ({ ...nl, Custom2: '' }))),
         });
         console.log('createNetworkSetting called (awaited).');
       } else {
@@ -381,24 +370,21 @@ const BlazorNetworkInputs = (prop) => {
 
   return (
     <React.Fragment>
-      {/*<div className="networkTitle mt-2">*/}
-      {/*  <h3>{ header}</h3>*/}
-      {/*</div>*/}
       <CRow>
         <CCol className="" md={6}>
           <CustomInput
-            label="Recipients"
+            label="Name"
             icon={cilUser}
             value={networkState.name}
             onChange={handleNetworkSetting}
-            placeholder="Input Recipients Name"
+            placeholder="Input Campaign Name"
             type="text"
             id="name"
             name="name"
             className="form-control item"
             isRequired={true}
-            title="Input Recipients Name"
-            message="Enter Recipients Name"
+            title="Input Campaign Name"
+            message="Enter Campaign Name"
           />
         </CCol>
         <CCol className="" md={6}>
@@ -419,13 +405,7 @@ const BlazorNetworkInputs = (prop) => {
           />
         </CCol>
       </CRow>
-      <CRow>
-        {/*<CCol className="" md={2}>*/}
-        {/*  <div className="input-group-append mt-4">*/}
-        {/*    <input className="importFilebtn" id="upload" type="file" accept="image/*"  />*/}
-        {/*  </div>*/}
-        {/*</CCol>*/}
-      </CRow>
+      <CRow></CRow>
 
       <AppContainer>
         <DataGridHeader
@@ -446,31 +426,20 @@ const BlazorNetworkInputs = (prop) => {
                   placeholder="Message Template..."
                 />
               ) : (
-                <RichTextEditor
-                  value={networkState.Custom1} // Ensure value is a string
-                  onChange={(e) => {
-                    // console.log({ e });
-                    setNetworkState((prev) => ({ ...prev, Custom1: e }));
+                <EmailTextEditor
+                  value={networkState.Custom2 ? JSON.parse(networkState.Custom2) : ''} // Ensure value is a string
+                  open={showFilters}
+                  toggle={toggleStock}
+                  onSave={(html, design) => {
+                    console.log({ html, design });
+                    setNetworkState((prev) => ({
+                      ...prev,
+                      Custom1: html,
+                      Custom2: JSON.stringify(design),
+                    }));
                   }}
-                  placeholder="Email Template..."
                 />
               )}
-
-              {/* <CustomInput
-                label=" Excel Upload"
-                // value={networkState.excelAttachment.name}
-                icon={cilUser}
-                onChange={handleNetworkSetting}
-                type="file"
-                id="excelAttachment"
-                name="excelAttachment"
-                placeholder="Email Excel  Upload"
-                className="form-control item"
-                src={networkState?.excelAttachment?.src}
-                helperText={networkState?.excelAttachment?.name}
-                isRequired={false}
-                title=" Excel Bulk Upload"
-              /> */}
             </CCol>
           </CRow>
         )}
@@ -497,7 +466,6 @@ const BlazorNetworkInputs = (prop) => {
                 className="form-control item"
                 isRequired={false}
                 title="Business Id e.g(19288)"
-                // message="Enter Buisness Name"
               />
             </CCol>
             <CCol className="" md={6}>
@@ -597,7 +565,6 @@ const BlazorNetworkInputs = (prop) => {
                     className="form-control item"
                     isRequired={false}
                     title="SMTP Server "
-                    // message="Enter Buisness Name"
                   />
                 </CCol>
                 <CCol className="" md={6}>
@@ -801,20 +768,6 @@ const BlazorNetworkInputs = (prop) => {
           loading={loading}
           loadingTitle="Submitting..."
         />
-
-        {/* <button
-          onClick={() => onCancel()}
-          type="button"
-          className="btn btn_Default m-2 sales-btn-style"
-        >
-        </button>
-
-        <button onClick={onSave} type="submit" className="btn btn_Default m-2 sales-btn-style">
-          Save
-        </button>
-        <button type="submit" className="btn btn_Default sales-btn-style m-2" onClick={onSubmit}>
-          Submit
-        </button> */}
       </div>
     </React.Fragment>
   );

@@ -144,7 +144,7 @@ const campaignadd = () => {
         console.log({ res });
         if (res.status === true) {
           // ✅ save filtered networks in state
-          const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
+          const filtered = res.data || [];
           setNetworksList(filtered);
           setSelectedNetworks(filtered.map((n) => n.name));
         } else {

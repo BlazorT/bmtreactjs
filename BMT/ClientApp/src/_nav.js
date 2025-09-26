@@ -115,7 +115,6 @@ const getIcon = (iconName) => {
 };
 
 export const mapNavItem = (data) => {
-  console.log(data);
   const navigate = useNavigate();
   return data.map((item) => {
     return {
