@@ -21,7 +21,7 @@ export interface FilterField {
   title?: string;
   message?: string;
   disableOption?: string;
-  disabled?:boolean
+  disabled?: boolean;
 }
 
 interface CustomFiltersProps {
@@ -71,14 +71,16 @@ const CustomFilters: React.FC<CustomFiltersProps> = ({
           <CCol>
             <div className="row ">
               <div className="mt-4 FloatRight">
-                <button
-                  type="button"
-                  title="Click For Search Data"
-                  className="btn_Default m-2 sales-btn-style alignLeft"
-                  onClick={() => fetching(filters)}
-                >
-                  Search
-                </button>
+                {fetching && (
+                  <button
+                    type="button"
+                    title="Click For Search Data"
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                    onClick={() => fetching(filters)}
+                  >
+                    Search
+                  </button>
+                )}
                 <button
                   type="button"
                   title="Click For Reset Data"

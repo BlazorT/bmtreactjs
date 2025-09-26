@@ -31,6 +31,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 //import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
+
 const UserRegister = () => {
   dayjs.extend(utc);
   const location = useLocation();

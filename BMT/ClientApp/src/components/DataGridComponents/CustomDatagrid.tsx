@@ -149,7 +149,10 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
       classNames = 'rdg-row-odd';
     }
 
-    if (Number.isInteger(row.status) && (row.status === 4 || row.status === 6)) {
+    if (
+      Number.isInteger(row.status) &&
+      (row.status === 4 || row.status === 6 || row.status === 2)
+    ) {
       classNames += ' deleted-row-red';
     }
 

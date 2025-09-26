@@ -4,7 +4,7 @@ import { CCol, CFormCheck, CRow } from '@coreui/react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import Button from '../InputsComponent/Button';
 
-const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn,submitBtnTitle='Submit' }) => {
+const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle = 'Submit' }) => {
   const showConfirmation = useShowConfirmation();
   const confirmationModal = () => {
     showConfirmation({
@@ -19,7 +19,7 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn,submitBtnTitle='
     });
   };
   const getColWidth = (inputName) => {
-    const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo'];
+    const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo', 'networkId'];
     const smallWidthFields = [
       /*'primaryContact',*/
       'isWhatsAppAsso',

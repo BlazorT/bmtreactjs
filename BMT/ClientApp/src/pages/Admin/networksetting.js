@@ -13,11 +13,17 @@ import { cilUser } from '@coreui/icons';
 import AppContainer from 'src/components/UI/AppContainer';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'src/redux/toast/toastSlice';
+import Spinner from 'src/components/UI/Spinner';
+import Loading from 'src/components/UI/Loading';
+import Form from 'src/components/UI/Form';
+
 //import globalutil from '../../util/globalutil';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
 
 const SingleDispatchment = () => {
   dayjs.extend(utc);
+  const user = useSelector((state) => state.user);
+  const orgId = user.orgId;
   const [activeTab, setActiveTab] = useState(1);
   const [organization, setOrganization] = useState(1);
   const [tabs, setTabs] = useState([]);
@@ -25,8 +31,6 @@ const SingleDispatchment = () => {
   const [networkList, setNetworkList] = useState([]);
   const [orglist, setOrgList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const user = useSelector((state) => state.user);
-  const orgId = user.orgId;
   const handleSubmit = (e) => {
     // console.log(e);
     e.preventDefault();
@@ -38,8 +42,10 @@ const SingleDispatchment = () => {
     error: createNetworkError,
     fetchData: GetNetworks,
   } = useFetch();
+
   useEffect(() => {
     getNetworksList();
+    getOrganizationLst();
   }, []);
 
   const getNetworksList = async () => {
@@ -47,7 +53,6 @@ const SingleDispatchment = () => {
       '/Admin/networks',
       {
         method: 'POST',
-        // body: JSON.stringify(fetchBody),
       },
       (res) => {
         // console.log(res, 'networks');
@@ -75,10 +80,6 @@ const SingleDispatchment = () => {
     error: GetOrgError,
     fetchData: GetOrg,
   } = useFetch();
-
-  useEffect(() => {
-    getOrganizationLst();
-  }, []);
 
   const getOrganizationLst = async () => {
     const orgBody = {
@@ -117,54 +118,54 @@ const SingleDispatchment = () => {
     }
   }, [orglist, orgId]);
   // console.log({ orglist });
+
+  if (OrgLoading?.current || NetworkLoading?.current) {
+    return <Loading />;
+  }
+
   return (
     <AppContainer>
-      <form
-        className="needs-validation service-integration-form"
-        onSubmit={handleSubmit}
-        noValidate
-      >
-        <CRow>
-          <CCol className="" md={12}>
-            <CustomSearch
-              label="Organization"
-              icon={cilUser}
-              type="text"
-              id="name"
-              value={organization}
-              onChange={(e, value) => setOrganization(e)}
-              placeholder="Organization"
-              name="name"
-              data={orglist}
-              className="form-control item"
-              isRequired={true}
-              title="Select Organization"
-              message="Select Organization"
-            />
-          </CCol>
-        </CRow>
-        <BlazorTabs
-          title="Networks"
-          tabs={tabs}
-          activeTab={activeTab}
-          handleActiveTab={setActiveTab}
-        />
-        <CContainer fluid className="m-0 p-0 mt-1">
-          {tabs.map((tab, index) => (
-            <>
-              {activeTab == tab.id && (
-                <BlazorNetworkInput
-                  key={tab.id}
-                  header={tab.name}
-                  networkId={tab.id}
-                  setNetworkList={setNetworkList}
-                  networkList={networkList}
-                />
-              )}
-            </>
-          ))}
-        </CContainer>
-      </form>
+      <CRow>
+        <CCol className="" md={12}>
+          <CustomSearch
+            label="Organization"
+            icon={cilUser}
+            type="text"
+            id="name"
+            value={organization}
+            onChange={(e, value) => setOrganization(e)}
+            placeholder="Organization"
+            name="name"
+            data={orglist}
+            className="form-control item"
+            isRequired={true}
+            title="Select Organization"
+            message="Select Organization"
+            disabled={user?.roleId !== 1}
+          />
+        </CCol>
+      </CRow>
+      <BlazorTabs
+        title="Networks"
+        tabs={tabs}
+        activeTab={activeTab}
+        handleActiveTab={setActiveTab}
+      />
+      <CContainer fluid className="m-0 p-0 mt-1">
+        {tabs.map((tab, index) => (
+          <>
+            {activeTab == tab.id && (
+              <BlazorNetworkInput
+                key={tab.id}
+                header={tab.name}
+                networkId={tab.id}
+                setNetworkList={setNetworkList}
+                networkList={networkList}
+              />
+            )}
+          </>
+        ))}
+      </CContainer>
     </AppContainer>
   );
 };

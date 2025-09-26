@@ -22,7 +22,6 @@ const AppSidebar = () => {
   const sidebarShow = useSelector((state) => state.sidebar.value);
   const navItem = useSelector((state) => state.navItems);
   const user = useSelector((state) => state.user);
-  console.log({ navItem });
   return (
     <CSidebar
       position="fixed"
