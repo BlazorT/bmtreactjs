@@ -19,7 +19,7 @@ namespace com.blazor.bmt.infrastructure.repositories
         public async Task<IEnumerable<Compaigntemplate>> GetCompaigntemplatesByNetworkList(int NetworkId)
         {
             return await _dbContext.Compaigntemplates.AsNoTracking()
-               .Where(x => x.NetworkId== (NetworkId == 0? x.NetworkId : NetworkId)).OrderBy(x=>x.Id).OrderBy(x => x.Name)
+               .Where(x => x.NetworkId== (NetworkId == 0? x.NetworkId : NetworkId) && x.Status==1).OrderBy(x=>x.Id)
                 .ToListAsync();
 
             // second way
