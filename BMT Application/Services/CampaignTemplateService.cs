@@ -6,6 +6,7 @@ using AutoMapper;
 using com.blazor.bmt.core.repositries;
 using com.blazor.bmt.core.interfaces;
 using com.blazor.bmt.application.model;
+using com.blazor.bmt.core;
 
 namespace com.blazor.bmt.application.services
 {
@@ -23,31 +24,52 @@ namespace com.blazor.bmt.application.services
         
         }
 
-        public async Task<IEnumerable<CompaigntemplateModel>> GetCampaignTemplatesByNetworkList(int NetworkId) {
+		public async Task<CompaigntemplateModel> GetCampaignTemplatesById(int id) {
+			var newEntity = await _campaignTemplateRepository.GetCompaignTemplateByIdAsnc(id);
+			
+			var newMappedEntity = _mapper.Map<CompaigntemplateModel>(newEntity);
+			return newMappedEntity;
+		}
+
+		public async Task<IEnumerable<CompaigntemplateModel>> GetCampaignTemplatesByNetworkList(int NetworkId) {
             var List = await _campaignTemplateRepository.GetCompaigntemplatesByNetworkList(NetworkId);
             var mapped = _mapper.Map<IEnumerable<CompaigntemplateModel>>(List);
             return mapped;
         }
+		public async Task<CompaigntemplateModel> Create(CompaigntemplateModel model)
+		{
+			//await ValidateProductIfExist(model);
 
-        //public async Task<IEnumerable<CityModel>> GetCitiesByStatusList(int status)
-        //{
-        //    var list = await _cityRepository.GetCitiesByStatusList(status);          
-        //    var mapped = _mapper.Map<IEnumerable<CityModel>>(list);
-        //    return mapped;
-        //}
-        //public async Task<IEnumerable<CityModel>> GetCitiesList(string keyword)
-        //{
-        //    var List = await _cityRepository.GetCitiesList(keyword);
-        //    var mapped = _mapper.Map<IEnumerable<CityModel>>(List);
-        //    return mapped;
-        //}
+			var mappedEntity = _mapper.Map<CompaigntemplateModel, Compaigntemplate>(model);
+			if (mappedEntity == null)
+				throw new ApplicationException($"Entity could not be mapped.");
 
-        //public async Task<IEnumerable<CityModel>> GetCitiesListByState(int state)
-        //{
-        //    var List = await _cityRepository.GetCitiesListByState(state);
-        //    var mapped = _mapper.Map<IEnumerable<CityModel>>(List);
-        //    return mapped;
-        //}
+			var newEntity = await _campaignTemplateRepository.AddAsync(mappedEntity);
+			// _logger.LogInformation($"Entity successfully added - Users Service");
 
-    }
+			var newMappedEntity = _mapper.Map<CompaigntemplateModel>(newEntity);
+			return newMappedEntity;
+		}
+
+		//public async Task<IEnumerable<CityModel>> GetCitiesByStatusList(int status)
+		//{
+		//    var list = await _cityRepository.GetCitiesByStatusList(status);          
+		//    var mapped = _mapper.Map<IEnumerable<CityModel>>(list);
+		//    return mapped;
+		//}
+		//public async Task<IEnumerable<CityModel>> GetCitiesList(string keyword)
+		//{
+		//    var List = await _cityRepository.GetCitiesList(keyword);
+		//    var mapped = _mapper.Map<IEnumerable<CityModel>>(List);
+		//    return mapped;
+		//}
+
+		//public async Task<IEnumerable<CityModel>> GetCitiesListByState(int state)
+		//{
+		//    var List = await _cityRepository.GetCitiesListByState(state);
+		//    var mapped = _mapper.Map<IEnumerable<CityModel>>(List);
+		//    return mapped;
+		//}
+
+	}
 }
