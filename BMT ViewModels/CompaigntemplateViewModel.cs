@@ -11,8 +11,8 @@ public partial class CompaigntemplateViewModel
     public string? Subject { get; set; }
 
     public string? Template { get; set; }
-
-    public int? NetworkId { get; set; }
+	public string? TemplateJson { get; set; }
+	public int? NetworkId { get; set; }
 
     public int Status { get; set; }
 
