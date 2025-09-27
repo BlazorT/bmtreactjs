@@ -45,6 +45,7 @@ const AddScheduleModel = (prop) => {
     data,
     selected,
     setSelected,
+    selectedTemplates,
     campaignRegData: submitData,
   } = prop;
   const [budgetData, setBudgetData] = useState({
@@ -52,6 +53,7 @@ const AddScheduleModel = (prop) => {
     TotalSchMessages: 0,
     TotalCampBudget: 0,
   });
+  console.log({ selectedTemplates });
   //console.log("selectedNetwork", selectedNetworks);
   const { createCampaign } = createSchedule();
   const user = useSelector((state) => state.user);
@@ -411,6 +413,13 @@ const AddScheduleModel = (prop) => {
       .map((n) => {
         const networkName = n.name.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
         const postTypeIds = selectedPostTypes[networkName];
+        const templateJson = selectedTemplates[networkName]
+          ? JSON.stringify({
+              template: selectedTemplates[networkName]?.template || '',
+              subject: selectedTemplates[networkName]?.subject || '',
+              title: selectedTemplates[networkName]?.title || '',
+            })
+          : '';
         console.log('postTypeIds', postTypeIds);
         return {
           id: 0,
@@ -419,6 +428,7 @@ const AddScheduleModel = (prop) => {
           posttypejson: JSON.stringify(postTypeIds),
           RowVer: 1,
           Status: 1,
+          Template: templateJson,
           LastUpdatedBy: user.userId,
           LastUpdatedAt: new Date(),
           CreatedAt: new Date(),
@@ -549,7 +559,7 @@ const AddScheduleModel = (prop) => {
     };
 
     console.log('body Data Submitted', JSON.stringify(campaignBody));
-
+    console.log({ campaignBody });
     try {
       const response = await fetch('/Compaigns/submitmycompaign', {
         method: 'POST',

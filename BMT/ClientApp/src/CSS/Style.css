@@ -3979,7 +3979,6 @@ fieldset.legend {
   color: white;
   border: none;
   border-bottom: 1px solid #ffffff4f;
-  min-width: 30em;
 }
 .text-body-secondary {
   color: white !important;
@@ -4128,4 +4127,21 @@ fieldset.legend {
   border-radius: 4px;
   background: #f0f0f0;
   cursor: pointer;
+}
+
+.email-send-modal .modal-dialog {
+  max-width: 30% !important; /* 50% of screen width */
+  margin: auto; /* center horizontally */
+}
+
+.email-send-modal .modal-content {
+  margin: auto; /* center content */
+}
+.card-body {
+  background: #0c355f;
+  color: white;
+  border-radius: 6px;
+}
+.card {
+  border-radius: 6px;
 }

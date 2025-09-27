@@ -29,12 +29,7 @@ const EmailTextEditor = ({ open, toggle, onSave, value, isModal = true }) => {
 
     // Load existing design if available
     if (value) {
-      const converter = htmlToStructuredDesign;
-      const convertedDesign = converter(value);
-
-      if (convertedDesign) {
-        unlayer.loadDesign(convertedDesign);
-      }
+      unlayer.loadDesign(value);
     }
   };
 

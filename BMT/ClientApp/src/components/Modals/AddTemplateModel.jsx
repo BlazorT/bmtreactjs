@@ -13,6 +13,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import useApi from 'src/hooks/useApi';
 import dayjs, { utc } from 'dayjs';
 import { useSelector } from 'react-redux';
+import SendTestEmailModel from './SendTestEmailModel';
 
 const defaultTemplateData = {
   id: 0,
@@ -20,6 +21,7 @@ const defaultTemplateData = {
   title: '',
   subject: '',
   template: '',
+  templateJson: '',
   networkId: 1,
   status: 1,
   rowVer: 1,
@@ -28,35 +30,15 @@ const defaultTemplateData = {
 dayjs.extend(utc);
 
 // Define the component with props
-const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
+const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) => {
   const user = useSelector((state) => state.user);
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
   const { postData, loading } = useApi('Template/submitcampaigntemplate');
 
   const [templateData, setTemplateData] = React.useState(defaultTemplateData);
-  const [design, setDesign] = useState(null);
   const [showEmailEditor, setShowEmailEditor] = useState(false);
-
-  const htmlToJSON = (html) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const parseNode = (node) => {
-      const jsonNode = { tagName: node.tagName.toLowerCase(), attributes: {}, children: [] };
-      Array.from(node.attributes).forEach(({ name, value }) => {
-        jsonNode.attributes[name] = value;
-      });
-      node.childNodes.forEach((childNode) => {
-        if (childNode.nodeType === Node.ELEMENT_NODE) {
-          jsonNode.children.push(parseNode(childNode));
-        } else if (childNode.nodeType === Node.TEXT_NODE) {
-          jsonNode.children.push(childNode.nodeValue.trim());
-        }
-      });
-      return jsonNode;
-    };
-    return parseNode(doc.body);
-  };
+  const [showTestEmailModel, setShowTestEmailModel] = useState(false);
 
   useEffect(() => {
     if (!template || !isOpen) return;
@@ -68,15 +50,14 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
       template: template?.template,
       title: template?.title,
       status: template?.status || 1,
+      templateJson:
+        template?.networkId === 3 && template?.templateJson ? template?.templateJson : null,
       rowVer: 1,
     });
-    if (template?.networkId === 3) {
-      //   console.log(htmlToJSON(template?.template));
-      setDesign(template?.template);
-    }
   }, [template, isOpen]);
 
   const toggleEmailEditor = () => setShowEmailEditor((prev) => !prev);
+  const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
 
   // Handle user input changes
   const handleTemplateData = async (e, label) => {
@@ -94,6 +75,19 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
     }
     if (templateData?.template === '') {
       showToast('Save template first.');
+      return;
+    }
+
+    if (onEdit) {
+      onEdit({
+        ...templateData,
+        createdAt: template ? template?.createdAt : dayjs().utc().format(),
+        lastUpdatedAt: dayjs().utc().format(),
+        createdBy: template ? template?.createdBy : user?.userId,
+        lastUpdatedBy: user?.userId,
+      });
+      showToast(`${template?.name} has been edited successfully`, 'success');
+
       return;
     }
 
@@ -117,6 +111,7 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
 
   const onYes = () => {
     showConfirmation({ isOpen: false });
+    setTemplateData(defaultTemplateData);
     toggle();
   };
 
@@ -133,7 +128,12 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
     });
   };
 
-  const templateInputFields = getTemplateInputFields(templateData, handleTemplateData, loading);
+  const templateInputFields = getTemplateInputFields(
+    templateData,
+    handleTemplateData,
+    loading,
+    onEdit,
+  );
   return (
     <CModal
       visible={isOpen}
@@ -166,16 +166,15 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
               <>
                 <EmailTextEditor
                   isModal={false}
-                  value={design}
+                  value={templateData?.templateJson ? JSON.parse(templateData?.templateJson) : null}
                   open={showEmailEditor}
                   toggle={toggleEmailEditor}
                   onSave={(html, design) => {
-                    console.log({ design, html });
                     setTemplateData((prev) => ({
                       ...prev,
                       template: html,
+                      templateJson: JSON.stringify(design),
                     }));
-                    setDesign(design);
                     showToast('Email template saved', 'success');
                   }}
                 />
@@ -185,7 +184,29 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates }) => {
         </CModalBody>
         <CModalFooter>
           <Button title="Close" onClick={confirmationModal} disabled={loading} />
+          {templateData?.networkId === 3 && (
+            <Button
+              title="Send Test Email"
+              onClick={toggleSendEmailModel}
+              disabled={
+                !(
+                  templateData?.networkId === 3 &&
+                  templateData?.title &&
+                  templateData?.subject &&
+                  templateData?.template
+                )
+              }
+              className="w-auto px-4"
+            />
+          )}
           <Button title="Submit" onClick={onSubmit} type="submit" loading={loading} />
+          <SendTestEmailModel
+            isOpen={showTestEmailModel}
+            toggle={toggleSendEmailModel}
+            subject={templateData?.subject}
+            title={templateData?.title}
+            body={templateData?.template}
+          />
         </CModalFooter>
       </Form>
     </CModal>
@@ -198,6 +219,7 @@ AddTemplateModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   template: PropTypes.node, // Accepts any renderable content (JSX, string, etc.)
   fetchTemplates: PropTypes.func,
+  onEdit: PropTypes.func,
 };
 
 // Default props
