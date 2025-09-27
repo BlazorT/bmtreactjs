@@ -13,8 +13,8 @@ public partial class Compaignnetwork : EntityTransaction
     public int NetworkId { get; set; }
 
     public string? Desc { get; set; }
-
-    public string? Code { get; set; }
+	public string? Template { get; set; }
+	public string? Code { get; set; }
     public string? posttypejson { get; set; }
     
     public int? CreatedBy { get; set; }
