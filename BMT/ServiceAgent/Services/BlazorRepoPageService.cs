@@ -1077,7 +1077,6 @@ WHERE c.OrgId = @p_OrgId
                         MySqlParameter pToDate = new MySqlParameter("p_DateTo", MySqlDbType.DateTime);
                         pToDate.Value = model.LastUpdatedAt == null || model.CreatedAt.Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
                         parameters.Add(pToDate);
-
                         MySqlParameter pId = new MySqlParameter("p_Id", SqlDbType.BigInt);
                         pId.Value = Convert.ToInt64(model.Id);
                         parameters.Add(pId);
