@@ -167,7 +167,7 @@ const CampignNetworkSettings = ({
                   <CCardBody className="p-3">
                     {/* Header Section with Icon and Checkbox */}
                     <div className="d-flex flex-wrap align-items-center mb-3">
-                      <div className="me-3">
+                      <div className="me-2">
                         <div
                           className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center position-relative"
                           style={{ width: '60px', height: '60px' }}
@@ -234,9 +234,10 @@ const CampignNetworkSettings = ({
                     {templates.length > 0 && (
                       <div className="border-top pt-3">
                         <div className="d-flex align-items-center justify-content-between mb-2">
-                          <h6 className="text-primary mb-0 small">Templates</h6>
+                          <h6 className="text-primary mb-0 small">
+                            Templates ({templates.length})
+                          </h6>
                           <CBadge color="primary" shape="rounded-pill" className="d-flex">
-                            {/* {templates.length} */}
                             <div
                               className="pointer"
                               onClick={() => {
@@ -251,7 +252,7 @@ const CampignNetworkSettings = ({
 
                         <CListGroup
                           className="list-group-flush"
-                          style={{ maxHeight: '300px', overflowY: 'auto', rowGap: 6 }}
+                          style={{ maxHeight: '200px', overflowY: 'auto', rowGap: 6 }}
                         >
                           {templates.map((template, templateIndex) => (
                             <CListGroupItem
