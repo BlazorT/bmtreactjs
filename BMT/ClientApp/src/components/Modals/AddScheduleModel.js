@@ -560,32 +560,32 @@ const AddScheduleModel = (prop) => {
 
     console.log('body Data Submitted', JSON.stringify(campaignBody));
     console.log({ campaignBody });
-    try {
-      const response = await fetch('/Compaigns/submitmycompaign', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(campaignBody),
-      });
+    // try {
+    //   const response = await fetch('/Compaigns/submitmycompaign', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(campaignBody),
+    //   });
 
-      const result = await response.json();
-      console.log({ result });
+    //   const result = await response.json();
+    //   console.log({ result });
 
-      if (result.status === true) {
-        showToast(`Campaign "${name}" submitted successfully!`, 'success');
-        const campaignId = parseInt(result.data, 10);
-        // alert(campaignId);
+    //   if (result.status === true) {
+    //     showToast(`Campaign "${name}" submitted successfully!`, 'success');
+    //     const campaignId = parseInt(result.data, 10);
+    //     // alert(campaignId);
 
-        await uploadAttachmentsAfterCampaign(campaignId);
-        navigate('/campaignslisting');
-      } else {
-        showToast(result.message || 'Submission failed.', 'error');
-      }
-    } catch (error) {
-      console.error('Error submitting campaign:', error);
-      showToast('An error occurred.', 'error');
-    }
+    //     await uploadAttachmentsAfterCampaign(campaignId);
+    //     navigate('/campaignslisting');
+    //   } else {
+    //     showToast(result.message || 'Submission failed.', 'error');
+    //   }
+    // } catch (error) {
+    //   console.error('Error submitting campaign:', error);
+    //   showToast('An error occurred.', 'error');
+    // }
   };
   console.log('submitData', submitData);
   const uploadAttachmentsAfterCampaign = async (campaignId) => {
@@ -839,7 +839,7 @@ const AddScheduleModel = (prop) => {
               <button
                 onClick={() => submitCompaign()}
                 type="submit"
-                className="btn btn_Default sales-btn-style m-2 min-width"
+                className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
               >
                 Submit Campaign
               </button>
