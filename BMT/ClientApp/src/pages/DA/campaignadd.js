@@ -38,6 +38,9 @@ import {
   cilShortText,
 } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
+import useApi from 'src/hooks/useApi';
+import Button from 'src/components/UI/Button';
+import CampignNetworkSettings from 'src/components/Component/CampignNetworkSettings';
 
 const campaignadd = () => {
   // let state;
@@ -64,6 +67,7 @@ const campaignadd = () => {
 
   const [selectedNetworks, setSelectedNetworks] = useState([]);
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
+  const [selectedTemplates, setSelectedTemplates] = useState({}); // { networkName: [postTypeId, ...] }
 
   const tabs = [
     { id: 0, name: 'Campaign' },
@@ -144,7 +148,9 @@ const campaignadd = () => {
         console.log({ res });
         if (res.status === true) {
           // ✅ save filtered networks in state
+          // const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
           const filtered = res.data || [];
+
           setNetworksList(filtered);
           setSelectedNetworks(filtered.map((n) => n.name));
         } else {
@@ -394,7 +400,7 @@ const campaignadd = () => {
       return updatedNetworks;
     });
   };
-
+  // console.log({ selectedNetworks });
   const handlePostTypeToggle = (networkName, postTypeId) => {
     if (!selectedNetworks.includes(networkName)) {
       showToast(`Please select the ${networkName} network first.`, 'warning');
@@ -414,10 +420,28 @@ const campaignadd = () => {
       };
     });
   };
+
+  const handleTemplateToggle = (networkName, template) => {
+    if (!selectedNetworks.includes(networkName)) {
+      showToast(`Please select the ${networkName} network first.`, 'warning');
+      return;
+    }
+
+    setSelectedTemplates((prev) => {
+      const currentTemplate = prev[networkName];
+
+      return {
+        ...prev,
+        [networkName]: currentTemplate?.id === template.id ? null : template, // toggle off if same
+      };
+    });
+  };
+
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
-  console.log({ gn: globalutil.networks(), networksList });
+
+  // console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
       <BlazorTabs
@@ -647,106 +671,19 @@ const campaignadd = () => {
           </React.Fragment>
         )}
         {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
-          <React.Fragment>
-            <AppContainer>
-              <DataGridHeader title="Networks" filterDisable={false} />
-            </AppContainer>
-            <CRow>
-              {globalutil
-                .networks()
-                .filter((network) =>
-                  networksList.some(
-                    (apiNet) =>
-                      apiNet?.name?.toLowerCase()?.trim() === network.name?.toLowerCase()?.trim(),
-                  ),
-                )
-                .map((network, index) => {
-                  const displayLabel = network.name;
-                  const IconName =
-                    network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                  let postTypeIds = [];
-                  try {
-                    postTypeIds = JSON.parse(network.desc || '[]');
-                  } catch (err) {
-                    console.warn('Invalid desc format in network:', network.desc);
-                  }
-                  const postTypeList = globalutil
-                    .postTypes()
-                    .filter((pt) => postTypeIds.includes(pt.id));
-                  const isSelected = selectedNetworks.includes(network.name);
-                  // Auto-select/deselect single post type
-                  if (postTypeList.length === 1) {
-                    const singleTypeId = postTypeList[0].id;
-
-                    if (isSelected && !selectedPostTypes[network.name]?.includes(singleTypeId)) {
-                      handlePostTypeToggle(network.name, singleTypeId); // select
-                    } else if (
-                      !isSelected &&
-                      selectedPostTypes[network.name]?.includes(singleTypeId)
-                    ) {
-                      handlePostTypeToggle(network.name, singleTypeId); // unselect
-                    }
-                  }
-
-                  return (
-                    <CCol md={4} key={index} className="mb-4">
-                      <ul className="inlinedisplay">
-                        <li className="divCircle">
-                          <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                        </li>
-                        <li className="network-checkbox-animate">
-                          <CFormCheck
-                            id={IconName}
-                            name={IconName}
-                            label={displayLabel}
-                            checked={isSelected}
-                            onChange={() => handleCheckboxChange(network.name)}
-                          />
-                        </li>
-                      </ul>
-
-                      <div className="mt-2 displayFlex">
-                        {postTypeList.length > 1 &&
-                          postTypeList.map((pt) => (
-                            <CFormCheck
-                              key={`${IconName}-${pt.id}`}
-                              id={`${IconName}-${pt.id}`}
-                              name={`${IconName}-${pt.id}`}
-                              label={
-                                pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()
-                              }
-                              checked={selectedPostTypes[network.name]?.includes(pt.id) || false}
-                              onChange={() => handlePostTypeToggle(network.name, pt.id)}
-                              className="mb-1 form-checksub"
-                            />
-                          ))}
-                      </div>
-                    </CCol>
-                  );
-                })}
-            </CRow>
-            <React.Fragment>
-              <div className="CenterAlign pt-2">
-                <button
-                  onClick={() => setActiveTab(0)}
-                  type="button"
-                  className="btn btn_Default m-2 sales-btn-style"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => {
-                    setActiveTab(2); // Go to tab 2
-                    toggleAddScheduleMdl(); // Open modal
-                  }}
-                  type="button"
-                  className="btn btn_Default sales-btn-style m-2"
-                >
-                  Next
-                </button>
-              </div>
-            </React.Fragment>
-          </React.Fragment>
+          <CampignNetworkSettings
+            handleCheckboxChange={handleCheckboxChange}
+            handlePostTypeToggle={handlePostTypeToggle}
+            icons={icons}
+            networksList={networksList}
+            selectedNetworks={selectedNetworks}
+            selectedPostTypes={selectedPostTypes}
+            setActiveTab={setActiveTab}
+            toggleAddScheduleMdl={toggleAddScheduleMdl}
+            selectedTemplates={selectedTemplates}
+            handleTemplateToggle={handleTemplateToggle}
+            setSelectedTemplates={setSelectedTemplates}
+          />
         )}
         {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (
           <React.Fragment>
@@ -791,6 +728,7 @@ const campaignadd = () => {
         toggle={toggleAddScheduleMdl}
         selectedNetworks={selectedNetworks}
         selectedPostTypes={selectedPostTypes}
+        selectedTemplates={selectedTemplates}
         setSelected={setSelectedNetworks}
         campaignRegData={campaignRegData}
         setData={setScheduleData}

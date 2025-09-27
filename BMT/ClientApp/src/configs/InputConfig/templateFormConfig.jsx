@@ -6,7 +6,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import globalutil from 'src/util/globalutil';
 
-export const getTemplateInputFields = (templateData, handleTemplateData, loading) => [
+export const getTemplateInputFields = (templateData, handleTemplateData, loading, onEdit) => [
   {
     component: CustomSelectInput,
     label: 'Network',
@@ -20,7 +20,7 @@ export const getTemplateInputFields = (templateData, handleTemplateData, loading
     isRequired: true,
     disableOption: 'Select Network',
     message: 'Select Network',
-    disabled: loading || templateData?.id !== 0,
+    disabled: onEdit || loading || templateData?.id !== 0,
   },
   {
     component: CustomInput,
