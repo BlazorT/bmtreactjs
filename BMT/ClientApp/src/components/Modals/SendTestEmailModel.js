@@ -26,13 +26,12 @@ const SendTestEmailModel = ({ isOpen, toggle, subject, body, title }) => {
       subject,
       title,
     });
-
     if (res?.success) {
       showToast(res?.message, 'success');
       toggle();
       setEmail('');
     } else {
-      showToast(res?.message, 'error');
+      showToast(res?.error?.message || res?.message, 'error');
     }
   };
 
