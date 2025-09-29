@@ -78,7 +78,7 @@ const TemplateActionCell = ({ template, canDelete, fetching }) => {
           ) : (
             <CCol className="d-flex justify-content-center">
               <div className="d-flex align-items-center justify-content-center gap-4">
-                <CTooltip content="Edit User">
+                <CTooltip content="Edit Template">
                   <CIcon
                     onClick={() => editUser(template.id)}
                     className="stock-toggle-icon"

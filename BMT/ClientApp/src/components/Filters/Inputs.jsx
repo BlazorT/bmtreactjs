@@ -26,7 +26,10 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle 
       'isWhatsappAsso',
       /*'contact',*/
       'hasValidDrivingLicense',
+      'autoReplyContent',
+      'autoReplyAllowed',
       'licenseNo',
+      'virtualAccount',
     ];
 
     if (fullWidthFields.includes(inputName)) {
@@ -46,7 +49,9 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle 
           const conditionalProps = Object.fromEntries(
             Object.entries(input).filter(([key, value]) => Boolean(value)),
           );
-          const colWidth = getColWidth(input.name);
+          const colWidth = input?.className?.includes('small-3')
+            ? 3
+            : getColWidth(input.name, input.component);
 
           return (
             <CCol key={index} xl={colWidth} className="">

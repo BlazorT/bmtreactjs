@@ -187,6 +187,9 @@ p {
   color: #ffffff !important;
 }
 
+.react-datepicker-popper {
+  z-index: 999 !important;
+}
 /* Style the calendar header */
 .date-picker-custom-calendar .react-datepicker__header {
   background: #0c355f !important;
@@ -4009,8 +4012,8 @@ fieldset.legend {
   background-color: #e9ecef00 !important;
 }
 .input-file-image-preview {
-  width: 50px !important;
-  height: 50px !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 /* EmailTextEditor.css */
 .custom-modal-container {
