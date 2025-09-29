@@ -130,7 +130,7 @@ services.AddAuthorization(config =>
 });
 // Load Default Configurations
 GlobalUTIL.loadGlobalSettings();
-//GlobalUTIL.loadConfigurations(1);
+GlobalUTIL.loadConfigurations(1);
 GlobalUTIL.LoadGlobalLookUpCollectionViewModel();
 services.AddCors(o => o.AddPolicy("BlazorPolicy", builder =>
 {

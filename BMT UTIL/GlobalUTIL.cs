@@ -375,10 +375,10 @@ namespace com.blazor.bmt.util
                                 // Notification
                                 GlobalBasicConfigurationsViewModel.FcmSenderId = "" + (dr["fcmSenderId"]);
                                 GlobalBasicConfigurationsViewModel.FcmServerKey = "" + (dr["fcmServerKey"]);
-                                //SMS Dynamic Queries                                
-                                GlobalBasicConfigurationsViewModel.InsertSmshistoryQuery = "" + (dr["InsertSMSHistoryQuery"]);
-                                GlobalBasicConfigurationsViewModel.UpdateSmsnotificationsQuery = "" + (dr["UpdateSMSNotificationsQuery"]);
-                                GlobalBasicConfigurationsViewModel.GetSmsnotificationsQuery = "" + (dr["GetSMSNotificationsQuery"]);
+                                ////SMS Dynamic Queries                                
+                                //GlobalBasicConfigurationsViewModel.InsertSmshistoryQuery = "" + (dr["InsertSMSHistoryQuery"]);
+                                //GlobalBasicConfigurationsViewModel.UpdateSmsnotificationsQuery = "" + (dr["UpdateSMSNotificationsQuery"]);
+                                //GlobalBasicConfigurationsViewModel.GetSmsnotificationsQuery = "" + (dr["GetSMSNotificationsQuery"]);
                                 // API
                                 GlobalBasicConfigurationsViewModel.ApiAuthKey = "" + (dr["ApiAuthKey"]);
                             }//while (dr.Read())
