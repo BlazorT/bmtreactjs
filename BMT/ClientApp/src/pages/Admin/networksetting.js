@@ -1,21 +1,17 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
 import { CCol, CContainer, CRow } from '@coreui/react';
-import useFetch from 'src/hooks/useFetch';
+import React, { useEffect, useMemo, useState } from 'react';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-import { useSelector } from 'react-redux';
-import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import { cilUser } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useSelector } from 'react-redux';
 import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs';
-import { cilUser } from '@coreui/icons';
 import AppContainer from 'src/components/UI/AppContainer';
-import { useDispatch } from 'react-redux';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import Spinner from 'src/components/UI/Spinner';
 import Loading from 'src/components/UI/Loading';
-import Form from 'src/components/UI/Form';
+import useApi from 'src/hooks/useApi';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 
 //import globalutil from '../../util/globalutil';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
@@ -24,65 +20,13 @@ const SingleDispatchment = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user);
   const orgId = user.orgId;
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = React.useState(1);
   const [organization, setOrganization] = useState(1);
   const [tabs, setTabs] = useState([]);
-  const dispatch = useDispatch();
   const [networkList, setNetworkList] = useState([]);
-  const [orglist, setOrgList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = (e) => {
-    // console.log(e);
-    e.preventDefault();
-  };
 
-  const {
-    response: GetNetworkRes,
-    loading: NetworkLoading,
-    error: createNetworkError,
-    fetchData: GetNetworks,
-  } = useFetch();
-
-  useEffect(() => {
-    getNetworksList();
-    getOrganizationLst();
-  }, []);
-
-  const getNetworksList = async () => {
-    await GetNetworks(
-      '/Admin/networks',
-      {
-        method: 'POST',
-      },
-      (res) => {
-        // console.log(res, 'networks');
-        if (res.status === true) {
-          const T = [];
-          res.data.map((tab, index) => T.push({ id: tab.id, name: tab.name }));
-          //alert(JSON.stringify(tabs));
-          setTabs(T);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          /*   setRows([]);*/
-        }
-      },
-    );
-  };
-  const {
-    response: GetOrgRes,
-    loading: OrgLoading,
-    error: GetOrgError,
-    fetchData: GetOrg,
-  } = useFetch();
-
-  const getOrganizationLst = async () => {
-    const orgBody = {
+  const orgBody = useMemo(
+    () => ({
       id: 0,
       roleId: user.roleId,
       orgId: 0,
@@ -92,34 +36,34 @@ const SingleDispatchment = () => {
       rowVer: 0,
       cityId: 0,
       status: 1,
-      // keyword: filters ? filters.keyword : '',
       createdAt: dayjs().utc().subtract(1, 'year').format(), // ISO 8601 string
       lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
       createdBy: user.userId,
       lastUpdatedBy: user.userId,
-    };
-    await GetOrg(
-      '/BlazorApi/orgsfulldata',
-      { method: 'POST', body: JSON.stringify(orgBody) },
-      (res) => {
-        if (Array.isArray(res?.data) && res?.data?.length > 0) {
-          setOrgList(res?.data);
-        }
-      },
-    );
-  };
-  useEffect(() => {
-    if (orglist?.length > 0) {
-      const findUserOrg = orglist?.find((item) => item.id === orgId);
+    }),
+    [user],
+  );
+  const body = useMemo(() => ({}), []);
 
+  const { data, loading } = useApi('/BlazorApi/orgsfulldata', 'POST', orgBody);
+
+  const { data: networkRes, loading: networksLoading } = useApi('/Admin/networks', 'POST', body);
+
+  useEffect(() => {
+    setTabs(networkRes?.data || []);
+  }, [networkRes]);
+
+  useEffect(() => {
+    if (data?.data?.length > 0) {
+      const findUserOrg = data?.data?.find((item) => item.id === orgId);
       if (findUserOrg) {
         setOrganization(findUserOrg); // store the whole object or just label/value depending on CustomSearch
       }
     }
-  }, [orglist, orgId]);
+  }, [data, orgId]);
   // console.log({ orglist });
 
-  if (OrgLoading?.current || NetworkLoading?.current) {
+  if (loading || networksLoading) {
     return <Loading />;
   }
 
@@ -136,7 +80,7 @@ const SingleDispatchment = () => {
             onChange={(e, value) => setOrganization(e)}
             placeholder="Organization"
             name="name"
-            data={orglist}
+            data={data?.data || []}
             className="form-control item"
             isRequired={true}
             title="Select Organization"
@@ -152,19 +96,19 @@ const SingleDispatchment = () => {
         handleActiveTab={setActiveTab}
       />
       <CContainer fluid className="m-0 p-0 mt-1">
-        {tabs.map((tab, index) => (
-          <>
-            {activeTab == tab.id && (
+        {tabs.map(
+          (tab) =>
+            activeTab == tab.id && (
               <BlazorNetworkInput
                 key={tab.id}
                 header={tab.name}
                 networkId={tab.id}
+                organizationId={organization?.id || 1}
                 setNetworkList={setNetworkList}
                 networkList={networkList}
               />
-            )}
-          </>
-        ))}
+            ),
+        )}
       </CContainer>
     </AppContainer>
   );
