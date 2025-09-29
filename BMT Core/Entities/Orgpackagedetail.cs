@@ -19,8 +19,8 @@ public partial class Orgpackagedetail : EntityTransaction
     public string? Password { get; set; }
     public int? port { get; set; }
     public string? ApikeySecret { get; set; }
-
-    public string? Custom2 { get; set; }
+	public long? m2mIntervalSeconds { get; set; }
+	public string? Custom2 { get; set; }
 
     public string? Custom1 { get; set; }
 

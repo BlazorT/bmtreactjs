@@ -34,8 +34,9 @@ public partial class OrgpackagedetailViewModel
     public string? HashTags { get; set; }
 
     public int NetworkId { get; set; }
+	public long? m2mIntervalSeconds { get; set; }
 
-    public int? PurchasedQouta { get; set; }
+	public int? PurchasedQouta { get; set; }
     public int? port { get; set; }
     public string? AutoReplyContent { get; set; }
 

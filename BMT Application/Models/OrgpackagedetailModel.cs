@@ -18,8 +18,8 @@ public partial class OrgpackagedetailModel : BaseModelTransactions
     public int? TargetAudienceId { get; set; }
 
     public string? Password { get; set; }
-
-    public string? ApikeySecret { get; set; }
+	public long? m2mIntervalSeconds { get; set; }
+	public string? ApikeySecret { get; set; }
     public int? port { get; set; }
     public string? Custom2 { get; set; }
 
