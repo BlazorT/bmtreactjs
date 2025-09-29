@@ -4,7 +4,7 @@ import CIcon from '@coreui/icons-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 const CustomInput = ({
- icon,
+  icon,
   type,
   label,
   title,
@@ -58,11 +58,11 @@ const CustomInput = ({
             className={`${className} form-control item`}
             id={id}
             name={name}
-            value={value ?? ""}
+            value={value ?? ''}
             placeholder={placeholder}
             required={isRequired}
             disabled={!!disabled}
-            autoComplete="off"
+            autoComplete="new-password"
             onChange={(e) => onChange?.(e)}
             autoFocus={!!autoFocus}
             onClick={() => onClick?.()}
@@ -77,13 +77,15 @@ const CustomInput = ({
           />
 
           {isRequired && <span className="invalid-tooltip">{message}</span>}
+
           {type === 'file' && (
             <div className="form-control row me-0 ">
               <div className="col-8 text-truncate ps-0 ">{helperText}</div>
             </div>
           )}
           {type === 'file' && src && src !== '' && src !== 'pdf' && (
-            <img src={`${src}`} className="input-file-image-preview" /> )}
+            <img src={`${src}`} className="input-file-image-preview" />
+          )}
           {type === 'file' && src && src !== '' && src == 'pdf' && (
             <FontAwesomeIcon icon={faFilePdf} size="lg" className="input-file-image-preview" />
           )}
