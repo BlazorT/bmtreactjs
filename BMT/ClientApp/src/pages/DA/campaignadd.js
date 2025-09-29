@@ -126,9 +126,11 @@ const campaignadd = () => {
     error: createNetworkError,
     fetchData: GetNetworks,
   } = useFetch();
+
   useEffect(() => {
     getNetworksList();
   }, []);
+
   const fetchBody = {
     orgId: String(user.orgId), // ✅ convert to string
     userId: String(user.userId), // ✅ convert to string

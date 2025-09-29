@@ -1,5 +1,5 @@
-import { cilCalendar, cilChevronBottom, cilUser } from '@coreui/icons';
-import { CCol, CFormCheck, CRow } from '@coreui/react';
+import { cilChevronBottom, cilUser } from '@coreui/icons';
+import { CCol, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -7,26 +7,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import AppContainer from 'src/components/UI/AppContainer';
-import CustomDatePicker from 'src/components/UI/DatePicker';
-import useFetch from 'src/hooks/useFetch';
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import globalutil from '../../util/globalutil';
-import Button from '../UI/Button';
-import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
-import EmailTextEditor from '../UI/email-editor';
 import {
   getInitialNetworkData,
   getNetworkInputFields,
 } from 'src/configs/InputConfig/networkFromConfig';
-import Inputs from '../Filters/Inputs';
-import Form from '../UI/Form';
 import { formValidator } from 'src/helpers/formValidator';
-import { useShowToast } from 'src/hooks/useShowToast';
 import useApi from 'src/hooks/useApi';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import { updateToast } from 'src/redux/toast/toastSlice';
+import Inputs from '../Filters/Inputs';
+import Button from '../UI/Button';
+import Form from '../UI/Form';
+import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
+import EmailTextEditor from '../UI/email-editor';
+import TemplateListModel from '../Modals/TemplateListModel';
 
 dayjs.extend(utc);
 
@@ -43,6 +40,9 @@ const BlazorNetworkInputs = (prop) => {
   );
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
+  const [showTemplateList, setShowTemplateList] = useState(false);
+
+  const toggleShowTemplateList = () => setShowTemplateList((prev) => !prev);
 
   const networkSettingBody = useMemo(
     () => ({
@@ -53,15 +53,27 @@ const BlazorNetworkInputs = (prop) => {
   );
 
   const { postData, loading } = useApi('/Organization/addupdatenetworksettings');
-  const { data: networkSettingsData, loading: networkSettingsLoading } = useApi(
-    '/Organization/orgpackagedetails',
-    'POST',
-    networkSettingBody,
-  );
+  const {
+    postData: refetchNetworkSettings,
+    data: networkSettingsData,
+    loading: networkSettingsLoading,
+  } = useApi('/Organization/orgpackagedetails', 'POST', networkSettingBody);
 
   useEffect(() => {
-    if (networkSettingsData?.data && networkSettingsData?.data?.length > 0) {
-      const data = networkSettingsData?.data?.[0];
+    if (networkSettingsData?.data && networkSettingsData.data.length > 0) {
+      const data = networkSettingsData.data[0];
+
+      // ✅ Safely parse custom1
+      let templateData = {};
+      if (data?.custom1) {
+        try {
+          templateData = JSON.parse(data.custom1);
+        } catch (err) {
+          console.error('Invalid JSON in custom1:', err);
+          templateData = {};
+        }
+      }
+
       setNetworkState({
         id: data?.id,
         orgId: data?.orgId,
@@ -74,6 +86,7 @@ const BlazorNetworkInputs = (prop) => {
         sender: data?.sender || '',
         port: data?.port || 0,
         apikey: data?.apikey || '',
+        apikeySecret: data?.apikeySecret || '',
         password: data?.password || '',
         autoReplyAllowed: data?.autoReplyAllowed,
         autoReplyContent: data?.autoReplyContent,
@@ -83,7 +96,7 @@ const BlazorNetworkInputs = (prop) => {
         networkId: data?.networkId,
         rowVer: 1,
         status: data?.status || 1,
-        Custom1: data?.custom1 || '',
+        Custom1: templateData?.template || '',
         Custom2: data?.custom2 || '',
         m2mIntervalSeconds: data?.m2mIntervalSeconds || 60,
         startTime: data?.startTime || dayjs().utc().format(),
@@ -92,7 +105,11 @@ const BlazorNetworkInputs = (prop) => {
         createdBy: data?.createdBy || user.userId,
         lastUpdatedAt: dayjs().utc().format(),
         createdAt: data?.createdAt || dayjs().utc().startOf('month').format(),
+        templateSubject: templateData?.subject || '',
+        templateTitle: templateData?.title || '',
       });
+    } else {
+      setNetworkState(getInitialNetworkData(organizationId, user, networkId));
     }
   }, [networkSettingsData]);
 
@@ -224,7 +241,8 @@ const BlazorNetworkInputs = (prop) => {
     formValidator();
     const form = document.querySelector('.network-settings-form');
 
-    if (!form.checkValidity()) {
+    if (!form?.checkValidity()) {
+      setshowFilters(true);
       return;
     }
     if (networkState?.name === '') {
@@ -232,6 +250,21 @@ const BlazorNetworkInputs = (prop) => {
         updateToast({
           isToastOpen: true,
           toastMessage: 'Template name is required.',
+          toastVariant: 'error',
+        }),
+      );
+      return;
+    }
+
+    if (
+      (networkState?.templateSubject === '' && networkId === 3) ||
+      networkState?.templateTitle === ''
+    ) {
+      setshowFilters(true);
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: 'Template subject or title  is required.',
           toastVariant: 'error',
         }),
       );
@@ -290,10 +323,38 @@ const BlazorNetworkInputs = (prop) => {
         );
         return;
       }
-      console.log({ networkList });
-      const res = await postData(networkList);
+      const body = networkList?.map((nl) => ({
+        ...nl,
+        autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
+        status: nl?.status ? 1 : 0,
+        virtualAccount: nl?.virtualAccount ? 1 : 0,
+        Custom1: JSON.stringify({
+          template: nl?.Custom1,
+          subject: nl?.templateSubject,
+          title: nl?.templateTitle,
+        }),
+      }));
+      console.log({ body });
+      const res = await postData(body);
       console.log({ res });
-      if (res?.status === true) {
+      if (res?.status === true && res?.data) {
+        await refetchNetworkSettings(networkSettingBody);
+        // setNetworkState((prev) => ({ ...prev, id: res?.id }));
+
+        setNetworkList((prev) => {
+          const updatedState = { ...networkState, id: res?.data };
+          const index = prev.findIndex((n) => n.networkId === updatedState.networkId);
+
+          if (index !== -1) {
+            // Replace existing
+            const newList = [...prev];
+            newList[index] = updatedState;
+            return newList;
+          }
+
+          // Otherwise add new
+          return [...prev, updatedState];
+        });
         showToast(res?.message, 'success');
         const GlobalPreferenceId = res?.data;
         const userId = user.userId;
@@ -354,7 +415,24 @@ const BlazorNetworkInputs = (prop) => {
     }
   };
 
-  const networkInputFields = getNetworkInputFields(networkState, handleNetworkSetting, networkId);
+  const networkInputFields = getNetworkInputFields(
+    networkState,
+    handleNetworkSetting,
+    networkId,
+    organizationId,
+  );
+
+  const onSelectTemplate = (t) => {
+    setNetworkState((prev) => ({
+      ...prev,
+      Custom1: t?.template,
+      Custom2: t?.templateJson || '',
+      templateSubject: t?.subject || '',
+      templateTitle: t?.title || '',
+    }));
+
+    setshowFilters(true);
+  };
   return (
     <React.Fragment>
       {networkSettingsLoading ? (
@@ -402,11 +480,51 @@ const BlazorNetworkInputs = (prop) => {
               title="Message Template"
               onClick={toggleStock}
               otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+              addButton="Load Template"
+              addBtnClick={toggleShowTemplateList}
               filterDisable={true}
+            />
+            <TemplateListModel
+              isOpen={showTemplateList}
+              toggle={toggleShowTemplateList}
+              onSelect={onSelectTemplate}
+              networkId={networkId}
             />
             {showFilters && (
               <CRow>
-                <CCol className="" md={12}>
+                <CCol md={6}>
+                  <CustomInput
+                    label="Template Title"
+                    icon={cilUser}
+                    value={networkState.templateTitle}
+                    onChange={handleNetworkSetting}
+                    placeholder="Input Template Title"
+                    type="text"
+                    id="templateTitle"
+                    name="templateTitle"
+                    className="form-control item"
+                    isRequired={true}
+                    title="Input Template Title"
+                    message="Enter Template Title"
+                  />
+                </CCol>
+                <CCol md={6}>
+                  <CustomInput
+                    label="Template Subject"
+                    icon={cilUser}
+                    value={networkState.templateSubject}
+                    onChange={handleNetworkSetting}
+                    placeholder="Input Template Subject"
+                    type="text"
+                    id="templateSubject"
+                    name="templateSubject"
+                    className="form-control item"
+                    isRequired={networkId === 3}
+                    title="Input Template Subject"
+                    message="Enter Template Subject"
+                  />
+                </CCol>
+                <CCol className="mt-2" md={12}>
                   {networkState?.networkId !== 3 ? (
                     <SocialMediaTextEditor
                       value={networkState.Custom1} // Ensure value is a string
@@ -427,6 +545,7 @@ const BlazorNetworkInputs = (prop) => {
                           Custom2: JSON.stringify(design),
                         }));
                       }}
+                      isModal={false}
                     />
                   )}
                 </CCol>
@@ -443,7 +562,7 @@ const BlazorNetworkInputs = (prop) => {
             {showIntegration && (
               <>
                 <Inputs inputFields={networkInputFields} isBtn={false}></Inputs>
-                <CRow>
+                {/* <CRow>
                   <CCol md={6}>
                     <label className="form-label fw-bold">Post Types</label>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
@@ -462,7 +581,7 @@ const BlazorNetworkInputs = (prop) => {
                       ))}
                     </div>
                   </CCol>
-                </CRow>
+                </CRow> */}
               </>
             )}
           </AppContainer>

@@ -42,6 +42,7 @@ const globalpreference = () => {
                 networkId={tab.id}
                 setNetworkList={setNetworkList}
                 networkList={networkList}
+                organizationId={1}
               />
             )}
           </>

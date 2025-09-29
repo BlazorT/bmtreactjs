@@ -2386,6 +2386,22 @@ input-bill-qty {
   max-width: 60%;
   margin-top: 0.5em; /* Center the modal horizontally */
 }
+/* TemplateListModel.css */
+.template-list-model .modal-dialog {
+  max-width: 60% !important; /* set width to 50% */
+  margin: auto !important; /* center horizontally */
+}
+
+/* TemplateListModel.css */
+.template-list-model .list-group-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.template-list-model .list-group-item:hover {
+  background-color: #094f96; /* light slate */
+}
+
 .css-1k2u9zb-MuiChartsAxis-root .MuiChartsAxis-line {
   stroke: rgb(198 180 180 / 87%) !important;
   shape-rendering: crispEdges;
@@ -4041,6 +4057,7 @@ fieldset.legend {
 .modal-backdrop {
   z-index: 1040 !important; /* Below modal content */
 }
+
 .custom-modal-email {
   width: 90vw;
   height: 90vh;
@@ -4095,10 +4112,10 @@ fieldset.legend {
   background-color: #0056b3;
 }
 .email-editor-container {
-  border: 1px solid #ccc;
+  border: 1px solid #999797;
   border-radius: 8px;
   position: relative;
-  background: #0b3153;
+  background: s#0b3153;
   padding: 5px;
 }
 

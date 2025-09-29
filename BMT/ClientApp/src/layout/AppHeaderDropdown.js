@@ -61,9 +61,8 @@ const AppHeaderDropdown = () => {
       }),
     );
     await userLogout('/Common/logout', { method: 'POST' });
-
     if (logoutRes.current?.status === true) {
-      navigate('');
+      navigate('/');
       dispatch(setNavItems([]));
       dispatch(
         setUserData({
