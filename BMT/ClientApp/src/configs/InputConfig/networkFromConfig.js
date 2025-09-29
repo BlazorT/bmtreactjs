@@ -1,15 +1,20 @@
-import { cilCalendar, cilUser } from '@coreui/icons';
+import { cilBuilding, cilCalendar, cilLink, cilLockLocked, cilUser } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import dayjs, { utc } from 'dayjs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 
-export const getNetworkInputFields = (networkState, handleNetworkSetting, networkId) => [
+export const getNetworkInputFields = (
+  networkState,
+  handleNetworkSetting,
+  networkId,
+  organizationId,
+) => [
   {
     component: CustomInput,
     label: 'Business Id',
-    icon: cilUser,
+    icon: cilBuilding,
     value: networkState.buisnessId,
     onChange: handleNetworkSetting,
     type: 'text',
@@ -23,37 +28,51 @@ export const getNetworkInputFields = (networkState, handleNetworkSetting, networ
   {
     component: CustomInput,
     label: 'Key',
-    icon: cilUser,
+    icon: cilLockLocked,
+    value: networkState.apikey,
+    onChange: handleNetworkSetting,
+    type: 'text',
+    id: 'apikey',
+    name: 'apikey',
+    placeholder: 'API Key e.g(uk08l00**)',
+    className: 'form-control item',
+    isRequired: false,
+    title: 'API Key e.g(uk08l00**)',
+    message: 'Enter API Key',
+  },
+  {
+    component: CustomInput,
+    label: 'Secret Key',
+    icon: cilLockLocked,
     value: networkState.apiKeySecret,
     onChange: handleNetworkSetting,
     type: 'text',
     id: 'apiKeySecret',
     name: 'apiKeySecret',
-    placeholder: 'API Key Secret e.g(uk08l00**)',
+    placeholder: 'Secret Key e.g(uk08l00**)',
     className: 'form-control item',
     isRequired: false,
-    title: 'API Key Secret e.g(uk08l00**)',
-    message: 'Enter API Key Secret',
+    title: 'Secret Key Secret e.g(uk08l00**)',
+    message: 'Enter Secret Key',
   },
   {
     component: CustomInput,
-    label: 'API Url',
-    icon: cilUser,
+    label: 'API Uri',
+    icon: cilLink,
     value: networkState.apiuri,
     onChange: handleNetworkSetting,
     type: 'text',
     id: 'apiuri',
     name: 'apiuri',
-    placeholder: 'API Url e.g(https:/api.example.com)',
+    placeholder: 'API URI',
     className: 'form-control item',
     isRequired: false,
-    title: 'API Url e.g(https:/api.example.com)',
-    message: 'Enter API Url',
+    message: 'Enter API Uri',
   },
   {
     component: CustomInput,
     label: 'Url',
-    icon: cilUser,
+    icon: cilLink,
     value: networkState.url,
     onChange: handleNetworkSetting,
     type: 'text',
@@ -95,7 +114,21 @@ export const getNetworkInputFields = (networkState, handleNetworkSetting, networ
     title: 'Purchased Qouta e.g (1000 Quantity Purchased)',
     message: 'Enter Purchased Qouta',
   },
-  ...(networkId === 3
+  {
+    component: CustomInput,
+    label: 'Sender',
+    icon: cilUser,
+    value: networkState.sender,
+    onChange: handleNetworkSetting,
+    type: 'text',
+    id: 'sender',
+    name: 'sender',
+    placeholder: 'Sender Email Account',
+    className: 'form-control item',
+    isRequired: false,
+    title: 'Sender Email Account',
+  },
+  ...(networkId === 3 && organizationId === 1
     ? [
         {
           component: CustomInput,
@@ -139,20 +172,7 @@ export const getNetworkInputFields = (networkState, handleNetworkSetting, networ
           isRequired: false,
           title: 'Port ex. 9003',
         },
-        {
-          component: CustomInput,
-          label: 'Sender',
-          icon: cilUser,
-          value: networkState.sender,
-          onChange: handleNetworkSetting,
-          type: 'text',
-          id: 'sender',
-          name: 'sender',
-          placeholder: 'Sender Email Account',
-          className: 'form-control item',
-          isRequired: false,
-          title: 'Sender Email Account',
-        },
+
         {
           component: CustomInput,
           label: 'Mail Server Email Account',
@@ -206,6 +226,7 @@ export const getNetworkInputFields = (networkState, handleNetworkSetting, networ
     title: 'Date To',
     minDate: dayjs(networkState.startTime),
   },
+
   {
     component: CustomInput,
     label: 'Message - Message Interval (in seconds)',
@@ -293,6 +314,9 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   sender: '',
   port: 0,
   apikey: '',
+  templateSubject: '',
+  templateTitle: '',
+  apiKeySecret: '',
   password: '',
   autoReplyAllowed: 1,
   autoReplyContent: '',

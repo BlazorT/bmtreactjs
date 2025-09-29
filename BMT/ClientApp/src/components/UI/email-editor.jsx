@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EmailEditor from 'react-email-editor';
 import Button from '../InputsComponent/Button';
 import CIcon from '@coreui/icons-react';
@@ -32,6 +32,13 @@ const EmailTextEditor = ({ open, toggle, onSave, value, isModal = true }) => {
       unlayer.loadDesign(value);
     }
   };
+
+  // 🔥 Reload editor when "value" prop changes
+  useEffect(() => {
+    if (value && emailEditorRef.current?.editor) {
+      emailEditorRef.current.editor.loadDesign(value);
+    }
+  }, [value]);
 
   const handleSave = async () => {
     const { design, html } = await exportHtml();
