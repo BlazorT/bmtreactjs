@@ -326,6 +326,8 @@ namespace com.blazor.bmt.util
 							viewModel.stmpserver = "" + GlobalBasicConfigurationsViewModel.SmtpServer;
 							viewModel.stmpuser = "" + GlobalBasicConfigurationsViewModel.SmtpUser;
 							viewModel.enableEmailNotification =  Convert.ToBoolean(GlobalBasicConfigurationsViewModel.email_notification_enabled);
+							viewModel.smtp_email_sender = GlobalBasicConfigurationsViewModel.SmtpSenderEmail;
+							viewModel.bmt_admin_email = ""+GlobalBasicConfigurationsViewModel.OrgAdminEmail;
 							//viewModel.au = GlobalBasicConfigurationsViewModel.ApiAuthKey;
 							//viewModel.IS_PROXY_ENABLED = "" + GlobalBasicConfigurationsViewModel.IsProxyEnabled;
 							//viewModel.PROXY_USER = "" + GlobalBasicConfigurationsViewModel.ProxyServer;
@@ -346,7 +348,7 @@ namespace com.blazor.bmt.util
                     using (var command = connection.CreateCommand())
                     {
 
-                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultOrgId,DefaultOrgName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,dsp_admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,InsertSMSHistoryQuery,UpdateSMSNotificationsQuery,GetSMSNotificationsQuery,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM basicconfigurations ";
+                        command.CommandText = "SELECT Id, proxy_server,proxy_user_pwd,proxy_user_name,isProxyEnabled,email_notification_enabled,sms_notification_enabled,DefaultPublicUserId,DefaultOrgId,DefaultOrgName,SmtpServer,SMTPPort,SSLEnabled,sms_qouta,admin_email,sms_service_user,sms_password,sms_service_url,SmtpUser,SmtpUserPwd,fcmSenderId,fcmServerKey,ApiAuthKey,email_sender,LastUpdatedBy,CreatedBy,CreatedAt,LastUpdatedAt,Status FROM basicconfigurations ";
                         command.CommandType = System.Data.CommandType.Text;
                         using (DbDataReader dr = command.ExecuteReader())
                         {
@@ -376,20 +378,21 @@ namespace com.blazor.bmt.util
                                 GlobalBasicConfigurationsViewModel.email_notification_enabled = Convert.ToByte(String.IsNullOrWhiteSpace(""+dr["email_notification_enabled"])?0: dr["email_notification_enabled"]);
                                 //EMAIl
                                 GlobalBasicConfigurationsViewModel.SmtpServer = "" + (dr["SmtpServer"]);
-                                GlobalBasicConfigurationsViewModel.OrgAdminEmail = "" + (dr["dsp_admin_email"]);
+                                GlobalBasicConfigurationsViewModel.OrgAdminEmail = "" + (dr["admin_email"]);
                                 GlobalBasicConfigurationsViewModel.SmtpUser = "" + (dr["SmtpUser"]);
-                                GlobalBasicConfigurationsViewModel.SmtpSenderEmail = "" + (dr["dsp_admin_email"]);
+                                GlobalBasicConfigurationsViewModel.SmtpSenderEmail = "" + (dr["email_sender"]);
                                 GlobalBasicConfigurationsViewModel.SmtpUserPwd = "" + (dr["SmtpUserPwd"]);
                                 GlobalBasicConfigurationsViewModel.Smtpport = Convert.ToInt32(dr["SmtpPort"]);
                                 // Notification
                                 GlobalBasicConfigurationsViewModel.FcmSenderId = "" + (dr["fcmSenderId"]);
                                 GlobalBasicConfigurationsViewModel.FcmServerKey = "" + (dr["fcmServerKey"]);
-                                ////SMS Dynamic Queries                                
-                                //GlobalBasicConfigurationsViewModel.InsertSmshistoryQuery = "" + (dr["InsertSMSHistoryQuery"]);
-                                //GlobalBasicConfigurationsViewModel.UpdateSmsnotificationsQuery = "" + (dr["UpdateSMSNotificationsQuery"]);
-                                //GlobalBasicConfigurationsViewModel.GetSmsnotificationsQuery = "" + (dr["GetSMSNotificationsQuery"]);
-                                // API
-                                GlobalBasicConfigurationsViewModel.ApiAuthKey = "" + (dr["ApiAuthKey"]);
+								//GlobalBasicConfigurationsViewModel.email_sender = "" + (dr["email_sender"]);
+								////SMS Dynamic Queries                                
+								//GlobalBasicConfigurationsViewModel.InsertSmshistoryQuery = "" + (dr["InsertSMSHistoryQuery"]);
+								//GlobalBasicConfigurationsViewModel.UpdateSmsnotificationsQuery = "" + (dr["UpdateSMSNotificationsQuery"]);
+								//GlobalBasicConfigurationsViewModel.GetSmsnotificationsQuery = "" + (dr["GetSMSNotificationsQuery"]);
+								// API
+								GlobalBasicConfigurationsViewModel.ApiAuthKey = "" + (dr["ApiAuthKey"]);
                             }//while (dr.Read())
                         }// using (DbDataReader dr = command.ExecuteReader())                        
                     }

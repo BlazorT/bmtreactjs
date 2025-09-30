@@ -26,8 +26,10 @@ namespace com.blazor.bmt.viewmodels
         public string stmpuser { get; set; } = "user";
         public string stmpserver { get; set; } = "smtp.gmail.com";        
         public string stmppwd { get; set; } = "htt6755";
-        public string smtpport { get; set; } = "587";       
-        public string flagReportEmailBody { get; set; } = String.Empty;
+        public string smtpport { get; set; } = "587";
+		public string smtp_email_sender { get; set; } = "bmt@bmt.blazortech.com";
+		public string bmt_admin_email { get; set; } = "admin@bmt.blazortech.com";
+		public string flagReportEmailBody { get; set; } = String.Empty;
         
         public string accountActivateEmailBody { get; set; } = String.Empty;
         public string accountBlockEmailBody { get; set; } = String.Empty;

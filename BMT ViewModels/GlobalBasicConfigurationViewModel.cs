@@ -11,9 +11,8 @@ namespace com.blazor.bmt.viewmodels
 
         public static string? DefaultOrgname { get; set; }
 
-        public static string SmtpServer { get; set; } = null!;
-
-        public static int? Smtpport { get; set; }
+        public static string SmtpServer { get; set; } = null!;	
+		public static int? Smtpport { get; set; }
 
         public static byte? IsProxyEnabled { get; set; }
 
