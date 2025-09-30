@@ -31,6 +31,7 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
+import globalutil from 'src/util/globalutil';
 //import useApi from 'src/hooks/useApi';
 //alert('ORG Called')
 const OrganizationAdd = () => {
@@ -89,12 +90,10 @@ const OrganizationAdd = () => {
         dspId: daData.dspid,
       };
 
-      //  console.log({ initialData });
       setDaApplyFormData(initialData);
     }
     setIsLoading(false);
   }, []);
-
   const { createUpdateOrg } = useUpdateOrg();
 
   const { checkUserAvailability } = useUserAvailability();
@@ -203,15 +202,16 @@ const OrganizationAdd = () => {
     if (form.checkValidity()) {
       const daBody = {
         ...daApplyFormData,
-        id: 0,
         contact: daApplyFormData.contact,
         address: daApplyFormData.mailAddress,
-
+        cityId: daApplyFormData?.cityId ? parseInt(daApplyFormData?.cityId) : 0,
+        stateId: daApplyFormData?.stateId ? parseInt(daApplyFormData?.stateId) : 0,
         rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
         // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
         createdAt: dayjs().utc().format(),
         lastUpdatedAt: dayjs().utc().format(),
         remarks: 'Organization registered successfully',
+        lastUpdatedBy: user?.userId || 1,
       };
       //console.log(daBody);
       // Upload & Submit
@@ -353,7 +353,7 @@ const OrganizationAdd = () => {
     onBlur,
     GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
-
+  // console.log(globalutil.states());
   /*if (isLoading) {
     return <Loading />;
   }*/

@@ -101,6 +101,7 @@ const BlazorNetworkInputs = (prop) => {
         m2mIntervalSeconds: data?.m2mIntervalSeconds || 60,
         startTime: data?.startTime || dayjs().utc().format(),
         finishTime: data?.finishTime || dayjs().utc().format(),
+        accountAuthData: data?.accountAuthData || '',
         lastUpdatedBy: user.userId,
         createdBy: data?.createdBy || user.userId,
         lastUpdatedAt: dayjs().utc().format(),
@@ -112,7 +113,7 @@ const BlazorNetworkInputs = (prop) => {
       setNetworkState(getInitialNetworkData(organizationId, user, networkId));
     }
   }, [networkSettingsData]);
-  console.log({ networkState });
+
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
 
   useEffect(() => {
