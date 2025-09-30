@@ -321,7 +321,16 @@ namespace com.blazor.bmt.util
                             if (BlazorConstant.ACCOUNT_PASSWORD_RESET_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status
                                 viewModel.profilePwdResetEmail = "" + (dr["value"]);
 
-    }//while (dr.Read())
+                            viewModel.stmppwd = GlobalBasicConfigurationsViewModel.SmtpUserPwd;
+                            viewModel.smtpport = ""+GlobalBasicConfigurationsViewModel.Smtpport;
+							viewModel.stmpserver = "" + GlobalBasicConfigurationsViewModel.SmtpServer;
+							viewModel.stmpuser = "" + GlobalBasicConfigurationsViewModel.SmtpUser;
+							viewModel.enableEmailNotification =  Convert.ToBoolean(GlobalBasicConfigurationsViewModel.email_notification_enabled);
+							//viewModel.au = GlobalBasicConfigurationsViewModel.ApiAuthKey;
+							//viewModel.IS_PROXY_ENABLED = "" + GlobalBasicConfigurationsViewModel.IsProxyEnabled;
+							//viewModel.PROXY_USER = "" + GlobalBasicConfigurationsViewModel.ProxyServer;
+
+						}//while (dr.Read())
                         if(viewModel.OrgId >0)
                         GlobalSettings.Configurations.Add(viewModel);
                     }// using (DbDataReader dr = command.ExecuteReader())                        
