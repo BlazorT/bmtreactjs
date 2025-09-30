@@ -70,13 +70,13 @@ namespace com.blazor.bmt.controllers
             {               
                     //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
                     blazorApiResponse.status = true;
-                if (GlobalSettings.Configurations.Any())
+                if (GlobalSettings.Configurations!= null && GlobalSettings.Configurations.Where(x=>x.OrgId== Convert.ToInt32(filter.orgId)).Any())
                 {
-                    blazorApiResponse.data = GlobalSettings.Configurations.FirstOrDefault();
+                    blazorApiResponse.data = GlobalSettings.Configurations.Where(x => x.OrgId == Convert.ToInt32(filter.orgId)).FirstOrDefault();
                 }
                 else {
                     GlobalUTIL.loadConfigurations(Convert.ToInt32(filter.orgId));
-                    blazorApiResponse.data = GlobalSettings.Configurations.FirstOrDefault();
+                    blazorApiResponse.data = GlobalSettings.Configurations.Where(x => x.OrgId == Convert.ToInt32(filter.orgId)).FirstOrDefault();
                 }
                    
                   //  _cache.Set("" + this.User.Identity.Name + Request.Path, blazorApiResponse.data, System.DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_SECONDS));
