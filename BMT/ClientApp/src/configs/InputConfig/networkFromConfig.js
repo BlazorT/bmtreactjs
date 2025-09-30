@@ -321,6 +321,7 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   password: '',
   autoReplyAllowed: 1,
   autoReplyContent: '',
+  accountAuthData: '',
   replyAttachment: '',
   virtualAccount: 0,
   posttypejson: [],
