@@ -11,26 +11,23 @@ import {
   cilFlagAlt,
   cilShortText,
 } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
 import { CCol, CFormCheck, CRow } from '@coreui/react';
-import React, { useEffect, useState } from 'react';
-import AppContainer from 'src/components/UI/AppContainer';
-import CustomDatePicker from 'src/components/UI/DatePicker';
-import { updateToast } from 'src/redux/toast/toastSlice';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import useFetch from 'src/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
+import AppContainer from 'src/components/UI/AppContainer';
+import CustomDatePicker from 'src/components/UI/DatePicker';
 import CustomTimePicker from 'src/components/UI/TimePicker';
-import { createSchedule } from 'src/hooks/api/createSchedule';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
-import CIcon from '@coreui/icons-react';
 const AddScheduleModel = (prop) => {
   dayjs.extend(utc);
   const {
@@ -53,92 +50,15 @@ const AddScheduleModel = (prop) => {
     TotalSchMessages: 0,
     TotalCampBudget: 0,
   });
-  console.log({ selectedTemplates });
-  //console.log("selectedNetwork", selectedNetworks);
-  const { createCampaign } = createSchedule();
   const user = useSelector((state) => state.user);
-  //const calculateBudget = (networks, scheduleJson, jsonRates) => {
-  //  if (!Array.isArray(networks) || !Array.isArray(scheduleJson) || !Array.isArray(jsonRates)) {
-  //    console.warn("Invalid input to calculateBudget");
-  //    return;
-  //  }
-
-  //  let TotalCampBudget = 0;
-  //  let TotalSchMessages = 0;
-
-  //  const networkBudgets = [];
-
-  //  for (const ntwk of networks) {
-  //    const rates = jsonRates.filter(r => r.id === ntwk.NetworkId);
-
-  //    if (rates.length === 0) {
-  //      console.warn(`No rate found for NetworkId: ${ntwk.NetworkId}`);
-  //      continue;
-  //    }
-
-  //    const UnitRate = parseFloat(rates[0].desc);
-  //    if (isNaN(UnitRate)) {
-  //      console.error(`Invalid rate for NetworkId: ${ntwk.NetworkId}`);
-  //      continue;
-  //    }
-
-  //    let sMessageCount = 0;
-  //    let nBudget = 0;
-
-  //    for (const schdl of scheduleJson.filter(s => s.NetworkId === ntwk.NetworkId)) {
-  //      const sDate = new Date(schdl.StartTime);
-  //      const fDate = new Date(schdl.FinishTime);
-
-  //      if (isNaN(sDate) || isNaN(fDate)) {
-  //        console.warn(`Invalid dates in schedule for NetworkId: ${ntwk.NetworkId}`);
-  //        continue;
-  //      }
-
-  //      const diffTime = Math.abs(fDate - sDate);
-  //      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  //      const parsedDays = JSON.parse(schdl.Days || '[]');
-  //      const daysSelected = parsedDays.length || 1;
-
-  //      switch (schdl.IntervalTypeId) {
-  //        case 1:
-  //          sMessageCount += diffDays;
-  //          nBudget += diffDays * UnitRate;
-  //          break;
-  //        case 2:
-  //        case 3:
-  //        case 5:
-  //        default:
-  //          sMessageCount += daysSelected * diffDays;
-  //          nBudget += daysSelected * diffDays * UnitRate;
-  //          break;
-  //        case 4:
-  //          // no messages added
-  //          nBudget += daysSelected * diffDays * UnitRate;
-  //          break;
-  //      }
-  //    }
-
-  //    TotalCampBudget += nBudget;
-  //    TotalSchMessages += sMessageCount;
-  //    networkBudgets.push({ NetworkId: ntwk.NetworkId, Budget: nBudget, Messages: sMessageCount });
-  //  }
-
-  //  setBudgetData({
-  //    TotalCampBudget,
-  //    TotalSchBudget: TotalCampBudget,
-  //    TotalSchMessages,
-  //  });
-
-  //  return networkBudgets;
-  //};
 
   const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
-    console.log('Networksss:', networks);
-    console.log('SelectedDaysss:', selectedDays);
-    console.log('Startss:', startDate?.toString());
-    console.log('Endss:', endDate?.toString());
-    console.log('StartTimes:', startTime?.toString());
-    console.log('FinishTimes:', finishTime?.toString());
+    // console.log('Networksss:', networks);
+    // console.log('SelectedDaysss:', selectedDays);
+    // console.log('Startss:', startDate?.toString());
+    // console.log('Endss:', endDate?.toString());
+    // console.log('StartTimes:', startTime?.toString());
+    // console.log('FinishTimes:', finishTime?.toString());
 
     const networkCount = networks?.length ?? 0;
     const dayCount = selectedDays?.length ?? 0;
@@ -182,66 +102,20 @@ const AddScheduleModel = (prop) => {
     isFixedTime: false,
     startDate: dayjs(submitData.startTime),
     endDate: dayjs(submitData.finishTime),
-    startTime: dayjs().startOf('day').add(1, 'hour'), // 00:00:00 (dayjs object)
-    finishTime: dayjs().startOf('day').add(10, 'hour'), // today 01:00:00
+    startTime: dayjs().local().subtract(2, 'hours'), // 00:00:00 (dayjs object)
+    finishTime: dayjs().local().add(6, 'hours'), // today 01:00:00
     selectedDays: [],
   });
 
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
-  const [jsonRates, setJsonRates] = useState([]);
   const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
-  const [networksList, setNetworksList] = useState([]);
   useEffect(() => {
     if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
       setInitialVisibleNetworks([...selectedNetworks]);
     }
   }, [selectedNetworks]);
-  const {
-    response: GetNetworkRes,
-    loading: NetworkLoading,
-    error: createNetworkError,
-    fetchData: GetNetworks,
-  } = useFetch();
-  useEffect(() => {
-    getNetworksList();
-  }, []);
-  const fetchBody = {
-    orgId: String(user.orgId), // ✅ convert to string
-    userId: String(user.userId), // ✅ convert to string
-    roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
-    dateto: new Date().toISOString(), // same as C#: DateTime.Now
-  };
-  console.log(JSON.stringify(fetchBody));
-  const getNetworksList = async () => {
-    await GetNetworks(
-      '/Admin/custombundlingdetails',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fetchBody),
-      },
-      (res) => {
-        console.log(res, 'networkssList');
-        if (res.status === true) {
-          // ✅ save filtered networks in state
-          const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
-          setNetworksList(filtered);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          setNetworksList([]); // empty if error
-        }
-        // setIsLoading(NetworkLoading.current);
-      },
-    );
-  };
-  // Effect: select/unselect days based on intervalTypeId
+
   useEffect(() => {
     if (campaignRegData.intervalTypeId === 2) {
       // Select all days
@@ -290,7 +164,7 @@ const AddScheduleModel = (prop) => {
   };
 
   const handleCampaignAddForm = (e, label, date) => {
-    console.log('datee', e, label, date);
+    // console.log('datee', e, label, date);
 
     if (label === 'startTime' || label === 'finishTime') {
       const newTime = e ? e : null;
@@ -381,7 +255,7 @@ const AddScheduleModel = (prop) => {
     );
   };
   useEffect(() => {
-    console.log('🔥 useEffect triggered');
+    // console.log('🔥 useEffect triggered');
 
     calculateBudget(
       selectedNetworks,
@@ -402,7 +276,7 @@ const AddScheduleModel = (prop) => {
 
   const onSave = () => {
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
-      console.error('Validation failed', campaignRegData);
+      // console.error('Validation failed', campaignRegData);
       showToast('All required fields must be filled.', 'error');
       return;
     }
@@ -420,7 +294,7 @@ const AddScheduleModel = (prop) => {
               title: selectedTemplates[networkName]?.title || '',
             })
           : '';
-        console.log('postTypeIds', postTypeIds);
+        // console.log('postTypeIds', postTypeIds);
         return {
           id: 0,
           CompaignId: 0,
@@ -436,7 +310,7 @@ const AddScheduleModel = (prop) => {
         };
       });
 
-    console.log('Selected network objects:', JSON.stringify(selectedNetworkObjects));
+    // console.log('Selected network objects:', JSON.stringify(selectedNetworkObjects));
 
     setSelectedNetworkJson(selectedNetworkObjects);
 
@@ -445,7 +319,7 @@ const AddScheduleModel = (prop) => {
     const endDate = campaignRegData.endDate; // dayjs object
     const startTime = dayjs(campaignRegData.startTime).local();
     const endTime = dayjs(campaignRegData.finishTime).local();
-    console.log({ startTime, endTime });
+    // console.log({ startTime, endTime });
     // Combine start date + time
     const combinedStart = dayjs(startDate)
       .hour(startTime.hour())
@@ -460,8 +334,8 @@ const AddScheduleModel = (prop) => {
       .second(0)
       .millisecond(0);
 
-    console.log('✔️ Correct StartTime:', combinedStart.format('YYYY-MM-DDTHH:mm:ss'));
-    console.log('✔️ Correct FinishTime:', combinedEnd.format('YYYY-MM-DDTHH:mm:ss'));
+    // console.log('✔️ Correct StartTime:', combinedStart.format('YYYY-MM-DDTHH:mm:ss'));
+    // console.log('✔️ Correct FinishTime:', combinedEnd.format('YYYY-MM-DDTHH:mm:ss'));
 
     const schedulePayload = [];
     for (let ntwk of selectedNetworkObjects) {
@@ -484,7 +358,7 @@ const AddScheduleModel = (prop) => {
       schedulePayload.push(payloadItem);
     }
 
-    console.log('Final schedulePayload:', JSON.stringify(schedulePayload, null, 2));
+    // console.log('Final schedulePayload:', JSON.stringify(schedulePayload, null, 2));
 
     const updatedSchedule = [...scheduleJson, ...schedulePayload];
     setScheduleJson(updatedSchedule);
@@ -558,7 +432,7 @@ const AddScheduleModel = (prop) => {
       CompaignExecutionSchedules: scheduleJson,
     };
 
-    console.log('body Data Submitted', JSON.stringify(campaignBody));
+    // console.log('body Data Submitted', JSON.stringify(campaignBody));
     console.log({ campaignBody });
     try {
       const response = await fetch('/Compaigns/submitmycompaign', {
@@ -587,9 +461,9 @@ const AddScheduleModel = (prop) => {
       showToast('An error occurred.', 'error');
     }
   };
-  console.log('submitData', submitData);
+  // // console.log('submitData', submitData);
   const uploadAttachmentsAfterCampaign = async (campaignId) => {
-    console.log('campaignId', campaignId);
+    // console.log('campaignId', campaignId);
     const files = {
       image: submitData.imageAttachment,
       pdf: submitData.pdfAttachment,
@@ -613,18 +487,18 @@ const AddScheduleModel = (prop) => {
         });
 
         const uploadResult = await res.json();
-        console.log(`Upload ${type} result:`, uploadResult);
+        // console.log(`Upload ${type} result:`, uploadResult);
 
         if (uploadResult.status !== true) {
           showToast(`Failed to upload ${type} attachment.`, 'warning');
         }
       } catch (err) {
-        console.error(`Error uploading ${type}:`, err);
+        // console.error(`Error uploading ${type}:`, err);
         showToast(`Error uploading ${type} attachment.`, 'error');
       }
     }
   };
-
+  // console.log({ startTime: campaignRegData.startTime });
   return (
     <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
       <ModalHeader>{header}</ModalHeader>
