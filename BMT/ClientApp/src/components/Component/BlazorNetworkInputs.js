@@ -80,13 +80,13 @@ const BlazorNetworkInputs = (prop) => {
         name: data?.name || '',
         attachment: '',
         excelAttachment: '',
-        buisnessId: data?.businessId || '',
+        businessId: data?.businessId || '',
         url: data?.url || '',
         apiuri: data?.apiuri || '',
         sender: data?.sender || '',
         port: data?.port || 0,
         apikey: data?.apikey || '',
-        apikeySecret: data?.apikeySecret || '',
+        apiKeySecret: data?.apikeySecret || '',
         password: data?.password || '',
         autoReplyAllowed: data?.autoReplyAllowed,
         autoReplyContent: data?.autoReplyContent,
@@ -112,7 +112,7 @@ const BlazorNetworkInputs = (prop) => {
       setNetworkState(getInitialNetworkData(organizationId, user, networkId));
     }
   }, [networkSettingsData]);
-
+  console.log({ networkState });
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
 
   useEffect(() => {

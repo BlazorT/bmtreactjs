@@ -33,6 +33,7 @@ const CustomInput = ({
   src,
   onPaste,
 }) => {
+  // console.log({ src });
   return (
     <div
       className={`form-outline text-start ${label ? 'mt-2' : icon ? '' : width ? width : 'w-30'} `}

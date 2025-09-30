@@ -74,6 +74,7 @@ const campaignadd = () => {
     { id: 1, name: 'Networks' },
     { id: 2, name: 'Schedule' },
   ];
+
   const showToast = useShowToast();
   const availableInterests = [
     // Existing
@@ -146,8 +147,8 @@ const campaignadd = () => {
         body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log({ fetchBody });
-        console.log({ res });
+        // console.log({ fetchBody });
+        // console.log({ res });
         if (res.status === true) {
           // ✅ save filtered networks in state
           const filtered = (res.data || []).filter((n) => n.purchasedQouta > 0);
@@ -268,7 +269,6 @@ const campaignadd = () => {
     // ❌ UNHANDLED CASE
     console.warn('Unhandled input in handleCampaignAddForm:', { e, label });
   };
-  console.log('campaignRegDataInitial', campaignRegData);
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
@@ -319,7 +319,7 @@ const campaignadd = () => {
     Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
     Email: cibGmail, // Assuming Email is your component for Email icon
   };
-  console.log(campaignRegData, 'test');
+  // console.log({campaignRegData});
   useEffect(() => {
     const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
 
@@ -353,7 +353,7 @@ const campaignadd = () => {
     });
 
     setScheduleRows(formatted);
-    console.log('✅ Formatted scheduleData:', formatted);
+    // console.log('✅ Formatted scheduleData:', formatted);
   }, [scheduleData]); // <--- Depend on scheduleData only
 
   const handleDeleteRow = (idToDelete) => {
@@ -442,6 +442,8 @@ const campaignadd = () => {
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
+
+  // console.log({ campaignRegData });
 
   // console.log({ gn: globalutil.networks(), networksList });
   return (

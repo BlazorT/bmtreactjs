@@ -59,7 +59,9 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'videoAttachment',
     name: 'videoAttachment',
-    src: campaignRegData?.videoAttachment?.src,
+    src: campaignRegData?.videoAttachment
+      ? URL.createObjectURL(campaignRegData.videoAttachment)
+      : null,
     helperText: campaignRegData?.videoAttachment?.name,
     className: 'form-control item',
     isRequired: false,
@@ -74,8 +76,10 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'imageAttachment',
     name: 'imageAttachment',
-    src:  campaignRegData?.imageAttachment?.src, 
-    helperText: campaignRegData?.imageAttachment?.name ,
+    src: campaignRegData?.imageAttachment
+      ? URL.createObjectURL(campaignRegData.imageAttachment)
+      : null,
+    helperText: campaignRegData?.imageAttachment?.name,
     className: 'form-control item',
     isRequired: false,
     accept: 'image/*',
@@ -89,13 +93,12 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'pdfAttachment',
     name: 'pdfAttachment',
-    src: campaignRegData?.pdfAttachment?.src,
+    // src: 'pdf',
     helperText: campaignRegData?.pdfAttachment?.name,
     className: 'form-control item',
     isRequired: false,
     accept: 'application/pdf',
   },
-
 
   {
     component: CustomDatePicker,
@@ -149,6 +152,6 @@ export const getInitialCampaignData = (user) => {
     lastUpdatedBy: user.userId,
     createdAt: now.utc().format(),
     startTime: now.format('YYYY-MM-DD HH:mm:ss'), // optional if needed
-    finishTime: now.add(2, 'days').format('YYYY-MM-DD HH:mm:ss'), // optional if needed
+    finishTime: now.add(2, 'days').add(2, 'hours').format('YYYY-MM-DD HH:mm:ss'), // optional if needed
   };
 };
