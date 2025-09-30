@@ -26,12 +26,14 @@ public partial class OrganizationViewModel
     public string? LogoAvatar { get; set; }
 
     public string? Instagram { get; set; }
+	public string? CountryCode { get; set; }
 
-    public int? CurrencyId { get; set; }
+	public int? CurrencyId { get; set; }
 
     public int? CityId { get; set; }
+	public int? CountryId { get; set; }
 
-    public int Status { get; set; }
+	public int Status { get; set; }
 
     public int? CreatedBy { get; set; }
 
