@@ -5,6 +5,37 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 
+const getLabels = (networkId, labelId) => {
+  if (labelId === 'businessId') {
+    switch (networkId) {
+      case 2:
+        return 'Whatsapp Buisness Account Id';
+      case 4:
+        return 'X Client Id';
+      case 5:
+        return 'Facebook Page Id';
+      case 6:
+        return 'Instragram User Id';
+      default:
+        return 'Business Id'; // optional fallback
+    }
+  }
+  if (labelId === 'apiKeySecret') {
+    switch (networkId) {
+      case 2:
+        return 'Whatsapp Access Token ';
+      case 4:
+        return 'X Client Secret';
+      case 5:
+        return 'Facebook Access Token';
+      case 6:
+        return 'Instragram Page Access Token';
+      default:
+        return 'API Key'; // optional fallback
+    }
+  }
+};
+
 export const getNetworkInputFields = (
   networkState,
   handleNetworkSetting,
@@ -13,21 +44,21 @@ export const getNetworkInputFields = (
 ) => [
   {
     component: CustomInput,
-    label: 'Business Id',
+    label: getLabels(networkId, 'businessId'),
     icon: cilBuilding,
     value: networkState.businessId,
     onChange: handleNetworkSetting,
     type: 'text',
     id: 'businessId',
     name: 'businessId',
-    placeholder: 'Business Id e.g(19288)',
+    placeholder: getLabels(networkId, 'businessId'),
     className: 'form-control item',
     isRequired: false,
     title: 'Business Id e.g(19288)',
   },
   {
     component: CustomInput,
-    label: 'Key',
+    label: 'Key' + `${networkId === 5 ? ' (Facebook User Access Token)' : ''}`,
     icon: cilLockLocked,
     value: networkState.apikey,
     onChange: handleNetworkSetting,
@@ -42,7 +73,7 @@ export const getNetworkInputFields = (
   },
   {
     component: CustomInput,
-    label: 'Secret Key',
+    label: getLabels(networkId, 'apiKeySecret'),
     icon: cilLockLocked,
     value: networkState.apiKeySecret,
     onChange: handleNetworkSetting,
@@ -86,7 +117,7 @@ export const getNetworkInputFields = (
   },
   {
     component: CustomInput,
-    label: 'Sender',
+    label: 'Sender' + `${networkId === 2 ? ' (Whatsapp Phone Number Id)' : ''}`,
     icon: cilUser,
     value: networkState.sender,
     onChange: handleNetworkSetting,
