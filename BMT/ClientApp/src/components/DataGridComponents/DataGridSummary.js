@@ -20,7 +20,6 @@ const CustomSummary = ({ rows, columns, summary }) => {
         return null;
       }
 
-      console.log({ rows: rows?.[0][field] });
       // Find column by key (React Data Grid uses 'key' instead of 'field')
       const column = columns.find((col) => col.key === field);
       if (!column) {

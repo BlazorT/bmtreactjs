@@ -192,7 +192,6 @@ const OrgList = () => {
               }}
               rows={rows}
               columns={orgsListCols}
-              rowHeight={50}
               pagination={true}
               loading={isLoading}
               hiddenCols={{

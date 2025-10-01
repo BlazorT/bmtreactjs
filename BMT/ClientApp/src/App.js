@@ -2,10 +2,11 @@ import React, { Suspense } from 'react';
 
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
+import 'react-data-grid/lib/styles.css';
 import './scss/style.scss';
 import '../src/CSS/Style.css';
 import '../src/CSS/Form.css';
-import 'react-data-grid/lib/styles.css';
+
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
 /*import Blazorhub from './Blazorhub';*/
@@ -28,13 +29,13 @@ const Page401 = React.lazy(() => import('./pages/Error/Page401'));
 const App = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   // index.tsx or index.js
-  const ignoreResizeObserverError = (e: ErrorEvent) => {
-    if (e.message === "ResizeObserver loop completed with undelivered notifications") {
+  const ignoreResizeObserverError = (e) => {
+    if (e.message === 'ResizeObserver loop completed with undelivered notifications') {
       e.stopImmediatePropagation();
     }
   };
 
-  window.addEventListener("error", ignoreResizeObserverError);
+  window.addEventListener('error', ignoreResizeObserverError);
 
   return (
     <React.Fragment>

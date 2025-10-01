@@ -45,7 +45,6 @@ const Logs = () => {
     status: '0',
     logTimeFrom: dayjs().subtract(1, 'year').utc().startOf('year').format(),
     logTimeTo: dayjs().utc().format().split('T')[0],
-
   };
   const [filters, setFilters] = useState(initialFilter);
   const applyFilters = async () => {
@@ -138,7 +137,6 @@ const Logs = () => {
       headerClassName: 'custom-header-data-grid',
       name: 'Log',
       flex: 1,
-      minWidth: 180,
       editable: false,
       sortable: false,
       filterable: true,
@@ -158,7 +156,6 @@ const Logs = () => {
       name: 'Log Time',
       headerClassName: 'custom-header-data-grid',
       flex: 1,
-      minWidth: 100,
       editable: false,
       filterable: false,
       sortable: true,
@@ -185,7 +182,6 @@ const Logs = () => {
       }));
     }
   };
-
 
   console.log(LogLoading.current);
   // if (isLoading) {
@@ -223,7 +219,6 @@ const Logs = () => {
                     isRequired={false}
                     title=" using by entity name, log name "
                   />
-
                 </div>
 
                 {/*<div className="col-md-6">*/}
@@ -298,7 +293,7 @@ const Logs = () => {
                 pagination={true}
                 summary={[
                   {
-                    field: 'logTime',
+                    field: 'logTimeFrom',
                     aggregates: [
                       { aggregate: 'count', caption: 'Count' },
                       { aggregate: 'max', caption: 'Last log Time' },

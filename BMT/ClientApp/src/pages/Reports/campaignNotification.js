@@ -389,7 +389,8 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           <div className="bg_Div mb-2 d-flex flex-column">
             <div className="dashboard-stock-header dashboard-drop">
               <div className="pointer" onClick={() => toggleStock()}>
-               Campaign Notification → Advance Search (Recipients, Delivery Status, Date To, Date From)
+                Campaign Notification → Advance Search (Recipients, Delivery Status, Date To, Date
+                From)
               </div>
               <CIcon
                 className="stock-toggle-icon"
@@ -489,15 +490,15 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                     // canPrint={pageRoles.canPrint}
                     summary={[
                       {
-                        key: 'sent',
+                        field: 'sent',
                         aggregates: [{ aggregate: 'sum', caption: 'Total Send' }],
                       },
                       {
-                        key: 'failed',
+                        field: 'failed',
                         aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }],
                       },
                       {
-                        key: 'delivered',
+                        field: 'delivered',
                         aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
                       },
                     ]}
