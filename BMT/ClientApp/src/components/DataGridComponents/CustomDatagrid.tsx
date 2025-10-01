@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// Make sure this is imported at the top level of your app or this component
 import React, { useState, useMemo } from 'react';
 import { DataGrid } from 'react-data-grid';
 import {
@@ -9,7 +10,6 @@ import {
   RowsChangeData,
   SortDirection,
 } from 'react-data-grid';
-import 'react-data-grid/lib/styles.css';
 
 import CustomSummary from './DataGridSummary';
 import DataGridHeader from './DataGridHeader';
