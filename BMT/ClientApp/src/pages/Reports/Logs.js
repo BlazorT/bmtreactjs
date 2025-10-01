@@ -123,20 +123,10 @@ const Logs = () => {
   const [rows, setRows] = useState([]);
 
   const columns = [
-    //{
-    //  key: 'entityName',
-    //  headerClassName: 'custom-header-data-grid',
-    //  name: 'Entity',
-    //  /* flex: 1,*/
-    //  width: 100,
-    //  editable: false,
-    //  filterable: true,
-    //},
     {
       key: 'logDesc',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Log',
-      flex: 1,
       editable: false,
       sortable: false,
       filterable: true,
@@ -144,18 +134,15 @@ const Logs = () => {
     },
     {
       key: 'machineIp',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Machine ',
-      /*  flex: 1,*/
-      width: 120,
       editable: false,
       filterable: true,
     },
     {
       key: 'logTimeFrom',
       name: 'Log Time',
-      headerClassName: 'custom-header-data-grid',
-      flex: 1,
+      headerCellClass: 'custom-header-data-grid',
       editable: false,
       filterable: false,
       sortable: true,

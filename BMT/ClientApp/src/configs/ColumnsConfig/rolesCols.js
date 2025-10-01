@@ -3,9 +3,7 @@ import BmtRolesCustomCell from 'src/components/DataGridCustomCells/BmtRolesCusto
 export const getRolesCols = (pageRoles) => [
   {
     key: 'id',
-    headerClassName: 'custom-header-data-grid',
-    flex: 1,
-    minWidth: 120,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     sortable: false,
@@ -15,12 +13,11 @@ export const getRolesCols = (pageRoles) => [
     headerAlign: 'center',
     align: 'center',
     cellClassName: 'centered-cell',
+    width: 60,
   },
   {
     key: 'roleName',
-    headerClassName: 'custom-header-data-grid',
-    flex: 1,
-    minWidth: 150,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     sortable: true,
@@ -32,9 +29,7 @@ export const getRolesCols = (pageRoles) => [
   },
   {
     key: 'status',
-    headerClassName: 'custom-header-data-grid',
-    flex: 1,
-    minWidth: 150,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     sortable: true,
@@ -46,9 +41,7 @@ export const getRolesCols = (pageRoles) => [
   },
   {
     key: 'lastUpdate',
-    headerClassName: 'custom-header-data-grid',
-    flex: 1,
-    minWidth: 150,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     sortable: true,
@@ -61,9 +54,7 @@ export const getRolesCols = (pageRoles) => [
   {
     key: 'imageUrl',
     width: 150,
-    headerClassName: 'custom-header-data-grid',
-    flex: 1,
-    minWidth: 150,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     sortable: false,

@@ -152,63 +152,42 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
   };
   const [rows, setRows] = useState([]);
 
-  const [columns, setColumns] = useState([
-    //{
-    //  key: 'userName',
-    //  headerClassName: 'custom-header-data-grid',
-    //  name: 'Name',
-    //  flex: 1,
-    //  width: 100,
-    //  editable: false,
-    //  filterable: true,
-    //},
+  const columns = [
     {
       key: 'orgName',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Organization Name',
-      flex: 1,
-      minWidth: 200,
       editable: false,
       sortable: false,
       filterable: true,
-      // align: 'center',
-      // headerAlign: 'center',
       disableColumnMenu: false,
     },
     {
       key: 'contact',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Contact',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
     {
       key: 'strength',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Strength',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
     {
       key: 'packageName',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Package',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
 
     {
       key: 'status',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Current Status',
-      flex: 1,
-      minWidth: 120,
       editable: false,
       sortable: false,
       filterable: true,
@@ -217,25 +196,16 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
 
     {
       key: 'expiryTime',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Expiry Date',
-      flex: 1,
-      minWidth: 100,
       editable: false,
       filterable: false,
       sortable: true,
       disableColumnMenu: true,
       type: 'timestamp',
     },
-  ]);
+  ];
   const [showStock, setShowStock] = useState(false);
-  //const [filters, setFilters] = useState({
-  //  keyword: '',
-  //  status: '',
-  //  lastUpdatedAt: moment().utc().format(),
-  //  createdAt: moment().utc().startOf('year').format(),
-  //  dsp: '',
-  //});
 
   const toggleStock = () => {
     setShowStock((prev) => !prev);
@@ -318,7 +288,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-           Organization Report → Advance Search (Name, Contact, Email, Status, Date To, Date From)
+            Organization Report → Advance Search (Name, Contact, Email, Status, Date To, Date From)
           </div>
           <CIcon
             className="stock-toggle-icon"
@@ -417,17 +387,6 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                 pagination={true}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
-                // summary={
-                //   [
-                //     //{
-                //     //  key: 'logTime',
-                //     //  aggregates: [
-                //     //    { aggregate: 'count', caption: 'Count' },
-                //     //    { aggregate: 'max', caption: 'Last log Time' },
-                //     //  ],
-                //     //},
-                //   ]
-                // }
               />
             </div>
           </div>

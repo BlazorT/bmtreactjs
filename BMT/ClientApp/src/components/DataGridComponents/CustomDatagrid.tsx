@@ -170,18 +170,18 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   // Custom styles for React Data Grid
   const gridStyles = {
     height: 'auto',
-    '--rdg-color-scheme': 'dark',
-    '--rdg-header-background-color': '#0A1A2C',
-    '--rdg-header-text-color': 'white',
-    '--rdg-color': 'white',
-    '--rdg-selection-width': '0px',
-    '--rdg-background-color': 'transparent',
-    '--rdg-border-color': cellBorder ? '#495d73' : 'transparent',
-    '--rdg-selection-color': '#1976d2',
-    '--rdg-font-size': '14px',
+    '--rdg-color-scheme': 'dark !important',
+    '--rdg-header-background-color': '#0A1A2C !important',
+    '--rdg-header-text-color': 'white !important',
+    '--rdg-color': 'white !important',
+    '--rdg-selection-width': '0px !important',
+    '--rdg-background-color': 'transparent !important',
+    '--rdg-border-color': cellBorder ? '#495d73 !important' : 'transparent !important',
+    '--rdg-selection-color': '#1976d2 !important',
+    '--rdg-font-size': '14px !important',
     ...(isZeroMargin && {
-      '--rdg-cell-padding-inline': '0px',
-      '--rdg-cell-padding-block': '0px',
+      '--rdg-cell-padding-inline': '0px !important',
+      '--rdg-cell-padding-block': '0px !important',
     }),
   } as React.CSSProperties;
 
