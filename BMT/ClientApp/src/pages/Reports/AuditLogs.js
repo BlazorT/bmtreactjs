@@ -81,8 +81,9 @@ const AuditLogs = () => {
       ...filters,
     };
 
-    await GetLog('/Log/auditlogdetails',
-      {method: 'POST',body: JSON.stringify(fetchBody),},
+    await GetLog(
+      '/Log/auditlogdetails',
+      { method: 'POST', body: JSON.stringify(fetchBody) },
       (res) => {
         console.log(res, 'res');
         if (res.status === true) {
@@ -119,77 +120,45 @@ const AuditLogs = () => {
   const [columns, setColumns] = useState([
     {
       key: 'attributeName',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Attribute',
-      /* flex: 1,*/
-      width: 120,
       editable: false,
       filterable: true,
     },
 
-    //{
-    //  key: 'fieldName',
-    //  headerClassName: 'custom-header-data-grid',
-    //  name: 'Field Name',
-    //  flex: 1,
-    //  minWidth: 150,
-    //  editable: false,
-    //  sortable: false,
-    //  filterable: true,
-    //  disableColumnMenu: false,
-    //},
     {
       key: 'oldValue',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Previous Value ',
-      flex: 1,
-      width: 120,
       editable: false,
       filterable: true,
-      //align: 'center',
     },
     {
       key: 'newValue',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'New Value',
-      flex: 1,
-      minWidth: 150,
       editable: false,
       filterable: true,
-      // align: 'center',
     },
     {
       key: 'username',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Updated By',
-      /*flex: 1,*/
-      minWidth: 120,
       editable: false,
       filterable: true,
     },
-
     {
       key: 'createdAt',
       name: 'Updated At',
-      headerClassName: 'custom-header-data-grid',
-      flex: 1,
-      minWidth: 100,
+      headerCellClass: 'custom-header-data-grid',
       editable: false,
       filterable: false,
       sortable: true,
       disableColumnMenu: true,
       type: 'timestamp',
-      //   renderCell: (params) => <EditFeildMapping value={params} />,
     },
   ]);
   const [showStock, setShowStock] = useState(false);
-  //const [filters, setFilters] = useState({
-  //  keyword: '',
-  //  status: '',
-  //  lastUpdatedAt: moment().utc().format(),
-  //  createdAt: moment().utc().startOf('year').format(),
-  //  dsp: '',
-  //});
 
   const toggleStock = () => {
     setShowStock((prev) => !prev);
@@ -213,7 +182,7 @@ const AuditLogs = () => {
       <div className="bg_Div mb-2 d-flex flex-column">
         <div className="dashboard-stock-header dashboard-drop">
           <div className="pointer" onClick={() => toggleStock()}>
-           Audit Logs → Advance Search (atribute name, Previous Value, New value, Update Date)
+            Audit Logs → Advance Search (atribute name, Previous Value, New value, Update Date)
           </div>
           <CIcon
             className="stock-toggle-icon"

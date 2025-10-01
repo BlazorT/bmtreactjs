@@ -36,48 +36,38 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
   {
     key: 'avatar',
     name: 'Picture',
-    width: 100,
-    flex: 1,
     resizable: false,
     sortable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'completeName',
     name: 'Name',
-    minWidth: 80,
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
-    minWidth: 220,
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
-    minWidth: 100,
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
-    minWidth: 100,
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
       const date = props.row.regDate;
@@ -93,11 +83,9 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
   {
     key: 'lastUpdatedAt',
     name: 'Last Updated',
-    minWidth: 100,
     resizable: true,
     sortable: true,
-    flex: 1,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
       const date = props.row.lastUpdatedAt;
@@ -113,8 +101,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
   {
     key: 'status',
     name: 'Action',
-    flex: 1,
-    minWidth: 120,
     resizable: true,
     sortable: false,
     renderCell: (props) => (
@@ -125,11 +111,10 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
         pageRoles={pageRoles}
       />
     ),
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
 ];
 
-// Alternative version with flex-like behavior using width calculation
 export const getUsersListColsFlexible = (
   fetching,
   usersData,
@@ -138,45 +123,40 @@ export const getUsersListColsFlexible = (
 ) => [
   {
     key: 'avatar',
-    flex: 1,
     name: 'Picture',
     width: 100, // Fixed width for image
     resizable: false,
     sortable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'completeName',
     name: 'Name',
     resizable: true,
-    flex: 1,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
-    flex: 1,
     resizable: true,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
     resizable: true,
-    flex: 1,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.regDate;
       if (!date) return '-';
@@ -192,9 +172,8 @@ export const getUsersListColsFlexible = (
     key: 'lastUpdatedAt',
     name: 'Last Updated',
     resizable: true,
-    flex: 1,
     sortable: true,
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.lastUpdatedAt;
       if (!date) return '-';
@@ -211,7 +190,6 @@ export const getUsersListColsFlexible = (
     name: 'Action',
     resizable: true,
     sortable: false,
-    flex: 1,
     renderCell: (props) => (
       <UsersActionRenderer
         row={props.row}
@@ -220,7 +198,7 @@ export const getUsersListColsFlexible = (
         pageRoles={pageRoles}
       />
     ),
-    cellClass: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
   },
 ];
 
