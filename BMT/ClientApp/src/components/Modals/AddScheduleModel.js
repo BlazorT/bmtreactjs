@@ -732,7 +732,12 @@ const AddScheduleModel = (prop) => {
                 Add Schedule
               </Button>
               <Button
-                disabled={loading}
+                content={
+                  scheduleJson?.length === 0
+                    ? 'Please add at least one schedule before submitting.'
+                    : ''
+                }
+                disabled={loading || scheduleJson?.length === 0}
                 loading={loading}
                 onClick={() => submitCompaign()}
                 type="submit"
