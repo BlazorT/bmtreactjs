@@ -427,6 +427,7 @@ const campaignContacts = () => {
     setShowTableModal(false);
     navigate('/recipientsGrid'); // navigate when modal hides
   };
+  console.log({ selectedFiles });
 
   return (
     <Form name="dsp-reg-form">
@@ -529,7 +530,13 @@ const campaignContacts = () => {
                           accept=".csv, .xls, .xlsx"
                           disabled={isChecked}
                           onChange={(e) => handleCampaignAddContacts(e, networkId)}
+                          className="form-control item"
                         />
+                        {/* {selectedFiles?.[networkId]?.name ? (
+                          <span className="text-truncate ps-0 ">
+                            {selectedFiles?.[networkId]?.name}
+                          </span>
+                        ) : null} */}
                       </li>
                       {importedData[networkKey]?.length > 0 && (
                         <ImportContactsListData

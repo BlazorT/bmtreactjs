@@ -1,8 +1,6 @@
 export const getProductsCols = (pageRoles, getProducts, products) => [
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -12,9 +10,7 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   },
 
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -23,9 +19,7 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     editable: false,
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -34,9 +28,7 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     editable: false,
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -45,9 +37,7 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
     editable: false,
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,

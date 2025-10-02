@@ -79,17 +79,17 @@ const CustomInput = ({
 
           {isRequired && <span className="invalid-tooltip">{message}</span>}
 
-          {type === 'file' && (
+          {type === 'file' && helperText ? (
             <div className="form-control row me-0 ">
               <div className="col-8 text-truncate ps-0 ">{helperText}</div>
             </div>
-          )}
-          {type === 'file' && src && src !== '' && src !== 'pdf' && (
+          ) : null}
+          {type === 'file' && src && src !== '' && src !== 'pdf' ? (
             <img src={`${src}`} className="input-file-image-preview" />
-          )}
-          {type === 'file' && src && src !== '' && src == 'pdf' && (
+          ) : null}
+          {type === 'file' && src && src !== '' && src == 'pdf' ? (
             <FontAwesomeIcon icon={faFilePdf} size="lg" className="input-file-image-preview" />
-          )}
+          ) : null}
         </div>
       </div>
     </div>

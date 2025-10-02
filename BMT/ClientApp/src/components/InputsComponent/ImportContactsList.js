@@ -23,7 +23,7 @@ const ImportedContactDropdown = ({ networkKey, importedData, setImportedData }) 
         color: 'white',
         padding: '10px',
         borderRadius: '8px',
-        width: '280px',
+        width: 'auto',
         maxHeight: '560px',
         display: 'flex',
         flexDirection: 'column',
