@@ -158,60 +158,46 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
   const [columns, setColumns] = useState([
     {
       key: 'userName',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Name',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
     {
       key: 'roleName',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Role',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
     {
       key: 'contact',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Contact',
-      flex: 1,
-      width: 100,
       editable: false,
       filterable: true,
     },
     {
       key: 'email',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Email',
-      // flex: 1,
-      width: 190,
       editable: false,
       filterable: true,
     },
-
     {
       key: 'status',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Current Status',
-      flex: 1,
-      minWidth: 120,
       editable: false,
       sortable: false,
       filterable: true,
       disableColumnMenu: false,
       renderCell: (params) => (params.row.status === 1 ? 'Active' : 'In Active'),
     },
-
     {
       key: 'createdAt',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       name: 'Date',
-      flex: 1,
-      minWidth: 100,
       editable: false,
       filterable: false,
       sortable: true,
@@ -310,7 +296,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
             <div className="bg_Div mb-2 d-flex flex-column">
               <div className="dashboard-stock-header dashboard-drop">
                 <div className="pointer" onClick={() => toggleStock()}>
-                User Report → Advance Search (Name, Contact, Status, Date To, Date From)
+                  User Report → Advance Search (Name, Contact, Status, Date To, Date From)
                 </div>
                 <CIcon
                   className="stock-toggle-icon"
@@ -402,21 +388,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
               <div className="show-stock">
                 <div className="row ">
                   <div className="col-md-12 col-xl-12">
-                    <CustomDatagrid
-                      rows={rows}
-                      columns={columns}
-                      pagination={true}
-                      // canExport={pageRoles.canExport}
-                      // canPrint={pageRoles.canPrint}
-                      summary={
-                        [
-                          //{
-                          //  key: 'status',
-                          //  aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
-                          //},
-                        ]
-                      }
-                    />
+                    <CustomDatagrid rows={rows} columns={columns} pagination={true} />
                   </div>
                 </div>
               </div>

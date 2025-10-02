@@ -5,9 +5,7 @@ import globalutil from 'src/util/globalutil';
 /* eslint-disable react/react-in-jsx-scope */
 export const getTemplateCols = (canDelete, fetching) => [
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -21,9 +19,7 @@ export const getTemplateCols = (canDelete, fetching) => [
     },
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -32,9 +28,7 @@ export const getTemplateCols = (canDelete, fetching) => [
     editable: false,
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -44,9 +38,7 @@ export const getTemplateCols = (canDelete, fetching) => [
   },
 
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -58,9 +50,7 @@ export const getTemplateCols = (canDelete, fetching) => [
     },
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
@@ -72,9 +62,7 @@ export const getTemplateCols = (canDelete, fetching) => [
     },
   },
   {
-    flex: 1,
-    minWidth: 130,
-    headerClassName: 'custom-header-data-grid',
+    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     sortable: true,
     disableColumnMenu: false,
