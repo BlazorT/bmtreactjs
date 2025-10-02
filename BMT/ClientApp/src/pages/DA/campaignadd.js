@@ -182,11 +182,30 @@ const campaignadd = () => {
       const type = file.type;
       const isVideo = label === 'video' && type.startsWith('video/');
       const isImage = label === 'image' && type.startsWith('image/');
-      const isPDF = label === 'pdf' && type === 'application/pdf';
+      const isPDF =
+        label === 'pdf' && (type === 'application/pdf' || type.startsWith('application/'));
 
       if (!(isVideo || isImage || isPDF)) {
         e.target.value = null;
         showToast(`Invalid file type. Please select a valid ${label} file.`, 'error');
+        return;
+      }
+
+      // ✅ SIZE VALIDATION (bytes)
+      const maxSizes = {
+        video: 16 * 1024 * 1024, // 16MB
+        image: 5 * 1024 * 1024, // 5MB
+        pdf: 100 * 1024 * 1024, // 100MB
+      };
+      console.log(file.size);
+      if (file.size > maxSizes[label]) {
+        e.target.value = null;
+        showToast(
+          `${label.toUpperCase()} file size exceeds the limit of ${
+            label === 'video' ? '16MB' : label === 'image' ? '5MB' : '100MB'
+          }.`,
+          'error',
+        );
         return;
       }
 
@@ -221,7 +240,6 @@ const campaignadd = () => {
         showToast(`${label} cannot be in the past.`, 'error');
         return;
       }
-      // console.log({ selectedDate, fieldKey, save: selectedDate.format('YYYY-MM-DD') });
       setCampaignRegData((prev) => ({
         ...prev,
         [fieldKey]: selectedDate.format('YYYY-MM-DD HH:mm:ss'),
@@ -269,6 +287,7 @@ const campaignadd = () => {
     // ❌ UNHANDLED CASE
     console.warn('Unhandled input in handleCampaignAddForm:', { e, label });
   };
+
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
@@ -367,12 +386,10 @@ const campaignadd = () => {
     { key: 'days', flex: 1, name: 'Days', minWidth: 250 },
     { key: 'startTime', flex: 1, name: 'Start Time', minWidth: 150 },
     { key: 'finishTime', flex: 1, name: 'End Time', minWidth: 130 },
-
     {
       key: 'action',
       name: 'Action',
       minWidth: 100,
-      sortable: false,
       renderCell: (params) => (
         <CIcon icon={cilTrash} onClick={() => handleDeleteRow(params.row.id)} />
       ),
@@ -454,272 +471,270 @@ const campaignadd = () => {
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
-      <CContainer fluid className="mt-4">
-        {tabs[activeTab] && tabs[activeTab].name === 'Campaign' && (
-          <React.Fragment>
-            <AppContainer>
-              <DataGridHeader
-                title="Basic Information"
-                onClick={toggleStock}
-                otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
-                filterDisable={true}
-              />
-              {showForm && (
-                <React.Fragment>
-                  <Inputs
-                    inputFields={campaignAddInputs}
-                    yesFn={goToAnotherPage}
-                    submitBtnTitle="Next"
-                    submitFn={() => {
-                      const trimmedName = campaignRegData.name?.trim() || '';
-                      if (trimmedName === '') {
-                        showToast('Please Enter Title', 'warning');
-                        return;
-                      }
+      {tabs[activeTab] && tabs[activeTab].name === 'Campaign' && (
+        <React.Fragment>
+          <AppContainer>
+            <DataGridHeader
+              title="Basic Information"
+              onClick={toggleStock}
+              otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
+              filterDisable={true}
+            />
+            {showForm && (
+              <React.Fragment>
+                <Inputs
+                  inputFields={campaignAddInputs}
+                  yesFn={goToAnotherPage}
+                  submitBtnTitle="Next"
+                  submitFn={() => {
+                    const trimmedName = campaignRegData.name?.trim() || '';
+                    if (trimmedName === '') {
+                      showToast('Please Enter Title', 'warning');
+                      return;
+                    }
 
-                      campaignRegData.name = trimmedName; // Update value if needed
-                      setActiveTab(1);
-                    }}
-                  >
-                    <div className="row">
-                      <div className="col-md-6 mt-2">
-                        <CForm>
-                          <CFormLabel className="labelName" htmlFor="status-radio-group">
-                            Status
-                          </CFormLabel>
-                          <div className="d-flex">
-                            <CFormCheck
-                              type="radio"
-                              id="status-active"
-                              name="status"
-                              value={1}
-                              inline
-                              label="Active"
-                              checked={campaignRegData.status === 1}
-                              onChange={handleCampaignAddForm}
-                              className="me-3 d-flex"
-                            />
-                            <CFormCheck
-                              type="radio"
-                              id="status-paused"
-                              name="status"
-                              value={2}
-                              inline
-                              label="Paused"
-                              checked={campaignRegData.status === 2}
-                              onChange={handleCampaignAddForm}
-                              className="me-3 d-flex"
-                            />
-                            <CFormCheck
-                              type="radio"
-                              inline
-                              id="status-cancel"
-                              name="status"
-                              value={3}
-                              label="Cancel"
-                              checked={campaignRegData.status === 3}
-                              onChange={handleCampaignAddForm}
-                              className="d-flex"
-                            />
-                          </div>
-                        </CForm>
-                      </div>
+                    campaignRegData.name = trimmedName; // Update value if needed
+                    setActiveTab(1);
+                  }}
+                >
+                  <div className="row">
+                    <div className="col-md-6 mt-2">
+                      <CForm>
+                        <CFormLabel className="labelName" htmlFor="status-radio-group">
+                          Status
+                        </CFormLabel>
+                        <div className="d-flex">
+                          <CFormCheck
+                            type="radio"
+                            id="status-active"
+                            name="status"
+                            value={1}
+                            inline
+                            label="Active"
+                            checked={campaignRegData.status === 1}
+                            onChange={handleCampaignAddForm}
+                            className="me-3 d-flex"
+                          />
+                          <CFormCheck
+                            type="radio"
+                            id="status-paused"
+                            name="status"
+                            value={2}
+                            inline
+                            label="Paused"
+                            checked={campaignRegData.status === 2}
+                            onChange={handleCampaignAddForm}
+                            className="me-3 d-flex"
+                          />
+                          <CFormCheck
+                            type="radio"
+                            inline
+                            id="status-cancel"
+                            name="status"
+                            value={3}
+                            label="Cancel"
+                            checked={campaignRegData.status === 3}
+                            onChange={handleCampaignAddForm}
+                            className="d-flex"
+                          />
+                        </div>
+                      </CForm>
                     </div>
-                    <AppContainer>
-                      <DataGridHeader
-                        title="Target Audience"
-                        onClick={toggleTargetAud}
-                        otherControls={[{ icon: cilChevronBottom, fn: toggleTargetAud }]}
-                        filterDisable={true}
-                      />
-                    </AppContainer>
-                    {targetAudience && (
-                      <React.Fragment>
-                        {/* Gender Selection */}
-                        <CRow>
-                          <CCol md="6" className="mt-3">
-                            <div className="btn-group">
-                              <CForm>
-                                <CFormLabel className="labelName" htmlFor="gender-radio-group">
-                                  Gender
-                                </CFormLabel>
-                                <div className="d-flex">
-                                  <CFormCheck
-                                    type="radio"
-                                    id="gender-all"
-                                    name="genderId"
-                                    inline
-                                    value={1}
-                                    label="All"
-                                    checked={campaignRegData.genderId === 1}
-                                    onChange={handleCampaignAddForm}
-                                    className="me-3 d-flex"
-                                  />
-                                  <CFormCheck
-                                    type="radio"
-                                    id="gender-men"
-                                    name="genderId"
-                                    value={2}
-                                    inline
-                                    label="Men"
-                                    checked={campaignRegData.genderId === 2}
-                                    onChange={handleCampaignAddForm}
-                                    className="me-3 d-flex"
-                                  />
-                                  <CFormCheck
-                                    type="radio"
-                                    id="gender-women"
-                                    name="genderId"
-                                    inline
-                                    value={3}
-                                    label="Women"
-                                    checked={campaignRegData.genderId === 3}
-                                    onChange={handleCampaignAddForm}
-                                    className="d-flex"
-                                  />
-                                </div>
-                              </CForm>
-                            </div>
-                          </CCol>
-                          <CCol md="6">
-                            <Range
-                              minAge={campaignRegData.minAge || 18}
-                              maxAge={campaignRegData.maxAge || 65}
-                              onMinAgeChange={(val) =>
-                                setCampaignRegData({ ...campaignRegData, minAge: val })
-                              }
-                              onMaxAgeChange={(val) =>
-                                setCampaignRegData({ ...campaignRegData, maxAge: val })
-                              }
-                            />
-                          </CCol>
-                        </CRow>
+                  </div>
+                  <AppContainer>
+                    <DataGridHeader
+                      title="Target Audience"
+                      onClick={toggleTargetAud}
+                      otherControls={[{ icon: cilChevronBottom, fn: toggleTargetAud }]}
+                      filterDisable={true}
+                    />
+                  </AppContainer>
+                  {targetAudience && (
+                    <React.Fragment>
+                      {/* Gender Selection */}
+                      <CRow>
+                        <CCol md="6" className="mt-3">
+                          <div className="btn-group">
+                            <CForm>
+                              <CFormLabel className="labelName" htmlFor="gender-radio-group">
+                                Gender
+                              </CFormLabel>
+                              <div className="d-flex">
+                                <CFormCheck
+                                  type="radio"
+                                  id="gender-all"
+                                  name="genderId"
+                                  inline
+                                  value={1}
+                                  label="All"
+                                  checked={campaignRegData.genderId === 1}
+                                  onChange={handleCampaignAddForm}
+                                  className="me-3 d-flex"
+                                />
+                                <CFormCheck
+                                  type="radio"
+                                  id="gender-men"
+                                  name="genderId"
+                                  value={2}
+                                  inline
+                                  label="Men"
+                                  checked={campaignRegData.genderId === 2}
+                                  onChange={handleCampaignAddForm}
+                                  className="me-3 d-flex"
+                                />
+                                <CFormCheck
+                                  type="radio"
+                                  id="gender-women"
+                                  name="genderId"
+                                  inline
+                                  value={3}
+                                  label="Women"
+                                  checked={campaignRegData.genderId === 3}
+                                  onChange={handleCampaignAddForm}
+                                  className="d-flex"
+                                />
+                              </div>
+                            </CForm>
+                          </div>
+                        </CCol>
+                        <CCol md="6">
+                          <Range
+                            minAge={campaignRegData.minAge || 18}
+                            maxAge={campaignRegData.maxAge || 65}
+                            onMinAgeChange={(val) =>
+                              setCampaignRegData({ ...campaignRegData, minAge: val })
+                            }
+                            onMaxAgeChange={(val) =>
+                              setCampaignRegData({ ...campaignRegData, maxAge: val })
+                            }
+                          />
+                        </CCol>
+                      </CRow>
 
-                        {/* Locations + Detailed Targeting */}
-                        <CRow className="mt-2">
-                          <LocationSelector
-                            campaignRegData={campaignRegData}
-                            setCampaignRegData={setCampaignRegData}
+                      {/* Locations + Detailed Targeting */}
+                      <CRow className="mt-2">
+                        <LocationSelector
+                          campaignRegData={campaignRegData}
+                          setCampaignRegData={setCampaignRegData}
+                        />
+
+                        <CCol md="6">
+                          <h5>Interests</h5>
+                          <input
+                            type="text"
+                            placeholder="Type to search interests"
+                            className="form-control"
+                            value={interestSearch}
+                            onChange={(e) => setInterestSearch(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && interestSearch.trim()) {
+                                setCampaignRegData({
+                                  ...campaignRegData,
+                                  interests: [
+                                    ...(campaignRegData.interests || []),
+                                    interestSearch.trim(),
+                                  ],
+                                });
+                                setInterestSearch('');
+                              }
+                            }}
                           />
 
-                          <CCol md="6">
-                            <h5>Interests</h5>
-                            <input
-                              type="text"
-                              placeholder="Type to search interests"
-                              className="form-control"
-                              value={interestSearch}
-                              onChange={(e) => setInterestSearch(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && interestSearch.trim()) {
-                                  setCampaignRegData({
-                                    ...campaignRegData,
-                                    interests: [
-                                      ...(campaignRegData.interests || []),
-                                      interestSearch.trim(),
-                                    ],
-                                  });
-                                  setInterestSearch('');
-                                }
-                              }}
-                            />
-
-                            {/* Suggestions dropdown */}
-                            {interestSearch && filteredInterests.length > 0 && (
-                              <div className="border mt-1 p-2">
-                                {filteredInterests.map((interest, index) => (
-                                  <div
-                                    key={index}
-                                    style={{ cursor: 'pointer', padding: '4px 0' }}
-                                    onClick={() => {
-                                      setCampaignRegData({
-                                        ...campaignRegData,
-                                        interests: [...(campaignRegData.interests || []), interest],
-                                      });
-                                      setInterestSearch('');
-                                    }}
-                                  >
-                                    {interest}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            <div className="mt-2">
-                              {(campaignRegData.interests || []).map((interest, index) => (
-                                <span
+                          {/* Suggestions dropdown */}
+                          {interestSearch && filteredInterests.length > 0 && (
+                            <div className="border mt-1 p-2">
+                              {filteredInterests.map((interest, index) => (
+                                <div
                                   key={index}
-                                  className="badge bg-primary me-2"
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: 'pointer', padding: '4px 0' }}
                                   onClick={() => {
                                     setCampaignRegData({
                                       ...campaignRegData,
-                                      interests: campaignRegData.interests.filter(
-                                        (_, i) => i !== index,
-                                      ),
+                                      interests: [...(campaignRegData.interests || []), interest],
                                     });
+                                    setInterestSearch('');
                                   }}
                                 >
-                                  {interest} ✕
-                                </span>
+                                  {interest}
+                                </div>
                               ))}
                             </div>
-                          </CCol>
-                        </CRow>
-                      </React.Fragment>
-                    )}
-                  </Inputs>
-                </React.Fragment>
-              )}
-            </AppContainer>
-          </React.Fragment>
-        )}
-        {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
-          <CampignNetworkSettings
-            handleCheckboxChange={handleCheckboxChange}
-            handlePostTypeToggle={handlePostTypeToggle}
-            icons={icons}
-            networksList={networksList}
-            selectedNetworks={selectedNetworks}
-            selectedPostTypes={selectedPostTypes}
-            setActiveTab={setActiveTab}
-            toggleAddScheduleMdl={toggleAddScheduleMdl}
-            selectedTemplates={selectedTemplates}
-            handleTemplateToggle={handleTemplateToggle}
-            setSelectedTemplates={setSelectedTemplates}
-          />
-        )}
-        {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (
-          <React.Fragment>
-            <AppContainer>
-              <React.Fragment>
-                <AppContainer>
-                  <React.Fragment>
-                    <DataGridHeader
-                      addButton="Schedule"
-                      addBtnClick={AddScheduleClick}
-                      title="Schedules"
-                      filterDisable
-                    />
-                    <div className="show-stock">
-                      <div className="row">
-                        <div className="col-md-12 col-xl-12">
-                          <CustomDatagrid
-                            rows={schedulerows}
-                            columns={schedulecolumns}
-                            rowHeight={55}
-                            pagination={true}
-                          />
-                        </div>
+                          )}
+
+                          <div className="mt-2">
+                            {(campaignRegData.interests || []).map((interest, index) => (
+                              <span
+                                key={index}
+                                className="badge bg-primary me-2"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setCampaignRegData({
+                                    ...campaignRegData,
+                                    interests: campaignRegData.interests.filter(
+                                      (_, i) => i !== index,
+                                    ),
+                                  });
+                                }}
+                              >
+                                {interest} ✕
+                              </span>
+                            ))}
+                          </div>
+                        </CCol>
+                      </CRow>
+                    </React.Fragment>
+                  )}
+                </Inputs>
+              </React.Fragment>
+            )}
+          </AppContainer>
+        </React.Fragment>
+      )}
+      {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
+        <CampignNetworkSettings
+          handleCheckboxChange={handleCheckboxChange}
+          handlePostTypeToggle={handlePostTypeToggle}
+          icons={icons}
+          networksList={networksList}
+          selectedNetworks={selectedNetworks}
+          selectedPostTypes={selectedPostTypes}
+          setActiveTab={setActiveTab}
+          toggleAddScheduleMdl={toggleAddScheduleMdl}
+          selectedTemplates={selectedTemplates}
+          handleTemplateToggle={handleTemplateToggle}
+          setSelectedTemplates={setSelectedTemplates}
+        />
+      )}
+      {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (
+        <React.Fragment>
+          <AppContainer>
+            <React.Fragment>
+              <AppContainer>
+                <React.Fragment>
+                  <DataGridHeader
+                    addButton="Schedule"
+                    addBtnClick={AddScheduleClick}
+                    title="Schedules"
+                    filterDisable
+                  />
+                  <div className="show-stock">
+                    <div className="row">
+                      <div className="col-md-12 col-xl-12">
+                        <CustomDatagrid
+                          rows={schedulerows}
+                          columns={schedulecolumns}
+                          rowHeight={55}
+                          pagination={true}
+                        />
                       </div>
                     </div>
-                  </React.Fragment>
-                </AppContainer>
-              </React.Fragment>
-            </AppContainer>
-          </React.Fragment>
-        )}
-      </CContainer>
+                  </div>
+                </React.Fragment>
+              </AppContainer>
+            </React.Fragment>
+          </AppContainer>
+        </React.Fragment>
+      )}
       <ConfirmationModal
         header="Confirmation!"
         body="Are you sure you want to cancel?"

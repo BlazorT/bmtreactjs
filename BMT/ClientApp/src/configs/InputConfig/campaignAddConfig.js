@@ -54,23 +54,21 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
   {
     component: CustomInput,
     label: 'Video Attachment',
+    info: '(MP4/3GP • Max 16MB)',
     onChange: (e) => handleCampaignAddForm(e, 'video'),
     icon: cilEnvelopeClosed,
     type: 'file',
     id: 'videoAttachment',
     name: 'videoAttachment',
-    src: campaignRegData?.videoAttachment
-      ? URL.createObjectURL(campaignRegData.videoAttachment)
-      : null,
     helperText: campaignRegData?.videoAttachment?.name,
     className: 'form-control item',
     isRequired: false,
-    accept: 'video/*',
+    accept: 'video/mp4, video/3gpp', // ✅ Only MP4 & 3GP
   },
-
   {
     component: CustomInput,
     label: 'Image Attachment',
+    info: '(PNG/JPEG • Max 5MB)',
     onChange: (e) => handleCampaignAddForm(e, 'image'),
     icon: cilEnvelopeClosed,
     type: 'file',
@@ -82,12 +80,12 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     helperText: campaignRegData?.imageAttachment?.name,
     className: 'form-control item',
     isRequired: false,
-    accept: 'image/*',
+    accept: 'image/png, image/jpeg', // ✅ only PNG and JPEG
   },
-
   {
     component: CustomInput,
     label: 'Pdf Attachment',
+    info: '(Max 100MB)',
     onChange: (e) => handleCampaignAddForm(e, 'pdf'),
     icon: cilEnvelopeClosed,
     type: 'file',

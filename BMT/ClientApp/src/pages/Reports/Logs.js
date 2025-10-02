@@ -1,42 +1,55 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { cilCalendar, cilChevronBottom, cilUser } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
 import useFetch from 'src/hooks/useFetch';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  cilUser,
-  cilCloudDownload,
-  cilCalendar,
-  cilChevronBottom,
-  cilFlagAlt,
-} from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import globalutil from 'src/util/globalutil';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-import Loading from 'src/components/UI/Loading';
+import { formatDateTime } from 'src/helpers/formatDate';
+import useApi from 'src/hooks/useApi';
+import AppContainer from 'src/components/UI/AppContainer';
 
+const columns = [
+  {
+    key: 'logDesc',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Log',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+  },
+  {
+    key: 'machineIp',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Machine ',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'logTimeFrom',
+    name: 'Log Time',
+    headerCellClass: 'custom-header-data-grid',
+    editable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    type: 'timestamp',
+  },
+];
+
+dayjs.extend(utc);
 const Logs = () => {
-  dayjs.extend(utc);
+  const { loading, postData: fetchLogs } = useApi('/Log/applog');
 
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'BMT Log',
-  );
-
-  useEffect(() => {
-    applyFilters();
-  }, []);
-
-  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
+
   const initialFilter = {
     OrgId: user.orgId,
     LogDesc: '',
@@ -47,6 +60,17 @@ const Logs = () => {
     logTimeTo: dayjs().utc().format().split('T')[0],
   };
   const [filters, setFilters] = useState(initialFilter);
+  const [rows, setRows] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+  };
+
+  useEffect(() => {
+    getLogList();
+  }, []);
+
   const applyFilters = async () => {
     const filterBody = {
       LogDesc: filters.LogDesc,
@@ -54,21 +78,8 @@ const Logs = () => {
       logTimeFrom: dayjs(filters.logTimeFrom).subtract(1, 'year').utc().format().split('T')[0],
       logTimeTo: dayjs(filters.logTimeTo).utc().format().split('T')[0],
     };
-
     getLogList(filterBody);
-
-    // getLogList(filterBody);
   };
-  const {
-    response: GetLogRes,
-    loading: LogLoading,
-    error: createServiceError,
-    fetchData: GetLog,
-  } = useFetch();
-
-  useEffect(() => {
-    getLogList();
-  }, []);
 
   const getLogList = async (filters) => {
     const fetchBody = {
@@ -85,76 +96,33 @@ const Logs = () => {
     };
     console.log(JSON.stringify(fetchBody));
 
-    await GetLog(
-      '/Log/applog',
-      {
-        method: 'POST',
-        body: JSON.stringify(fetchBody),
-      },
-      (res) => {
-        console.log(res, 'res');
-        if (res.status === true) {
-          const mappedArray = res.data.map((data, index) => ({
-            id: data.id,
-            userId: data.userId,
-            orgId: user.orgId.toString(),
-            logDesc: data.logDesc,
-            entityName: data.entityName,
-            menuId: data.menuId,
-            machineIp: data.machineIp,
-            actionType: data.actionType,
-            logTimeFrom: formatDateTime(data.logTime),
-          }));
+    const res = await fetchLogs(fetchBody);
+    if (res?.status === true) {
+      const mappedArray = res.data.map((data, index) => ({
+        id: data.id,
+        userId: data.userId,
+        orgId: user.orgId.toString(),
+        logDesc: data.logDesc,
+        entityName: data.entityName,
+        menuId: data.menuId,
+        machineIp: data.machineIp,
+        actionType: data.actionType,
+        logTimeFrom: formatDateTime(data.logTime),
+      }));
 
-          setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          setRows([]);
-        }
-      },
-    );
+      setRows(mappedArray);
+    } else {
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: res.message,
+          toastVariant: 'error',
+        }),
+      );
+      setRows([]);
+    }
   };
-  const [rows, setRows] = useState([]);
 
-  const columns = [
-    {
-      key: 'logDesc',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Log',
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-    },
-    {
-      key: 'machineIp',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Machine ',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'logTimeFrom',
-      name: 'Log Time',
-      headerCellClass: 'custom-header-data-grid',
-      editable: false,
-      filterable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      type: 'timestamp',
-    },
-  ];
-  const [showStock, setShowStock] = useState(false);
-
-  const toggleStock = () => {
-    setShowStock((prev) => !prev);
-  };
   const changeFilter = (e, date) => {
     if (date === 'logTimeTo' || date === 'logTimeFrom') {
       setFilters((prevFilters) => ({
@@ -170,25 +138,16 @@ const Logs = () => {
     }
   };
 
-  console.log(LogLoading.current);
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
   return (
-    <div>
-      <div className="bg_Div mb-2 d-flex flex-column">
-        <div className="dashboard-stock-header dashboard-drop">
-          <div className="pointer" onClick={toggleStock}>
-            Log → Advance Search ( Log name, Date From, Date To)
-          </div>
-
-          <CIcon
-            className="stock-toggle-icon"
-            onClick={() => toggleStock()}
-            icon={cilChevronBottom}
-          />
-        </div>
-        {showStock == true ? (
+    <>
+      <AppContainer>
+        <DataGridHeader
+          title=" Log → Advance Search ( Log name, Date From, Date To)"
+          onClick={toggleFilters}
+          otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
+          filterDisable={true}
+        />
+        {showFilters == true ? (
           <div className="show-stock">
             <div className="mb-0 dashboard-table padLeftRight">
               <div className="row">
@@ -207,21 +166,6 @@ const Logs = () => {
                     title=" using by entity name, log name "
                   />
                 </div>
-
-                {/*<div className="col-md-6">*/}
-                {/*  <CustomSelectInput*/}
-                {/*    label="Business Entity"*/}
-                {/*    icon={cilFlagAlt}*/}
-                {/*    id="menuId"*/}
-                {/*    disableOption="Select Business Entity"*/}
-                {/*    // options={globalutil.businessentities()}*/}
-                {/*    className="form-control item form-select"*/}
-                {/*    value={filters.menuId}*/}
-                {/*    name="menuId"*/}
-                {/*    title=" Business Entity"*/}
-                {/*    onChange={(e) => changeFilter(e)}*/}
-                {/*  />*/}
-                {/*</div>*/}
               </div>
               <div className="row">
                 <div className="col-md-6 mt-2">
@@ -266,8 +210,9 @@ const Logs = () => {
             </div>
           </div>
         ) : null}
-      </div>
-      <div className="bg_Div mb-2 d-flex flex-column">
+      </AppContainer>
+
+      <AppContainer>
         <DataGridHeader exportFn={() => ''} title="Log Viewer" filterDisable />
         <div className="show-stock">
           <div className="row ">
@@ -275,7 +220,7 @@ const Logs = () => {
               <CustomDatagrid
                 rows={rows}
                 columns={columns}
-                loading={LogLoading?.current}
+                loading={loading}
                 // rowHeight={'normal'}
                 pagination={true}
                 summary={[
@@ -291,17 +236,8 @@ const Logs = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-md-12 col-xl-12 mt-2">
-          <div className="d-flex justify-content-end align-items-center ">
-            <button type="button" className="btn_Default m-2 sales-btn-style">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+      </AppContainer>
+    </>
   );
 };
 export default Logs;

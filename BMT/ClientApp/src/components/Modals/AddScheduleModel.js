@@ -28,6 +28,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
+import Button from '../UI/Button';
 const AddScheduleModel = (prop) => {
   dayjs.extend(utc);
   const {
@@ -109,7 +110,9 @@ const AddScheduleModel = (prop) => {
 
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
+
   useEffect(() => {
     if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
       setInitialVisibleNetworks([...selectedNetworks]);
@@ -435,6 +438,7 @@ const AddScheduleModel = (prop) => {
     // console.log('body Data Submitted', JSON.stringify(campaignBody));
     console.log({ campaignBody });
     try {
+      setLoading(true);
       const response = await fetch('/Compaigns/submitmycompaign', {
         method: 'POST',
         headers: {
@@ -459,6 +463,8 @@ const AddScheduleModel = (prop) => {
     } catch (error) {
       console.error('Error submitting campaign:', error);
       showToast('An error occurred.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
   // // console.log('submitData', submitData);
@@ -481,11 +487,13 @@ const AddScheduleModel = (prop) => {
       formData.append('files', file); // backend should use Request.Form.Files
 
       try {
+        setLoading(true);
+
         const res = await fetch('/BlazorApi/uploadattachments', {
           method: 'POST',
           body: formData, // don't set headers here
         });
-
+        console.log({ res });
         const uploadResult = await res.json();
         // console.log(`Upload ${type} result:`, uploadResult);
 
@@ -493,8 +501,10 @@ const AddScheduleModel = (prop) => {
           showToast(`Failed to upload ${type} attachment.`, 'warning');
         }
       } catch (err) {
-        // console.error(`Error uploading ${type}:`, err);
+        console.error(`Error uploading ${type}:`, err);
         showToast(`Error uploading ${type} attachment.`, 'error');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -526,6 +536,7 @@ const AddScheduleModel = (prop) => {
                             <CFormCheck
                               id={IconName}
                               name={IconName}
+                              disabled={loading}
                               label={network.name}
                               checked={selectedNetworks.includes(network.name)}
                               onChange={() => handleNetworkChange(network.name)}
@@ -542,6 +553,7 @@ const AddScheduleModel = (prop) => {
                 <CustomSelectInput
                   label="Interval Types"
                   icon={cilFlagAlt}
+                  disabled={loading}
                   disableOption="Select Interval Types"
                   id="intervalTypes"
                   options={globalutil.intervals()}
@@ -555,6 +567,7 @@ const AddScheduleModel = (prop) => {
               </CCol>
               <CCol md="6" className="mt-3">
                 <CFormCheck
+                  disabled={loading}
                   label="Is Fixed Time"
                   name="isFixedTime"
                   checked={campaignRegData.isFixedTime} // ✅ bind to your state
@@ -577,7 +590,7 @@ const AddScheduleModel = (prop) => {
                         id={`day-${day.id}`}
                         checked={campaignRegData.selectedDays.includes(day.id)}
                         onChange={() => handleDayChange(day.id)}
-                        disabled={campaignRegData.intervalTypeId === 2} // disable if all are auto-selected
+                        disabled={campaignRegData.intervalTypeId === 2 || loading} // disable if all are auto-selected
                       />
                     </CCol>
                   ))}
@@ -596,12 +609,14 @@ const AddScheduleModel = (prop) => {
                 placeholder="interval size"
                 className="form-control item"
                 isRequired={false}
+                disabled={loading}
               />
             </CRow>
             <CRow>
               <CCol md="6">
                 <CustomDatePicker
                   icon={cilCalendar}
+                  disabled={loading}
                   label="Date From"
                   id="startDate"
                   name="startDate"
@@ -623,6 +638,7 @@ const AddScheduleModel = (prop) => {
                   title="end date"
                   className="scheduleClass"
                   value={campaignRegData.endDate}
+                  disabled={loading}
                   disablePast="true"
                   minDate={dayjs(submitData.startTime)}
                   maxDate={dayjs(submitData.finishTime)}
@@ -643,6 +659,7 @@ const AddScheduleModel = (prop) => {
                   className="scheduleClass"
                   value={campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null}
                   onChange={(e) => handleCampaignAddForm(e, 'startTime')}
+                  disabled={loading}
                 />
               </CCol>
               <CCol md="6">
@@ -654,6 +671,7 @@ const AddScheduleModel = (prop) => {
                   className="scheduleClass"
                   value={campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null}
                   onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
+                  disabled={loading}
                   title=" End Time"
                 />
               </CCol>
@@ -695,28 +713,34 @@ const AddScheduleModel = (prop) => {
             </CRow>
           </AppContainer>
           <React.Fragment>
-            <div className="CenterAlign pt-2">
-              <button
+            <div className="CenterAlign pt-2 gap-2">
+              <Button
+                disabled={loading}
                 onClick={() => onCancel()}
                 type="button"
-                className="btn btn_Default m-2 sales-btn-style"
+                className="w-auto px-4"
+                // className="btn btn_Default m-2 sales-btn-style"
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
+                disabled={loading}
                 onClick={() => onSave()}
                 type="button"
-                className="btn btn_Default sales-btn-style m-2 min-width"
+                className="w-auto px-4"
               >
                 Add Schedule
-              </button>
-              <button
+              </Button>
+              <Button
+                disabled={loading}
+                loading={loading}
                 onClick={() => submitCompaign()}
                 type="submit"
-                className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
+                className="w-auto px-4"
+                // className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
               >
                 Submit Campaign
-              </button>
+              </Button>
             </div>
           </React.Fragment>
         </form>

@@ -18,6 +18,7 @@ export default function CustomDatePicker(prop) {
     maxDate,
     minDate,
     disablePast = false,
+    disabled,
   } = prop;
 
   const [error, setError] = React.useState(null);
@@ -69,6 +70,7 @@ export default function CustomDatePicker(prop) {
           minDate={minDate || (disablePast ? new Date() : null)}
           maxDate={maxDate || null}
           required={isRequired}
+          disabled={disabled}
         />
       </div>
       {errorMessage && <div className="text-danger">{errorMessage}</div>}

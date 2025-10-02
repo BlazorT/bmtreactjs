@@ -37,7 +37,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     key: 'avatar',
     name: 'Picture',
     resizable: false,
-    sortable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
     headerCellClass: 'custom-header-data-grid',
   },
@@ -45,28 +44,24 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     key: 'completeName',
     name: 'Name',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
@@ -84,7 +79,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     key: 'lastUpdatedAt',
     name: 'Last Updated',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
@@ -102,7 +96,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     key: 'status',
     name: 'Action',
     resizable: true,
-    sortable: false,
     renderCell: (props) => (
       <UsersActionRenderer
         row={props.row}
@@ -126,7 +119,6 @@ export const getUsersListColsFlexible = (
     name: 'Picture',
     width: 100, // Fixed width for image
     resizable: false,
-    sortable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
     headerCellClass: 'custom-header-data-grid',
   },
@@ -134,28 +126,24 @@ export const getUsersListColsFlexible = (
     key: 'completeName',
     name: 'Name',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.regDate;
@@ -172,7 +160,6 @@ export const getUsersListColsFlexible = (
     key: 'lastUpdatedAt',
     name: 'Last Updated',
     resizable: true,
-    sortable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.lastUpdatedAt;
@@ -189,7 +176,6 @@ export const getUsersListColsFlexible = (
     key: 'status',
     name: 'Action',
     resizable: true,
-    sortable: false,
     renderCell: (props) => (
       <UsersActionRenderer
         row={props.row}

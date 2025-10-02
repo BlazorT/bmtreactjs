@@ -92,6 +92,7 @@ const BlazorNetworkInputs = (prop) => {
         autoReplyContent: data?.autoReplyContent,
         replyAttachment: data?.replyMediaContentId || '',
         virtualAccount: data?.virtualAccount,
+        purchasedQouta: data?.purchasedQouta || '',
         posttypejson: [],
         networkId: data?.networkId,
         rowVer: 1,

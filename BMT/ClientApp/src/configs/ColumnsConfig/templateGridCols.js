@@ -7,7 +7,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Network',
     key: 'networkId',
@@ -21,7 +20,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Name',
     key: 'name',
@@ -30,7 +28,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Title',
     key: 'title',
@@ -40,7 +37,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Template',
     key: 'template',
@@ -52,7 +48,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Last Update Time',
     key: 'lastUpdatedAt',
@@ -64,7 +59,6 @@ export const getTemplateCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Action',
     key: 'action',

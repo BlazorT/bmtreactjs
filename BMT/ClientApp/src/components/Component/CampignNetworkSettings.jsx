@@ -37,6 +37,7 @@ const CampignNetworkSettings = ({
   const [networkTemplates, setNetworkTemplates] = useState({});
   const [isTemplateModelOpen, setIsTemplateModalOpen] = React.useState(false);
   const [editTemplate, setEditTemplate] = useState(null);
+  const [showTemplateList, setShowTemplateList] = useState(null);
 
   const toggleShowTemplateModal = () => setIsTemplateModalOpen((prev) => !prev);
 
@@ -103,7 +104,12 @@ const CampignNetworkSettings = ({
 
     // Update selectedTemplates only if this template is already selected
     setSelectedTemplates((prev) => {
-      const networkName = updatedTemplate.name; // ⚠️ safer if you pass networkName explicitly
+      const findNN = globalutil.networks()?.find((nn) => nn?.id === updatedTemplate?.networkId);
+      if (!findNN) {
+        return prev;
+      }
+
+      const networkName = findNN.name; // ⚠️ safer if you pass networkName explicitly
       const existing = prev[networkName];
 
       if (existing?.id === updatedTemplate.id) {
@@ -120,13 +126,12 @@ const CampignNetworkSettings = ({
     setEditTemplate(null);
   };
 
-  //   console.log({ editTemplate });
   return (
     <React.Fragment>
       <AppContainer>
         <DataGridHeader title="Networks" filterDisable={false} />
       </AppContainer>
-      <CRow>
+      <CRow className="p-2">
         {globalutil
           .networks()
           .filter((network) =>
@@ -147,7 +152,7 @@ const CampignNetworkSettings = ({
             }
             const postTypeList = globalutil.postTypes().filter((pt) => postTypeIds.includes(pt.id));
             const isSelected = selectedNetworks.includes(network.name);
-            const isLoadingThisNetwork = loadingNetworkId === network?.id;
+            // const isLoadingThisNetwork = loadingNetworkId === network?.id;
             const templates = networkTemplates[network?.id] || [];
 
             // Auto-select/deselect single post type
@@ -195,6 +200,10 @@ const CampignNetworkSettings = ({
                             title="Select Templates"
                             loading={loading && loadingNetworkId === network?.id}
                             onClick={() => {
+                              setShowTemplateList((prev) => ({
+                                ...prev,
+                                [network?.name]: true,
+                              }));
                               getTemplates(network?.id);
                             }}
                             className="w-auto btn btn-outline-primary btn-sm ms-2"
@@ -230,9 +239,60 @@ const CampignNetworkSettings = ({
                       </div>
                     )}
 
+                    {selectedTemplates?.[network.name] ? (
+                      <CListGroupItem
+                        className="px-2 py-2 border-start-0 rounded border-end-0 d-flex"
+                        //   onClick={() => handleTemplateToggle(network.name, template)}
+                      >
+                        <div className="d-flex justify-content-between align-items-start">
+                          <div className="flex-grow-1">
+                            <div className="fw-bold text-primary text-center small mb-1">
+                              Selected Template
+                            </div>
+                            {selectedTemplates?.[network.name]?.template && (
+                              <div className="text-primary small">
+                                <strong>Content:</strong>{' '}
+                                {truncateText(selectedTemplates?.[network.name]?.template, 80)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <CBadge className="d-flex gap-2 justify-content-center align-items-center">
+                          <CTooltip content="Edit or Preview">
+                            <CIcon
+                              onClick={() => {
+                                setEditTemplate(selectedTemplates?.[network.name]);
+                                toggleShowTemplateModal();
+                              }}
+                              className="stock-toggle-icon"
+                              icon={cilPencil}
+                              style={{ cursor: 'pointer' }}
+                            />
+                          </CTooltip>
+                          <CFormCheck
+                            id={`${IconName}-${selectedTemplates?.[network.name]?.id}`}
+                            name={`${IconName}-${selectedTemplates?.[network.name]?.id}`}
+                            checked={
+                              selectedTemplates?.[network.name]?.id ===
+                              selectedTemplates?.[network.name]?.id
+                            }
+                            onChange={(e) => {
+                              setShowTemplateList((prev) => ({
+                                ...prev,
+                                [network?.name]: true,
+                              }));
+
+                              handleTemplateToggle(network.name, selectedTemplates?.[network.name]);
+                            }}
+                            className="mb-0"
+                          />
+                        </CBadge>
+                      </CListGroupItem>
+                    ) : null}
+
                     {/* Templates List */}
-                    {templates.length > 0 && (
-                      <div className="border-top pt-3">
+                    {templates.length > 0 && showTemplateList?.[network?.name] && (
+                      <div className="border-top pt-3 mb-3">
                         <div className="d-flex align-items-center justify-content-between mb-2">
                           <h6 className="text-primary mb-0 small">
                             Templates ({templates.length})
@@ -299,7 +359,17 @@ const CampignNetworkSettings = ({
                                     id={`${IconName}-${template.id}`}
                                     name={`${IconName}-${template.id}`}
                                     checked={selectedTemplates?.[network.name]?.id === template.id}
-                                    onChange={() => handleTemplateToggle(network.name, template)}
+                                    onChange={(e) => {
+                                      if (e?.target.checked) {
+                                        const isLoadingThisNetwork =
+                                          loadingNetworkId === network?.id;
+                                        setShowTemplateList((prev) => ({
+                                          ...prev,
+                                          [network?.name]: false,
+                                        }));
+                                      }
+                                      handleTemplateToggle(network.name, template);
+                                    }}
                                     className="mb-0"
                                   />
                                 </CBadge>

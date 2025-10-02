@@ -32,7 +32,7 @@
 }
 .signin-text-style {
   font-family: 'permanentmarker-regular';
-  font-size: 1.1875em;
+  font-size: 1.1em;
 }
 .css-dkrdoe-MuiTablePagination-root {
   overflow: auto;
@@ -4164,4 +4164,9 @@ fieldset.legend {
 }
 .card {
   border-radius: 6px;
+}
+.label-info {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ffffffe1;
 }

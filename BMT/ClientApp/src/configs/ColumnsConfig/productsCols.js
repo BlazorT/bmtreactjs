@@ -2,7 +2,6 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: ' Name',
     key: 'name',
@@ -12,7 +11,6 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Fee',
     key: 'fee',
@@ -21,7 +19,6 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Early Bird Disc(%)',
     key: 'earlyBirdDiscount',
@@ -30,7 +27,6 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Discount',
     key: 'discount',
@@ -39,7 +35,6 @@ export const getProductsCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Validity Time (Days)',
     key: 'packageInDays',

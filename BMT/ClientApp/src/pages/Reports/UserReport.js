@@ -27,35 +27,69 @@ import { getUserReportPdf } from 'src/helpers/getUserReportPdf';
 
 //import FleetInspectionTab from 'src/components/FleetComponents/FleetInspectionTab';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import AppContainer from 'src/components/UI/AppContainer';
+import useApi from 'src/hooks/useApi';
+dayjs.extend(utc);
 
-const UserReport = ({ reportField, fetchInspection, value }) => {
-  dayjs.extend(utc);
-  // console.log(JSON.stringify(globalutil.userroles()));
-  //const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-  //  (item) => item.name === 'Users Report',
-  //);
-  const generatePdf = async () => {
-    const body = {
-      id: rows[0].id,
-    };
-    const reportRows = makeGroupingRows(rows);
-    const doc = getUserReportPdf(reportRows, reportField);
-    doc.output('dataurlnewwindow');
-    // console.log(reportRows, 'repoertdata');
-  };
+const columns = [
+  {
+    key: 'userName',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Name',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'roleName',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Role',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'contact',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Contact',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'email',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Email',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'status',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Current Status',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+    renderCell: (params) => (params.row.status === 1 ? 'Active' : 'In Active'),
+  },
+  {
+    key: 'createdAt',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Date',
+    editable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    type: 'timestamp',
+  },
+];
 
-  useEffect(() => {
-    applyFilters();
-  }, []);
-  const [activeTab, setActiveTab] = useState(1);
-  const tabs = [
-    { id: 1, name: 'Users' },
-    { id: 2, name: 'Summary' },
-  ];
-  const [isLoading, setIsLoading] = useState(true);
+const tabs = [
+  { id: 1, name: 'Users' },
+  { id: 2, name: 'Summary' },
+];
+const UserReport = () => {
   const user = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
+  const { loading, postData: fetchUserReport } = useApi('/BlazorApi/users');
+
+  const [activeTab, setActiveTab] = useState(1);
   const initialFilter = {
     orgId: user.orgId,
     UserName: '',
@@ -64,6 +98,20 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
+  const [rows, setRows] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+  };
+
+  const generatePdf = async () => {
+    const reportRows = makeGroupingRows(rows);
+    const doc = getUserReportPdf(reportRows);
+    doc.output('dataurlnewwindow');
+    // console.log(reportRows, 'repoertdata');
+  };
+
   const applyFilters = async () => {
     const filterBody = {
       UserName: filters.UserName === '' ? '' : filters.UserName,
@@ -76,15 +124,11 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
 
     getLogList(filterBody);
   };
-  const {
-    response: GetLogRes,
-    loading: LogLoading,
-    error: createServiceError,
-    fetchData: GetLog,
-  } = useFetch();
+
   useEffect(() => {
     getLogList();
   }, []);
+
   const getLogList = async (filters) => {
     const fetchBody = {
       id: 0,
@@ -104,108 +148,36 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       status: 0,
       genderId: 0,
       rowVer: 0,
-      //licenseExpiryDate: moment().utc().startOf('year').format(),
       createdAt: dayjs().utc().subtract(1, 'year').format(),
       lastUpdatedAt: dayjs().utc().format(),
       ...filters,
-      //logTime: moment().utc().startOf('year').format(),
     };
-
-    console.log(JSON.stringify(fetchBody));
-    await GetLog(
-      '/BlazorApi/users',
-      {
-        method: 'POST',
-        body: JSON.stringify(fetchBody),
-      },
-      (res) => {
-        console.log(res, 'user responce');
-        if (res.status === true) {
-          const mappedArray = res.data.map((data) => ({
-            id: data.id,
-            roleName: data.roleName,
-            // roleId: roleId.find((item) => item.id === data.roleId)?.name || null,
-            //userId: data.userId,
-            //dspid: user.dspId.toString(),
-            //userRole: data.userRole,
-            userName: data.userName,
-            status: data.status,
-            contact: data.contact,
-            email: data.email,
-            createdAt: formatDate(data.createdAt)
-              ? formatDate(data.createdAt)
-              : formatDate(data.createdAt),
-            //  lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
-          }));
-          setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          setRows([]);
-        }
-        setIsLoading(false);
-      },
-    );
-    setIsLoading(false);
+    const res = await fetchUserReport(fetchBody);
+    if (res?.status === true) {
+      const mappedArray = res.data.map((data) => ({
+        id: data.id,
+        roleName: data.roleName,
+        userName: data.userName,
+        status: data.status,
+        contact: data.contact,
+        email: data.email,
+        createdAt: formatDate(data.createdAt)
+          ? formatDate(data.createdAt)
+          : formatDate(data.createdAt),
+      }));
+      setRows(mappedArray);
+    } else {
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: res.message,
+          toastVariant: 'error',
+        }),
+      );
+      setRows([]);
+    }
   };
-  const [rows, setRows] = useState([]);
 
-  const [columns, setColumns] = useState([
-    {
-      key: 'userName',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Name',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'roleName',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Role',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'contact',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Contact',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'email',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Email',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'status',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Current Status',
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-      renderCell: (params) => (params.row.status === 1 ? 'Active' : 'In Active'),
-    },
-    {
-      key: 'createdAt',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Date',
-      editable: false,
-      filterable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      type: 'timestamp',
-    },
-  ]);
-  const [showStock, setShowStock] = useState(false);
   const makeGroupingRows = (data) => {
     const updatedData = [];
     const uniqueDescValues = [...new Set(data.map((item) => item.daName))];
@@ -262,9 +234,6 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
     return grouping;
   };
 
-  const toggleStock = () => {
-    setShowStock((prev) => !prev);
-  };
   const changeFilter = (e, date) => {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
@@ -279,9 +248,7 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
       }));
     }
   };
-  if (isLoading) {
-    return <Loading />;
-  }
+
   return (
     <>
       <BlazorTabs
@@ -290,122 +257,102 @@ const UserReport = ({ reportField, fetchInspection, value }) => {
         activeTab={activeTab}
         handleActiveTab={setActiveTab}
       />
-      <CContainer fluid className="mt-4">
-        {tabs.find((s) => s.id === 1).id === activeTab && (
-          <div className="">
-            <div className="bg_Div mb-2 d-flex flex-column">
-              <div className="dashboard-stock-header dashboard-drop">
-                <div className="pointer" onClick={() => toggleStock()}>
-                  User Report → Advance Search (Name, Contact, Status, Date To, Date From)
-                </div>
-                <CIcon
-                  className="stock-toggle-icon"
-                  onClick={() => toggleStock()}
-                  icon={cilChevronBottom}
-                />
-              </div>
-              {showStock == true ? (
-                <div className="show-stock">
-                  <div className="mb-0 dashboard-table padLeftRight">
-                    <div className="row">
-                      <div className="col-md-6">
-                        <CustomInput
-                          label="Keyword"
-                          value={filters.UserName}
-                          onChange={changeFilter}
-                          icon={cilUser}
-                          type="text"
-                          id="UserName"
-                          name="UserName"
-                          placeholder="Name,Contact"
-                          className="form-control item"
-                          isRequired={false}
-                          title="using by user code,user name,contact "
-                          // message="Enter Buisness Name"
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <CustomSelectInput
-                          label="Status"
-                          icon={cilFlagAlt}
-                          disableOption="Select Status"
-                          id="status"
-                          options={globalutil.statuses()}
-                          className="form-control item form-select"
-                          value={filters.status}
-                          name="status"
-                          title=" user status "
-                          onChange={(e) => changeFilter(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6 mt-2">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          label="Date From "
-                          id="createdAt"
-                          name="createdAt"
-                          value={filters.createdAt}
-                          title=" user registration date  "
-                          onChange={(e) => changeFilter(e, 'createdAt')}
-                        />
-                      </div>
-                      <div className="col-md-6 mt-2">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          label="Date To"
-                          id="lastUpdatedAt"
-                          name="lastUpdatedAt"
-                          value={filters.lastUpdatedAt}
-                          title=" user registration date  "
-                          onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6"> </div>
-                      <div className="col-md-6">
-                        <div className="mt-2">
-                          <button
-                            type="button"
-                            title="Click for searching user report data"
-                            onClick={() => applyFilters()}
-                            className="btn_Default m-2 sales-btn-style alignLeft"
-                          >
-                            Search
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            <div className="bg_Div mb-2 d-flex flex-column">
-              <DataGridHeader exportFn={() => generatePdf()} title="Users" filterDisable />
+      {tabs.find((s) => s.id === 1).id === activeTab && (
+        <>
+          <AppContainer>
+            <DataGridHeader
+              title="User Report → Advance Search (Name, Contact, Status, Date To, Date From)"
+              onClick={toggleFilters}
+              otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
+              filterDisable={true}
+            />
+            {showFilters == true ? (
               <div className="show-stock">
-                <div className="row ">
-                  <div className="col-md-12 col-xl-12">
-                    <CustomDatagrid rows={rows} columns={columns} pagination={true} />
+                <div className="mb-0 dashboard-table padLeftRight">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Keyword"
+                        value={filters.UserName}
+                        onChange={changeFilter}
+                        icon={cilUser}
+                        type="text"
+                        id="UserName"
+                        name="UserName"
+                        placeholder="Name,Contact"
+                        className="form-control item"
+                        isRequired={false}
+                        title="using by user code,user name,contact "
+                        // message="Enter Buisness Name"
+                      />
+                    </div>
+
+                    <div className="col-md-6">
+                      <CustomSelectInput
+                        label="Status"
+                        icon={cilFlagAlt}
+                        disableOption="Select Status"
+                        id="status"
+                        options={globalutil.statuses()}
+                        className="form-control item form-select"
+                        value={filters.status}
+                        name="status"
+                        title=" user status "
+                        onChange={(e) => changeFilter(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 mt-2">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date From "
+                        id="createdAt"
+                        name="createdAt"
+                        value={filters.createdAt}
+                        title=" user registration date  "
+                        onChange={(e) => changeFilter(e, 'createdAt')}
+                      />
+                    </div>
+                    <div className="col-md-6 mt-2">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date To"
+                        id="lastUpdatedAt"
+                        name="lastUpdatedAt"
+                        value={filters.lastUpdatedAt}
+                        title=" user registration date  "
+                        onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6"> </div>
+                    <div className="col-md-6">
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          title="Click for searching user report data"
+                          onClick={() => applyFilters()}
+                          className="btn_Default m-2 sales-btn-style alignLeft"
+                        >
+                          Search
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-md-12 col-xl-12 mt-2">
-                <div className="d-flex justify-content-end align-items-center ">
-                  <button type="button" className="btn_Default m-2 sales-btn-style">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        {tabs.find((s) => s.id === 2).id === activeTab && <h1>User Summary</h1>}
-      </CContainer>
+            ) : null}
+          </AppContainer>
+
+          <AppContainer>
+            <DataGridHeader exportFn={() => generatePdf()} title="Users" filterDisable />
+            <CustomDatagrid rows={rows} columns={columns} pagination={true} loading={loading} />
+          </AppContainer>
+        </>
+      )}
+      {tabs.find((s) => s.id === 2).id === activeTab && <h1>User Summary</h1>}
     </>
   );
 };
