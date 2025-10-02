@@ -3,15 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
-using com.blazor.bmt.application.interfaces;
-
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Blazor.Web.UI.Interfaces;
 
 using Blazor.Web.Application.Interfaces;
 using com.blazor.bmt.application.model;
-using com.blazor.bmt.infrastructure.repositories;
 
 namespace com.blazor.bmt.controllers
 {
