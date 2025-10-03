@@ -1,53 +1,86 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
-import useFetch from 'src/hooks/useFetch';
-import { updateToast } from 'src/redux/toast/toastSlice';
+import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser } from '@coreui/icons';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  cilUser,
-  cilCloudDownload,
-  cilCalendar,
-  cilChevronBottom,
-  cilFlagAlt,
-} from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
 import { getOrgReportPdf } from 'src/helpers/getOrgReportPdf';
+import { updateToast } from 'src/redux/toast/toastSlice';
 
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
+import { formatDate } from 'src/helpers/formatDate';
+import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
-import dayjs from 'dayjs';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-import utc from 'dayjs/plugin/utc';
-import Loading from 'src/components/UI/Loading';
 
-const organizationreport = ({ reportField, fetchInspection, value }) => {
-  dayjs.extend(utc);
+const columns = [
+  {
+    key: 'orgName',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Organization Name',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+  },
+  {
+    key: 'contact',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Contact',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'strength',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Strength',
+    editable: false,
+    filterable: true,
+  },
+  {
+    key: 'packageName',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Package',
+    editable: false,
+    filterable: true,
+  },
 
+  {
+    key: 'status',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Current Status',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+  },
+
+  {
+    key: 'expiryTime',
+    headerCellClass: 'custom-header-data-grid',
+    name: 'Expiry Date',
+    editable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    type: 'timestamp',
+  },
+];
+
+dayjs.extend(utc);
+
+const organizationreport = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Organizations',
   );
-  const generatePdf = async () => {
-    const body = {
-      id: rows[0].id,
-    };
-    const reportRows = makeGroupingRows(rows);
-    const doc = getOrgReportPdf(reportRows, reportField);
-    doc.output('dataurlnewwindow');
-    console.log(reportRows, 'repoertdata');
-  };
-
-  useEffect(() => {
-    applyFilters();
-  }, []);
-
-  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
+  const { loading, postData: fetchOrgReport } = useApi('/Report/organizationsreportdata');
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [rows, setRows] = useState([]);
   const initialFilter = {
     orgId: user.orgId,
     name: '',
@@ -56,6 +89,22 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   };
   const [filters, setFilters] = useState(initialFilter);
+
+  useEffect(() => {
+    getDAuserList();
+  }, []);
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+  };
+
+  const generatePdf = async () => {
+    const reportRows = makeGroupingRows(rows);
+    const doc = getOrgReportPdf(reportRows);
+    doc.output('dataurlnewwindow');
+    console.log(reportRows, 'repoertdata');
+  };
+
   const applyFilters = async () => {
     const filterBody = {
       name: filters.name,
@@ -67,15 +116,7 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
     getDAuserList(filterBody);
     // getDAuserList(filterBody);
   };
-  const {
-    response: GetOrgRes,
-    loading: LogLoading,
-    error: createServiceError,
-    fetchData: GetOrgs,
-  } = useFetch();
-  useEffect(() => {
-    getDAuserList();
-  }, []);
+
   const getDAuserList = async (filters) => {
     const fetchBody = {
       id: 0,
@@ -101,115 +142,38 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
         .format('YYYY-MM-DD'),
       ...filters,
     };
-    //alert(JSON.stringify(fetchBody));
-    await GetOrgs(
-      '/Report/organizationsreportdata',
-      {
-        method: 'POST',
-        body: JSON.stringify(fetchBody),
-      },
-      (res) => {
-        console.log(res, 'res');
 
-        if (res.status) {
-          const mappedArray = res.data.map((data) => ({
-            id: data.id,
-            // roleId: data.roleId,
-            // userId: data.userId,
-            // dspid: user.dspId.toString(),
-            userRole: data.userRole,
-            userName: data.userName,
-            orgName: data.name + ', ' + data.stateName,
-            performance: data.performance,
-            strength: data.strength,
-            contact: data.contact,
-            packageName: data.packageName,
-            violations: data.violations,
-            status: data.status == 0 ? 'Active' : 'In-Active',
-            //status: globalutil.statuses().find((item) => item.id === data.status)
-            //  ? globalutil.statuses().find((item) => item.id === data.status).name
-            //  : '',
-            createdAt: formatDate(data.createdAt),
-            // lastUpdatedAt: moment(filters.lastUpdatedAt).utc().format().toString().split('T')[0],
-            expiryTime: formatDate(data.expiryTime),
-          }));
+    const res = await fetchOrgReport(fetchBody);
 
-          setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          setRows([]);
-        }
-        setIsLoading(false);
-      },
-    );
-    setIsLoading(false);
+    if (res?.status) {
+      const mappedArray = res?.data?.map((data) => ({
+        id: data.id,
+        userRole: data.userRole,
+        userName: data.userName,
+        orgName: data.name + ', ' + data.stateName,
+        performance: data.performance,
+        strength: data.strength,
+        contact: data.contact,
+        packageName: data.packageName,
+        violations: data.violations,
+        status: data.status == 0 ? 'Active' : 'In-Active',
+        createdAt: formatDate(data.createdAt),
+        expiryTime: formatDate(data.expiryTime),
+      }));
+
+      setRows(mappedArray);
+    } else {
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: res.message,
+          toastVariant: 'error',
+        }),
+      );
+      setRows([]);
+    }
   };
-  const [rows, setRows] = useState([]);
 
-  const columns = [
-    {
-      key: 'orgName',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Organization Name',
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-    },
-    {
-      key: 'contact',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Contact',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'strength',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Strength',
-      editable: false,
-      filterable: true,
-    },
-    {
-      key: 'packageName',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Package',
-      editable: false,
-      filterable: true,
-    },
-
-    {
-      key: 'status',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Current Status',
-      editable: false,
-      sortable: false,
-      filterable: true,
-      disableColumnMenu: false,
-    },
-
-    {
-      key: 'expiryTime',
-      headerCellClass: 'custom-header-data-grid',
-      name: 'Expiry Date',
-      editable: false,
-      filterable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      type: 'timestamp',
-    },
-  ];
-  const [showStock, setShowStock] = useState(false);
-
-  const toggleStock = () => {
-    setShowStock((prev) => !prev);
-  };
   const makeGroupingRows = (data) => {
     const updatedData = [];
     const uniqueDescValues = [...new Set(data.map((item) => item.daName))];
@@ -280,23 +244,17 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
       }));
     }
   };
-  if (isLoading) {
-    return <Loading />;
-  }
+
   return (
-    <div className=" ">
-      <div className="bg_Div mb-2 d-flex flex-column">
-        <div className="dashboard-stock-header dashboard-drop">
-          <div className="pointer" onClick={() => toggleStock()}>
-            Organization Report → Advance Search (Name, Contact, Email, Status, Date To, Date From)
-          </div>
-          <CIcon
-            className="stock-toggle-icon"
-            onClick={() => toggleStock()}
-            icon={cilChevronBottom}
-          />
-        </div>
-        {showStock == true ? (
+    <>
+      <AppContainer>
+        <DataGridHeader
+          title="Organization Report → Advance Search (Name, Contact, Email, Status, Date To, Date From)"
+          onClick={toggleFilters}
+          otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
+          filterDisable={true}
+        />
+        {showFilters == true ? (
           <div className="show-stock">
             <div className="mb-0 dashboard-table padLeftRight">
               <div className="row">
@@ -375,8 +333,8 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
             </div>
           </div>
         ) : null}
-      </div>
-      <div className="bg_Div mb-2 d-flex flex-column">
+      </AppContainer>
+      <AppContainer>
         <DataGridHeader exportFn={() => generatePdf()} title="Organization Report" filterDisable />
         <div className="show-stock">
           <div className="row ">
@@ -387,12 +345,13 @@ const organizationreport = ({ reportField, fetchInspection, value }) => {
                 pagination={true}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
+                loading={loading}
               />
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </AppContainer>
+    </>
   );
 };
 export default organizationreport;

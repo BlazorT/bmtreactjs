@@ -96,6 +96,7 @@ function SignIn() {
     globalutil.setuserroles(data.userroles);
     globalutil.setbusinessentitiess(data.businessentities);
     globalutil.setbusinesstypes(data.businesstypes);
+    globalutil.setdeliverstatus(data.deliverstatus);
   };
 
   const getUtils = async () => {
@@ -213,8 +214,6 @@ function SignIn() {
         <div className="col-12 col-md-8 col-lg-6 col-xl-5 LoginCardOverlayImg">
           <div className="LoginCardOverlayImg2ndView">
             <div className="card-body p-3 text-center">
-              {/*<img className="LogoStyl mb-2" src="bmtlogo.png" alt="logo" />*/}
-              {/* <br />*/}
               <div>
                 <strong className="signin-text-style labelName"> Blazor Media Toolkit </strong>
               </div>
@@ -280,9 +279,9 @@ function SignIn() {
               </form>
             </div>
           </div>
-          <div className="LoginCardOverlayImg3ndView">
+          <div className="LoginCardOverlayImg3ndView mt-2 mb-2">
             {/*  <img className="poweredbyStyl" src="poweredbyaws.png" alt="logo" />*/}
-            <div className="text-center Copyrights-labelName mt-2">
+            <div className="text-center Copyrights-labelName">
               © 2020{' '}
               <a onClick={toggleModal} className="underline Copyrights-labelName">
                 Blazor Media Toolkit(BMT).
@@ -306,31 +305,6 @@ function SignIn() {
                     </p>
                   </Carousel.Caption>
                 </Carousel.Item>
-                {/*<Carousel.Item>*/}
-                {/*  <img*/}
-                {/*    className="d-block w-100 carousalImg"*/}
-                {/*    src="carouselImg4.png"*/}
-                {/*    alt="Second slide"*/}
-                {/*  />*/}
-                {/*  <Carousel.Caption>*/}
-                {/*    <h5>Delivery Service</h5>*/}
-                {/*    <p> As a DSP, you are only as strong as your team of delivery associates. </p>*/}
-                {/*  </Carousel.Caption>*/}
-                {/*</Carousel.Item>*/}
-                {/*<Carousel.Item>*/}
-                {/*  <img*/}
-                {/*    className="d-block w-100 carousalImg"*/}
-                {/*    src="carouselImg3.png"*/}
-                {/*    alt="Third slide"*/}
-                {/*  />*/}
-                {/*  <Carousel.Caption>*/}
-                {/*    <h5>Partner Application</h5>*/}
-                {/*    <p>*/}
-                {/*      Your leadership won’t just set them up for success on the road today, but*/}
-                {/*      wherever their career takes them.*/}
-                {/*    </p>*/}
-                {/*  </Carousel.Caption>*/}
-                {/*</Carousel.Item>*/}
               </Carousel>
             </div>
             <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">

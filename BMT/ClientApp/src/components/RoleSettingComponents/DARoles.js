@@ -37,7 +37,6 @@ const DARoles = (prop) => {
       width: 130,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group !== '' && (
@@ -62,7 +61,6 @@ const DARoles = (prop) => {
       width: 40,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -82,7 +80,6 @@ const DARoles = (prop) => {
       width: 180,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
     },
     {
@@ -93,7 +90,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -114,7 +110,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -135,7 +130,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -156,7 +150,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -177,7 +170,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (
@@ -198,7 +190,6 @@ const DARoles = (prop) => {
       minWidth: 100,
       editable: false,
       filterable: false,
-      sortable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group === '' && (

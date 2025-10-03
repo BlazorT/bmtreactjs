@@ -328,7 +328,8 @@ namespace Blazor.Web.UI.Services
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
                         command.Parameters.Add(new MySqlParameter("@p_OrgId", MySqlDbType.Int32) { Value = cModel.OrgId });
-                        command.Parameters.Add(new MySqlParameter("@p_DeliveryStatus", MySqlDbType.Int32) { Value = cModel.DeliveryStatus });
+						command.Parameters.Add(new MySqlParameter("@p_CampaignId", MySqlDbType.Int64) { Value = cModel.Id });
+						command.Parameters.Add(new MySqlParameter("@p_DeliveryStatus", MySqlDbType.Int32) { Value = cModel.DeliveryStatus });
                         command.Parameters.Add(new MySqlParameter("@p_DateFrom", MySqlDbType.DateTime) { Value = cModel.CreatedAt });
                         command.Parameters.Add(new MySqlParameter("@p_DateTo", MySqlDbType.DateTime) { Value = cModel.LastUpdatedAt });
                         command.Parameters.Add(new MySqlParameter("@p_Recipient", MySqlDbType.VarChar) { Value = cModel.recipient ?? string.Empty });
@@ -358,6 +359,7 @@ FROM compaigns c
 INNER JOIN notification n ON c.id = n.comaignId
 LEFT OUTER JOIN networks nt ON nt.id = n.NetworkId
 WHERE c.OrgId = @p_OrgId
+AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
   AND (n.deliveryStatus = @p_DeliveryStatus OR ifnull(@p_DeliveryStatus,0)=0)
   AND c.CreatedAt >= @p_DateFrom
   AND c.CreatedAt <= @p_DateTo
