@@ -6,6 +6,7 @@ interface ButtonProps {
   onClick: () => void;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  content?: string;
   disabled?: boolean;
   icon?: ReactNode;
   children?: ReactNode;
@@ -23,11 +24,13 @@ const Button: React.FC<ButtonProps> = ({
   loading = false,
   loadingTitle = '',
   children,
+  content,
 }: ButtonProps) => {
   return loading ? (
     <LoadingBtn title={loadingTitle} className={''} />
   ) : (
     <button
+      title={content}
       type={type}
       onClick={onClick}
       disabled={disabled}

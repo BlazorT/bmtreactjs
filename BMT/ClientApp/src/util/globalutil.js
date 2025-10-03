@@ -9,12 +9,9 @@ export default class globalutil {
   }
   static setnetworks(networks) {
     localStorage.setItem('networks', JSON.stringify(networks));
-  }        
+  }
   static statuses() {
-    if (
-      localStorage.getItem('statuses') !== '' &&
-      localStorage.getItem('statuses') !== null
-    )
+    if (localStorage.getItem('statuses') !== '' && localStorage.getItem('statuses') !== null)
       return JSON.parse(localStorage.getItem('statuses'));
     else return null;
   }
@@ -50,7 +47,7 @@ export default class globalutil {
   //notifications
   static setnotifications(notifications) {
     localStorage.setItem('notifications', JSON.stringify(notifications));
-  } 
+  }
   static notifications() {
     if (
       localStorage.getItem('notifications') !== '' &&
@@ -64,10 +61,7 @@ export default class globalutil {
     localStorage.setItem('packages', JSON.stringify(packages));
   }
   static packages() {
-    if (
-      localStorage.getItem('packages') !== '' &&
-      localStorage.getItem('packages') !== null
-    )
+    if (localStorage.getItem('packages') !== '' && localStorage.getItem('packages') !== null)
       return JSON.parse(localStorage.getItem('packages'));
     else return null;
   }
@@ -76,10 +70,7 @@ export default class globalutil {
     localStorage.setItem('currencies', JSON.stringify(currencies));
   }
   static currencies() {
-    if (
-      localStorage.getItem('currencies') !== '' &&
-      localStorage.getItem('currencies') !== null
-    )
+    if (localStorage.getItem('currencies') !== '' && localStorage.getItem('currencies') !== null)
       return JSON.parse(localStorage.getItem('currencies'));
     else return null;
   }
@@ -96,7 +87,6 @@ export default class globalutil {
   }
   //states
   static states() {
-    
     if (localStorage.getItem('states') !== '' && localStorage.getItem('states') !== null)
       return JSON.parse(localStorage.getItem('states'));
     else return null;
@@ -104,7 +94,7 @@ export default class globalutil {
   static setstates(states) {
     localStorage.setItem('states', JSON.stringify(states));
   }
-    //intervaltypes
+  //intervaltypes
   static servicetypes() {
     if (
       localStorage.getItem('servicetypes') !== '' &&
@@ -128,7 +118,7 @@ export default class globalutil {
   }
   static setcommonstatuses(statuses) {
     if (statuses !== null && statuses !== undefined)
-    localStorage.setItem('commonstatuses', JSON.stringify(statuses));
+      localStorage.setItem('commonstatuses', JSON.stringify(statuses));
   }
   //setstatuses
   static auditentities() {
@@ -160,7 +150,7 @@ export default class globalutil {
   static setuserroles(userroles) {
     localStorage.setItem('userroles', JSON.stringify(userroles));
   }
-  
+
   //MENUS
   static menus() {
     if (localStorage.getItem('menus') !== '' && localStorage.getItem('menus') !== null)
@@ -172,7 +162,10 @@ export default class globalutil {
   }
   //deliverstatus
   static deliverstatus() {
-    if (localStorage.getItem('deliverstatus') !== '' && localStorage.getItem('deliverstatus') !== null)
+    if (
+      localStorage.getItem('deliverstatus') !== '' &&
+      localStorage.getItem('deliverstatus') !== null
+    )
       return JSON.parse(localStorage.getItem('deliverstatus'));
     else return null;
   }
@@ -181,7 +174,10 @@ export default class globalutil {
   }
 
   static businessentitiess() {
-    if (localStorage.getItem('businessentitiess') !== '' && localStorage.getItem('businessentitiess') !== null)
+    if (
+      localStorage.getItem('businessentitiess') !== '' &&
+      localStorage.getItem('businessentitiess') !== null
+    )
       return JSON.parse(localStorage.getItem('businessentitiess'));
     else return null;
   }
@@ -189,7 +185,10 @@ export default class globalutil {
     localStorage.setItem('businessentitiess', JSON.stringify(businessentitiess));
   }
   static businesstypes() {
-    if (localStorage.getItem('businesstypes') !== '' && localStorage.getItem('businesstypes') !== null)
+    if (
+      localStorage.getItem('businesstypes') !== '' &&
+      localStorage.getItem('businesstypes') !== null
+    )
       return JSON.parse(localStorage.getItem('businesstypes'));
     else return null;
   }
@@ -204,5 +203,15 @@ export default class globalutil {
   static setcountries(countries) {
     localStorage.setItem('countries', JSON.stringify(countries));
   }
-  
+  static deliverstatus() {
+    if (
+      localStorage.getItem('deliverstatus') !== '' &&
+      localStorage.getItem('deliverstatus') !== null
+    )
+      return JSON.parse(localStorage.getItem('deliverstatus'));
+    else return null;
+  }
+  static setdeliverstatus(deliverstatus) {
+    localStorage.setItem('deliverstatus', JSON.stringify(deliverstatus));
+  }
 }

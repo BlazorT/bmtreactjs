@@ -213,9 +213,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     const endItem = Math.min((currentPage + 1) * pageSize, sortedRows.length);
 
     return (
-      <div className="d-flex justify-content-between align-items-center p-1 bg-dark-color text-white">
+      <div className="d-flex justify-content-between align-items-center p-2 bg-dark-color text-white">
         <div>
-          Showing {startItem} to {endItem} of {sortedRows.length} entries
+          Showing {startItem} - {endItem} of {sortedRows.length}
         </div>
         <div className="d-flex align-items-center gap-2">
           <CTooltip content="First">

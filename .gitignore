@@ -361,4 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/.vscode
+/.vscodeBMT/wwwroot/productimages/*.mp4
+BMT/wwwroot/productimages/*.mp4

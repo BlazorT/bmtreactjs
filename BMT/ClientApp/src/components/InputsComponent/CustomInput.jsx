@@ -32,6 +32,7 @@ const CustomInput = ({
   minLength,
   src,
   onPaste,
+  info,
 }) => {
   // console.log({ src });
   return (
@@ -40,7 +41,7 @@ const CustomInput = ({
     >
       {label && (
         <label htmlFor={id} className="login_label labelName ">
-          {label}
+          {label} {info ? <span className="label-info"> {info}</span> : null}
         </label>
       )}
       <div className="form-outline text-start">

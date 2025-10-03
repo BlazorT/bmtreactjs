@@ -2,7 +2,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Network Name',
     key: 'name',
@@ -12,7 +11,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Pricing Unit',
     key: 'unitName',
@@ -21,7 +19,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Unit Price',
     key: 'unitPrice',
@@ -30,7 +27,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Discount',
     key: 'discount',
@@ -39,7 +35,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Free Quota',
     key: 'freeAllowed',
@@ -48,7 +43,6 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
-    sortable: true,
     disableColumnMenu: false,
     name: 'Applicable Date',
     key: 'startTime',

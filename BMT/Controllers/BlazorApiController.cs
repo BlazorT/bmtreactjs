@@ -125,9 +125,12 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        [HttpPost]
-        [HttpGet]
-        public async Task<ActionResult> GetCampaignNotificationReportData([FromBody] CampaignNotificationViewModel vm)
+        //[HttpPost]
+        //[HttpGet]
+		[HttpPost("notificationsreportdata")]
+		[HttpGet("notificationsreportdata")]
+		[Route("notificationsreportdata")]
+		public async Task<ActionResult> GetCampaignNotificationReportData([FromBody] CampaignNotificationViewModel vm)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) ||
                 Convert.ToString(Request.Headers["Authorization"]) != BlazorConstant.API_AUTH_KEY)
@@ -301,49 +304,50 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        //[HttpGet]
-        //[HttpPost]
-        //[Route("addupdateproduct")]
-        //public async Task<ActionResult> UpdateProduct([FromBody] ProductViewModel pvm)
-        //{
-        //    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
-        //    // List<User> cstrs = new List<User>();
-        //    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
-        //    try
-        //    {
-        //        if (pvm != null && pvm.Id <= 0)
-        //        {
-        //            pvm.CreatedAt = GlobalUTIL.CurrentDateTime;
-        //            pvm.CreatedBy = pvm.LastUpdatedBy;
-        //            pvm.RowVer = 1;
-        //            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-        //            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
-        //            blazorApiResponse.data= await _productPageService.Create(pvm);
-        //        }
-        //        else {
-        //           var dbProduct= await _productPageService.GetProductByIdAsync(pvm.Id);
-        //            pvm.CreatedBy = dbProduct.CreatedBy;
-        //            pvm.CreatedAt = dbProduct.CreatedAt;
-        //            pvm.RowVer = dbProduct.RowVer+1;
-        //            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-        //            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
-        //           await _productPageService.Update(pvm);
-        //            blazorApiResponse.data = pvm;
-        //        }          
-        //        blazorApiResponse.message = string.Format("User {0} has been saved", pvm.Name);
-        //        blazorApiResponse.status = true;                
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        blazorApiResponse.status = false;
-        //        blazorApiResponse.errorCode = "408";
-        //        blazorApiResponse.message = ex.Message;
-        //        _logger.LogError(ex.StackTrace);
-        //    }
-        //    return Ok(blazorApiResponse);
-        //    // .ToArray();
-        //}
-        [HttpPost]
+		
+		//[HttpGet]
+		//[HttpPost]
+		//[Route("addupdateproduct")]
+		//public async Task<ActionResult> UpdateProduct([FromBody] ProductViewModel pvm)
+		//{
+		//    BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+		//    // List<User> cstrs = new List<User>();
+		//    if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+		//    try
+		//    {
+		//        if (pvm != null && pvm.Id <= 0)
+		//        {
+		//            pvm.CreatedAt = GlobalUTIL.CurrentDateTime;
+		//            pvm.CreatedBy = pvm.LastUpdatedBy;
+		//            pvm.RowVer = 1;
+		//            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+		//            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
+		//            blazorApiResponse.data= await _productPageService.Create(pvm);
+		//        }
+		//        else {
+		//           var dbProduct= await _productPageService.GetProductByIdAsync(pvm.Id);
+		//            pvm.CreatedBy = dbProduct.CreatedBy;
+		//            pvm.CreatedAt = dbProduct.CreatedAt;
+		//            pvm.RowVer = dbProduct.RowVer+1;
+		//            pvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+		//            pvm.LastUpdatedBy = pvm.LastUpdatedBy;
+		//           await _productPageService.Update(pvm);
+		//            blazorApiResponse.data = pvm;
+		//        }          
+		//        blazorApiResponse.message = string.Format("User {0} has been saved", pvm.Name);
+		//        blazorApiResponse.status = true;                
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        blazorApiResponse.status = false;
+		//        blazorApiResponse.errorCode = "408";
+		//        blazorApiResponse.message = ex.Message;
+		//        _logger.LogError(ex.StackTrace);
+		//    }
+		//    return Ok(blazorApiResponse);
+		//    // .ToArray();
+		//}
+		[HttpPost]
         [Route("updateuser")]
         public async Task<ActionResult> UpdateOrgUser([FromBody] UserViewModel uvm)
         {
