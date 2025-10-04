@@ -28,8 +28,14 @@ public partial class OrgpackagedetailViewModel
     public int? UnitId { get; set; }
     
     public int? VirtualAccount { get; set; }
+	public string? smtpserver { get; set; }
+	public string? smtpport { get; set; }
+	public string? smtpcreduser { get; set; }
+	public string? smtpcredpwd { get; set; }
+	public int? smtpsslenabled { get; set; }
+	public string? smtpsecretkey { get; set; }
 
-    public string? Url { get; set; }
+	public string? Url { get; set; }
 
     public string? HashTags { get; set; }
 

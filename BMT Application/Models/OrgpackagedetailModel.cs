@@ -1,7 +1,5 @@
 ﻿using Blazor.Web.Application.Models.Base;
-using com.blazor.bmt.core.baseentity;
 using System;
-using System.Collections.Generic;
 
 namespace com.blazor.bmt.application.model;
 
@@ -16,8 +14,13 @@ public partial class OrgpackagedetailModel : BaseModelTransactions
     public string? Description { get; set; }
 
     public int? TargetAudienceId { get; set; }
-
-    public string? Password { get; set; }
+	public string? smtpserver { get; set; }
+	public string? smtpport { get; set; }
+	public string? smtpcreduser { get; set; }
+	public string? smtpcredpwd { get; set; }
+	public int? smtpsslenabled { get; set; }
+	public string? smtpsecretkey { get; set; }
+	public string? Password { get; set; }
 	public long? m2mIntervalSeconds { get; set; }
 	public string? ApikeySecret { get; set; }
     public int? port { get; set; }
