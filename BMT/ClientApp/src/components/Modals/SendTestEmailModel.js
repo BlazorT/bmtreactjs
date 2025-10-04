@@ -1,13 +1,14 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
+import { cibMailRu } from '@coreui/icons';
 import { CCol, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
-import React, { useState } from 'react';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import Button from '../UI/Button';
-import useApi from 'src/hooks/useApi';
+import { useState } from 'react';
 import validateEmail from 'src/helpers/validateEmail';
+import useApi from 'src/hooks/useApi';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import CustomInput from '../InputsComponent/CustomInput';
-import { cibMailchimp, cibMailRu, cibMinutemailer } from '@coreui/icons';
+import Button from '../UI/Button';
 
 const SendTestEmailModel = ({
   isOpen,

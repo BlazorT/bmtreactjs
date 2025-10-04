@@ -16,6 +16,8 @@ const getLabels = (networkId, labelId) => {
         return 'Facebook Page Id';
       case 6:
         return 'Instragram User Id';
+      case 8:
+        return 'Tiktok Client Id';
       default:
         return 'Business Id'; // optional fallback
     }
@@ -30,6 +32,8 @@ const getLabels = (networkId, labelId) => {
         return 'Facebook Access Token';
       case 6:
         return 'Instragram Page Access Token';
+      case 8:
+        return 'Tiktok Client Secret';
       default:
         return 'API Key'; // optional fallback
     }
