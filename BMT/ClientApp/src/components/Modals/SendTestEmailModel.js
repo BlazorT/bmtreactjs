@@ -37,6 +37,7 @@ const SendTestEmailModel = ({
       body,
       subject,
       title,
+      smtpport,
       smtppswd,
       smtpserver,
       smtpuser,
