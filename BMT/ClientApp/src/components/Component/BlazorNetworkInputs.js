@@ -24,6 +24,7 @@ import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
 import EmailTextEditor from '../UI/email-editor';
 import TemplateListModel from '../Modals/TemplateListModel';
+import SendTestEmailModel from '../Modals/SendTestEmailModel';
 
 dayjs.extend(utc);
 
@@ -41,7 +42,9 @@ const BlazorNetworkInputs = (prop) => {
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
   const [showTemplateList, setShowTemplateList] = useState(false);
+  const [showTestEmailModel, setShowTestEmailModel] = useState(false);
 
+  const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
   const toggleShowTemplateList = () => setShowTemplateList((prev) => !prev);
 
   const networkSettingBody = useMemo(
@@ -107,6 +110,12 @@ const BlazorNetworkInputs = (prop) => {
         createdBy: data?.createdBy || user.userId,
         lastUpdatedAt: dayjs().utc().format(),
         createdAt: data?.createdAt || dayjs().utc().startOf('month').format(),
+        smtpcreduser: data?.smtpcreduser || '',
+        smtpcredpwd: data?.smtpcredpwd || '',
+        smtpsslenabled: data?.smtpsslenabled || '',
+        smtpsecretkey: data?.smtpsecretkey || '',
+        smtpserver: data?.smtpserver || '',
+        smtpport: data?.smtpport || '',
         templateSubject: templateData?.subject || '',
         templateTitle: templateData?.title || '',
       });
@@ -329,6 +338,7 @@ const BlazorNetworkInputs = (prop) => {
         ...nl,
         autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
         status: nl?.status ? 1 : 0,
+        smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
         virtualAccount: nl?.virtualAccount ? 1 : 0,
         Custom1: JSON.stringify({
           template: nl?.Custom1,
@@ -589,12 +599,33 @@ const BlazorNetworkInputs = (prop) => {
           </AppContainer>
           <div className="CenterAlign pt-2 gap-4">
             <Button title="Cancel" onClick={onCancel} disabled={loading} />
+            {networkId === 3 &&
+              networkState?.smtpserver &&
+              networkState?.smtpcredpwd &&
+              networkState?.smtpcreduser &&
+              networkState?.sender &&
+              networkState?.smtpport && (
+                <Button title="Test Email" onClick={toggleSendEmailModel} disabled={loading} />
+              )}
             <Button title="Save" onClick={onSave} disabled={loading} type="submit" />
             <Button
               title="Submit"
               onClick={onSubmit}
               loading={loading}
               loadingTitle="Submitting..."
+            />
+            <SendTestEmailModel
+              isOpen={showTestEmailModel}
+              toggle={toggleSendEmailModel}
+              subject="Test Subject"
+              title="Send Test Email"
+              body="Hi, this is a test email"
+              smtpport={networkState?.smtpport}
+              smtppswd={networkState?.smtpcredpwd}
+              smtpserver={networkState?.smtpserver}
+              smtpuser={networkState?.smtpcreduser}
+              ssl={!!networkState?.smtpsslenabled}
+              sender={networkState?.sender}
             />
           </div>
         </Form>
