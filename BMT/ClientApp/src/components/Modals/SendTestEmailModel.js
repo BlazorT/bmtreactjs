@@ -9,7 +9,19 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import CustomInput from '../InputsComponent/CustomInput';
 import { cibMailchimp, cibMailRu, cibMinutemailer } from '@coreui/icons';
 
-const SendTestEmailModel = ({ isOpen, toggle, subject, body, title }) => {
+const SendTestEmailModel = ({
+  isOpen,
+  toggle,
+  subject,
+  body,
+  title,
+  smtpport,
+  smtppswd,
+  smtpserver,
+  smtpuser,
+  ssl,
+  sender,
+}) => {
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
   const { postData, loading } = useApi('http://192.168.18.163:5000/email/send');
@@ -25,6 +37,11 @@ const SendTestEmailModel = ({ isOpen, toggle, subject, body, title }) => {
       body,
       subject,
       title,
+      smtppswd,
+      smtpserver,
+      smtpuser,
+      ssl,
+      sender,
     });
     if (res?.success) {
       showToast(res?.message, 'success');
