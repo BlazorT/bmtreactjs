@@ -39,8 +39,13 @@ public partial class Orgpackagedetail : EntityTransaction
     public int? PurchasedQouta { get; set; }
 
     public string? AutoReplyContent { get; set; }
-
-    public int? ReplyMediaContentId { get; set; }
+	public string? smtpserver { get; set; }
+	public string? smtpport { get; set; }
+	public string? smtpcreduser { get; set; }
+	public string? smtpcredpwd { get; set; }
+	public int? smtpsslenabled { get; set; }
+	public string? smtpsecretkey { get; set; }
+	public int? ReplyMediaContentId { get; set; }
 
     public int? AutoReplyAllowed { get; set; }
 
