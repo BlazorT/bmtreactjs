@@ -118,32 +118,27 @@ export const getUsersListColsFlexible = (
     key: 'avatar',
     name: 'Picture',
     width: 100, // Fixed width for image
-    resizable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'completeName',
     name: 'Name',
-    resizable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
-    resizable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
-    resizable: true,
     headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
-    resizable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.regDate;
@@ -159,7 +154,6 @@ export const getUsersListColsFlexible = (
   {
     key: 'lastUpdatedAt',
     name: 'Last Updated',
-    resizable: true,
     headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.lastUpdatedAt;
@@ -175,7 +169,6 @@ export const getUsersListColsFlexible = (
   {
     key: 'status',
     name: 'Action',
-    resizable: true,
     renderCell: (props) => (
       <UsersActionRenderer
         row={props.row}
