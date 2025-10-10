@@ -53,7 +53,7 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
   },
   {
     component: CustomInput,
-    label: 'Video Attachment',
+    label: 'Media Attachment',
     info: '(MP4/3GP • Max 16MB)',
     onChange: (e) => handleCampaignAddForm(e, 'video'),
     icon: cilEnvelopeClosed,
@@ -63,12 +63,12 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     helperText: campaignRegData?.videoAttachment?.name,
     className: 'form-control item',
     isRequired: false,
-    accept: 'video/mp4, video/3gpp', // ✅ Only MP4 & 3GP
+    accept: 'video/mp4, video/3gpp', // ✅ MP4, 3GP, and GIF supported
   },
   {
     component: CustomInput,
     label: 'Image Attachment',
-    info: '(PNG/JPEG • Max 5MB)',
+    info: '(PNG/JPEG/GIF • Max 5MB)',
     onChange: (e) => handleCampaignAddForm(e, 'image'),
     icon: cilEnvelopeClosed,
     type: 'file',
@@ -80,7 +80,7 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     helperText: campaignRegData?.imageAttachment?.name,
     className: 'form-control item',
     isRequired: false,
-    accept: 'image/png, image/jpeg', // ✅ only PNG and JPEG
+    accept: 'image/png, image/jpeg, image/gif', // ✅ only PNG and JPEG
   },
   {
     component: CustomInput,
