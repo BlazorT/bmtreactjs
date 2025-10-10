@@ -58,12 +58,15 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
 
   {
     key: 'imageUrl',
-    name: 'Action',
-    // maxWidth: 100,
+    width: 150,
+    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
+    name: 'Action',
+    headerAlign: 'center',
+    align: 'center',
+    cellClassName: 'centered-cell',
     renderCell: (params) => (
       <OrgActionCell
         value={params}
