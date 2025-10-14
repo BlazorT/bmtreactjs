@@ -970,7 +970,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 org.CityName = ""+reader["CityName"];
                                 org.Contact = ""+ reader["Contact"];
                                 org.UserName = "" + reader["userName"];
-								org.CountryId = Convert.ToInt32(reader["countryid"]);
+                                org.CountryId = Convert.ToInt32(reader["countryid"]);
 								org.CreatedBy = Convert.ToInt32(reader["CreatedBy"]);
                                 org.CreatedAt = Convert.ToDateTime(reader["CreatedAt"]);
                                 org.ExpiryTime = Convert.ToDateTime(reader["ExpiryTime"]);
