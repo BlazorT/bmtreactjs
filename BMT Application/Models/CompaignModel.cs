@@ -19,7 +19,7 @@ public partial class CompaignModel
 
     public string? HashTags { get; set; }
     public string? targetaudiance { get; set; }
-
+    public string? paymentRef { get; set; }
     public byte? AutoGenerateLeads { get; set; }
 
     public double? TaxApplicable { get; set; }

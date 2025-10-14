@@ -1816,6 +1816,9 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         MySqlParameter pCampaignschedules = new MySqlParameter("p_campaignschedules", MySqlDbType.LongText, 4000);
                         pCampaignschedules.Value = campaignschedules;
                         parameter.Add(pCampaignschedules);
+                        MySqlParameter pPaymentRef = new MySqlParameter("p_paymentRef", MySqlDbType.LongText, 1000);
+                        pPaymentRef.Value = model.paymentRef;
+                        parameter.Add(pPaymentRef);
                         MySqlParameter pStartTime = new MySqlParameter("p_startTime", MySqlDbType.DateTime);
                         pStartTime.Value = (model.StartTime == null ? GlobalUTIL.CurrentDateTime : model.StartTime);
                         parameter.Add(pStartTime);

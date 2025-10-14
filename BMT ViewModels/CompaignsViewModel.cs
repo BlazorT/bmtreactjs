@@ -34,6 +34,7 @@ namespace com.blazor.bmt.viewmodels
         public string? Contact { get; set; }       
         public double? Budget { get; set; }       
         public string? logoAvatar { get; set; }
+        public string? paymentRef { get; set; }
         public string? compaignschedules { get; set; }
         public string? compaignsdetails { get; set; }
         public string? attachments { get; set; }
