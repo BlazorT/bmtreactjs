@@ -556,29 +556,73 @@ const campaignadd = () => {
     const message = searchParams.get('message');
     const transactionRefNumber = searchParams.get('transactionRefNumber');
 
+    const pp_TxnType = searchParams.get('pp_TxnType') || '';
+    const pp_Amount = searchParams.get('pp_Amount') || '';
+    const pp_BillReference = searchParams.get('pp_BillReference') || '';
+    const pp_ResponseCode = searchParams.get('pp_ResponseCode') || '';
+    const pp_RetreivalReferenceNo = searchParams.get('pp_RetreivalReferenceNo') || '';
+    const pp_SubMerchantID = searchParams.get('pp_SubMerchantID') || '';
+    const pp_TxnCurrency = searchParams.get('pp_TxnCurrency') || '';
+    const pp_TxnDateTime = searchParams.get('pp_TxnDateTime') || '';
+    const pp_TxnRefNo = searchParams.get('pp_TxnRefNo') || '';
+    const pp_MobileNumber = searchParams.get('pp_MobileNumber') || '';
+    const pp_CNIC = searchParams.get('pp_CNIC') || '';
+    const pp_SecureHash = searchParams.get('pp_SecureHash') || '';
+    const pp_ResponseMessage = searchParams.get('pp_ResponseMessage') || '';
+
+    const filteredResponse = {
+      pp_TxnType,
+      pp_Amount,
+      pp_BillReference,
+      pp_ResponseCode,
+      pp_RetreivalReferenceNo,
+      pp_SubMerchantID,
+      pp_TxnCurrency,
+      pp_TxnDateTime,
+      pp_TxnRefNo,
+      pp_MobileNumber,
+      pp_CNIC,
+      pp_SecureHash,
+    };
+
     // console.log({ pp_ResponseMessage });
     setTimeout(() => {
       if (amount || orderRefNumber || message) {
         console.log({ amount, orderRefNumber, message });
         if (window.opener) {
-          const data = {
-            orderRefNumber,
-            message,
-            amount,
-            transactionRefNumber,
-          };
-          console.log({ data });
+          if (pp_ResponseCode) {
+            console.log({ filteredResponse });
 
-          window.opener.postMessage(
-            {
-              status: message ? 'failed' : 'success',
-              txnRef: orderRefNumber,
-              message: message ?? '',
-              data: btoa(JSON.stringify(data)),
-            },
-            '*',
-          );
-          window.close();
+            window.opener.postMessage(
+              {
+                status: pp_ResponseCode === '000' ? 'failed' : 'success',
+                txnRef: orderRefNumber,
+                message: pp_ResponseMessage ?? 'Payment failed. Please try again.',
+                data: btoa(JSON.stringify(filteredResponse)),
+              },
+              '*',
+            );
+            window.close();
+          } else {
+            const data = {
+              orderRefNumber,
+              message,
+              amount,
+              transactionRefNumber,
+            };
+            console.log({ data });
+
+            window.opener.postMessage(
+              {
+                status: message ? 'failed' : 'success',
+                txnRef: orderRefNumber,
+                message: message ?? '',
+                data: btoa(JSON.stringify(data)),
+              },
+              '*',
+            );
+            window.close();
+          }
           // Optional: Close popup after a delay
         }
 

@@ -774,6 +774,7 @@ const AddScheduleModel = (prop) => {
         isOpen={isPaymentOpen}
         toggle={togglePaymentMdl}
         amount={budgetData.TotalCampBudget}
+        onSubmit={submitCompaign}
       />
     </>
   );
