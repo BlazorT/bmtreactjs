@@ -23,6 +23,9 @@ import { setUserData } from 'src/redux/user/userSlice';
 import Loading from 'src/components/UI/Loading';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
 import { CBadge } from '@coreui/react';
+
+export const keysToKeep = ['dastatuses', 'states', 'countries', 'statuses', 'currencies'];
+
 const AppHeader = (phoneNumber) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,7 +75,6 @@ const AppHeader = (phoneNumber) => {
 
     if (logoutRes.current?.status === true) {
       navigate('/');
-      const keysToKeep = ['dastatuses', 'states', 'countries'];
 
       Object.keys(localStorage).forEach((key) => {
         if (!keysToKeep.includes(key)) {

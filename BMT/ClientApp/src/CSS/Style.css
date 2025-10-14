@@ -4149,6 +4149,14 @@ fieldset.legend {
   cursor: pointer;
 }
 
+.payment-modal .modal-dialog {
+  max-width: 40% !important; /* 50% of screen width */
+  margin: auto; /* center horizontally */
+}
+
+.payment-modal .modal-content {
+  margin: auto; /* center content */
+}
 .email-send-modal .modal-dialog {
   max-width: 30% !important; /* 50% of screen width */
   margin: auto; /* center horizontally */
@@ -4169,4 +4177,7 @@ fieldset.legend {
   font-size: 0.7rem;
   font-weight: 700;
   color: #ffffffe1;
+}
+.section {
+  background-color: #303c54 !important;
 }

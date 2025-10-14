@@ -18,6 +18,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import UserProfileModal from '../components/Modals/UserProfileModal';
 import useFetch from 'src/hooks/useFetch';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
+import { keysToKeep } from './AppHeader';
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
@@ -73,7 +74,6 @@ const AppHeaderDropdown = () => {
           isAuthenticated: false,
         }),
       );
-      const keysToKeep = ['dastatuses', 'states', 'countries'];
 
       Object.keys(localStorage).forEach((key) => {
         if (!keysToKeep.includes(key)) {

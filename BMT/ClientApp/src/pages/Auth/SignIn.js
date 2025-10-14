@@ -291,180 +291,153 @@ function SignIn() {
           </div>
         </div>
         <div className="ContainerView">
-          <div className="CarousalMainDiv row py-3 d-flex align-items-center">
-            <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
-              <Carousel data-bs-theme="dark">
-                <Carousel.Item>
-                  <img className="d-block w-100 carousalImg" src="BDMT.jpg" alt="First slide" />
-                  <Carousel.Caption>
-                    <h5>Tips for the Amazon</h5>
-                    <p>
-                      {' '}
-                      While Amazon provides access to tools and mentorship to help you hit the
-                      ground running
-                    </p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              </Carousel>
-            </div>
-            <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
-              <h5 className="MainHeading pb-2">Social Media Campaign</h5>
-              <p className="lineHeight">
-                Blazor Media Toolkit Campaign plays nice with others and integrates with over 700
-                apps and services like whatsapp,facebook,tweeter,messenger,youtube etc. From
-                accounting to CMS and analytics applications, all the way to services that are
-                focused on sales, support and lead generation. Visit their website and try out their
-                platform for free to find out if Blazor Media Campaign(BMC) is the right solution to
-                help grow your ....
-              </p>
+          <div className="section">
+            <div className="container ContainerView">
+              <div className="CarousalMainDiv row py-3 d-flex align-items-center">
+                <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
+                  <Carousel data-bs-theme="dark">
+                    <Carousel.Item>
+                      <img className="d-block w-100 carousalImg" src="BDMT.jpg" alt="First slide" />
+                      <Carousel.Caption>
+                        <h5>Tips for the Amazon</h5>
+                        <p>
+                          {' '}
+                          While Amazon provides access to tools and mentorship to help you hit the
+                          ground running
+                        </p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                  </Carousel>
+                </div>
+                <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
+                  <h5 className="MainHeading pb-2">Social Media Campaign</h5>
+                  <p className="lineHeight">
+                    Blazor Media Toolkit Campaign plays nice with others and integrates with over
+                    700 apps and services like whatsapp,facebook,tweeter,messenger,youtube etc. From
+                    accounting to CMS and analytics applications, all the way to services that are
+                    focused on sales, support and lead generation. Visit their website and try out
+                    their platform for free to find out if Blazor Media Campaign(BMC) is the right
+                    solution to help grow your ....
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="SeprateDiv"> </div>
-          <div className="CarousalMainDiv row py-3 d-flex align-items-center">
-            <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
-              <h2>
-                <span className="txtColor">Blazor</span> Media Toolkit{' '}
-              </h2>
-              {/*<h5 className="MainHeading pb-2">Partnership With Momentum</h5>*/}
-              <ul className="liFontsize">
-                <li>Facebook</li>
-                <li>WhatsApp</li>
-                <li>Twitter</li>
-                <li>SMS</li>
-                <li>Email</li>
-                <li>Linkedin</li>
-                <li>TikTok</li>
-                <li>Snapchat</li>
-                <li>Instagram</li>
-              </ul>
-            </div>
-            <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
-              <Carousel data-bs-theme="dark">
-                <Carousel.Item>
-                  <img className="d-block w-100 carousalImg" src="email.jpg" alt="First slide" />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p> Email</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="whatsapp.jpg"
-                    alt="Second slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Whatsapp</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="instagram.jpg"
-                    alt="Third slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Instagram</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="linkedin.jpg"
-                    alt="Fourth slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>LinkedIn</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="realtwiter.jpg"
-                    alt="Third slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Twitter</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img className="d-block w-100 carousalImg" src="tiktok.jpg" alt="Fifth slide" />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Tiktok</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carousalImg"
-                    src="snapchat.png"
-                    alt="seventh slide"
-                  />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Snapchat</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
 
-                <Carousel.Item>
-                  <img className="d-block w-100 carousalImg" src="fb.jpg" alt="sixth slide" />
-                  <Carousel.Caption>
-                    <h5>Blazor Media Toolkit</h5>
-                    <p>Facebook</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              </Carousel>
+          <div className="SeprateDiv"> </div>
+          <div className="section">
+            <div className="container ContainerView">
+              <div className="CarousalMainDiv row py-3 d-flex align-items-center">
+                <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5 carousalImg">
+                  <h2>
+                    <span className="txtColor">Blazor</span> Media Toolkit{' '}
+                  </h2>
+                  {/*<h5 className="MainHeading pb-2">Partnership With Momentum</h5>*/}
+                  <ul className="liFontsize">
+                    <li>Facebook</li>
+                    <li>WhatsApp</li>
+                    <li>Twitter</li>
+                    <li>SMS</li>
+                    <li>Email</li>
+                    <li>Linkedin</li>
+                    <li>TikTok</li>
+                    <li>Snapchat</li>
+                    <li>Instagram</li>
+                  </ul>
+                </div>
+                <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
+                  <Carousel data-bs-theme="dark">
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="email.jpg"
+                        alt="First slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p> Email</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="whatsapp.jpg"
+                        alt="Second slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Whatsapp</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="instagram.jpg"
+                        alt="Third slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Instagram</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="linkedin.jpg"
+                        alt="Fourth slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>LinkedIn</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="realtwiter.jpg"
+                        alt="Third slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Twitter</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="tiktok.jpg"
+                        alt="Fifth slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Tiktok</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        className="d-block w-100 carousalImg"
+                        src="snapchat.png"
+                        alt="seventh slide"
+                      />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Snapchat</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+
+                    <Carousel.Item>
+                      <img className="d-block w-100 carousalImg" src="fb.jpg" alt="sixth slide" />
+                      <Carousel.Caption>
+                        <h5>Blazor Media Toolkit</h5>
+                        <p>Facebook</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                  </Carousel>
+                </div>
+              </div>
             </div>
           </div>
-          {/*<Modal*/}
-          {/*  isOpen={modalOpen}*/}
-          {/*  toggle={toggleModal}*/}
-          {/*  className="custom-modal PROCEEDModal"*/}
-          {/*  backdrop={false}*/}
-          {/*>*/}
-          {/*  <video controls={false} autoPlay={true} muted={true} className="ProceedLandingVid">*/}
-          {/*    <source src="BackgroundVideo.mp4" type="video/mp4" />*/}
-          {/*  </video>*/}
-          {/*  <div className="DSPLandingproceedView row">*/}
-          {/*    <div className="col-md-2">*/}
-          {/*      <img*/}
-          {/*        className="DSPLandingproceedLogo"*/}
-          {/*        src={*/}
-          {/*          loginRes.current?.data?.dspLogo*/}
-          {/*            ? loginRes.current.data.dspLogo*/}
-          {/*            : 'bmtlogo.png'*/}
-          {/*        }*/}
-          {/*        alt="logo"*/}
-          {/*      />*/}
-          {/*      <br />*/}
-          {/*    </div>*/}
-          {/*    <div className="col-md-10 mt-2">*/}
-          {/*      <strong className="PROCEEDTitle">*/}
-          {/*        {loginRes.current?.data?.dspName}, {loginRes.current?.data?.dspStateName} ,*/}
-          {/*        {getCountryById(loginRes.current?.data?.dspStateId)}*/}
-          {/*      </strong>*/}
-          {/*      <p className="DSPLandingproceedViewPara">*/}
-          {/*        An opportunity to lead As a BMT, you are only as strong as your team of delivery*/}
-          {/*        associates. Your leadership won’t just set them up for success on the road today,*/}
-          {/*        but wherever their career takes them. Successful candidates are passionate about*/}
-          {/*        hiring and coaching, building a strong company culture, and giving back to the*/}
-          {/*        community.*/}
-          {/*      </p>*/}
-          {/*      <button*/}
-          {/*        onClick={ClickProceed}*/}
-          {/*        type="submit"*/}
-          {/*        className="btn btn_Default minWidth sales-btn-style mb-3"*/}
-          {/*      >*/}
-          {/*        PROCEED <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>*/}
-          {/*        <CIcon className="stock-toggle-icon" icon={cilChevronRight}></CIcon>{' '}*/}
-          {/*      </button>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</Modal>*/}
+
           <div className="SeprateDiv"> </div>
 
           <section id="Reviews" className="backgrdClr">
@@ -485,7 +458,7 @@ function SignIn() {
                       alt="Michael-Azran"
                     />
                   </div>
-                  <div className="card-body clientBodyBackgroundClr">
+                  <div className="card-body rounded-0 clientBodyBackgroundClr">
                     <span className="card-title AdvisorName">Michael-Azran</span>
                     <br />
                     <p className="ClientPost">Michael-Azran, BDN, Canada</p>
@@ -503,7 +476,7 @@ function SignIn() {
                       alt="Abdul Razaq"
                     />
                   </div>
-                  <div className="card-body clientBodyBackgroundClr">
+                  <div className="card-body rounded-0 clientBodyBackgroundClr">
                     <span className="card-title AdvisorName">Abdul Razaq</span>
                     <br />
                     <p className="ClientPost">Abdul Razaq, Barcelona,Spain </p>
@@ -521,7 +494,7 @@ function SignIn() {
                       alt="Taymullah Abdul Rehman"
                     />
                   </div>
-                  <div className="card-body clientBodyBackgroundClr">
+                  <div className="card-body rounded-0 clientBodyBackgroundClr">
                     <span className="card-title AdvisorName">Youngs Merchant Club</span>
                     <br />
                     <p className="ClientPost">Taymullah Abdul Rehman, Co-Founder, YMC LLC</p>

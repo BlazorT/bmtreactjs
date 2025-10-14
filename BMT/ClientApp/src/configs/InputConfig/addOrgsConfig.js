@@ -205,7 +205,9 @@ export const getDaAppllyInputs = (
     isRequired: true,
     disableOption: daUserData.stateId === '' ? 'Select Country First' : 'Select City',
     message: 'Please select your city',
-    options: cityList?.filter((cl) => cl?.stateId === parseInt(daUserData?.stateId || '0')),
+    options: !daUserData?.cityId
+      ? cityList?.filter((cl) => cl?.stateId === parseInt(daUserData?.stateId || '0'))
+      : cityList,
   },
   {
     component: CustomInput,
@@ -246,8 +248,8 @@ export const getInitialDaData = (user) => ({
   createdAt: dayjs().utc().format(),
   registrationTime: dayjs().utc().format(),
   lastUpdatedAt: dayjs().utc().format(),
-  createdBy: user.userId,
-  lastUpdatedBy: user.userId,
+  createdBy: user?.userId || 1,
+  lastUpdatedBy: user?.userId || 1,
 });
 export const getInitialDaIdentificationData = () => ({
   ssnCountry: '',

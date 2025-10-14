@@ -46,14 +46,12 @@ const addorganization = () => {
   );
   const user = useSelector((state) => state.user);
 
-  const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
-    if (pageRoles.canAdd === 0) {
+    if (pageRoles.canAdd === 0 && user) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: `You dont have a privilege to add a DA, please contact admin for access`,
+          toastMessage: `You dont have a privilege to add a Organization, please contact admin for access`,
           toastVariant: 'warning',
         }),
       );
@@ -72,28 +70,20 @@ const addorganization = () => {
       //  console.log({ initialData });
       setDaApplyFormData(initialData);
     }
-    setIsLoading(false);
-  }, []);
+  }, [user]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const uploadRef = useRef(null);
-  const { data, loading, error, checkEmailValidation } = useEmailVerification();
+  const { checkEmailValidation } = useEmailVerification();
 
   const showToast = useShowToast();
   const { uploadAvatar, uploadAttachments } = useUploadAvatar();
   const [daApplyFormData, setDaApplyFormData] = useState(getInitialDaData(user));
-  const [daIdentificationData, setDAIdentificationData] = useState(
-    getInitialDaIdentificationData(),
-  );
+
   const [showStock, setShowStock] = useState(true);
-  const [isThisBrandnew, setIsThisBrandnew] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [showOther, setShowOther] = useState(false);
-  const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
 
   const { createUpdateOrg } = useUpdateOrg();
@@ -138,57 +128,26 @@ const addorganization = () => {
         emailInputElement.setCustomValidity(`${fieldValue} is not a valid email`);
       } else {
         checkUserAvailability(fieldValue, '', daApplyFormData.id, setEmailMessage);
-        // const emailInputElement = document.getElementById('email');
-        // setEmailMessage(`${daUserData.email} can not be verified Api error`);
-        // emailInputElement.setCustomValidity(`${daUserData.email} can not verify api error`);
-        // return;
       }
     }
   };
   // Define a single change handler handleDAIdentification to update daIdentificationData dynamically
-  const handleDAIdentification = (event) => {
-    const { name, value, files } = event.target;
 
-    setDAIdentificationData((prevData) => ({
-      ...prevData,
-      [name]: value, // If it's a file input, use files[0], otherwise use the value
-    }));
-  };
+  const { response: GetCityRes, loading: CityLoading, fetchData: GetCity } = useFetch();
 
-  const toggleOther = () => {
-    setShowOther((prev) => !prev);
-  };
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
   useEffect(() => {
     getCityList();
   }, []);
+
   const getCityList = async () => {
     await GetCity(
       '/Common/cities',
       {
         method: 'POST',
-        // body: JSON.stringify(fetchBody),
       },
       (res) => {
-        console.log(res, 'city');
         if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  id: data.id,
-          //  userId: data.userId,
-          //  dspid: user.dspId.toString(),
-          //  logDesc: data.logDesc,
-          //  entityName: data.entityName,
-          //  menuId: data.menuId,
-          //  machineIp: data.machineIp,
-          //  actionType: data.actionType,
-          //  logTime: formatDateTime(data.logTime),
-          //}));
-          // setRows(mappedArray);
+          //
         } else {
           dispatch(
             updateToast({
@@ -199,17 +158,12 @@ const addorganization = () => {
           );
           /*   setRows([]);*/
         }
-        setIsLoading(CityLoading.current);
       },
     );
   };
   const submitDA = async () => {
     formValidator();
     const form = document.querySelector('.apply-da-form');
-    if (daApplyFormData.email === '') {
-      setEmailReadonly(false);
-      return;
-    }
 
     if (form.checkValidity()) {
       const daBody = {
@@ -234,7 +188,7 @@ const addorganization = () => {
         formData.append('id', '0');
         formData.append('name', avatar.name);
         formData.append('fileName', avatar.name);
-        formData.append('createdBy', user.userId);
+        formData.append('createdBy', user?.userId || 1);
         formData.append('createdAt', dayjs().utc().format());
 
         // alert("Upload version before upload");
@@ -287,8 +241,8 @@ const addorganization = () => {
       formData.append('fileName', '');
       formData.append('userId', userId);
       formData.append('daid', userId);
-      formData.append('createdBy', user.userId);
-      formData.append('lastUpdatedBy', user.userId);
+      formData.append('createdBy', user?.userId || 1);
+      formData.append('lastUpdatedBy', user?.userId || 1);
       formData.append('createdAt', dayjs().utc().format());
       formData.append('lastUpdatedAt', dayjs().utc().format());
       formData.append('rowVer', 1);
@@ -336,10 +290,6 @@ const addorganization = () => {
     setShowStock(!showStock);
   };
 
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
-
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
@@ -355,38 +305,14 @@ const addorganization = () => {
     }
   };
 
-  //const IsThisBrandNewClick = () => {
-  //  setIsThisBrandnew(!isThisBrandnew);
-  //};
-  const maxlength = 14;
-  const associatedWithAmazonNo = () => {
-    toggleModal();
-    setEmailReadonly(false);
-  };
-
-  //const associatedWithAmazon = () => {
-  //  toggleModal();
-  //  setEmailReadonly(true);
-  //};
-
-  const handleFocus = () => {
-    toggleModal(true);
-    setIsThisBrandnew(true);
-  };
-
   const daApplyInputs = getDaAppllyInputs(
     daApplyFormData,
     handleDAFormData,
-    handleFocus,
-    emailReadonly,
     emailMessage,
     pageRoles.canAdd,
     onBlur,
     GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
-  const daAppllySsnInputs = getDaAppllySsnInputs(daIdentificationData, handleDAIdentification);
-  const daAppllyIDInputs = getDaAppllyIDInputs(daIdentificationData, handleDAIdentification);
-  const daAppllyBirthInputs = getDaAppllyBirthInputs(daIdentificationData, handleDAIdentification);
 
   /*if (isLoading) {
     return <Loading />;
