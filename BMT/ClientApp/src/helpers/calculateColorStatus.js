@@ -5,6 +5,7 @@ export const calculateColorStatus = (val) => {
   if (val >= 75 && val <= 100) return 'fantasticColor';
 };
 export const keepOnlyAlphanumeric = (input) => {
+  if (!input) return '';
   // Regular expression that matches any character that is NOT:
   // - a-z (lowercase letters)
   // - A-Z (uppercase letters)

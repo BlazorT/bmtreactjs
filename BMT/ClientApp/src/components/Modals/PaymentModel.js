@@ -15,11 +15,13 @@ import {
   CSpinner,
 } from '@coreui/react';
 import { useEffect, useState } from 'react';
+import { useEasyPaisa } from 'src/hooks/useEasyPaisa';
+import { useJazzCash } from 'src/hooks/useJazzCash';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import Button from '../UI/Button';
-import { useEasyPaisa } from 'src/hooks/useEasyPaisa';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import JazzCashConfirm from './jazz-cash-confirm';
+import JCInitiateLoading from './jazz-cash-initiate-load';
 
 const paymentGatewayDescriptions = {
   cash: 'Simply Pay at the restaurant, when you pick up the food.',
@@ -40,6 +42,8 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
   const [gateways, setGateways] = useState([]);
   const [selectedGateway, setSelectedGateway] = useState(null);
   const [paymentGateway, setPaymentGateway] = useState(null);
+  const [jazzCashResponse, setJazzCashResponse] = useState('');
+  const [jazzCashTxnRef, setJazzCashTxnRef] = useState('');
   const [jazzCashMode, setJazzCashMode] = useState(null); // 'wallet' or 'card'
   const [walletData, setWalletData] = useState({
     accountNumber: '',
@@ -47,7 +51,31 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
   });
   const [errors, setErrors] = useState({});
   //!! amount
-  const { prepareRequest } = useEasyPaisa(true, 1, paymentGateway, 'BMT');
+  const { prepareRequest } = useEasyPaisa(true, amount, paymentGateway, 'BMT');
+  const {
+    triggerJazzCashPayment,
+    loadingJC,
+    initiateJCPayment,
+    isPending: paymentInitiatedPending,
+    isPaymentInitiated,
+    isPaymentSuccess,
+    // loadingJC,
+  } = useJazzCash(
+    true,
+    paymentGateway,
+    amount,
+    '',
+    walletData.accountNumber,
+    walletData.cnicLastSix,
+    setJazzCashTxnRef,
+    onSubmit,
+    setJazzCashResponse,
+  );
+
+  useEffect(() => {
+    if (!isPaymentSuccess) return;
+    onSubmit();
+  }, [isPaymentSuccess]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -178,6 +206,13 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
     console.log('Wallet data:', walletData);
     if (gateway?.name?.toLowerCase() === 'easypaisa') {
       prepareRequest();
+    } else if (gateway?.name?.toLowerCase() === 'jazzcash') {
+      if (jazzCashMode === 'wallet') {
+        //
+        initiateJCPayment();
+      } else {
+        triggerJazzCashPayment();
+      }
     }
   };
 
@@ -187,187 +222,196 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
   };
 
   return (
-    <CModal
-      visible={isOpen}
-      alignment="center"
-      aria-labelledby="email-send"
-      aria-describedby="email-send-full-view"
-      backdrop="static"
-      className="payment-modal"
-      size="lg"
-    >
-      <CModalHeader closeButton={false}>
-        <CModalTitle>Payment Options</CModalTitle>
-      </CModalHeader>
+    <>
+      <JCInitiateLoading isOpen={paymentInitiatedPending} />
+      <JazzCashConfirm
+        isVisible={isPaymentInitiated}
+        placeOrder={onSubmit}
+        jazzCashTxnRef={jazzCashTxnRef}
+        jazzCashResponse={jazzCashResponse}
+      />
+      <CModal
+        visible={isOpen}
+        alignment="center"
+        aria-labelledby="email-send"
+        aria-describedby="email-send-full-view"
+        backdrop="static"
+        className="payment-modal"
+        size="lg"
+      >
+        <CModalHeader closeButton={false}>
+          <CModalTitle>Payment Options</CModalTitle>
+        </CModalHeader>
 
-      <CModalBody>
-        {loading ? (
-          <div className="text-center py-4">
-            <CSpinner color="primary" />
-            <p className="mt-2">Loading payment gateways...</p>
-          </div>
-        ) : gateways?.length === 0 ? (
-          <p className="text-center">No Payment Gateways Available</p>
-        ) : (
-          <CRow className="g-3">
-            {gateways.map((gateway) => {
-              const isJazzCash = gateway.name?.toLowerCase() === 'jazzcash';
-              const isSelected = selectedGateway === gateway.id;
+        <CModalBody>
+          {loading ? (
+            <div className="text-center py-4">
+              <CSpinner color="primary" />
+              <p className="mt-2">Loading payment gateways...</p>
+            </div>
+          ) : gateways?.length === 0 ? (
+            <p className="text-center">No Payment Gateways Available</p>
+          ) : (
+            <CRow className="g-3">
+              {gateways.map((gateway) => {
+                const isJazzCash = gateway.name?.toLowerCase() === 'jazzcash';
+                const isSelected = selectedGateway === gateway.id;
 
-              return (
-                <CCol xs={12} key={gateway.id || gateway.name}>
-                  <div
-                    className={`border rounded p-3 ${isSelected ? 'border-primary bg-light' : ''}`}
-                    style={{ transition: 'all 0.2s' }}
-                  >
+                return (
+                  <CCol xs={12} key={gateway.id || gateway.name}>
                     <div
-                      onClick={() => handleGatewaySelect(gateway.id)}
-                      style={{ cursor: 'pointer' }}
+                      className={`border rounded p-3 ${isSelected ? 'border-primary bg-light' : ''}`}
+                      style={{ transition: 'all 0.2s' }}
                     >
-                      <CFormCheck
-                        type="radio"
-                        name="paymentGateway"
-                        id={`gateway-${gateway.id}`}
-                        checked={isSelected}
-                        onChange={() => handleGatewaySelect(gateway.id)}
-                        label={
-                          <div className="d-flex align-items-start gap-3">
-                            {gateway.logo && (
-                              <img
-                                src={`data:image/png;base64,${gateway.logo}`}
-                                alt={gateway.name}
-                                style={{
-                                  width: '60px',
-                                  height: '30px',
-                                  objectFit: 'contain',
-                                }}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                }}
-                              />
-                            )}
-                            <span className="fw-semibold">{gateway.name}</span>
-                          </div>
-                        }
-                      />
-                    </div>
-
-                    {isSelected && (
-                      <div className="mt-1 ps-0">
-                        <CAlert color="info" className="mb-0">
-                          <small>{getGatewayDescription(gateway.name)}</small>
-                        </CAlert>
-
-                        {isJazzCash && (
-                          <div className="mt-3">
-                            <p className="fw-semibold mb-2">Select Payment Mode:</p>
-                            <div className="d-flex flex-column gap-2">
-                              <div className="d-flex w-100">
-                                <CFormCheck
-                                  type="radio"
-                                  name="jazzCashMode"
-                                  id="jazzcash-wallet"
-                                  value="wallet"
-                                  checked={jazzCashMode === 'wallet'}
-                                  onChange={() => setJazzCashMode('wallet')}
-                                  label="Pay From Mobile Wallet"
-                                  className="flex-grow-1"
+                      <div
+                        onClick={() => handleGatewaySelect(gateway.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <CFormCheck
+                          type="radio"
+                          name="paymentGateway"
+                          id={`gateway-${gateway.id}`}
+                          checked={isSelected}
+                          onChange={() => handleGatewaySelect(gateway.id)}
+                          label={
+                            <div className="d-flex align-items-start gap-3">
+                              {gateway.logo && (
+                                <img
+                                  src={`data:image/png;base64,${gateway.logo}`}
+                                  alt={gateway.name}
+                                  style={{
+                                    width: '60px',
+                                    height: '30px',
+                                    objectFit: 'contain',
+                                  }}
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
                                 />
-                              </div>
-                              <div className="d-flex w-100">
-                                <CFormCheck
-                                  type="radio"
-                                  name="jazzCashMode"
-                                  id="jazzcash-card"
-                                  value="card"
-                                  checked={jazzCashMode === 'card'}
-                                  onChange={() => setJazzCashMode('card')}
-                                  label="Pay Through Card"
-                                  className="flex-grow-1"
-                                />
-                              </div>
+                              )}
+                              <span className="fw-semibold">{gateway.name}</span>
                             </div>
-
-                            {jazzCashMode === 'wallet' && (
-                              <div className="mt-3 p-3 border rounded bg-primary">
-                                <CRow className="g-3">
-                                  <CCol xs={12}>
-                                    <CFormLabel htmlFor="accountNumber">
-                                      Account Number <span className="text-danger">*</span>
-                                    </CFormLabel>
-                                    <CFormInput
-                                      type="text"
-                                      id="accountNumber"
-                                      placeholder="03XXXXXXXXX"
-                                      value={walletData.accountNumber}
-                                      onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, '');
-                                        if (value.length <= 11) {
-                                          handleInputChange('accountNumber', value);
-                                        }
-                                      }}
-                                      invalid={!!errors.accountNumber}
-                                      maxLength={11}
-                                    />
-                                    {errors.accountNumber && (
-                                      <div className="text-danger small mt-1">
-                                        {errors.accountNumber}
-                                      </div>
-                                    )}
-                                    <small>11 digits starting with 03</small>
-                                  </CCol>
-
-                                  <CCol xs={12}>
-                                    <CFormLabel htmlFor="cnicLastSix">
-                                      Last 6 Digits of CNIC <span className="text-danger">*</span>
-                                    </CFormLabel>
-                                    <CFormInput
-                                      type="text"
-                                      id="cnicLastSix"
-                                      placeholder="XXXXXX"
-                                      value={walletData.cnicLastSix}
-                                      onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, '');
-                                        if (value.length <= 6) {
-                                          handleInputChange('cnicLastSix', value);
-                                        }
-                                      }}
-                                      invalid={!!errors.cnicLastSix}
-                                      maxLength={6}
-                                    />
-                                    {errors.cnicLastSix && (
-                                      <div className="text-danger small mt-1">
-                                        {errors.cnicLastSix}
-                                      </div>
-                                    )}
-                                    <small>Enter the last 6 digits of your CNIC</small>
-                                  </CCol>
-                                </CRow>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                          }
+                        />
                       </div>
-                    )}
-                  </div>
-                </CCol>
-              );
-            })}
-          </CRow>
-        )}
-      </CModalBody>
 
-      <CModalFooter>
-        <Button title="Cancel" onClick={confirmationModal} disabled={loading} />
-        <Button
-          title="Pay"
-          onClick={handlePay}
-          type="submit"
-          loading={loading}
-          disabled={!selectedGateway}
-        />
-      </CModalFooter>
-    </CModal>
+                      {isSelected && (
+                        <div className="mt-1 ps-0">
+                          <CAlert color="info" className="mb-0">
+                            <small>{getGatewayDescription(gateway.name)}</small>
+                          </CAlert>
+
+                          {isJazzCash && (
+                            <div className="mt-3">
+                              <p className="fw-semibold mb-2">Select Payment Mode:</p>
+                              <div className="d-flex flex-column gap-2">
+                                <div className="d-flex w-100">
+                                  <CFormCheck
+                                    type="radio"
+                                    name="jazzCashMode"
+                                    id="jazzcash-wallet"
+                                    value="wallet"
+                                    checked={jazzCashMode === 'wallet'}
+                                    onChange={() => setJazzCashMode('wallet')}
+                                    label="Pay From Mobile Wallet"
+                                    className="flex-grow-1"
+                                  />
+                                </div>
+                                <div className="d-flex w-100">
+                                  <CFormCheck
+                                    type="radio"
+                                    name="jazzCashMode"
+                                    id="jazzcash-card"
+                                    value="card"
+                                    checked={jazzCashMode === 'card'}
+                                    onChange={() => setJazzCashMode('card')}
+                                    label="Pay Through Card"
+                                    className="flex-grow-1"
+                                  />
+                                </div>
+                              </div>
+
+                              {jazzCashMode === 'wallet' && (
+                                <div className="mt-3 p-3 border rounded bg-primary">
+                                  <CRow className="g-3">
+                                    <CCol xs={12}>
+                                      <CFormLabel htmlFor="accountNumber">
+                                        Account Number <span className="text-danger">*</span>
+                                      </CFormLabel>
+                                      <CFormInput
+                                        type="text"
+                                        id="accountNumber"
+                                        placeholder="03XXXXXXXXX"
+                                        value={walletData.accountNumber}
+                                        onChange={(e) => {
+                                          const value = e.target.value.replace(/\D/g, '');
+                                          if (value.length <= 11) {
+                                            handleInputChange('accountNumber', value);
+                                          }
+                                        }}
+                                        invalid={!!errors.accountNumber}
+                                        maxLength={11}
+                                      />
+                                      {errors.accountNumber && (
+                                        <div className="text-danger small mt-1">
+                                          {errors.accountNumber}
+                                        </div>
+                                      )}
+                                      <small>11 digits starting with 03</small>
+                                    </CCol>
+
+                                    <CCol xs={12}>
+                                      <CFormLabel htmlFor="cnicLastSix">
+                                        Last 6 Digits of CNIC <span className="text-danger">*</span>
+                                      </CFormLabel>
+                                      <CFormInput
+                                        type="text"
+                                        id="cnicLastSix"
+                                        placeholder="XXXXXX"
+                                        value={walletData.cnicLastSix}
+                                        onChange={(e) => {
+                                          const value = e.target.value.replace(/\D/g, '');
+                                          if (value.length <= 6) {
+                                            handleInputChange('cnicLastSix', value);
+                                          }
+                                        }}
+                                        invalid={!!errors.cnicLastSix}
+                                        maxLength={6}
+                                      />
+                                      {errors.cnicLastSix && (
+                                        <div className="text-danger small mt-1">
+                                          {errors.cnicLastSix}
+                                        </div>
+                                      )}
+                                      <small>Enter the last 6 digits of your CNIC</small>
+                                    </CCol>
+                                  </CRow>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </CCol>
+                );
+              })}
+            </CRow>
+          )}
+        </CModalBody>
+
+        <CModalFooter>
+          <Button title="Cancel" onClick={confirmationModal} disabled={loading} />
+          <Button
+            title="Pay"
+            onClick={handlePay}
+            type="submit"
+            loading={loading}
+            disabled={!selectedGateway}
+          />
+        </CModalFooter>
+      </CModal>
+    </>
   );
 };
 
