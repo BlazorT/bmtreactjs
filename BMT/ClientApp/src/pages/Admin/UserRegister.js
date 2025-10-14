@@ -31,6 +31,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 //import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
+import globalutil from 'src/util/globalutil';
 
 const UserRegister = () => {
   dayjs.extend(utc);
@@ -51,7 +52,7 @@ const UserRegister = () => {
 
   const [UserData, setUserData] = useState(getInitialUserData(user));
   const [showForm, setshowForm] = useState(true);
-  const [dspList, setdspList] = useState([]);
+  const [orgList, setOrgList] = useState([]);
   const [isThisBrandnew, setIsThisBrandnew] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,6 +88,7 @@ const UserRegister = () => {
       setUserData((prevData) => ({ ...prevData, [label]: e }));
     } else {
       const { name, value, type, checked } = e.target;
+
       const fieldValue = type === 'checkbox' ? checked : value;
 
       if (name === 'userName') {
@@ -136,6 +138,7 @@ const UserRegister = () => {
       //secondaryContact: daUserData.isWhatsappAsso ? daUserData.primaryContact : '',
       password: btoa(UserData.password),
       orgId: parseInt(UserData.orgId),
+      cityId: parseInt(UserData.cityId),
       lastUpdatedBy: user.userId,
       lastUpdatedAt: dayjs().utc().format(),
       remarks: 'created user',
@@ -171,6 +174,7 @@ const UserRegister = () => {
         }
       }
     } else {
+      console.log({ userBody });
       const res = await createUpdateUser(userBody);
       console.log({ res });
       if (res.status === true) {
@@ -228,7 +232,7 @@ const UserRegister = () => {
   // Fetch DSP list
   const fetchDspList = async () => {
     const orgData = await getOrgs();
-    setdspList(orgData);
+    if (orgData && Array.isArray(orgData)) setOrgList(orgData?.filter((o) => o?.name !== ''));
     setIsLoading(false);
   };
   const {
@@ -287,7 +291,7 @@ const UserRegister = () => {
     emailMessage,
     userNameMessage,
     inputRef,
-    dspList,
+    orgList,
     TermsModal,
     onBlur,
     GetCityRes?.current?.data ? GetCityRes.current.data : [],

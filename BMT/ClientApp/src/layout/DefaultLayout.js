@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
-import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 
 const DefaultLayout = () => {
-  const confirMdl = useSelector((state) => state.confirMdl);
-
   //useEffect(() => {
   //  const divElem = document.querySelector('body > div');
   //  if (!divElem) return;
@@ -25,14 +22,6 @@ const DefaultLayout = () => {
   //}, []);
   return (
     <div>
-      <ConfirmationModal
-        header={confirMdl.header}
-        body={confirMdl.body}
-        isOpen={confirMdl.isOpen}
-        onYes={() => confirMdl.onYes()}
-        onNo={() => confirMdl.onNo()}
-      />
-
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />

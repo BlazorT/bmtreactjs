@@ -1,73 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
+import { cilChevronBottom } from '@coreui/icons';
+import { CFormCheck } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import useFetch from 'src/hooks/useFetch';
-import { CFormCheck } from '@coreui/react';
-import { cilChevronBottom } from '@coreui/icons';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-//import EmailBrandNewModal from 'src/components/Modals/EmailBrandNewModal';
-import { formValidator } from 'src/helpers/formValidator';
-//import { generateRandomNumbers, generateRandomPassword } from 'src/helpers/generatePassowrd';
-import {
-  getDaAppllyBirthInputs,
-  getDaAppllyIDInputs,
-  getDaAppllyInputs,
-  getDaAppllySsnInputs,
-  getInitialDaData,
-  getInitialDaIdentificationData,
-} from 'src/configs/InputConfig/addOrgsConfig';
-import validateEmail from 'src/helpers/validateEmail';
-//import Loading from 'src/components/UI/Loading';
-import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
-import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
-import Form from 'src/components/UI/Form';
-import AppContainer from 'src/components/UI/AppContainer';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import AppContainer from 'src/components/UI/AppContainer';
+import Form from 'src/components/UI/Form';
+import { getDaAppllyInputs, getInitialDaData } from 'src/configs/InputConfig/addOrgsConfig';
+import { formValidator } from 'src/helpers/formValidator';
+import validateEmail from 'src/helpers/validateEmail';
+import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
+import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
+import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import useEmailVerification from 'src/hooks/useEmailVerification';
+import useFetch from 'src/hooks/useFetch';
 import { useShowToast } from 'src/hooks/useShowToast';
-import globalutil from 'src/util/globalutil';
-//import useApi from 'src/hooks/useApi';
-//alert('ORG Called')
+import { updateToast } from 'src/redux/toast/toastSlice';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+
 const OrganizationAdd = () => {
   dayjs.extend(utc);
-  //document.write(JSON.stringify(useSelector((state) => state.navItems.pageRoles)));
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name.toLowerCase() === 'Organizations'.toLowerCase(),
   );
-
   const user = useSelector((state) => state.user);
-
-  const [isLoading, setIsLoading] = useState(false);
-  //alert(JSON.stringify(pageRoles));
+  const showConfirmation = useShowConfirmation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const uploadRef = useRef(null);
-  const { data, loading, error, checkEmailValidation } = useEmailVerification();
+  const { checkEmailValidation } = useEmailVerification();
 
   const showToast = useShowToast();
   const { uploadAvatar, uploadAttachments } = useUploadAvatar();
   const [daApplyFormData, setDaApplyFormData] = useState(getInitialDaData(user));
-  const [daIdentificationData, setDAIdentificationData] = useState(
-    getInitialDaIdentificationData(),
-  );
+
   const [showStock, setShowStock] = useState(true);
-  const [isThisBrandnew, setIsThisBrandnew] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
 
   useEffect(() => {
-    if (pageRoles == null || pageRoles.canAdd === 0) {
+    if ((pageRoles == null || pageRoles.canAdd === 0) && user) {
       dispatch(
         updateToast({
           isToastOpen: true,
@@ -81,6 +60,7 @@ const OrganizationAdd = () => {
     }
     formValidator();
     const state = location.state;
+    console.log({ state });
     if (state !== null) {
       const daData = state.user[0];
       const initialData = {
@@ -92,15 +72,14 @@ const OrganizationAdd = () => {
 
       setDaApplyFormData(initialData);
     }
-    setIsLoading(false);
-  }, []);
+  }, [user]);
+
   const { createUpdateOrg } = useUpdateOrg();
 
   const { checkUserAvailability } = useUserAvailability();
 
   const handleDAFormData = (event, label = '') => {
     if (label === 'avatar') {
-      console.log({ event });
       setDaApplyFormData((prevdaApplyFormData) => ({
         ...prevdaApplyFormData,
         [label]: event,
@@ -136,20 +115,11 @@ const OrganizationAdd = () => {
         emailInputElement.setCustomValidity(`${fieldValue} is not a valid email`);
       } else {
         checkUserAvailability(fieldValue, '', daApplyFormData.id, setEmailMessage);
-        // const emailInputElement = document.getElementById('email');
-        // setEmailMessage(`${daUserData.email} can not be verified Api error`);
-        // emailInputElement.setCustomValidity(`${daUserData.email} can not verify api error`);
-        // return;
       }
     }
   };
 
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
+  const { response: GetCityRes, loading: CityLoading, fetchData: GetCity } = useFetch();
 
   useEffect(() => {
     getCityList();
@@ -160,22 +130,10 @@ const OrganizationAdd = () => {
       '/Common/cities',
       {
         method: 'POST',
-        // body: JSON.stringify(fetchBody),
       },
       (res) => {
         console.log(res, 'city');
         if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  id: data.id,
-          //  userId: data.userId,
-          //  dspid: user.dspId.toString(),
-          //  logDesc: data.logDesc,
-          //  entityName: data.entityName,
-          //  menuId: data.menuId,
-          //  machineIp: data.machineIp,
-          //  actionType: data.actionType,
-          //  logTime: formatDateTime(data.logTime),
-          //}));
           // setRows(mappedArray);
         } else {
           dispatch(
@@ -185,19 +143,13 @@ const OrganizationAdd = () => {
               toastVariant: 'error',
             }),
           );
-          /*   setRows([]);*/
         }
-        setIsLoading(CityLoading.current);
       },
     );
   };
   const submitDA = async () => {
     formValidator();
     const form = document.querySelector('.apply-org-form');
-    if (daApplyFormData.email === '') {
-      setEmailReadonly(false);
-      return;
-    }
 
     if (form.checkValidity()) {
       const daBody = {
@@ -224,12 +176,16 @@ const OrganizationAdd = () => {
         formData.append('id', '0');
         formData.append('name', avatar.name);
         formData.append('fileName', avatar.name);
-        formData.append('createdBy', user.userId);
+        formData.append('createdBy', user?.userId || 1);
         formData.append('createdAt', dayjs().utc().format());
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
 
         // alert("Upload version before upload");
         const uploadAvatarRes = await uploadAvatar(formData);
-        if (uploadAvatarRes.status === true) {
+        console.log({ uploadAvatarRes });
+        if (uploadAvatarRes?.status === true) {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
 
@@ -240,6 +196,7 @@ const OrganizationAdd = () => {
           }
         }
       } else {
+        console.log({ daBody });
         const res = await createUpdateOrg(daBody);
         console.log({ res });
         if (res.status === true) {
@@ -277,8 +234,8 @@ const OrganizationAdd = () => {
       formData.append('fileName', '');
       formData.append('userId', userId);
       formData.append('daid', userId);
-      formData.append('createdBy', user.userId);
-      formData.append('lastUpdatedBy', user.userId);
+      formData.append('createdBy', user?.userId || 1);
+      formData.append('lastUpdatedBy', user?.userId || 1);
       formData.append('createdAt', dayjs().utc().format());
       formData.append('lastUpdatedAt', dayjs().utc().format());
       formData.append('rowVer', 1);
@@ -304,7 +261,7 @@ const OrganizationAdd = () => {
       const attachmentsRes = await uploadAttachments(formDataArray);
       //console.log({ attachmentsRes });
       if (attachmentsRes.status === true) {
-        if (user.userId !== '') {
+        if (user?.userId !== '') {
           navigate('/Organizations');
         } else {
           navigate('/');
@@ -314,7 +271,7 @@ const OrganizationAdd = () => {
         else showToast(attachmentsRes.message, 'error');
       }
     } else {
-      if (user.userId !== '') {
+      if (user?.userId !== '') {
         navigate('/Organizations');
       } else {
         navigate('/');
@@ -326,10 +283,6 @@ const OrganizationAdd = () => {
     setShowStock(!showStock);
   };
 
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
-
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
@@ -338,7 +291,10 @@ const OrganizationAdd = () => {
     setConfirmationModalOpen(!confirmationModalOpen);
   };
   const goToAnotherPage = () => {
-    if (user.userId === '') {
+    showConfirmation({
+      isOpen: false,
+    });
+    if (user?.userId === '') {
       navigate('/');
     } else {
       navigate('/Organizations');
@@ -353,10 +309,7 @@ const OrganizationAdd = () => {
     onBlur,
     GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
-  // console.log(globalutil.states());
-  /*if (isLoading) {
-    return <Loading />;
-  }*/
+
   return (
     <React.Fragment>
       <AppContainer>

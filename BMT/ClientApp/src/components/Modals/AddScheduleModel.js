@@ -29,6 +29,7 @@ import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import Button from '../UI/Button';
+import PaymentModel from './PaymentModel';
 const AddScheduleModel = (prop) => {
   dayjs.extend(utc);
   const {
@@ -44,6 +45,9 @@ const AddScheduleModel = (prop) => {
     selected,
     setSelected,
     selectedTemplates,
+    currencyName,
+    makeOrder,
+    paymentRef,
     campaignRegData: submitData,
   } = prop;
   const [budgetData, setBudgetData] = useState({
@@ -52,7 +56,7 @@ const AddScheduleModel = (prop) => {
     TotalCampBudget: 0,
   });
   const user = useSelector((state) => state.user);
-
+  // console.log({ user });
   const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
     // console.log('Networksss:', networks);
     // console.log('SelectedDaysss:', selectedDays);
@@ -111,7 +115,16 @@ const AddScheduleModel = (prop) => {
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
+
+  const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
+  // console.log({ g: budgetData.TotalCampBudget });
+  useEffect(() => {
+    if (isOpen && makeOrder && paymentRef) {
+      submitCompaign(paymentRef);
+    }
+  }, [makeOrder, isOpen, paymentRef]);
 
   useEffect(() => {
     if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
@@ -369,7 +382,7 @@ const AddScheduleModel = (prop) => {
 
     showToast('Schedule saved successfully!', 'success');
   };
-  const submitCompaign = async () => {
+  const submitCompaign = async (ref = '') => {
     if (!Array.isArray(scheduleJson) || scheduleJson.length === 0) {
       showToast('Please add at least one schedule before submitting.', 'warning');
       return;
@@ -431,6 +444,8 @@ const AddScheduleModel = (prop) => {
       Discount: 0,
       CreatedBy: user.userId,
       TotalBudget: budgetData.TotalCampBudget,
+      paymentRef: ref || '',
+      PaymentStatus: ref ? 1 : 2,
       CompaignNetworks: selectedNetworkJson,
       CompaignExecutionSchedules: scheduleJson,
     };
@@ -510,247 +525,257 @@ const AddScheduleModel = (prop) => {
   };
   // console.log({ startTime: campaignRegData.startTime });
   return (
-    <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
-      <ModalHeader>{header}</ModalHeader>
-      <ModalBody className="paddingAllSide">
-        <form className="needs-validation shift-add-form" onSubmit={handleSubmit} noValidate>
-          <AppContainer>
-            <React.Fragment>
-              <AppContainer>
-                <DataGridHeader title="Networks" filterDisable={false} />
-              </AppContainer>
-              <CRow>
-                {globalutil
-                  .networks()
-                  .filter((network) => initialVisibleNetworks.includes(network.name))
-                  .map((network, index) => {
-                    const IconName =
-                      network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
-                    return (
-                      <CCol md={4} key={index}>
-                        <ul className="inlinedisplay">
-                          <li className="divCircle">
-                            <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                          </li>
-                          <li className="network-checkbox-animate">
-                            <CFormCheck
-                              id={IconName}
-                              name={IconName}
-                              disabled={loading}
-                              label={network.name}
-                              checked={selectedNetworks.includes(network.name)}
-                              onChange={() => handleNetworkChange(network.name)}
-                            />
-                          </li>
-                        </ul>
-                      </CCol>
-                    );
-                  })}
-              </CRow>
-            </React.Fragment>
-            <CRow>
-              <CCol md="6">
-                <CustomSelectInput
-                  label="Interval Types"
-                  icon={cilFlagAlt}
-                  disabled={loading}
-                  disableOption="Select Interval Types"
-                  id="intervalTypes"
-                  options={globalutil.intervals()}
-                  className="form-control item form-select scheduleClass"
-                  value={campaignRegData.intervalTypeId}
-                  name="intervalTypes"
-                  isRequired="true"
-                  title=" Select Interval Types "
-                  onChange={handleIntervalTypeChange}
-                />
-              </CCol>
-              <CCol md="6" className="mt-3">
-                <CFormCheck
-                  disabled={loading}
-                  label="Is Fixed Time"
-                  name="isFixedTime"
-                  checked={campaignRegData.isFixedTime} // ✅ bind to your state
-                  onChange={(e) =>
-                    setCampaignRegData({ ...campaignRegData, isFixedTime: e.target.checked })
-                  } // ✅ update state on change
-                  className="mt-4 d-flex flex-row justify-content-center scheduleClass"
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mt-2">
-              <fieldset className="fieldset">
-                <legend className="legend">Select Days</legend>
-                <CRow className="mt-3">
-                  {daysList.map((day) => (
-                    <CCol md="3" key={day.id}>
-                      <CFormCheck
-                        type="checkbox"
-                        label={day.name}
-                        id={`day-${day.id}`}
-                        checked={campaignRegData.selectedDays.includes(day.id)}
-                        onChange={() => handleDayChange(day.id)}
-                        disabled={campaignRegData.intervalTypeId === 2 || loading} // disable if all are auto-selected
-                      />
-                    </CCol>
-                  ))}
+    <>
+      <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
+        <ModalHeader>{header}</ModalHeader>
+        <ModalBody className="paddingAllSide">
+          <form className="needs-validation shift-add-form" onSubmit={handleSubmit} noValidate>
+            <AppContainer>
+              <React.Fragment>
+                <AppContainer>
+                  <DataGridHeader title="Networks" filterDisable={false} />
+                </AppContainer>
+                <CRow>
+                  {globalutil
+                    .networks()
+                    .filter((network) => initialVisibleNetworks.includes(network.name))
+                    .map((network, index) => {
+                      const IconName =
+                        network.name.charAt(0).toUpperCase() + network.name.slice(1).toLowerCase();
+                      return (
+                        <CCol md={4} key={index}>
+                          <ul className="inlinedisplay">
+                            <li className="divCircle">
+                              <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
+                            </li>
+                            <li className="network-checkbox-animate">
+                              <CFormCheck
+                                id={IconName}
+                                name={IconName}
+                                disabled={loading}
+                                label={network.name}
+                                checked={selectedNetworks.includes(network.name)}
+                                onChange={() => handleNetworkChange(network.name)}
+                              />
+                            </li>
+                          </ul>
+                        </CCol>
+                      );
+                    })}
                 </CRow>
-              </fieldset>
-            </CRow>
-            <CRow>
-              <CustomInput
-                label="Interval Size (in seconds)"
-                value={campaignRegData.intervalval}
-                onChange={handleCampaignAddForm}
-                icon={cilFlagAlt}
-                type="number"
-                id="intervalval"
-                name="intervalval"
-                placeholder="interval size"
-                className="form-control item"
-                isRequired={false}
-                disabled={loading}
-              />
-            </CRow>
-            <CRow>
-              <CCol md="6">
-                <CustomDatePicker
-                  icon={cilCalendar}
-                  disabled={loading}
-                  label="Date From"
-                  id="startDate"
-                  name="startDate"
-                  value={campaignRegData.startDate}
-                  minDate={dayjs(submitData.startTime)}
-                  maxDate={dayjs(submitData.finishTime)}
-                  title="start date"
-                  className="scheduleClass"
-                  disablePast="true"
-                  onChange={(e) => handleCampaignAddForm(e, 'startDate')}
-                />
-              </CCol>
-              <CCol md="6">
-                <CustomDatePicker
-                  icon={cilCalendar}
-                  label="Date To"
-                  id="endDate"
-                  name="endDate"
-                  title="end date"
-                  className="scheduleClass"
-                  value={campaignRegData.endDate}
-                  disabled={loading}
-                  disablePast="true"
-                  minDate={dayjs(submitData.startTime)}
-                  maxDate={dayjs(submitData.finishTime)}
-                  // min={submitData?.startTime}
-                  // max={submitData?.finishTime}
-                  onChange={(e) => handleCampaignAddForm(e, 'endDate')}
-                />
-              </CCol>
-            </CRow>
-            <CRow>
-              <CCol md="6">
-                <CustomTimePicker
-                  icon={cilCalendar}
-                  label="Start Time"
-                  id="startTime"
-                  name="startTime"
-                  title="Start Time"
-                  className="scheduleClass"
-                  value={campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null}
-                  onChange={(e) => handleCampaignAddForm(e, 'startTime')}
+              </React.Fragment>
+              <CRow>
+                <CCol md="6">
+                  <CustomSelectInput
+                    label="Interval Types"
+                    icon={cilFlagAlt}
+                    disabled={loading}
+                    disableOption="Select Interval Types"
+                    id="intervalTypes"
+                    options={globalutil.intervals()}
+                    className="form-control item form-select scheduleClass"
+                    value={campaignRegData.intervalTypeId}
+                    name="intervalTypes"
+                    isRequired="true"
+                    title=" Select Interval Types "
+                    onChange={handleIntervalTypeChange}
+                  />
+                </CCol>
+                <CCol md="6" className="mt-3">
+                  <CFormCheck
+                    disabled={loading}
+                    label="Is Fixed Time"
+                    name="isFixedTime"
+                    checked={campaignRegData.isFixedTime} // ✅ bind to your state
+                    onChange={(e) =>
+                      setCampaignRegData({ ...campaignRegData, isFixedTime: e.target.checked })
+                    } // ✅ update state on change
+                    className="mt-4 d-flex flex-row justify-content-center scheduleClass"
+                  />
+                </CCol>
+              </CRow>
+              <CRow className="mt-2">
+                <fieldset className="fieldset">
+                  <legend className="legend">Select Days</legend>
+                  <CRow className="mt-3">
+                    {daysList.map((day) => (
+                      <CCol md="3" key={day.id}>
+                        <CFormCheck
+                          type="checkbox"
+                          label={day.name}
+                          id={`day-${day.id}`}
+                          checked={campaignRegData.selectedDays.includes(day.id)}
+                          onChange={() => handleDayChange(day.id)}
+                          disabled={campaignRegData.intervalTypeId === 2 || loading} // disable if all are auto-selected
+                        />
+                      </CCol>
+                    ))}
+                  </CRow>
+                </fieldset>
+              </CRow>
+              <CRow>
+                <CustomInput
+                  label="Interval Size (in seconds)"
+                  value={campaignRegData.intervalval}
+                  onChange={handleCampaignAddForm}
+                  icon={cilFlagAlt}
+                  type="number"
+                  id="intervalval"
+                  name="intervalval"
+                  placeholder="interval size"
+                  className="form-control item"
+                  isRequired={false}
                   disabled={loading}
                 />
-              </CCol>
-              <CCol md="6">
-                <CustomTimePicker
-                  icon={cilCalendar}
-                  label="End Time"
-                  id="finishTime"
-                  name="finishTime"
-                  className="scheduleClass"
-                  value={campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null}
-                  onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
+              </CRow>
+              <CRow>
+                <CCol md="6">
+                  <CustomDatePicker
+                    icon={cilCalendar}
+                    disabled={loading}
+                    label="Date From"
+                    id="startDate"
+                    name="startDate"
+                    value={campaignRegData.startDate}
+                    minDate={dayjs(submitData.startTime)}
+                    maxDate={dayjs(submitData.finishTime)}
+                    title="start date"
+                    className="scheduleClass"
+                    disablePast="true"
+                    onChange={(e) => handleCampaignAddForm(e, 'startDate')}
+                  />
+                </CCol>
+                <CCol md="6">
+                  <CustomDatePicker
+                    icon={cilCalendar}
+                    label="Date To"
+                    id="endDate"
+                    name="endDate"
+                    title="end date"
+                    className="scheduleClass"
+                    value={campaignRegData.endDate}
+                    disabled={loading}
+                    disablePast="true"
+                    minDate={dayjs(submitData.startTime)}
+                    maxDate={dayjs(submitData.finishTime)}
+                    // min={submitData?.startTime}
+                    // max={submitData?.finishTime}
+                    onChange={(e) => handleCampaignAddForm(e, 'endDate')}
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol md="6">
+                  <CustomTimePicker
+                    icon={cilCalendar}
+                    label="Start Time"
+                    id="startTime"
+                    name="startTime"
+                    title="Start Time"
+                    className="scheduleClass"
+                    value={campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null}
+                    onChange={(e) => handleCampaignAddForm(e, 'startTime')}
+                    disabled={loading}
+                  />
+                </CCol>
+                <CCol md="6">
+                  <CustomTimePicker
+                    icon={cilCalendar}
+                    label="End Time"
+                    id="finishTime"
+                    name="finishTime"
+                    className="scheduleClass"
+                    value={campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null}
+                    onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
+                    disabled={loading}
+                    title=" End Time"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol md={4}>
+                  <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                    Schedule Messages
+                  </label>
+                  <input
+                    id="TotalSchMessages"
+                    className="form-control item user-profile-input labelName"
+                    value={budgetData.TotalSchMessages}
+                    disabled
+                  />
+                </CCol>
+                <CCol md={4}>
+                  <label htmlFor="" className="labelName profile-user-labels mt-2">
+                    Schedule Budget({currencyName || ''})
+                  </label>
+                  <input
+                    id="TotalSchBudget"
+                    className="form-control item user-profile-input"
+                    value={budgetData.TotalSchBudget}
+                    disabled
+                  />
+                </CCol>
+                <CCol md={4}>
+                  <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                    Campaign Budget({currencyName || ''})
+                  </label>
+                  <input
+                    id="TotalCampBudget"
+                    className="form-control item user-profile-input"
+                    value={budgetData.TotalCampBudget}
+                    disabled
+                  />
+                </CCol>
+              </CRow>
+            </AppContainer>
+            <React.Fragment>
+              <div className="CenterAlign pt-2 gap-2">
+                <Button
                   disabled={loading}
-                  title=" End Time"
-                />
-              </CCol>
-            </CRow>
-            <CRow>
-              <CCol md={4}>
-                <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                  Schedule Messages
-                </label>
-                <input
-                  id="TotalSchMessages"
-                  className="form-control item user-profile-input labelName"
-                  value={budgetData.TotalSchMessages}
-                  disabled
-                />
-              </CCol>
-              <CCol md={4}>
-                <label htmlFor="" className="labelName profile-user-labels mt-2">
-                  Schedule Budget($)
-                </label>
-                <input
-                  id="TotalSchBudget"
-                  className="form-control item user-profile-input"
-                  value={budgetData.TotalSchBudget}
-                  disabled
-                />
-              </CCol>
-              <CCol md={4}>
-                <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                  Campaign Budget($)
-                </label>
-                <input
-                  id="TotalCampBudget"
-                  className="form-control item user-profile-input"
-                  value={budgetData.TotalCampBudget}
-                  disabled
-                />
-              </CCol>
-            </CRow>
-          </AppContainer>
-          <React.Fragment>
-            <div className="CenterAlign pt-2 gap-2">
-              <Button
-                disabled={loading}
-                onClick={() => onCancel()}
-                type="button"
-                className="w-auto px-4"
-                // className="btn btn_Default m-2 sales-btn-style"
-              >
-                Back
-              </Button>
-              <Button
-                disabled={loading}
-                onClick={() => onSave()}
-                type="button"
-                className="w-auto px-4"
-              >
-                Add Schedule
-              </Button>
-              <Button
-                content={
-                  scheduleJson?.length === 0
-                    ? 'Please add at least one schedule before submitting.'
-                    : ''
-                }
-                disabled={loading || scheduleJson?.length === 0}
-                loading={loading}
-                onClick={() => submitCompaign()}
-                type="submit"
-                className="w-auto px-4"
-                // className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
-              >
-                Submit Campaign
-              </Button>
-            </div>
-          </React.Fragment>
-        </form>
-      </ModalBody>
-    </Modal>
+                  onClick={() => onCancel()}
+                  type="button"
+                  className="w-auto px-4"
+                  // className="btn btn_Default m-2 sales-btn-style"
+                >
+                  Back
+                </Button>
+                <Button
+                  disabled={loading}
+                  onClick={() => onSave()}
+                  type="button"
+                  className="w-auto px-4"
+                >
+                  Add Schedule
+                </Button>
+                <Button
+                  content={
+                    scheduleJson?.length === 0
+                      ? 'Please add at least one schedule before submitting.'
+                      : ''
+                  }
+                  disabled={loading || scheduleJson?.length === 0}
+                  loading={loading}
+                  onClick={() =>
+                    // submitCompaign()
+                    togglePaymentMdl()
+                  }
+                  type="submit"
+                  className="w-auto px-4"
+                  // className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
+                >
+                  Submit Campaign
+                </Button>
+              </div>
+            </React.Fragment>
+          </form>
+        </ModalBody>
+      </Modal>
+      <PaymentModel
+        isOpen={isPaymentOpen}
+        toggle={togglePaymentMdl}
+        amount={budgetData.TotalCampBudget}
+      />
+    </>
   );
 };
 export default AddScheduleModel;

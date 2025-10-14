@@ -1,31 +1,6 @@
 import { cilChevronBottom, cilTrash } from '@coreui/icons';
-import { CCol, CContainer, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
+import { CCol, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 
-import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
-import useFetch from 'src/hooks/useFetch';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import LocationSelector from 'src/components/Component/LocationMarker';
-import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import Inputs from 'src/components/Filters/Inputs';
-import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-import AppContainer from 'src/components/UI/AppContainer';
-import Form from 'src/components/UI/Form';
-import Loading from 'src/components/UI/Loading';
-import {
-  getCampaignAddConfig,
-  getInitialCampaignData,
-} from 'src/configs/InputConfig/campaignAddConfig';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useShowToast } from 'src/hooks/useShowToast';
-import globalutil from 'src/util/globalutil';
-import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import Range from 'src/components/UI/Range';
 import {
   cibFacebook,
   cibGmail,
@@ -38,9 +13,32 @@ import {
   cilShortText,
 } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import useApi from 'src/hooks/useApi';
-import Button from 'src/components/UI/Button';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import CampignNetworkSettings from 'src/components/Component/CampignNetworkSettings';
+import LocationSelector from 'src/components/Component/LocationMarker';
+import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import Inputs from 'src/components/Filters/Inputs';
+import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import AppContainer from 'src/components/UI/AppContainer';
+import Form from 'src/components/UI/Form';
+import Loading from 'src/components/UI/Loading';
+import Range from 'src/components/UI/Range';
+import {
+  getCampaignAddConfig,
+  getInitialCampaignData,
+} from 'src/configs/InputConfig/campaignAddConfig';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
+import useFetch from 'src/hooks/useFetch';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { updateToast } from 'src/redux/toast/toastSlice';
+import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 
 const campaignadd = () => {
   // let state;
@@ -57,17 +55,23 @@ const campaignadd = () => {
   const [activeTab, setActiveTab] = useState(0);
   const dispatch = useDispatch();
 
+  const { getOrgs } = useFetchOrgs();
+
   const [interestSearch, setInterestSearch] = useState('');
   const [networksList, setNetworksList] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
 
+  const [paymentRef, setPaymentRef] = useState('');
+  const [makeOrder, setMakeOrder] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
 
   const [schedulerows, setScheduleRows] = useState([]);
+  const [currencyName, setCurrencyName] = useState('');
 
   const [selectedNetworks, setSelectedNetworks] = useState([]);
   const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
   const [selectedTemplates, setSelectedTemplates] = useState({}); // { networkName: [postTypeId, ...] }
+  const [orgsList, setOrgsList] = useState([]);
 
   const tabs = [
     { id: 0, name: 'Campaign' },
@@ -130,7 +134,23 @@ const campaignadd = () => {
 
   useEffect(() => {
     getNetworksList();
+    fetchOrgs();
   }, []);
+
+  useEffect(() => {
+    if (user && orgsList?.length > 0) {
+      console.log({ user, orgsList });
+      const findOrg = orgsList?.find((ol) => ol?.id === user?.orgId);
+      if (findOrg) {
+        setCurrencyName(findOrg?.currencyName);
+      }
+    }
+  }, [orgsList, user]);
+
+  const fetchOrgs = async () => {
+    const orgData = await getOrgs();
+    if (orgData && Array.isArray(orgData)) setOrgsList(orgData?.filter((o) => o?.name !== ''));
+  };
 
   const fetchBody = {
     orgId: String(user.orgId), // ✅ convert to string
@@ -459,6 +479,143 @@ const campaignadd = () => {
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const amount = searchParams.get('amount');
+    const orderRefNumber = searchParams.get('orderRefNumber');
+    const message = searchParams.get('message');
+    const transactionRefNumber = searchParams.get('transactionRefNumber');
+
+    const pp_TxnType = searchParams.get('pp_TxnType') || '';
+    const pp_Amount = searchParams.get('pp_Amount') || '';
+    const pp_BillReference = searchParams.get('pp_BillReference') || '';
+    const pp_ResponseCode = searchParams.get('pp_ResponseCode') || '';
+    const pp_RetreivalReferenceNo = searchParams.get('pp_RetreivalReferenceNo') || '';
+    const pp_SubMerchantID = searchParams.get('pp_SubMerchantID') || '';
+    const pp_TxnCurrency = searchParams.get('pp_TxnCurrency') || '';
+    const pp_TxnDateTime = searchParams.get('pp_TxnDateTime') || '';
+    const pp_TxnRefNo = searchParams.get('pp_TxnRefNo') || '';
+    const pp_MobileNumber = searchParams.get('pp_MobileNumber') || '';
+    const pp_CNIC = searchParams.get('pp_CNIC') || '';
+    const pp_SecureHash = searchParams.get('pp_SecureHash') || '';
+    const pp_ResponseMessage = searchParams.get('pp_ResponseMessage') || '';
+
+    const filteredResponse = {
+      pp_TxnType,
+      pp_Amount,
+      pp_BillReference,
+      pp_ResponseCode,
+      pp_RetreivalReferenceNo,
+      pp_SubMerchantID,
+      pp_TxnCurrency,
+      pp_TxnDateTime,
+      pp_TxnRefNo,
+      pp_MobileNumber,
+      pp_CNIC,
+      pp_SecureHash,
+    };
+    // console.log({ pp_ResponseMessage });
+    setTimeout(() => {
+      //   if (pp_TxnRefNo && pp_TxnRefNo === orderInfo.jazzCashTxnRef) {
+      //     if (pp_ResponseCode === "000") {
+      //       placeOrder(btoa(JSON.stringify(filteredResponse)));
+      //     } else {
+      //       setError({
+      //         title: "Error",
+      //         message: pp_ResponseMessage ?? "Payment failed. Please try again.",
+      //         variant: ErrorVariant.Error,
+      //       });
+      //       window.history.replaceState({}, document.title, pathname);
+      //     }
+      //   }
+      if (amount || orderRefNumber || message) {
+        if (message) {
+          showToast(message, 'error');
+          window.history.replaceState({}, document.title, pathname);
+        } else {
+          const paymentData = {
+            orderRefNumber,
+            message,
+            amount,
+            transactionRefNumber,
+          };
+          console.log({ paymentData });
+          //   placeOrder(btoa(JSON.stringify(paymentData)));
+        }
+
+        // Remove query params from URL
+      }
+    }, 1500);
+  }, [searchParams, pathname]);
+
+  useEffect(() => {
+    const amount = searchParams.get('amount');
+    const orderRefNumber = searchParams.get('orderRefNumber');
+    const message = searchParams.get('message');
+    const transactionRefNumber = searchParams.get('transactionRefNumber');
+
+    // console.log({ pp_ResponseMessage });
+    setTimeout(() => {
+      if (amount || orderRefNumber || message) {
+        console.log({ amount, orderRefNumber, message });
+        if (window.opener) {
+          const data = {
+            orderRefNumber,
+            message,
+            amount,
+            transactionRefNumber,
+          };
+          console.log({ data });
+
+          window.opener.postMessage(
+            {
+              status: message ? 'failed' : 'success',
+              txnRef: orderRefNumber,
+              message: message ?? '',
+              data: btoa(JSON.stringify(data)),
+            },
+            '*',
+          );
+          window.close();
+          // Optional: Close popup after a delay
+        }
+
+        // Remove query params from URL
+      }
+    }, 1000);
+  }, [searchParams, pathname]);
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Optional: check event.origin for security
+      // console.log("Received message from popup:", event.data);
+      // console.log({ event });
+      // Validate the structure
+      if (event.data?.status) {
+        const { message, data, status } = event.data;
+        console.log('status:', status);
+        console.log('Message:', message);
+        console.log('Raw Data:', data);
+        console.log('Parsed data', JSON.parse(atob(data)));
+        if (status === 'failed') {
+          showToast(message, 'error');
+        } else {
+          setPaymentRef(data);
+          setMakeOrder(true);
+        }
+
+        // TODO: handle this data in your app (e.g., update state, redirect, etc.)
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   // console.log({ campaignRegData });
 
@@ -753,6 +910,9 @@ const campaignadd = () => {
         setData={setScheduleData}
         data={scheduleData}
         header="Add Schedule "
+        currencyName={currencyName}
+        makeOrder={makeOrder}
+        paymentRef={paymentRef}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>
