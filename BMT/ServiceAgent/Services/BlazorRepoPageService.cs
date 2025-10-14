@@ -716,6 +716,8 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 uvmi.UserCode = "" + reader["Id"];
                                 uvmi.CompleteName = "" + reader["CompleteName"];
                                 uvmi.OrgId = Convert.ToInt32(reader["OrgId"]);
+                                uvmi.CityId = Convert.ToInt32(reader["AddCity"]);// CityId
+
                                 // uvmi.SchoolName = "" + reader["SchoolName"];
                                 uvmi.RoleName = "" + reader["RoleName"];
                                 uvmi.FirstName = "" + reader["FirstName"];
