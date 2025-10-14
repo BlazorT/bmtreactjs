@@ -1,6 +1,7 @@
 ﻿using com.blazor.bmt.core.baseentity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace com.blazor.bmt.core;
 
@@ -30,6 +31,8 @@ public partial class Compaign : EntityTransaction
     public int? OrgId { get; set; }
 
     public int? CreatedBy { get; set; }
+    public string? paymentRef { get; set; }
+    
 
     public DateTime CreatedAt { get; set; }
 
