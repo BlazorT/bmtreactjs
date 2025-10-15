@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 import { cilPencil } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CCol, CRow, CTooltip } from '@coreui/react';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useShowToast } from 'src/hooks/useShowToast';
-import { useSelector } from 'react-redux';
 import PricingModal from '../Modals/PriceEditModal';
 
 const PricingActionCell = (prop) => {
@@ -15,9 +12,6 @@ const PricingActionCell = (prop) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const toggleShowEditModal = () => setShowEditModal((prev) => !prev);
 
-  //   if (loading) {
-  //     return <Spinner />;
-  //   }
   return (
     <React.Fragment>
       <PricingModal
