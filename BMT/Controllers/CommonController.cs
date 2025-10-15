@@ -235,6 +235,7 @@ namespace com.blazor.bmt.controllers
                         lookUps.Currencies = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.CURRENCIES).ToList();
                         //lookUps.Countries = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.COUNTRIES).ToList();
                         lookUps.PostTypes = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.POST_TYPES).ToList();
+                        lookUps.campaignunits = lst.Where(x => x.LVType == (int)LOOKUP_TYPES.CAMPAIGN_UNITS).ToList();
                         response.data = lookUps;
                         response.status = true;
                     }

@@ -24,6 +24,7 @@
         public List<GlobalLookUpViewModel> packages { get; set; } = new List<GlobalLookUpViewModel>();
         public List<GlobalLookUpViewModel> Currencies { get; set; } = new List<GlobalLookUpViewModel>();
         public List<GlobalLookUpViewModel> PostTypes { get; set; } = new List<GlobalLookUpViewModel>();
+        public List<GlobalLookUpViewModel> campaignunits { get; set; } = new List<GlobalLookUpViewModel>();
         public List<GlobalLookUpViewModel> product_assignment_types { get; set; } = new List<GlobalLookUpViewModel>();
 
     }
