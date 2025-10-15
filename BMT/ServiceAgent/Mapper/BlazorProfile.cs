@@ -66,6 +66,7 @@ namespace com.blazor.bmt
             CreateMap<Compaignexecutionschedule, CompaignexecutionscheduleModel>();
             CreateMap<Compaignscheduleday, CompaignscheduledayModel>();
            CreateMap<Bundlingpackagedetail, BundlingpackagedetailModel>().ReverseMap();
+            CreateMap<Bundlingpackagedetail, BundlingpackagedetailViewModel>().ReverseMap();
             CreateMap<BundlingpackagedetailModel, BundlingpackagedetailViewModel>().ReverseMap();
             CreateMap<Package, PackageModel>().ReverseMap();
             CreateMap<Mediacontent, MediacontentModel>().ReverseMap();
