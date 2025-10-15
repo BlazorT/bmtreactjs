@@ -49,6 +49,15 @@ namespace Blazor.Web.UI.Services
 
                     }).ToList();
                     break;
+                case PARENT_ENUMS.CAMPAIGN_UNITS:
+                    var blsts = Enum.GetValues(typeof(CAMPAIGN_UNITS)).Cast<CAMPAIGN_UNITS>().Select(x => x).ToList();
+                    enumList = blsts.Select(o => new EnumViewModel
+                    {
+                        id = (int)o,
+                        name = GetEnumDesciption(typeof(CAMPAIGN_UNITS), o.ToString())
+
+                    }).ToList();
+                    break;
                 case PARENT_ENUMS.POST_TYPES:
                     var psts = Enum.GetValues(typeof(POST_TYPES)).Cast<POST_TYPES>().Select(x => x).ToList();
                     enumList = psts.Select(o => new EnumViewModel

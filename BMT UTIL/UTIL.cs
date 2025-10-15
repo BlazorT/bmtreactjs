@@ -31,6 +31,31 @@ namespace com.blazor.bmt.util
         INVITED = 3
 
     }
+    public enum CAMPAIGN_UNITS
+    {
+        [Description("Hour")]
+        HOUR = 1,
+        [Description("Messages")]
+        MESSAGES = 2,
+        [Description("Bundle")]
+        BUNDLE = 3,
+        [Description("DAY")]
+        DAY = 4,
+        [Description("WEEK")]
+        WEEK = 5,
+        [Description("MONTH")]
+        MONTH = 6,
+        [Description("3 Month")]
+        QUARTERYR = 7,
+        [Description("6 Month")]
+        HALFYR = 8,
+        [Description("YEAR")]
+        YEAR = 9,
+        [Description("2 YEAR")]
+        TWOYEAR =10,
+        [Description("3 YEAR")]
+        THEEYEAR = 11
+    }
     public enum STATUS_ADMIN_USERS
     {
         [Description("Active")]
@@ -111,7 +136,8 @@ namespace com.blazor.bmt.util
         COMPAIGNS_STATUS = 19,
         MEDIA_NETWORKS = 20,
         INTERVAL_TYPES = 21,
-        POST_TYPES = 22
+        POST_TYPES = 22,
+        CAMPAIGN_UNITS = 23
     }
     public enum USERROLES
     {
@@ -286,7 +312,9 @@ namespace com.blazor.bmt.util
         [Description("Post Types")]
         POST_TYPES = 10,
         [Description("USER_ROLES")]
-        USER_ROLES = 22
+        USER_ROLES = 22,
+        [Description("CAMPAIGN UNITS")]
+        CAMPAIGN_UNITS = 23
     }
     public enum STATUS_TYPE
     {
