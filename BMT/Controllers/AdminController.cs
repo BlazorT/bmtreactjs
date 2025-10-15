@@ -184,25 +184,25 @@ namespace com.blazor.bmt.controllers
                 if (bpackage.Id > 0)
                 {
                     // UsersViewModel User = new UsersViewModel();
-                    BundlingpackagedetailModel pkg = await _BundlingPackageService.GetBundlingPackageByIdAsync(bpackage.Id);
+                    //BundlingpackagedetailModel pkg = await _BundlingPackageService.GetBundlingPackageByIdAsync(bpackage.Id);
                                       
-                    pkg.Discount = bpackage.Discount;
-                    pkg.UnitPrice = bpackage.UnitPrice;
-                    pkg.FreeAllowed = bpackage.FreeAllowed;
-                    pkg.Tax = bpackage.Tax == null ? 0.0 : bpackage.Tax;
-                    pkg.NetworkId = bpackage.NetworkId;
-                    pkg.FinishTime = bpackage.FinishTime;
-                    pkg.UnitId = bpackage.UnitId;                
-                    pkg.CurrentApplied = bpackage.CurrentApplied;
-                    pkg.StartTime = bpackage.StartTime;
-                    pkg.CreatedBy = Convert.ToInt32(bpackage.CreatedBy);
-                    pkg.CreatedAt = bpackage.CreatedAt;
+                    //pkg.Discount = bpackage.Discount;
+                    //pkg.UnitPrice = bpackage.UnitPrice;
+                    //pkg.FreeAllowed = bpackage.FreeAllowed;
+                    //pkg.Tax = bpackage.Tax == null ? 0.0 : bpackage.Tax;
+                    //pkg.NetworkId = bpackage.NetworkId;
+                    //pkg.FinishTime = bpackage.FinishTime;
+                    //pkg.UnitId = bpackage.UnitId;                
+                    //pkg.CurrentApplied = bpackage.CurrentApplied;
+                    //pkg.StartTime = bpackage.StartTime;
+                    //pkg.CreatedBy = Convert.ToInt32(bpackage.CreatedBy);
+                    //pkg.CreatedAt = bpackage.CreatedAt;
 
                     //  user.ExpireTime = System.DateTime.Now.AddDays(UTIL.PackageUtil.getPackageDays(Convert.ToInt32(user.SchoolId)));
-                    pkg.Status = bpackage.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : bpackage.Status;
-                    //user.SubscriptionPackageId = user.SubscriptionPackageId;
+                    //pkg.Status = bpackage.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : bpackage.Status;
+                    ////user.SubscriptionPackageId = user.SubscriptionPackageId;
                     bpackage.RowVer = bpackage.RowVer + 1;
-                    bpackage = await _BundlingPackageService.Update(pkg);
+                    bpackage = await _BundlingPackageService.Update(bpackage);
 
                     blazorApiResponse.status = true;
                     if (bpackage.Id > 0)
