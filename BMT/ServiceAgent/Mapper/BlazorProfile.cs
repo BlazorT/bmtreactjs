@@ -12,6 +12,7 @@ namespace com.blazor.bmt
             CreateMap<StateModel, StatesViewModel>();           
             CreateMap<CountryModel, CountryViewModel>();            
             CreateMap<BundlingpackagedetailModel, Bundlingpackagedetail>();
+            CreateMap<BundlingpackagedetailViewModel, Bundlingpackagedetail>().ReverseMap();
             CreateMap<PackageModel, Package>();
             CreateMap<CityModel, CityViewModel>();
             CreateMap<CompaignModel, CompaignsViewModel>();
