@@ -25,6 +25,11 @@ namespace com.blazor.bmt.application.services
         //Task<PackageModel> GetPackageByIdAsync(int Id);
         //Task<IEnumerable<PackageModel>> GetPackagesList(string details);
 
+        public async Task<IEnumerable<BundlingpackagedetailViewModel>> GetBundlingPackageAllFiltersAsync(int networkId, int status = 0) {
+            var list = await _BundlingPackageRepository.GetBundlingPackageAllFiltersAsync(networkId,status);
+            var mapped = _mapper.Map<IEnumerable<BundlingpackagedetailViewModel>>(list);
+            return mapped;
+        }
         public async Task<IEnumerable<BundlingpackagedetailViewModel>> GetBundlingPackagesByStatusList(int status)
         {
             var list = await _BundlingPackageRepository.GetBundlingPackagesListByStatusAsync(status);          

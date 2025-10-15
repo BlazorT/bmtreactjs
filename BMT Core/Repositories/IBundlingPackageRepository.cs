@@ -10,7 +10,8 @@ namespace Blazor.Web.Core.Repositories
     {
         Task<IEnumerable<Bundlingpackagedetail>> GetBundlingPackagesListByStatusAsync(int status);
         Task<Bundlingpackagedetail> GetBundlingPackageByIdAsync(Int64 id);
-        
+        Task<IEnumerable<Bundlingpackagedetail>> GetBundlingPackageAllFiltersAsync(int networkId, int status = 0);
+
         //Task<IEnumerable<BundlingPackageDetail>> GetBundlingPackageByNameAsync(string name);
         Task<IEnumerable<Bundlingpackagedetail>> GetBundlingPackageByNetworkIdAsync(int networkId);
 
