@@ -7,6 +7,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import Loading from 'src/components/UI/Loading';
 import useApi from 'src/hooks/useApi';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 
 const globalpreference = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -17,11 +18,19 @@ const globalpreference = () => {
 
   const { data, loading } = useApi('/Admin/networks', 'POST', body);
 
+  const { data: pricingRes, loading: pricingLoading, fetchPricing } = useFetchPricing();
+
+  const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
+
+  useEffect(() => {
+    fetchPricing();
+  }, []);
+
   useEffect(() => {
     setTabs(data?.data || []);
   }, [data]);
 
-  if (loading) {
+  if (loading || pricingLoading) {
     return <Loading />;
   }
   return (
@@ -43,6 +52,7 @@ const globalpreference = () => {
                 setNetworkList={setNetworkList}
                 networkList={networkList}
                 organizationId={1}
+                pricingData={pricingData}
               />
             )}
           </>

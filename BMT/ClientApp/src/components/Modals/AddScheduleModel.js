@@ -1,16 +1,4 @@
-import {
-  cibFacebook,
-  cibGmail,
-  cibInstagram,
-  cibLinkedin,
-  cibSnapchat,
-  cibTiktok,
-  cibTwitter,
-  cibWhatsapp,
-  cilCalendar,
-  cilFlagAlt,
-  cilShortText,
-} from '@coreui/icons';
+import { cilCalendar, cilFlagAlt } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CCol, CFormCheck, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
@@ -24,47 +12,63 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import CustomTimePicker from 'src/components/UI/TimePicker';
+import { daysList, icons } from 'src/constants/constants';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import Button from '../UI/Button';
 import PaymentModel from './PaymentModel';
+
+dayjs.extend(utc);
+
 const AddScheduleModel = (prop) => {
-  dayjs.extend(utc);
   const {
     header,
     isOpen,
     toggle,
-    initialData,
     selectedNetworks,
     selectedPostTypes,
-    selectedDays,
     setData,
-    data,
-    selected,
     setSelected,
     selectedTemplates,
     currencyName,
     makeOrder,
     paymentRef,
+    data,
     campaignRegData: submitData,
   } = prop;
+
   const [budgetData, setBudgetData] = useState({
     TotalSchBudget: 0,
     TotalSchMessages: 0,
     TotalCampBudget: 0,
   });
-  const user = useSelector((state) => state.user);
-  // console.log({ user });
-  const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
-    // console.log('Networksss:', networks);
-    // console.log('SelectedDaysss:', selectedDays);
-    // console.log('Startss:', startDate?.toString());
-    // console.log('Endss:', endDate?.toString());
-    // console.log('StartTimes:', startTime?.toString());
-    // console.log('FinishTimes:', finishTime?.toString());
 
+  const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
+
+  const user = useSelector((state) => state.user);
+
+  const [campaignRegData, setCampaignRegData] = useState({
+    Intervalval: '',
+    intervalTypeId: 0,
+    isFixedTime: false,
+    startDate: dayjs(submitData.startTime),
+    endDate: dayjs(submitData.finishTime),
+    startTime: dayjs().local().subtract(2, 'hours'), // 00:00:00 (dayjs object)
+    finishTime: dayjs().local().add(6, 'hours'), // today 01:00:00
+    selectedDays: [],
+  });
+
+  const showToast = useShowToast();
+  const [scheduleJson, setScheduleJson] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
+  const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
+  // console.log({ g: budgetData.TotalCampBudget });
+
+  const calculateBudget = (networks, selectedDays, startDate, endDate, startTime, finishTime) => {
     const networkCount = networks?.length ?? 0;
     const dayCount = selectedDays?.length ?? 0;
 
@@ -84,42 +88,20 @@ const AddScheduleModel = (prop) => {
     const scheduleCount = networkCount * (dayCount || 1) * dateDiff * hoursDiff;
     const gTotal = scheduleCount * 10;
     const gTotalMess = scheduleCount * 100;
-
+    // console.log(scheduleJson);
+    // Sum all schedule budgets
+    const totalCampBudget = scheduleJson.reduce((acc, curr) => acc + (curr.Budget || 0), 0);
     setBudgetData({
-      TotalCampBudget: gTotal,
+      TotalCampBudget: totalCampBudget,
       TotalSchBudget: gTotal,
       TotalSchMessages: gTotalMess,
     });
   };
 
-  const daysList = [
-    { id: 1, name: 'Sunday' },
-    { id: 2, name: 'Monday' },
-    { id: 3, name: 'Tuesday' },
-    { id: 4, name: 'Wednesday' },
-    { id: 5, name: 'Thursday' },
-    { id: 6, name: 'Friday' },
-    { id: 7, name: 'Saturday' },
-  ];
-  const [campaignRegData, setCampaignRegData] = useState({
-    Intervalval: '',
-    intervalTypeId: 0,
-    isFixedTime: false,
-    startDate: dayjs(submitData.startTime),
-    endDate: dayjs(submitData.finishTime),
-    startTime: dayjs().local().subtract(2, 'hours'), // 00:00:00 (dayjs object)
-    finishTime: dayjs().local().add(6, 'hours'), // today 01:00:00
-    selectedDays: [],
-  });
+  useEffect(() => {
+    setScheduleJson(data);
+  }, [data]);
 
-  const showToast = useShowToast();
-  const [scheduleJson, setScheduleJson] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
-
-  const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
-  // console.log({ g: budgetData.TotalCampBudget });
   useEffect(() => {
     if (isOpen && makeOrder && paymentRef) {
       submitCompaign(paymentRef);
@@ -247,20 +229,6 @@ const AddScheduleModel = (prop) => {
       }),
     );
   };
-  const icons = {
-    Tiktock: cibTiktok,
-    Snapchat: cibSnapchat,
-    Facebook: cibFacebook,
-    Sms: cilShortText,
-    Linkedin: cibLinkedin,
-    Twitter: cibTwitter,
-    Instagram: cibInstagram,
-    Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
-    Email: cibGmail, // Assuming Email is your component for Email icon
-  };
-
-  //  const [selected, setSelected] = useState(selectedNetworks); // Initial load
-  const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
 
   const handleNetworkChange = (networkName) => {
     setSelected(
@@ -270,25 +238,6 @@ const AddScheduleModel = (prop) => {
           : [...prevSelected, networkName], // add if checked
     );
   };
-  useEffect(() => {
-    // console.log('🔥 useEffect triggered');
-
-    calculateBudget(
-      selectedNetworks,
-      campaignRegData.selectedDays,
-      campaignRegData.startDate,
-      campaignRegData.endDate,
-      campaignRegData.startTime,
-      campaignRegData.finishTime,
-    );
-  }, [
-    selectedNetworks.join('|'), // ✅ detect network changes
-    (campaignRegData.selectedDays || []).join('|'), // ✅ detect days changes
-    campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0, // ✅ convert to timestamp
-    campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
-    campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0,
-    campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0,
-  ]);
 
   const onSave = () => {
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
@@ -361,7 +310,7 @@ const AddScheduleModel = (prop) => {
         CompaignDetailId: 0,
         StartTime: combinedStart.format('YYYY-MM-DDTHH:mm:ss'),
         FinishTime: combinedEnd.format('YYYY-MM-DDTHH:mm:ss'),
-        Intervalval: parseFloat(campaignRegData.intervalval),
+        Intervalval: parseFloat(campaignRegData.Intervalval || 0),
         IntervalTypeId: parseInt(campaignRegData.intervalTypeId),
         RowVer: 1,
         Status: 1,
@@ -523,7 +472,27 @@ const AddScheduleModel = (prop) => {
       }
     }
   };
-  // console.log({ startTime: campaignRegData.startTime });
+
+  useEffect(() => {
+    // console.log('🔥 useEffect triggered');
+
+    calculateBudget(
+      selectedNetworks,
+      campaignRegData.selectedDays,
+      campaignRegData.startDate,
+      campaignRegData.endDate,
+      campaignRegData.startTime,
+      campaignRegData.finishTime,
+    );
+  }, [
+    selectedNetworks.join('|'), // ✅ detect network changes
+    (campaignRegData.selectedDays || []).join('|'), // ✅ detect days changes
+    campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0, // ✅ convert to timestamp
+    campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
+    campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0,
+    campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0,
+    scheduleJson,
+  ]);
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} className="custom-modal">
@@ -730,21 +699,10 @@ const AddScheduleModel = (prop) => {
             </AppContainer>
             <React.Fragment>
               <div className="CenterAlign pt-2 gap-2">
-                <Button
-                  disabled={loading}
-                  onClick={() => onCancel()}
-                  type="button"
-                  className="w-auto px-4"
-                  // className="btn btn_Default m-2 sales-btn-style"
-                >
+                <Button disabled={loading} onClick={onCancel} type="button" className="w-auto px-4">
                   Back
                 </Button>
-                <Button
-                  disabled={loading}
-                  onClick={() => onSave()}
-                  type="button"
-                  className="w-auto px-4"
-                >
+                <Button disabled={loading} onClick={onSave} type="button" className="w-auto px-4">
                   Add Schedule
                 </Button>
                 <Button
@@ -755,13 +713,9 @@ const AddScheduleModel = (prop) => {
                   }
                   disabled={loading || scheduleJson?.length === 0}
                   loading={loading}
-                  onClick={() =>
-                    // submitCompaign()
-                    togglePaymentMdl()
-                  }
+                  onClick={togglePaymentMdl}
                   type="submit"
                   className="w-auto px-4"
-                  // className="btn btn_Default sales-btn-style m-2 min-width w-auto px-3"
                 >
                   Submit Campaign
                 </Button>

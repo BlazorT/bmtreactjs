@@ -1,4 +1,7 @@
-export const getPricingCols = (pageRoles, getProducts, products) => [
+/* eslint-disable react/react-in-jsx-scope */
+import PricingActionCell from 'src/components/DataGridCustomCells/PricingActionCell';
+
+export const getPricingCols = (user, getPricing) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
@@ -48,4 +51,18 @@ export const getPricingCols = (pageRoles, getProducts, products) => [
     key: 'startTime',
     editable: false,
   },
+  ...(user?.roleId === 1
+    ? [
+        {
+          headerCellClass: 'custom-header-data-grid',
+          filterable: true,
+          disableColumnMenu: false,
+          name: 'Action',
+          key: 'action',
+          editable: false,
+          renderCell: (params) =>
+            params?.row?.name ? null : <PricingActionCell value={params} getPricing={getPricing} />,
+        },
+      ]
+    : []),
 ];

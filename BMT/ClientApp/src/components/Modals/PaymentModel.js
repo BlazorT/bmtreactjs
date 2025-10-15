@@ -52,6 +52,7 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
   const [errors, setErrors] = useState({});
   //!! amount
   const { prepareRequest } = useEasyPaisa(true, amount, paymentGateway, 'BMT');
+  // console.log({ amount });
   const {
     triggerJazzCashPayment,
     loadingJC,
@@ -236,7 +237,7 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
         aria-labelledby="email-send"
         aria-describedby="email-send-full-view"
         backdrop="static"
-        className="payment-modal"
+        className="payment-modal "
         size="lg"
       >
         <CModalHeader closeButton={false}>

@@ -12,6 +12,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import Loading from 'src/components/UI/Loading';
 import useApi from 'src/hooks/useApi';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 
 //import globalutil from '../../util/globalutil';
 //import NetworkInputs from 'src/components/Component/NetworkInputs';
@@ -49,6 +50,14 @@ const SingleDispatchment = () => {
 
   const { data: networkRes, loading: networksLoading } = useApi('/Admin/networks', 'POST', body);
 
+  const { data: pricingRes, loading: pricingLoading, fetchPricing } = useFetchPricing();
+
+  const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
+
+  useEffect(() => {
+    fetchPricing();
+  }, []);
+
   useEffect(() => {
     setTabs(networkRes?.data || []);
   }, [networkRes]);
@@ -63,7 +72,7 @@ const SingleDispatchment = () => {
   }, [data, orgId]);
   // console.log({ orglist });
 
-  if (loading || networksLoading) {
+  if (loading || networksLoading || pricingLoading) {
     return <Loading />;
   }
 
@@ -106,6 +115,7 @@ const SingleDispatchment = () => {
                 organizationId={organization?.id || 1}
                 setNetworkList={setNetworkList}
                 networkList={networkList}
+                pricingData={pricingData}
               />
             ),
         )}

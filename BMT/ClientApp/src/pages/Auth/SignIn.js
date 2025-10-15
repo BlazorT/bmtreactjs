@@ -1,5 +1,5 @@
 // React and third-party libraries
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 //import CIcon from '@coreui/icons-react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -26,6 +26,12 @@ function SignIn() {
   const dispatch = useDispatch();
   const location = useLocation();
   const toast = useSelector(selectToast);
+
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user?.isAuthenticated) navigate(-1);
+  }, [user]);
 
   const {
     response: utilRes,
@@ -97,6 +103,7 @@ function SignIn() {
     globalutil.setbusinessentitiess(data.businessentities);
     globalutil.setbusinesstypes(data.businesstypes);
     globalutil.setdeliverstatus(data.deliverstatus);
+    globalutil.setcampaignunits(data.campaignunits);
   };
 
   const getUtils = async () => {

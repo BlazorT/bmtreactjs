@@ -195,6 +195,17 @@ export default class globalutil {
   static setbusinesstypes(businesstypes) {
     localStorage.setItem('businesstypes', JSON.stringify(businesstypes));
   }
+  static campaignunits() {
+    if (
+      localStorage.getItem('campaignunits') !== '' &&
+      localStorage.getItem('campaignunits') !== null
+    )
+      return JSON.parse(localStorage.getItem('campaignunits'));
+    else return null;
+  }
+  static setcampaignunits(campaignunits) {
+    localStorage.setItem('campaignunits', JSON.stringify(campaignunits));
+  }
   static countries() {
     if (localStorage.getItem('countries') !== '' && localStorage.getItem('countries') !== null)
       return JSON.parse(localStorage.getItem('countries'));
