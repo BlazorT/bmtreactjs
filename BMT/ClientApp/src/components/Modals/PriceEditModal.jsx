@@ -74,7 +74,6 @@ const PricingModal = ({
 
     const submissionData = {
       id: parseInt(networkData?.id?.split('-')[0]),
-      startTime: dayjs().utc(networkData?.startTime).format(),
       name: '',
       unitId: parseInt(pricingData?.unitId || '0'),
       unitName:
@@ -82,8 +81,6 @@ const PricingModal = ({
       unitPrice: Number(pricingData.unitPrice),
       discount: pricingData.discount ? Number(pricingData.discount) : 0,
       freeAllowed: pricingData.freeQuota ? Number(pricingData.freeQuota) : 0,
-      lastUpdatedAt: dayjs().utc().format(),
-      lastUpdatedBy: user?.userId || 1,
       networkId: networkData?.networkId,
       tax: networkData?.tax || 0,
       purchasedQouta: networkData?.purchasedQouta || 0,
@@ -93,10 +90,13 @@ const PricingModal = ({
       currentApplied: networkData?.currentApplied || 1,
       virtualAccount: networkData?.virtualAccount || 1,
       bundlingAllowed: networkData?.bundlingAllowed || 1,
-      createdBy: networkData?.createdBy || user?.userId,
-      createdAt: networkData?.createdAt || dayjs().utc().format(),
+      startTime: dayjs().utc(networkData?.startTime).format(),
       finishTime: dayjs().utc(networkData?.finishTime).format(),
       approvalTime: networkData?.approvalTime,
+      createdBy: networkData?.createdBy || user?.userId,
+      createdAt: networkData?.createdAt || dayjs().utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
+      lastUpdatedBy: user?.userId || 1,
       status: 1,
       rowVer: 1,
     };
@@ -213,9 +213,7 @@ const PricingModal = ({
     >
       <Form name="pricing-form">
         <CModalHeader closeButton={false}>
-          <CModalTitle className="text-uppercase">
-            {networkData?.networkName} Pricing Configuration
-          </CModalTitle>
+          <CModalTitle className="text-uppercase">{networkData?.networkName} Pricing</CModalTitle>
         </CModalHeader>
 
         <CModalBody>
@@ -250,7 +248,13 @@ const PricingModal = ({
 
         <CModalFooter>
           <Button title="Cancel" onClick={confirmationModal} disabled={loading} />
-          <Button title="Save Pricing" onClick={handleSubmit} type="submit" loading={loading} />
+          <Button
+            title="Submit"
+            onClick={handleSubmit}
+            type="submit"
+            loading={loading}
+            loadingTitle="Submitting..."
+          />
         </CModalFooter>
       </Form>
     </CModal>

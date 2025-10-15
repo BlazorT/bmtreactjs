@@ -250,7 +250,7 @@ export const getNetworkInputFields = (
     value: networkState.unitId,
     name: 'unitId',
     onChange: (e) => handleNetworkSetting(e),
-    isRequired: false,
+    isRequired: parseInt(networkState?.price) > 0,
     disableOption: 'Select Unit',
     message: 'Please select unit',
   },
@@ -280,6 +280,7 @@ export const getNetworkInputFields = (
     name: 'startTime',
     title: 'Date From',
     maxDate: dayjs(networkState.finishTime),
+    minDate: dayjs(),
   },
   {
     component: CustomDatePicker,

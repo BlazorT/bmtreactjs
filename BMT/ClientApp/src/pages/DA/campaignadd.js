@@ -3,7 +3,7 @@ import { CCol, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 
 import CIcon from '@coreui/icons-react';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import CampignNetworkSettings from 'src/components/Component/CampignNetworkSettings';
@@ -29,6 +29,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import { availableInterests, icons } from 'src/constants/constants';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 
 const campaignadd = () => {
   // let state;
@@ -62,6 +63,10 @@ const campaignadd = () => {
   const [selectedTemplates, setSelectedTemplates] = useState({}); // { networkName: [postTypeId, ...] }
   const [orgsList, setOrgsList] = useState([]);
 
+  const { data: pricingRes, fetchPricing } = useFetchPricing();
+
+  const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
+
   const tabs = [
     { id: 0, name: 'Campaign' },
     { id: 1, name: 'Networks' },
@@ -80,6 +85,7 @@ const campaignadd = () => {
   useEffect(() => {
     getNetworksList();
     fetchOrgs();
+    fetchPricing();
   }, []);
 
   useEffect(() => {
@@ -779,6 +785,7 @@ const campaignadd = () => {
         currencyName={currencyName}
         makeOrder={makeOrder}
         paymentRef={paymentRef}
+        pricingData={pricingData}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

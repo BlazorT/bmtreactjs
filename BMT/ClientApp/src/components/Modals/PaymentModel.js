@@ -65,7 +65,7 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
     true,
     paymentGateway,
     amount,
-    '',
+    'BMT',
     walletData.accountNumber,
     walletData.cnicLastSix,
     setJazzCashTxnRef,
@@ -404,7 +404,7 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
         <CModalFooter>
           <Button title="Cancel" onClick={confirmationModal} disabled={loading} />
           <Button
-            title="Pay"
+            title={`Pay ${amount?.toFixed(2)}`}
             onClick={handlePay}
             type="submit"
             loading={loading}
