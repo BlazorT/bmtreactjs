@@ -185,25 +185,24 @@ namespace com.blazor.bmt.controllers
                 {
                     // UsersViewModel User = new UsersViewModel();
                     BundlingpackagedetailModel pkg = await _BundlingPackageService.GetBundlingPackageByIdAsync(bpackage.Id);
-                    // OrganizationModel organization = new OrganizationModel();
-                    bpackage.LastUpdatedBy = bpackage.LastUpdatedBy;
-                    bpackage.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                                      
                     pkg.Discount = bpackage.Discount;
                     pkg.UnitPrice = bpackage.UnitPrice;
                     pkg.FreeAllowed = bpackage.FreeAllowed;
                     pkg.Tax = bpackage.Tax == null ? 0.0 : bpackage.Tax;
                     pkg.NetworkId = bpackage.NetworkId;
                     pkg.FinishTime = bpackage.FinishTime;
+                    pkg.UnitId = bpackage.UnitId;                
                     pkg.CurrentApplied = bpackage.CurrentApplied;
                     pkg.StartTime = bpackage.StartTime;
-                    pkg.CreatedBy = pkg.CreatedBy;
-                    pkg.CreatedAt = pkg.CreatedAt;
+                    pkg.CreatedBy = Convert.ToInt32(bpackage.CreatedBy);
+                    pkg.CreatedAt = bpackage.CreatedAt;
 
                     //  user.ExpireTime = System.DateTime.Now.AddDays(UTIL.PackageUtil.getPackageDays(Convert.ToInt32(user.SchoolId)));
-                    bpackage.Status = bpackage.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : bpackage.Status;
+                    pkg.Status = bpackage.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : bpackage.Status;
                     //user.SubscriptionPackageId = user.SubscriptionPackageId;
                     bpackage.RowVer = bpackage.RowVer + 1;
-                    bpackage = await _BundlingPackageService.Update(bpackage);
+                    bpackage = await _BundlingPackageService.Update(pkg);
 
                     blazorApiResponse.status = true;
                     if (bpackage.Id > 0)
