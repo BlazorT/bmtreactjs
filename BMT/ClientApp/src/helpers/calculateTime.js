@@ -26,3 +26,10 @@ export default function calculateTime(timestamps) {
 
   return { min: minTime, max: maxTime };
 }
+export const groupBy = (array, key) => {
+  return array.reduce((result, item) => {
+    const group = typeof key === 'function' ? key(item) : item[key];
+    (result[group] = result[group] || []).push(item);
+    return result;
+  }, {});
+};

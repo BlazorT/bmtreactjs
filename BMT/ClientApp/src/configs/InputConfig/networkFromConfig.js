@@ -4,6 +4,8 @@ import dayjs, { utc } from 'dayjs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
+import { packageUnits } from 'src/constants/constants';
+import globalutil from 'src/util/globalutil';
 
 const getLabels = (networkId, labelId) => {
   if (labelId === 'businessId') {
@@ -226,18 +228,31 @@ export const getNetworkInputFields = (
     : []),
   {
     component: CustomInput,
-    label: 'Unit',
+    label: 'Message - Message Interval (in seconds)',
     icon: cilUser,
-    value: networkState.unitId,
+    value: networkState.m2mIntervalSeconds,
     onChange: handleNetworkSetting,
     type: 'number',
-    id: 'unitId',
-    name: 'unitId',
-    placeholder: 'Enter Unit e.g (40)',
+    id: 'm2mIntervalSeconds',
+    name: 'm2mIntervalSeconds',
+    placeholder: 'Message - Message Interval (in seconds)',
     className: 'form-control item',
     isRequired: false,
-    title: 'Enter Unit e.g (40)',
-    message: 'Enter Unit',
+  },
+  {
+    component: CustomSelectInput,
+    label: 'Unit',
+    icon: cilUser,
+    id: 'unitId',
+    options: globalutil.campaignunits(),
+    // options: packageUnits,
+    className: 'form-control item form-select',
+    value: networkState.unitId,
+    name: 'unitId',
+    onChange: (e) => handleNetworkSetting(e),
+    isRequired: false,
+    disableOption: 'Select Unit',
+    message: 'Please select unit',
   },
   {
     component: CustomInput,
@@ -254,19 +269,7 @@ export const getNetworkInputFields = (
     title: 'Purchased Qouta e.g (1000 Quantity Purchased)',
     message: 'Enter Purchased Qouta',
   },
-  {
-    component: CustomInput,
-    label: 'Message - Message Interval (in seconds)',
-    icon: cilUser,
-    value: networkState.m2mIntervalSeconds,
-    onChange: handleNetworkSetting,
-    type: 'number',
-    id: 'm2mIntervalSeconds',
-    name: 'm2mIntervalSeconds',
-    placeholder: 'Message - Message Interval (in seconds)',
-    className: 'form-control item',
-    isRequired: false,
-  },
+
   {
     component: CustomDatePicker,
     label: 'Date From',
@@ -290,6 +293,34 @@ export const getNetworkInputFields = (
     minDate: dayjs(networkState.startTime),
   },
 
+  {
+    component: CustomInput,
+    label: 'Price',
+    icon: cilUser,
+    value: networkState.price,
+    onChange: handleNetworkSetting,
+    type: 'text',
+    id: 'price',
+    name: 'price',
+    placeholder: 'Pricing',
+    className: 'form-control item',
+    isRequired: false,
+    title: 'Pricing',
+  },
+  {
+    component: CustomInput,
+    label: 'Discount',
+    icon: cilUser,
+    value: networkState.discount,
+    onChange: handleNetworkSetting,
+    type: 'text',
+    id: 'discount',
+    name: 'discount',
+    placeholder: 'Discount',
+    className: 'form-control item',
+    isRequired: false,
+    title: 'Discount',
+  },
   {
     component: CustomInput,
     label: 'Auto Reply Message',
@@ -369,6 +400,7 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   port: 0,
   smtpcreduser: '',
   smtpcredpwd: '',
+  purchasedQouta: '',
   smtpsslenabled: 0,
   smtpsecretkey: '',
   smtpserver: '',
@@ -378,6 +410,7 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   autoReplyContent: '',
   accountAuthData: '',
   replyAttachment: '',
+  unitId: '',
   virtualAccount: 0,
   posttypejson: [],
   networkId: networkId,
@@ -386,6 +419,8 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   Custom1: '',
   Custom2: '',
   m2mIntervalSeconds: 60,
+  price: '',
+  discount: '',
   createdBy: user.userId,
   lastUpdatedBy: user.userId,
   startTime: dayjs().utc().format(),

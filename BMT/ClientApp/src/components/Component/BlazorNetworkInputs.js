@@ -25,11 +25,12 @@ import Spinner from '../UI/Spinner';
 import EmailTextEditor from '../UI/email-editor';
 import TemplateListModel from '../Modals/TemplateListModel';
 import SendTestEmailModel from '../Modals/SendTestEmailModel';
+import PaymentModel from '../Modals/PaymentModel';
 
 dayjs.extend(utc);
 
 const BlazorNetworkInputs = (prop) => {
-  const { networkId, setNetworkList, networkList, organizationId } = prop;
+  const { networkId, setNetworkList, networkList, organizationId, pricingData } = prop;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,11 +40,14 @@ const BlazorNetworkInputs = (prop) => {
   const [networkState, setNetworkState] = useState(
     getInitialNetworkData(organizationId, user, networkId),
   );
+  const [showPackageDetails, setShowPackageDetails] = useState(false);
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
   const [showTemplateList, setShowTemplateList] = useState(false);
   const [showTestEmailModel, setShowTestEmailModel] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
+  const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
   const toggleShowTemplateList = () => setShowTemplateList((prev) => !prev);
 
@@ -61,6 +65,8 @@ const BlazorNetworkInputs = (prop) => {
     data: networkSettingsData,
     loading: networkSettingsLoading,
   } = useApi('/Organization/orgpackagedetails', 'POST', networkSettingBody);
+
+  const findNetworkPrice = pricingData?.find((pd) => pd?.networkId === networkId);
 
   useEffect(() => {
     if (networkSettingsData?.data && networkSettingsData.data.length > 0) {
@@ -80,6 +86,7 @@ const BlazorNetworkInputs = (prop) => {
       setNetworkState({
         id: data?.id,
         orgId: data?.orgId,
+        unitId: data?.unitId,
         name: data?.name || '',
         attachment: '',
         excelAttachment: '',
@@ -123,6 +130,19 @@ const BlazorNetworkInputs = (prop) => {
       setNetworkState(getInitialNetworkData(organizationId, user, networkId));
     }
   }, [networkSettingsData]);
+
+  useEffect(() => {
+    if (networkState?.purchasedQouta && !isNaN(Number(networkState?.purchasedQouta))) {
+      // valid purchasedQouta number
+
+      setNetworkState((prev) => ({
+        ...prev,
+        price:
+          networkState?.purchasedQouta *
+          ((findNetworkPrice?.unitPrice || 1) - (findNetworkPrice?.discount || 0)),
+      }));
+    }
+  }, [networkState?.purchasedQouta, findNetworkPrice]);
 
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
 
@@ -211,6 +231,10 @@ const BlazorNetworkInputs = (prop) => {
 
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
+  };
+
+  const showPackageDetail = () => {
+    setShowPackageDetails((prev) => !prev);
   };
 
   const showIntegrationfn = () => {
@@ -447,6 +471,12 @@ const BlazorNetworkInputs = (prop) => {
   };
   return (
     <React.Fragment>
+      <PaymentModel
+        isOpen={isPaymentOpen}
+        toggle={togglePaymentMdl}
+        amount={parseFloat(networkState.price)}
+        onSubmit={onSubmit}
+      />
       {networkSettingsLoading ? (
         <Spinner />
       ) : (
@@ -573,28 +603,42 @@ const BlazorNetworkInputs = (prop) => {
             />
             {showIntegration && (
               <>
-                <Inputs inputFields={networkInputFields} isBtn={false}></Inputs>
-                {/* <CRow>
-                  <CCol md={6}>
-                    <label className="form-label fw-bold">Post Types</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                      {globalutil.postTypes().map((pt) => (
-                        <div key={pt.id} style={{ minWidth: '110px' }}>
-                          <CFormCheck
-                            type="checkbox"
-                            id={`postType_${pt.id}`}
-                            label={pt.name.charAt(0).toUpperCase() + pt.name.slice(1).toLowerCase()}
-                            name="posttypejson"
-                            value={pt.id}
-                            checked={networkState.posttypejson?.includes(pt.id) || false}
-                            onChange={handleNetworkSetting}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </CCol>
-                </CRow> */}
+                <Inputs
+                  inputFields={networkInputFields?.filter(
+                    (f) =>
+                      f?.label !== 'Unit' &&
+                      f?.label !== 'Quota' &&
+                      f?.label !== 'Date From' &&
+                      f?.label !== 'Price' &&
+                      f?.label !== 'Discount' &&
+                      f?.label !== 'Date To',
+                  )}
+                  isBtn={false}
+                ></Inputs>
               </>
+            )}
+          </AppContainer>
+
+          <AppContainer>
+            <DataGridHeader
+              title="Package Detail"
+              onClick={showPackageDetail}
+              otherControls={[{ icon: cilChevronBottom, fn: showPackageDetail }]}
+              filterDisable={true}
+            />
+            {showPackageDetails && (
+              <Inputs
+                inputFields={networkInputFields?.filter(
+                  (f) =>
+                    f?.label === 'Unit' ||
+                    f?.label === 'Quota' ||
+                    f?.label === 'Price' ||
+                    f?.label === 'Discount' ||
+                    f?.label === 'Date From' ||
+                    f?.label === 'Date To',
+                )}
+                isBtn={false}
+              ></Inputs>
             )}
           </AppContainer>
           <div className="CenterAlign pt-2 gap-4">
@@ -610,7 +654,23 @@ const BlazorNetworkInputs = (prop) => {
             <Button title="Save" onClick={onSave} disabled={loading} type="submit" />
             <Button
               title="Submit"
-              onClick={onSubmit}
+              onClick={() => {
+                if (parseInt(networkState?.purchasedQouta || '0') > 0) {
+                  if (networkList.length === 0) {
+                    dispatch(
+                      updateToast({
+                        isToastOpen: true,
+                        toastMessage: 'Save atleast one netrwork settings to submit.',
+                        toastVariant: 'error',
+                      }),
+                    );
+                    return;
+                  }
+                  togglePaymentMdl();
+                } else {
+                  onSubmit();
+                }
+              }}
               loading={loading}
               loadingTitle="Submitting..."
             />

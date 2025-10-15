@@ -4162,6 +4162,9 @@ fieldset.legend {
   margin: auto; /* center horizontally */
 }
 
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
 .email-send-modal .modal-content {
   margin: auto; /* center content */
 }

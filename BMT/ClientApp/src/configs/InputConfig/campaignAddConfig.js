@@ -2,20 +2,10 @@
 // userFormConfig.js
 import dayjs from 'dayjs';
 
-import {
-  cilUser,
-  cilEnvelopeClosed,
-  cilScreenSmartphone,
-  cilFlagAlt,
-  cilInfo,
-  cilCalendar,
-} from '@coreui/icons';
+import { cilCalendar, cilEnvelopeClosed, cilUser } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import ImagePicker from 'src/components/UI/ImagePicker';
-import globalutil from 'src/util/globalutil';
 
 export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, TermsModal) => [
   {
@@ -31,7 +21,6 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     className: 'form-control item',
     isRequired: true,
     maxLength: 20,
-    // pattern: '.*[A-Z].*',
     message: 'Enter Title',
     autoFocus: true,
   },
@@ -47,8 +36,6 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     placeholder: '#tag',
     className: 'form-control item',
     isRequired: false,
-    // maxLength: 10,
-    // pattern: '.*[A-Z].*',
     message: 'Enter #Tag',
   },
   {
@@ -97,7 +84,15 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     isRequired: false,
     accept: 'application/pdf',
   },
-
+  {
+    component: CFormCheck,
+    label: 'Generate Auto Leads',
+    checked: campaignRegData.autoGenerateLeads,
+    onChange: handleCampaignAddForm,
+    id: 'autoGenerateLeads',
+    name: 'autoGenerateLeads',
+    className: 'item mt-5',
+  },
   {
     component: CustomDatePicker,
     label: 'Campaign Start Date',
@@ -113,15 +108,6 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     disablePast: true, // 👈 allow past dates here
   },
   {
-    component: CFormCheck,
-    label: 'Generate Auto Leads',
-    checked: campaignRegData.autoGenerateLeads,
-    onChange: handleCampaignAddForm,
-    id: 'autoGenerateLeads',
-    name: 'autoGenerateLeads',
-    className: 'item mt-4',
-  },
-  {
     component: CustomDatePicker,
     label: 'Campaign End Date',
     value: campaignRegData.finishTime,
@@ -133,6 +119,19 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     isRequired: false,
     minDate: dayjs(campaignRegData.startTime),
     disablePast: true, // 👈 allow past dates here
+  },
+  {
+    component: 'RadioGroup',
+    label: 'Status',
+    name: 'status',
+    value: campaignRegData.status,
+    options: [
+      { label: 'Active', value: 1 },
+      { label: 'Paused', value: 2 },
+      { label: 'Cancel', value: 3 },
+    ],
+    onChange: handleCampaignAddForm,
+    className: 'item mt-3',
   },
 ];
 export const getInitialCampaignData = (user) => {

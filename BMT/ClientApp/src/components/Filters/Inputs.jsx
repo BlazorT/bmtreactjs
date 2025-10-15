@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
+import { CCol, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 import React from 'react';
-import { CCol, CFormCheck, CRow } from '@coreui/react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import Button from '../InputsComponent/Button';
 
 const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle = 'Submit' }) => {
   const showConfirmation = useShowConfirmation();
+
   const confirmationModal = () => {
     showConfirmation({
       header: 'Confirmation!',
@@ -18,13 +19,12 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle 
         }),
     });
   };
+
   const getColWidth = (inputName) => {
     const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo', 'networkId'];
     const smallWidthFields = [
-      /*'primaryContact',*/
       'isWhatsAppAsso',
       'isWhatsappAsso',
-      /*'contact',*/
       'hasValidDrivingLicense',
       'autoReplyContent',
       'autoReplyAllowed',
@@ -45,22 +45,57 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle 
     <React.Fragment>
       <CRow>
         {inputFields.map((input, index) => {
-          const FieldComponent = input.component;
-          const conditionalProps = Object.fromEntries(
-            Object.entries(input).filter(([key, value]) => Boolean(value)),
-          );
           const colWidth = input?.className?.includes('small-3')
             ? 3
             : getColWidth(input.name, input.component);
 
+          // 🟩 1️⃣ Handle RadioGroup type specially
+          {
+            /* 🟩 1️⃣ Handle RadioGroup type specially */
+          }
+          if (input.component === 'RadioGroup') {
+            return (
+              <CCol key={index} xl={colWidth}>
+                <CFormLabel className="labelName">{input.label}</CFormLabel>
+                <div className="d-flex">
+                  {input.options.map((opt) => {
+                    const radioId = `${input.name}-${opt.value}`; // ✅ unique id
+                    return (
+                      <CFormCheck
+                        key={opt.value}
+                        type="radio"
+                        name={input.name}
+                        id={radioId}
+                        value={opt.value}
+                        label={opt.label}
+                        inline
+                        checked={input.value === opt.value}
+                        onChange={input.onChange}
+                        className="me-3 d-flex"
+                      />
+                    );
+                  })}
+                </div>
+              </CCol>
+            );
+          }
+
+          // 🟩 2️⃣ Default behavior for all other components
+          const FieldComponent = input.component;
+          const conditionalProps = Object.fromEntries(
+            Object.entries(input).filter(([key, value]) => Boolean(value)),
+          );
+
           return (
-            <CCol key={index} xl={colWidth} className="">
+            <CCol key={index} xl={colWidth}>
               <FieldComponent {...conditionalProps} />
             </CCol>
           );
         })}
       </CRow>
+
       {children}
+
       {isBtn !== false && (
         <CRow className="CenterAlign gap-3">
           <Button title="Cancel" onClick={confirmationModal} />

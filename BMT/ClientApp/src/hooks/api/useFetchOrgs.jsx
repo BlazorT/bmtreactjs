@@ -10,7 +10,6 @@ export const useFetchOrgs = () => {
 
   const showToast = useShowToast();
   const { fetchData: fetchDsps } = useFetch();
-  console.log({ user });
   const getOrgs = async (filters) => {
     const orgBody = {
       id: user?.roleId === 1 ? 0 : user?.orgId,
@@ -34,14 +33,14 @@ export const useFetchOrgs = () => {
       lastUpdatedBy: 0,
     };
 
-    console.log(orgBody, 'orgBody');
+    // console.log(orgBody, 'orgBody');
     // Wrap the fetchUsers call in a Promise
     return new Promise((resolve, reject) => {
       fetchDsps(
         '/BlazorApi/orgsfulldata',
         { method: 'POST', body: JSON.stringify(orgBody) },
         (res) => {
-          console.log(res);
+          // console.log(res);
           if (res.status) {
             resolve(res.data);
           } else if (res.status === 400) {
