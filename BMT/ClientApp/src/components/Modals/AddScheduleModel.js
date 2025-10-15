@@ -36,6 +36,7 @@ const AddScheduleModel = (prop) => {
     makeOrder,
     paymentRef,
     data,
+    pricingData,
     campaignRegData: submitData,
   } = prop;
 
@@ -84,17 +85,30 @@ const AddScheduleModel = (prop) => {
         ? Math.max(1, Math.ceil((finishTime.valueOf() - startTime.valueOf()) / (1000 * 60 * 60)))
         : 1;
 
-    // ✅ combine all factors
-    const scheduleCount = networkCount * (dayCount || 1) * dateDiff * hoursDiff;
-    const gTotal = scheduleCount * 10;
-    const gTotalMess = scheduleCount * 100;
-    // console.log(scheduleJson);
-    // Sum all schedule budgets
-    const totalCampBudget = scheduleJson.reduce((acc, curr) => acc + (curr.Budget || 0), 0);
+    // ✅ total number of schedule repetitions
+    const scheduleCount = (dayCount || 1) * dateDiff * hoursDiff;
+
+    // ✅ sum total of selected networks' prices from pricingData
+    const totalNetworkPrice = networks?.reduce((sum, network) => {
+      const networkId = globalutil
+        .networks()
+        .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
+      const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
+      return sum + (matchedPricing?.unitPrice || 0);
+    }, 0);
+    // ✅ calculate total schedule budget using the summed prices
+    const totalScheduleBudget = totalNetworkPrice * scheduleCount;
+
+    // ✅ optionally calculate total messages (example multiplier)
+    const totalScheduleMessages = scheduleCount * 100;
+
+    // ✅ if you have multiple schedule budgets to sum
+    const totalCampBudget = scheduleJson?.reduce((acc, curr) => acc + (curr.Budget || 0), 0) || 0;
+
     setBudgetData({
-      TotalCampBudget: totalCampBudget,
-      TotalSchBudget: gTotal,
-      TotalSchMessages: gTotalMess,
+      TotalCampBudget: parseFloat(totalCampBudget?.toFixed(2)),
+      TotalSchBudget: parseFloat(totalScheduleBudget?.toFixed(2)),
+      TotalSchMessages: totalScheduleMessages,
     });
   };
 

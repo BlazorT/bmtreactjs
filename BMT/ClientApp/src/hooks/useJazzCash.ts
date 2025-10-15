@@ -32,7 +32,7 @@ export function useJazzCash(
 
   const [loadingJC, setLoadingJC] = useState<boolean>(false);
 
-  const triggerJazzCashPayment = async (amount?: string, ref?: string) => {
+  const triggerJazzCashPayment = async (amount?: string) => {
     try {
       setLoadingJC(true);
       const JAZZ_MERCHANT_ID = gateway?.merchantAccountId;

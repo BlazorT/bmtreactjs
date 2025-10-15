@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -66,7 +66,9 @@ const BlazorNetworkInputs = (prop) => {
     loading: networkSettingsLoading,
   } = useApi('/Organization/orgpackagedetails', 'POST', networkSettingBody);
 
-  const findNetworkPrice = pricingData?.find((pd) => pd?.networkId === networkId);
+  const findNetworkPrice = pricingData?.find(
+    (pd) => pd?.networkId === networkId && networkState?.unitId == pd?.unitId,
+  );
 
   useEffect(() => {
     if (networkSettingsData?.data && networkSettingsData.data.length > 0) {
@@ -132,16 +134,15 @@ const BlazorNetworkInputs = (prop) => {
   }, [networkSettingsData]);
 
   useEffect(() => {
-    if (networkState?.purchasedQouta && !isNaN(Number(networkState?.purchasedQouta))) {
-      // valid purchasedQouta number
-
-      setNetworkState((prev) => ({
-        ...prev,
-        price:
-          networkState?.purchasedQouta *
-          ((findNetworkPrice?.unitPrice || 1) - (findNetworkPrice?.discount || 0)),
-      }));
-    }
+    // valid purchasedQouta number
+    // console.log({ findNetworkPrice });
+    setNetworkState((prev) => ({
+      ...prev,
+      price: (
+        parseFloat(networkState?.purchasedQouta || '0') *
+        ((findNetworkPrice?.unitPrice || 1) - (findNetworkPrice?.discount || 0))
+      )?.toFixed(2),
+    }));
   }, [networkState?.purchasedQouta, findNetworkPrice]);
 
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
@@ -306,6 +307,11 @@ const BlazorNetworkInputs = (prop) => {
       return;
     }
 
+    if (parseInt(networkState?.price) > 0 && !networkState?.unitId) {
+      showToast('Select unit first to purchase quota', 'error');
+      return;
+    }
+
     const updatedState = { ...networkState };
 
     // Append networkId to file names (if files exist)
@@ -364,6 +370,8 @@ const BlazorNetworkInputs = (prop) => {
         status: nl?.status ? 1 : 0,
         smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
         virtualAccount: nl?.virtualAccount ? 1 : 0,
+        unitId: nl?.unitId ? parseInt(nl?.unitId) : 0,
+        purchasedQouta: nl?.purchasedQouta ? parseInt(nl?.purchasedQouta) : 0,
         Custom1: JSON.stringify({
           template: nl?.Custom1,
           subject: nl?.templateSubject,
@@ -377,20 +385,7 @@ const BlazorNetworkInputs = (prop) => {
         await refetchNetworkSettings(networkSettingBody);
         // setNetworkState((prev) => ({ ...prev, id: res?.id }));
 
-        setNetworkList((prev) => {
-          const updatedState = { ...networkState, id: res?.data };
-          const index = prev.findIndex((n) => n.networkId === updatedState.networkId);
-
-          if (index !== -1) {
-            // Replace existing
-            const newList = [...prev];
-            newList[index] = updatedState;
-            return newList;
-          }
-
-          // Otherwise add new
-          return [...prev, updatedState];
-        });
+        setNetworkList([]);
         showToast(res?.message, 'success');
         const GlobalPreferenceId = res?.data;
         const userId = user.userId;
@@ -469,12 +464,127 @@ const BlazorNetworkInputs = (prop) => {
 
     setshowFilters(true);
   };
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const amount = searchParams.get('amount');
+    const orderRefNumber = searchParams.get('orderRefNumber');
+    const message = searchParams.get('message');
+    const transactionRefNumber = searchParams.get('transactionRefNumber');
+
+    const pp_TxnType = searchParams.get('pp_TxnType') || '';
+    const pp_Amount = searchParams.get('pp_Amount') || '';
+    const pp_BillReference = searchParams.get('pp_BillReference') || '';
+    const pp_ResponseCode = searchParams.get('pp_ResponseCode') || '';
+    const pp_RetreivalReferenceNo = searchParams.get('pp_RetreivalReferenceNo') || '';
+    const pp_SubMerchantID = searchParams.get('pp_SubMerchantID') || '';
+    const pp_TxnCurrency = searchParams.get('pp_TxnCurrency') || '';
+    const pp_TxnDateTime = searchParams.get('pp_TxnDateTime') || '';
+    const pp_TxnRefNo = searchParams.get('pp_TxnRefNo') || '';
+    const pp_MobileNumber = searchParams.get('pp_MobileNumber') || '';
+    const pp_CNIC = searchParams.get('pp_CNIC') || '';
+    const pp_SecureHash = searchParams.get('pp_SecureHash') || '';
+    const pp_ResponseMessage = searchParams.get('pp_ResponseMessage') || '';
+
+    const filteredResponse = {
+      pp_TxnType,
+      pp_Amount,
+      pp_BillReference,
+      pp_ResponseCode,
+      pp_RetreivalReferenceNo,
+      pp_SubMerchantID,
+      pp_TxnCurrency,
+      pp_TxnDateTime,
+      pp_TxnRefNo,
+      pp_MobileNumber,
+      pp_CNIC,
+      pp_SecureHash,
+    };
+
+    // console.log({ pp_ResponseMessage });
+    setTimeout(() => {
+      if (amount || orderRefNumber || message) {
+        console.log({ amount, orderRefNumber, message });
+        if (window.opener) {
+          if (pp_ResponseCode) {
+            console.log({ filteredResponse });
+
+            window.opener.postMessage(
+              {
+                status: pp_ResponseCode === '000' ? 'failed' : 'success',
+                txnRef: orderRefNumber,
+                message: pp_ResponseMessage ?? 'Payment failed. Please try again.',
+                data: btoa(JSON.stringify(filteredResponse)),
+              },
+              '*',
+            );
+            window.close();
+          } else {
+            const data = {
+              orderRefNumber,
+              message,
+              amount,
+              transactionRefNumber,
+            };
+            console.log({ data });
+
+            window.opener.postMessage(
+              {
+                status: message ? 'failed' : 'success',
+                txnRef: orderRefNumber,
+                message: message ?? '',
+                data: btoa(JSON.stringify(data)),
+              },
+              '*',
+            );
+            window.close();
+          }
+          // Optional: Close popup after a delay
+        }
+
+        // Remove query params from URL
+      }
+    }, 1000);
+  }, [searchParams, pathname]);
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Optional: check event.origin for security
+      // console.log("Received message from popup:", event.data);
+      // console.log({ event });
+      // Validate the structure
+      if (event.data?.status) {
+        const { message, data, status } = event.data;
+        console.log('status:', status);
+        console.log('Message:', message);
+        console.log('Raw Data:', data);
+        console.log('Parsed data', JSON.parse(atob(data)));
+        if (status === 'failed') {
+          showToast(message, 'error');
+        } else {
+          onSubmit();
+        }
+
+        // TODO: handle this data in your app (e.g., update state, redirect, etc.)
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  const totalPrice = networkList?.reduce((total, item) => total + (item.price || 0), 0);
+
   return (
     <React.Fragment>
       <PaymentModel
         isOpen={isPaymentOpen}
         toggle={togglePaymentMdl}
-        amount={parseFloat(networkState.price)}
+        amount={parseFloat(totalPrice)}
         onSubmit={onSubmit}
       />
       {networkSettingsLoading ? (
