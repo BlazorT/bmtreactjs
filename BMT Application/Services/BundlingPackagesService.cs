@@ -7,6 +7,7 @@ using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.core.interfaces;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.application.model;
+using com.blazor.bmt.core;
 
 namespace com.blazor.bmt.application.services
 {
@@ -57,7 +58,8 @@ namespace com.blazor.bmt.application.services
             if (edit == null)
                 throw new ApplicationException($"Entity could not be loaded.");
 
-            _mapper.Map<BundlingpackagedetailModel>(model);
+            _mapper.Map<BundlingpackagedetailViewModel, Bundlingpackagedetail>(model, edit);
+            //_mapper.Map<BundlingpackagedetailModel>(model);
 
             await _BundlingPackageRepository.UpdateAsync(edit );
             _logger.LogInformation($"Entity successfully updated - BundlingPackageService");
