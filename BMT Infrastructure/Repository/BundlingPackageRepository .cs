@@ -43,11 +43,20 @@ namespace com.blazor.bmt.infrastructure.repositories
             //var spec = new UsersWithRoleSpecification(name);
             //return await GetAsync(spec);
             return await _dbContext.Bundlingpackagedetails.AsNoTracking()
-               .Where(x => x.NetworkId== networkId)
+               .Where(x => x.NetworkId== (networkId==0? x.NetworkId: networkId) && x.Status==1)
                 .ToListAsync();
 
         }
-       
+        public async Task<IEnumerable<Bundlingpackagedetail>> GetBundlingPackageAllFiltersAsync(int networkId, int status=0)
+        {
+            //var spec = new UsersWithRoleSpecification(name);
+            //return await GetAsync(spec);
+            return await _dbContext.Bundlingpackagedetails.AsNoTracking()
+               .Where(x => x.NetworkId == (networkId == 0 ? x.NetworkId : networkId) && x.Status == (status==0? x.Status: status))
+                .ToListAsync();
+
+        }
+
 
     }
 }

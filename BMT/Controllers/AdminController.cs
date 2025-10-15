@@ -223,6 +223,32 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse); 
         }
 
+        [HttpGet("bundlingdetails")]
+        [HttpPost("bundlingdetails")]
+        [Route("bundlingdetails")]
+        public async Task<ActionResult> GetBundlingDetails([FromBody] WebApiFilters filters)
+        {
+            // if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+               
+                blazorApiResponse.data = await _BundlingPackageService.GetBundlingPackageAllFiltersAsync(Convert.ToInt32(filters.id), Convert.ToInt32(filters.status));
+                blazorApiResponse.status = true;
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                // _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
+
+
         [HttpPost("updatenetworsbulk")]
         [Route("updatenetworsbulk")]
         public async Task<ActionResult> UpdateNetworksBulk([FromBody] List<networkidvalues> mdls)
