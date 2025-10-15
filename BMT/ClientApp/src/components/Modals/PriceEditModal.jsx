@@ -67,19 +67,38 @@ const PricingModal = ({
       return;
     }
 
+    if (parseFloat(pricingData?.discount) > parseFloat(pricingData?.unitPrice)) {
+      showToast('Discount can not be greater then price', 'warning');
+      return;
+    }
+
     const submissionData = {
-      ...pricingData,
-      ...networkData,
-      startTime: dayjs().utc(networkData?.startTime).format(),
       id: parseInt(networkData?.id?.split('-')[0]),
+      startTime: dayjs().utc(networkData?.startTime).format(),
+      name: '',
       unitId: parseInt(pricingData?.unitId || '0'),
       unitName:
         globalutil.campaignunits()?.find((u) => u.id === parseInt(pricingData?.unitId))?.name || '',
       unitPrice: Number(pricingData.unitPrice),
       discount: pricingData.discount ? Number(pricingData.discount) : 0,
-      freeQuota: pricingData.freeQuota ? Number(pricingData.freeQuota) : 0,
+      freeAllowed: pricingData.freeQuota ? Number(pricingData.freeQuota) : 0,
       lastUpdatedAt: dayjs().utc().format(),
       lastUpdatedBy: user?.userId || 1,
+      networkId: networkData?.networkId,
+      tax: networkData?.tax || 0,
+      purchasedQouta: networkData?.purchasedQouta || 0,
+      usedQuota: networkData?.usedQuota || 0,
+      autoReplyAllowed: networkData?.autoReplyAllowed || 0,
+      hashTags: networkData?.hashTags || '',
+      currentApplied: networkData?.currentApplied || 1,
+      virtualAccount: networkData?.virtualAccount || 1,
+      bundlingAllowed: networkData?.bundlingAllowed || 1,
+      createdBy: networkData?.createdBy || user?.userId,
+      createdAt: networkData?.createdAt || dayjs().utc().format(),
+      finishTime: dayjs().utc(networkData?.finishTime).format(),
+      approvalTime: networkData?.approvalTime,
+      status: 1,
+      rowVer: 1,
     };
     console.log({ submissionData });
     console.log({ submissionData: JSON.stringify(submissionData) });
@@ -89,11 +108,11 @@ const PricingModal = ({
       if (res?.status) {
         getPricing();
         showToast(res?.message, 'success');
+        handleClose();
       } else {
         showToast(res?.message || 'Error updating pricing, try again later', 'error');
       }
     }
-    handleClose();
   };
 
   const handleClose = () => {
@@ -129,7 +148,7 @@ const PricingModal = ({
       isRequired: true,
       disableOption: 'Select Unit',
       message: errors.unitId || 'Please select a unit',
-      disabled: loading,
+      disabled: pricingData.unitId,
     },
     {
       component: CustomInput,
@@ -203,30 +222,30 @@ const PricingModal = ({
           <Inputs inputFields={inputFields} isBtn={false} />
 
           {/* {pricingData.unitPrice && (
-          <div className="mt-3 p-3 bg-light rounded">
-            <h6 className="mb-2">Price Summary</h6>
-            <div className="d-flex justify-content-between">
-              <span>Unit Price:</span>
-              <span className="fw-bold">${Number(pricingData.unitPrice).toFixed(2)}</span>
-            </div>
-            {pricingData.discount && (
-              <div className="d-flex justify-content-between text-danger">
-                <span>Discount:</span>
-                <span>-${Number(pricingData.discount).toFixed(2)}</span>
+            <div className="mt-3 p-3 bg-light rounded">
+              <h6 className="mb-2">Price Summary</h6>
+              <div className="d-flex justify-content-between">
+                <span>Unit Price:</span>
+                <span className="fw-bold">${Number(pricingData.unitPrice).toFixed(2)}</span>
               </div>
-            )}
-            <hr />
-            <div className="d-flex justify-content-between">
-              <span className="fw-bold">Final Price:</span>
-              <span className="fw-bold text-success">${calculateFinalPrice().toFixed(2)}</span>
-            </div>
-            {pricingData.freeQuota && (
-              <div className="mt-2 text-muted">
-                <small>Free Quota: {pricingData.freeQuota} units</small>
+              {pricingData.discount && (
+                <div className="d-flex justify-content-between text-danger">
+                  <span>Discount:</span>
+                  <span>-${Number(pricingData.discount).toFixed(2)}</span>
+                </div>
+              )}
+              <hr />
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold">Final Price:</span>
+                <span className="fw-bold text-success">${calculateFinalPrice().toFixed(2)}</span>
               </div>
-            )}
-          </div>
-        )} */}
+              {pricingData.freeQuota && (
+                <div className="mt-2 text-muted">
+                  <small>Free Quota: {pricingData.freeQuota} units</small>
+                </div>
+              )}
+            </div>
+          )} */}
         </CModalBody>
 
         <CModalFooter>
