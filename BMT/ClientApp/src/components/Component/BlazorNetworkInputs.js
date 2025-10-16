@@ -18,14 +18,14 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import Inputs from '../Filters/Inputs';
+import PaymentModel from '../Modals/PaymentModel';
+import SendTestEmailModel from '../Modals/SendTestEmailModel';
+import TemplateListModel from '../Modals/TemplateListModel';
 import Button from '../UI/Button';
 import Form from '../UI/Form';
 import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
 import EmailTextEditor from '../UI/email-editor';
-import TemplateListModel from '../Modals/TemplateListModel';
-import SendTestEmailModel from '../Modals/SendTestEmailModel';
-import PaymentModel from '../Modals/PaymentModel';
 
 dayjs.extend(utc);
 
@@ -66,9 +66,7 @@ const BlazorNetworkInputs = (prop) => {
     loading: networkSettingsLoading,
   } = useApi('/Organization/orgpackagedetails', 'POST', networkSettingBody);
 
-  const findNetworkPrice = pricingData?.find(
-    (pd) => pd?.networkId === networkId && networkState?.unitId == pd?.unitId,
-  );
+  // console.log(globalutil.campaignunits());
 
   useEffect(() => {
     if (networkSettingsData?.data && networkSettingsData.data.length > 0) {
@@ -84,11 +82,38 @@ const BlazorNetworkInputs = (prop) => {
           templateData = {};
         }
       }
+      // --- Compute packageId based on time range ---
+      const start = dayjs(data?.startTime).utc();
+      const finish = dayjs(data?.finishTime).utc();
 
+      let packageId = 9; // default = No Of Messages (if no valid range)
+      if (data?.finishTime && start.isValid() && finish.isValid()) {
+        const diffDays = finish.diff(start, 'day');
+        const diffWeeks = finish.diff(start, 'week');
+        const diffMonths = finish.diff(start, 'month');
+        const diffYears = finish.diff(start, 'year');
+
+        if (diffDays === 1)
+          packageId = 1; // Day
+        else if (diffWeeks === 1)
+          packageId = 2; // Week
+        else if (diffMonths === 1)
+          packageId = 3; // Month
+        else if (diffMonths === 3)
+          packageId = 4; // 3 Month
+        else if (diffMonths === 6)
+          packageId = 5; // 6 Month
+        else if (diffYears === 1)
+          packageId = 6; // Year
+        else if (diffYears === 2)
+          packageId = 7; // 2 Year
+        else if (diffYears === 3) packageId = 8; // 3 Year
+      }
       setNetworkState({
         id: data?.id,
         orgId: data?.orgId,
-        unitId: data?.unitId,
+        unitId: data?.unitId || 1,
+        packageId,
         name: data?.name || '',
         attachment: '',
         excelAttachment: '',
@@ -133,17 +158,69 @@ const BlazorNetworkInputs = (prop) => {
     }
   }, [networkSettingsData]);
 
+  const findNetworkPrice = pricingData?.find(
+    (pd) => pd?.networkId === networkId && networkState?.unitId == pd?.unitId,
+  );
+
   useEffect(() => {
     // valid purchasedQouta number
     // console.log({ findNetworkPrice });
+    setTimeout(() => {
+      setNetworkState((prev) => ({
+        ...prev,
+        price: (
+          parseFloat(networkState?.purchasedQouta || '0') *
+          ((findNetworkPrice?.unitPrice || 1) - (findNetworkPrice?.discount || 0))
+        )?.toFixed(2),
+      }));
+    }, 1000);
+  }, [networkState?.purchasedQouta, findNetworkPrice]);
+
+  dayjs.extend(utc);
+
+  useEffect(() => {
+    if (!networkState?.packageId) return;
+
+    const start = dayjs().utc().startOf('day'); // start from today UTC
+    let finish;
+
+    switch (parseInt(networkState.packageId)) {
+      case 1: // Day
+        console.log('hi');
+        finish = start.add(1, 'day');
+        break;
+      case 2: // Week
+        finish = start.add(1, 'week');
+        break;
+      case 3: // Month
+        finish = start.add(1, 'month');
+        break;
+      case 4: // 3 Month
+        finish = start.add(3, 'month');
+        break;
+      case 5: // 6 Month
+        finish = start.add(6, 'month');
+        break;
+      case 6: // Year
+        finish = start.add(1, 'year');
+        break;
+      case 7: // 2 Year
+        finish = start.add(2, 'year');
+        break;
+      case 8: // 3 Year
+        finish = start.add(3, 'year');
+        break;
+      case 9: // No Of Messages — no time restriction
+        break;
+      default:
+        finish = start;
+    }
     setNetworkState((prev) => ({
       ...prev,
-      price: (
-        parseFloat(networkState?.purchasedQouta || '0') *
-        ((findNetworkPrice?.unitPrice || 1) - (findNetworkPrice?.discount || 0))
-      )?.toFixed(2),
+      startTime: start.format(), // e.g. "2025-10-16T00:00:00Z"
+      finishTime: finish ? finish.format() : null, // e.g. "2025-10-23T00:00:00Z"
     }));
-  }, [networkState?.purchasedQouta, findNetworkPrice]);
+  }, [networkState?.packageId]);
 
   const foundSavedId = networkList?.find((n) => n?.networkId === networkId);
 
@@ -721,6 +798,7 @@ const BlazorNetworkInputs = (prop) => {
                       f?.label !== 'Date From' &&
                       f?.label !== 'Price' &&
                       f?.label !== 'Discount' &&
+                      f?.label !== 'Package' &&
                       f?.label !== 'Date To',
                   )}
                   isBtn={false}
@@ -744,6 +822,7 @@ const BlazorNetworkInputs = (prop) => {
                     f?.label === 'Quota' ||
                     f?.label === 'Price' ||
                     f?.label === 'Discount' ||
+                    f?.label === 'Package' ||
                     f?.label === 'Date From' ||
                     f?.label === 'Date To',
                 )}
