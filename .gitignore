@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /.vscodeBMT/wwwroot/productimages/*.mp4
 BMT/wwwroot/productimages/*.mp4
+BMT/ClientApp/public/productimages/*.mp4
