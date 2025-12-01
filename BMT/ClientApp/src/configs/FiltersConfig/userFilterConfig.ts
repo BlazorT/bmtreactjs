@@ -35,7 +35,7 @@ export const getUsersFiltersFields = (
     id: 'status',
     name: 'status',
     disableOption: 'Select Status',
-    options: globalutil.statuses(),
+    options: globalutil.statuses()?.filter((status: any) => status.id !== 5 && status.id !== 4),
     className: 'form-control item form-select',
     title: 'user status',
   },

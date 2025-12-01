@@ -30,7 +30,7 @@ function SignIn() {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user?.isAuthenticated) navigate(-1);
+    if (user?.isAuthenticated) navigate('/Dashboard');
   }, [user]);
 
   const {

@@ -17,7 +17,7 @@ const UsersActionCell = (prop) => {
   const { loading, updateStatus } = useToggleUserStatus();
 
   const [userStatus, setUserStatus] = React.useState(params.row.status);
-  console.log(params.row);
+
   const editUser = (id) => {
     navigate('/UserRegister', { state: { id: id, user: user } });
   };
@@ -55,12 +55,12 @@ const UsersActionCell = (prop) => {
         <Spinner />
       ) : (
         <CRow>
-          {userStatus === 6 ? (
+          {userStatus == 2 ? (
             <CCol className="d-flex justify-content-center">
               <div className="d-flex align-items-center justify-content-center gap-4">
                 <CTooltip content="Re-Activate User">
                   <CIcon
-                    onClick={() => toggleStatus(5)}
+                    onClick={() => toggleStatus(1)}
                     className="stock-toggle-icon"
                     icon={cilReload}
                     style={{ cursor: 'pointer' }}
@@ -80,11 +80,11 @@ const UsersActionCell = (prop) => {
                   />
                 </CTooltip>
 
-                {canDelete === 1 && (
+                {canDelete == 1 && (
                   <CTooltip content="Delete User">
                     <CIcon
                       className="stock-toggle-icon IconColorRed"
-                      onClick={() => toggleStatus(4)}
+                      onClick={() => toggleStatus(2)}
                       icon={cilTrash}
                       style={{ cursor: 'pointer' }}
                     />
@@ -96,7 +96,6 @@ const UsersActionCell = (prop) => {
         </CRow>
       )}
     </>
-
   );
 };
 export default UsersActionCell;

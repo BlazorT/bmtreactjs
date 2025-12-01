@@ -38,7 +38,7 @@ const Users: React.FC = () => {
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
     createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
   });
-  console.log("filters", filters);
+  console.log('filters', filters);
 
   const [showFilters, setshowFilters] = useState(false);
   const [showUserGrid, setshowUserGrid] = useState(true);
@@ -64,7 +64,7 @@ const Users: React.FC = () => {
     const usersList = await fetchUsers(0, filter);
     console.log(usersList);
     setUsersData(usersList);
-    formatApiDataAsRows(usersList.filter((data: { roleId: number }) => data.roleId !== 3));
+    formatApiDataAsRows(usersList);
   };
 
   const formatApiDataAsRows = (apiData: any[]) => {

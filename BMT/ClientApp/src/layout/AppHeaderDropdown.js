@@ -7,7 +7,13 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from '@coreui/react';
-import { cilLockLocked, cilChevronBottom, cilUser, cilAccountLogout } from '@coreui/icons';
+import {
+  cilLockLocked,
+  cilChevronBottom,
+  cilUser,
+  cilAccountLogout,
+  cilUserX,
+} from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +25,20 @@ import UserProfileModal from '../components/Modals/UserProfileModal';
 import useFetch from 'src/hooks/useFetch';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
 import { keysToKeep } from './AppHeader';
+import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import Spinner from 'src/components/UI/Spinner';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { faMonument } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const showConfirmation = useShowConfirmation();
+  const showToast = useShowToast();
+
+  const { loading, updateStatus } = useToggleUserStatus();
 
   const user = useSelector((state) => state.user);
 
@@ -100,8 +116,75 @@ const AppHeaderDropdown = () => {
       }),
     );
   };
+
+  const toggleStatus = () => {
+    showConfirmation({
+      header: 'Confirmation!',
+      body: `Are you sure you want to unsubscribe ${user?.userInfo?.fullName}?`,
+      isOpen: true,
+      onYes: () => onYesToggle(2),
+      onNo: () => onNoConfirm(),
+    });
+  };
+
+  const onYesToggle = async (status) => {
+    showConfirmation({
+      body: (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status"></div>
+        </div>
+      ),
+    });
+    const body = {
+      id: user?.userInfo?.id,
+      email: user?.userInfo?.email,
+      roleId: user?.userInfo?.roleId,
+      firstName: user?.userInfo?.firstName || user?.userInfo?.fullName?.split(' ')[0] || '',
+      lastName: user?.userInfo?.lastName || user?.userInfo?.fullName?.split(' ')[1] || '',
+      status: 2,
+      rowVer: user?.userInfo?.rowVer, // MUST match DB rowVer
+      lastUpdatedBy: user?.userInfo?.id,
+      UserCode: '',
+      GenderId: 0,
+      CreatedAt: dayjs().utc().format(),
+    };
+    const response = await updateStatus(null, status, body);
+    console.log(response);
+    if (response.status) {
+      showToast(`${user?.userInfo?.fullName} has been unsubscribe successfully`);
+      await userLogout('/Common/logout', { method: 'POST' });
+      if (logoutRes.current?.status === true) {
+        navigate('/');
+        dispatch(setNavItems([]));
+        dispatch(
+          setUserData({
+            userId: '',
+            dspId: '',
+            roleId: '',
+            userInfo: {},
+            isAuthenticated: false,
+          }),
+        );
+
+        Object.keys(localStorage).forEach((key) => {
+          if (!keysToKeep.includes(key)) {
+            localStorage.removeItem(key);
+          }
+        });
+        onNo();
+      }
+    } else {
+      showToast(response.message, 'error');
+    }
+    onNoConfirm();
+  };
+
+  const onNoConfirm = () => {
+    showConfirmation({ isOpen: false });
+  };
   return (
     <CDropdown variant="nav-item">
+      {loading && <Spinner />}
       <CDropdownItem className="text-center UserNameNav">{user.userInfo.fullName}</CDropdownItem>
       <CDropdownToggle className="py-0 text-center labelName RoleNameIconNav" caret={false}>
         {user.userInfo.userRole}
@@ -117,6 +200,14 @@ const AppHeaderDropdown = () => {
           Profile
         </CDropdownItem>
         {/* <CDropdownDivider /> */}
+        <CDropdownItem
+          className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
+          role="button"
+          onClick={toggleStatus}
+        >
+          <CIcon icon={cilUserX} className="me-2 " />
+          Unsubscribe
+        </CDropdownItem>
         <CDropdownItem
           className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
           role="button"

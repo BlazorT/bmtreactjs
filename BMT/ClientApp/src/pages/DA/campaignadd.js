@@ -30,22 +30,25 @@ import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import { availableInterests, icons } from 'src/constants/constants';
 import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
+import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
+import globalutil from 'src/util/globalutil';
 
 const campaignadd = () => {
   // let state;
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [campaignRegData, setCampaignRegData] = useState(getInitialCampaignData(user));
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
-  const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const dispatch = useDispatch();
 
   const { getOrgs } = useFetchOrgs();
+  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
 
   const [interestSearch, setInterestSearch] = useState('');
   const [networksList, setNetworksList] = useState([]);
@@ -63,9 +66,10 @@ const campaignadd = () => {
   const [selectedTemplates, setSelectedTemplates] = useState({}); // { networkName: [postTypeId, ...] }
   const [orgsList, setOrgsList] = useState([]);
 
-  const { data: pricingRes, fetchPricing } = useFetchPricing();
+  const { data: pricingRes, fetchPricing, loading: pricingLoading } = useFetchPricing();
 
   const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
+  const recipients = useMemo(() => data?.data || [], [data]);
 
   const tabs = [
     { id: 0, name: 'Campaign' },
@@ -86,6 +90,7 @@ const campaignadd = () => {
     getNetworksList();
     fetchOrgs();
     fetchPricing();
+    fetchRecipientList();
   }, []);
 
   useEffect(() => {
@@ -97,6 +102,20 @@ const campaignadd = () => {
       }
     }
   }, [orgsList, user]);
+
+  const fetchRecipientList = async () => {
+    const body = {
+      id: 0,
+      orgId: user?.orgId,
+      rowVer: 1,
+      networkId: 0,
+      contentId: '',
+      status: 1,
+      createdAt: dayjs().utc().subtract(10, 'year').format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
+    };
+    await getRecipientList(body);
+  };
 
   const fetchOrgs = async () => {
     const orgData = await getOrgs();
@@ -338,7 +357,15 @@ const campaignadd = () => {
   const schedulecolumns = [
     { key: 'interval', flex: 1, name: 'Interval', width: 100 },
     { key: 'budget', flex: 1, name: 'Budget', minWidth: 130 },
-    { key: 'NetworkId', flex: 1, name: 'Network', minWidth: 150 },
+    {
+      key: 'NetworkId',
+      flex: 1,
+      name: 'Network',
+      minWidth: 150,
+      renderCell: (params) => (
+        <p>{globalutil.networks()?.find((n) => n?.id == params.row?.NetworkId)?.name || '-'}</p>
+      ),
+    },
     { key: 'days', flex: 1, name: 'Days', minWidth: 250 },
     { key: 'startTime', flex: 1, name: 'Start Time', minWidth: 150 },
     { key: 'finishTime', flex: 1, name: 'End Time', minWidth: 130 },
@@ -351,10 +378,6 @@ const campaignadd = () => {
       ),
     },
   ];
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   const handleCheckboxChange = (networkName) => {
     setSelectedNetworks((prevSelected) => {
@@ -531,6 +554,9 @@ const campaignadd = () => {
 
   // console.log({ campaignRegData });
 
+  if (loading || pricingLoading) {
+    return <Loading />;
+  }
   // console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
@@ -731,36 +757,30 @@ const campaignadd = () => {
       {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (
         <React.Fragment>
           <AppContainer>
-            <React.Fragment>
-              <AppContainer>
-                <React.Fragment>
-                  <DataGridHeader
-                    addButton="Schedule"
-                    addBtnClick={AddScheduleClick}
-                    title="Schedules"
-                    filterDisable
+            <DataGridHeader
+              addButton="Schedule"
+              addBtnClick={AddScheduleClick}
+              title="Schedules"
+              filterDisable
+            />
+            <div className="show-stock">
+              <div className="row">
+                <div className="col-md-12 col-xl-12">
+                  <CustomDatagrid
+                    rows={schedulerows}
+                    columns={schedulecolumns}
+                    rowHeight={55}
+                    pagination={true}
+                    summary={[
+                      {
+                        field: 'budget',
+                        aggregates: [{ aggregate: 'sum', caption: 'Total Budget' }],
+                      },
+                    ]}
                   />
-                  <div className="show-stock">
-                    <div className="row">
-                      <div className="col-md-12 col-xl-12">
-                        <CustomDatagrid
-                          rows={schedulerows}
-                          columns={schedulecolumns}
-                          rowHeight={55}
-                          pagination={true}
-                          summary={[
-                            {
-                              field: 'budget',
-                              aggregates: [{ aggregate: 'sum', caption: 'Total Budget' }],
-                            },
-                          ]}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </React.Fragment>
-              </AppContainer>
-            </React.Fragment>
+                </div>
+              </div>
+            </div>
           </AppContainer>
         </React.Fragment>
       )}
@@ -786,6 +806,7 @@ const campaignadd = () => {
         makeOrder={makeOrder}
         paymentRef={paymentRef}
         pricingData={pricingData}
+        recipients={recipients}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

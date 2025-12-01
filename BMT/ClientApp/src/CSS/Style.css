@@ -3770,7 +3770,8 @@ input[type='number']::-webkit-outer-spin-button {
   /* padding: 20px;*/
   /* width: 400px;*/
   /* font-family: courier;*/
-  box-shadow: 0 0px 10px 0px !important;
+  box-shadow: 0 0px 6px 0px !important;
+  border-radius: 6px;
 }
 
 fieldset.legend {

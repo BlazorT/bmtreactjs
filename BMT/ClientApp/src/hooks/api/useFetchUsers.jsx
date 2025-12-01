@@ -30,7 +30,7 @@ export const useFetchUsers = () => {
       securityToken: '',
       registrationTime: dayjs().utc().format(),
       cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      status: filters ? (filters.status === '' ? 0 : parseInt(filters.status)) : 0,
       userName: filters ? filters.UserName : '',
       createdAt: filters
         ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
