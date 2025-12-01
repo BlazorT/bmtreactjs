@@ -16,22 +16,22 @@ import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import Form from 'src/components/UI/Form';
 // Hooks and Helpers
-import useFetch from 'src/hooks/useFetch';
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
+import useFetch from 'src/hooks/useFetch';
 //import { setUserData } from 'src/redux/user/userSlice';
-import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
-import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { updateToast } from 'src/redux/toast/toastSlice';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
+import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
+import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import useEmailVerification from 'src/hooks/useEmailVerification';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
+import { updateToast } from 'src/redux/toast/toastSlice';
 //import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
+import Loading from 'src/components/UI/Loading';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
-import globalutil from 'src/util/globalutil';
 
 const UserRegister = () => {
   dayjs.extend(utc);
@@ -43,7 +43,7 @@ const UserRegister = () => {
   // Hooks and Helper Functions
   const { data, error, loading, checkEmailValidation } = useEmailVerification();
   const { getOrgs } = useFetchOrgs();
-  const { createUpdateUser } = useUpdateUser();
+  const { createUpdateUser, loading: userLoading } = useUpdateUser();
   const { loading: avatarLoading, uploadAvatar } = useUploadAvatar();
   const { checkUserAvailability } = useUserAvailability();
   const showConfirmation = useShowConfirmation();
@@ -299,82 +299,84 @@ const UserRegister = () => {
 
   return (
     <React.Fragment>
-      {/*{isLoading ? (*/}
-      {/*  <Loading />*/}
-      {/*) : (*/}
-      <AppContainer>
-        <DataGridHeader
-          title="Advance Information"
-          onClick={toggleForm}
-          otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
-          filterDisable={true}
-        />
-        <Form name="da-user-form">
-          {showForm && (
-            <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser}>
-              <CRow className="w-50 align-self-center mt-2 mb-3">
-                <CCol md="6">
-                  <CForm>
-                    <CFormLabel className="labelName" htmlFor="gender-radio-group">
-                      Gender
-                    </CFormLabel>
-                    <div className="d-flex">
-                      <CFormCheck
-                        type="radio"
-                        id="male"
-                        name="genderId"
-                        value={0}
-                        inline
-                        label="Male"
-                        checked={UserData?.genderId?.toString() === '0'}
-                        onChange={handleUserInput}
-                        className="me-3 d-flex"
-                      />
-                      <CFormCheck
-                        type="radio"
-                        id="female"
-                        name="genderId"
-                        inline
-                        value={1}
-                        label="Female"
-                        checked={UserData?.genderId?.toString() === '1'}
-                        onChange={handleUserInput}
-                        className="d-flex"
-                      />
-                    </div>
-                  </CForm>
-                </CCol>
-              </CRow>
-              <CFormCheck
-                name="isTermsAccepted"
-                checked={UserData.isTermsAccepted}
-                onChange={handleUserInput}
-                className="d-flex flex-row justify-content-center"
-                id="isTermsAccepted"
-                required
-                label={
-                  <span>
-                    By providing this info, you agree to our terms & conditions, read our{' '}
-                    <strong className="lblTerms" onClick={TermsModal}>
-                      Terms & Conditions (EULA)
-                    </strong>
-                  </span>
-                }
-              />
-            </Inputs>
-          )}
-        </Form>
-        <EmailBrandNewModal
-          isOpen={modalOpen}
-          toggle={toggleModal}
-          isThisBrandnew={isThisBrandnew}
-          IsThisBrandNewClick={IsThisBrandNewClick}
-          associatedWithAmazonNo={associatedWithAmazonNo}
-          associatedWithAmazon={associatedWithAmazon}
-        />
-        <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
-      </AppContainer>
-      {/* )}*/}
+      {userLoading || avatarLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <AppContainer>
+            <DataGridHeader
+              title="Advance Information"
+              onClick={toggleForm}
+              otherControls={[{ icon: cilChevronBottom, fn: toggleForm }]}
+              filterDisable={true}
+            />
+            <Form name="da-user-form">
+              {showForm && (
+                <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser}>
+                  <CRow className="w-50 align-self-center mt-2 mb-3">
+                    <CCol md="6">
+                      <CForm>
+                        <CFormLabel className="labelName" htmlFor="gender-radio-group">
+                          Gender
+                        </CFormLabel>
+                        <div className="d-flex">
+                          <CFormCheck
+                            type="radio"
+                            id="male"
+                            name="genderId"
+                            value={0}
+                            inline
+                            label="Male"
+                            checked={UserData?.genderId?.toString() === '0'}
+                            onChange={handleUserInput}
+                            className="me-3 d-flex"
+                          />
+                          <CFormCheck
+                            type="radio"
+                            id="female"
+                            name="genderId"
+                            inline
+                            value={1}
+                            label="Female"
+                            checked={UserData?.genderId?.toString() === '1'}
+                            onChange={handleUserInput}
+                            className="d-flex"
+                          />
+                        </div>
+                      </CForm>
+                    </CCol>
+                  </CRow>
+                  <CFormCheck
+                    name="isTermsAccepted"
+                    checked={UserData.isTermsAccepted}
+                    onChange={handleUserInput}
+                    className="d-flex flex-row justify-content-center"
+                    id="isTermsAccepted"
+                    required
+                    label={
+                      <span>
+                        By providing this info, you agree to our terms & conditions, read our{' '}
+                        <strong className="lblTerms" onClick={TermsModal}>
+                          Terms & Conditions (EULA)
+                        </strong>
+                      </span>
+                    }
+                  />
+                </Inputs>
+              )}
+            </Form>
+            <EmailBrandNewModal
+              isOpen={modalOpen}
+              toggle={toggleModal}
+              isThisBrandnew={isThisBrandnew}
+              IsThisBrandNewClick={IsThisBrandNewClick}
+              associatedWithAmazonNo={associatedWithAmazonNo}
+              associatedWithAmazon={associatedWithAmazon}
+            />
+            <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
+          </AppContainer>
+        </>
+      )}
     </React.Fragment>
   );
 };

@@ -13,11 +13,14 @@ import Button from './Button';
 const ImagePicker = (prop) => {
   dayjs.extend(utc);
   const { image, onChange } = prop;
+
   const [selectedImage, setSelectedImage] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const [logoAvatar, setLogoAvatar] = useState();
   const [previewImage, setPreviewImage] = useState([]);
+  const [userHasSelected, setUserHasSelected] = useState(false);
+
   const user = useSelector((state) => state.user);
   const {
     response: createImageRes,
@@ -77,11 +80,15 @@ const ImagePicker = (prop) => {
     /* clearFormData();*/
   };
   //};
-  useEffect(() => {
-    setSelectedImage(image);
-  }, []);
-
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    // Only update from prop if user hasn't selected a file yet
+    // AND if the prop is a valid image URL/data URL (not a File object)
+    if (image && !userHasSelected && typeof image === 'string') {
+      setSelectedImage(image);
+    }
+  }, [image, userHasSelected]);
 
   const handleImageChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
@@ -91,11 +98,9 @@ const ImagePicker = (prop) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        //setSelectedImage(e.target.value);
-
         setSelectedImage(reader.result);
-        onChange(file.name);
-        //
+        setUserHasSelected(true); // Mark that user has selected
+        onChange(file.name); // Pass the entire file object
       };
       reader.readAsDataURL(file);
     }
