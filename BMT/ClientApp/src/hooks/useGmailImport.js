@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 // src/hooks/useGmailImport.js
 import { useState, useEffect, useCallback } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
@@ -144,6 +145,91 @@ export const useGmailImport = () => {
     return Array.from(map.values());
   };
 
+  const fetchAllEmails = async (token, onProgress) => {
+    return new Promise(async (resolve, reject) => {
+      let allEmails = [];
+      let pageToken = null;
+      let totalFetched = 0;
+
+      try {
+        do {
+          // Step 1: List messages (lightweight)
+          const listResponse = await axios.get(
+            'https://gmail.googleapis.com/gmail/v1/users/me/messages',
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              params: {
+                maxResults: 500, // Max allowed per page
+                pageToken: pageToken,
+                // Optional: filter with q= 'label:inbox' or 'from:someone@example.com'
+                // q: 'in:inbox',
+              },
+            },
+          );
+
+          const messages = listResponse.data.messages || [];
+          const batchSize = messages.length;
+
+          if (batchSize === 0) break;
+
+          // Step 2: Batch fetch message details (only headers we need)
+          const messageDetails = await Promise.all(
+            messages.map(
+              (msg) =>
+                axios
+                  .get(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: {
+                      format: 'metadata',
+                      metadataHeaders: ['From', 'To', 'Subject', 'Date'],
+                    },
+                  })
+                  .catch(() => null), // silently skip failed ones
+            ),
+          );
+
+          // Extract useful data
+          const formatted = messageDetails.filter(Boolean).map((detail) => {
+            const headers = detail.data.payload.headers;
+            const getHeader = (name) => headers.find((h) => h.name === name)?.value || '';
+
+            return {
+              id: detail.data.id,
+              threadId: detail.data.threadId,
+              from: getHeader('From'),
+              to: getHeader('To'),
+              subject: getHeader('Subject'),
+              date: getHeader('Date'),
+              snippet: detail.data.snippet,
+              labelIds: detail.data.labelIds || [],
+            };
+          });
+
+          allEmails.push(...formatted);
+          totalFetched += batchSize;
+          pageToken = listResponse.data.nextPageToken;
+
+          // Optional: report progress
+          if (onProgress) {
+            onProgress({
+              fetched: totalFetched,
+              emails: allEmails,
+              hasMore: !!pageToken,
+            });
+          }
+
+          // Respect rate limits – small delay
+          await new Promise((r) => setTimeout(r, 100)); // 100ms delay
+        } while (pageToken);
+
+        resolve(allEmails);
+      } catch (error) {
+        console.error('Error fetching all emails:', error);
+        reject(error);
+      }
+    });
+  };
+
   const fetchAllData = async (token) => {
     if (!token) return;
     setLoading(true);
@@ -174,44 +260,9 @@ export const useGmailImport = () => {
       }));
 
       // 3. Emails – safe batching
-      let allEmails = [];
-      let pageToken = null;
-      let fetched = 0;
-      const MAX = 100;
-
-      do {
-        const res = await axios.get('https://gmail.googleapis.com/gmail/v1/users/me/messages', {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { maxResults: 50, pageToken },
-        });
-
-        const batch = (res.data.messages || []).slice(0, 10);
-        const details = await Promise.all(
-          batch.map(async (msg) => {
-            try {
-              const d = await axios.get(
-                `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}`,
-                {
-                  headers: { Authorization: `Bearer ${token}` },
-                  params: { format: 'metadata', metadataHeaders: ['From', 'Subject', 'Date'] },
-                },
-              );
-              const h = d.data.payload.headers;
-              return {
-                from: h.find((x) => x.name === 'From')?.value || '',
-                subject: h.find((x) => x.name === 'Subject')?.value || '',
-                date: h.find((x) => x.name === 'Date')?.value || '',
-              };
-            } catch {
-              return null;
-            }
-          }),
-        );
-
-        allEmails.push(...details.filter(Boolean));
-        pageToken = res.data.nextPageToken;
-        fetched += batch.length;
-      } while (pageToken && fetched < MAX);
+      const allEmails = await fetchAllEmails(token, (progress) => {
+        console.log(`Fetched ${progress.fetched} emails so far...`);
+      });
 
       const merged = mergeData(contacts, allEmails);
       setCombinedData(merged);

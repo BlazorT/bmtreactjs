@@ -3416,9 +3416,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
     center right 0rem;
   width: 8%;
 }
-.legend {
-  /*  color: #ef2525;*/
-}
+
 .table-light {
   --cui-table-color: rgb(241 243 247 / 95%) !important;
   --cui-table-bg: #ebedef;
