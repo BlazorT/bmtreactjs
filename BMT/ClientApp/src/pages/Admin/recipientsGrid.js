@@ -1,36 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import useFetch from 'src/hooks/useFetch';
-import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import Loading from 'src/components/UI/Loading';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
+import MailOptionsModal from 'src/components/MailImports/MailOptionsModal';
+import AppContainer from 'src/components/UI/AppContainer';
 import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
-import { updateToast } from 'src/redux/toast/toastSlice';
+import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
 import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
-import AppContainer from 'src/components/UI/AppContainer';
+import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
+
 const recipientslisting = () => {
   dayjs.extend(utc);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const {
+    postData: getOrgs,
+    loading: orgsLoading,
+    data: orgsData,
+  } = useApi('/BlazorApi/orgsfulldata');
 
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Recipients',
   );
   const orgId = user.orgId;
   const Role = user.roleId;
-  const navigate = useNavigate();
+
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
-  const [recipientsData, setRecipientsData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
+  const [isShowImportOptions, setIsShowImportOptions] = useState(false);
+  const [rows, setRows] = useState([]);
+  const [fullRecipientsData, setFullRecipientsData] = useState([]);
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
@@ -43,17 +50,36 @@ const recipientslisting = () => {
   });
 
   useEffect(() => {
+    fetchFullRecipients();
     getRecipientsList(filters);
+    getOrganizationLst();
   }, []);
 
-  const [rows, setRows] = useState([]);
-  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const fetchFullRecipients = async () => {
+    const body = {
+      id: 0,
+      orgId: user.orgId,
+      contentId: '',
+      rowVer: 0,
+      networkId: 0,
+      status: 0,
+      createdAt: dayjs().subtract(5, 'year').startOf('year').format(),
+      lastUpdatedAt: dayjs().utc().endOf('day').format(),
+    };
+
+    const fullList = await getRecipientList(body);
+    setFullRecipientsData(fullList);
+  };
+
   const getRecipientsList = async (filters) => {
-    console.log(filters, 'filtersfilters');
     const recipientsList = await getRecipientList(filters);
-    console.log({ recipientsList });
-    setRecipientsData(recipientsList);
-    const networks = globalutil.networks(); // assuming it returns an array of { id, name }
+
+    // If this is the first load (no filters applied yet)
+    if (fullRecipientsData.length === 0) {
+      setFullRecipientsData(recipientsList); // <-- store full list once
+    }
+
+    const networks = globalutil.networks();
 
     const mappedArray = recipientsList.map((data) => {
       const network = networks.find((n) => n.id === data.networkId);
@@ -61,19 +87,17 @@ const recipientslisting = () => {
       return {
         id: data.id,
         contentId: data.contentId,
-        networkId: network ? network.name : '', // <-- show name instead of ID
+        networkId: network ? network.name : '',
         orgName: data.orgName,
         status: data.status,
         createdAt: formatDateTime(data.createdAt),
       };
     });
 
-    // console.log(mappedArray, 'recipients data');
     setRows(mappedArray);
   };
-  console.log('filters', filters);
+
   const changeFilter = (event, key, label) => {
-    console.log({ event, key, label });
     // Handle date filters
     if (key === 'createdAt' || key === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
@@ -113,8 +137,9 @@ const recipientslisting = () => {
     setshowDaGrid((prev) => !prev);
   };
 
+  const toggleIsShowImportOptions = () => setIsShowImportOptions((prev) => !prev);
+
   const handleReset = () => {
-    getRecipientsList();
     setFilters({
       id: 0,
       orgId: user.orgId,
@@ -124,73 +149,41 @@ const recipientslisting = () => {
       createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
+    getRecipientsList({
+      id: 0,
+      orgId: user.orgId,
+      contentId: '',
+      rowVer: 0,
+      networkId: 0,
+      status: 0,
+      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      lastUpdatedAt: dayjs().utc().startOf('day').format(),
+    });
   };
-  const {
-    response: GetOrgRes,
-    loading: OrgLoading,
-    error: GetOrgError,
-    fetchData: GetOrg,
-  } = useFetch();
-  useEffect(() => {
-    getOrganizationLst(filters);
-  }, []);
-  const getOrganizationLst = async (compaign) => {
+
+  const getOrganizationLst = async () => {
     const recipientsBody = {
       id: 0,
-      roleId: compaign,
+      roleId: 0,
       orgId: 0,
       email: '',
       name: '',
       contact: '',
       rowVer: 0,
-      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      cityId: 0,
+      status: 0,
       // keyword: filters ? filters.keyword : '',
-      createdAt: filters
-        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
-      lastUpdatedAt: filters
-        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format('YYYY-MM-DD'),
+      createdAt: dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
       createdBy: 0,
       lastUpdatedBy: 0,
-      ...filters,
     };
-    await GetOrg(
-      '/BlazorApi/orgsfulldata',
-      { method: 'POST', body: JSON.stringify(recipientsBody) },
-      (res) => {
-        console.log(res, 'orgs');
-        if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  //id: data.id,
-          //  //userId: data.userId,
-          //  //dspid: user.dspId.toString(),
-          //  //logDesc: data.logDesc,
-          //  //entityName: data.entityName,
-          //  //menuId: data.menuId,
-          //  //machineIp: data.machineIp,
-          //  //actionType: data.actionType,
-          //  //logTime: formatDateTime(data.logTime),
-          //}));
-          // setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          /*   setRows([]);*/
-        }
-        setIsLoading(OrgLoading.current);
-      },
-    );
+    await getOrgs(recipientsBody);
   };
+
   useEffect(() => {
-    if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data;
+    if (orgsData?.data?.length > 0) {
+      const orgData = orgsData?.data;
       const findUserOrg = orgData?.find((item) => item.id === orgId);
       // console.log(findUserOrg, 'findUserOrg')
       if (findUserOrg)
@@ -199,73 +192,89 @@ const recipientslisting = () => {
           name: findUserOrg,
         }));
     }
-  }, [GetOrgRes?.current?.data, orgId]);
+  }, [orgsData?.data, orgId]);
+
   const orgFilterFields = getRecipientsFilterConfig(
     filters,
     changeFilter,
-    GetOrgRes?.current?.data || [],
+    orgsData?.data || [],
     Role,
   );
-  const recipientslistingCols = getrecipietslistingCols(
-    getRecipientsList,
-    recipientsData,
-    pageRoles,
-  );
 
-  if (loading) {
-    return <Loading />;
-  }
+  const getBothLists = () => {
+    fetchFullRecipients();
+    getRecipientsList({
+      id: 0,
+      orgId: user.orgId,
+      contentId: '',
+      rowVer: 0,
+      networkId: 0,
+      status: 0,
+      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      lastUpdatedAt: dayjs().utc().startOf('day').format(),
+    });
+  };
+  const recipientslistingCols = getrecipietslistingCols();
+
+  // console.log({ fullRecipientsData });
   return (
     <React.Fragment>
-      {data && (
-        <React.Fragment>
-          <AppContainer>
-            <DataGridHeader
-              title="Recipients Grid -> Advance Search (Organization, Network, Recipients, Date(>=))"
-              onClick={toggleFilters}
-              otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
-              filterDisable={true}
-            />
+      <MailOptionsModal
+        isOpen={isShowImportOptions}
+        toggle={toggleIsShowImportOptions}
+        recipientsList={fullRecipientsData}
+        getRecipientList={getBothLists}
+      />
+      <React.Fragment>
+        <AppContainer>
+          <DataGridHeader
+            title="Recipients Grid -> Advance Search (Organization, Network, Recipients, Date(>=))"
+            onClick={toggleFilters}
+            otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
+            filterDisable={true}
+          />
 
-            {showFilters && (
-              <CustomFilters
-                filters={filters}
-                changeFilter={changeFilter}
-                fetching={getRecipientsList}
-                handleReset={handleReset}
-                filterFields={orgFilterFields}
-              />
-            )}
-          </AppContainer>
-          <AppContainer>
-            <DataGridHeader
-              title="Recipients List"
-              onClick={toggleGrid}
-              addButton={'Recipients'}
-              addBtnClick={() => navigate('/campaignContacts')}
-              otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
-              filterDisable={true}
+          {showFilters && (
+            <CustomFilters
+              filters={filters}
+              changeFilter={changeFilter}
+              fetching={getRecipientsList}
+              handleReset={handleReset}
+              filterFields={orgFilterFields}
             />
-            {showDaGrid && (
-              <CustomDatagrid
-                rows={rows}
-                columns={recipientslistingCols}
-                rowHeight={50}
-                pagination={true}
-                // loading={rows.length < 1 ? true : false}
-                sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
-                hiddenCols={{
-                  columnVisibilityModel: {
-                    lastUpdatedAt: false,
-                  },
-                }}
-                //  canExport={pageRoles.canExport}
-                // canPrint={pageRoles.canPrint}
-              />
-            )}
-          </AppContainer>
-        </React.Fragment>
-      )}
+          )}
+        </AppContainer>
+        <AppContainer>
+          <DataGridHeader
+            title="Recipients List"
+            onClick={toggleGrid}
+            addSecButton={'Recipients'}
+            addSecBtnClick={() => navigate('/campaignContacts')}
+            addButton="Import From Gmail | Outlook"
+            addBtnClick={toggleIsShowImportOptions}
+            otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
+            filterDisable={true}
+          />
+          {showDaGrid && (
+            <CustomDatagrid
+              rows={rows}
+              columns={recipientslistingCols}
+              rowHeight={50}
+              pagination={true}
+              loading={loading || orgsLoading}
+              // loading={rows.length < 1 ? true : false}
+              sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+              hiddenCols={{
+                columnVisibilityModel: {
+                  lastUpdatedAt: false,
+                },
+              }}
+              //  canExport={pageRoles.canExport}
+              // canPrint={pageRoles.canPrint}
+            />
+          )}
+        </AppContainer>
+      </React.Fragment>
     </React.Fragment>
   );
 };

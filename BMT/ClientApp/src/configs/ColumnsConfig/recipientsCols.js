@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import RecipientsActionCell from 'src/components/DataGridCustomCells/RecipientsActionCell';
 
-export const getrecipietslistingCols = (getDasList, daRes, pageRoles) => [
+export const getrecipietslistingCols = () => [
   {
     key: 'networkId',
     name: 'Network Name',

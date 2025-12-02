@@ -42,6 +42,7 @@ interface CustomDatagridProps {
   footer?: React.ReactNode;
   cellBorder?: boolean;
   isZeroMargin?: boolean;
+  pageSizeOptions?: number[];
   headerProps?: {
     title?: string;
     addButton?: string;
@@ -90,6 +91,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
+  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
   // Filter rows based on search term
   const filteredRows = useMemo(() => {
@@ -127,10 +129,10 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   const paginatedRows = useMemo(() => {
     if (!pagination) return sortedRows;
 
-    const start = currentPage * pageSize;
-    const end = start + pageSize;
+    const start = currentPage * currentPageSize;
+    const end = start + currentPageSize;
     return sortedRows.slice(start, end);
-  }, [sortedRows, pagination, currentPage, pageSize]);
+  }, [sortedRows, pagination, currentPage, currentPageSize]);
 
   // Add row selection column if needed
   const finalColumns = useMemo(() => {
@@ -162,6 +164,10 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
     if (row.inventoryOf === 2) {
       classNames += ' vehicle-da-inventory';
+    }
+
+    if (row.disabled === true) {
+      classNames += ' disabled-row-red';
     }
 
     return classNames;
@@ -349,8 +355,10 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
               selectedRows={selectedRows}
               onSelectedRowsChange={onSelectedRowsChange}
               rowClass={getRowClassName}
+              rowKeyGetter={(row) => row?.content}
               className="rdg-dark"
               rowHeight={rowHeight}
+              isRowSelectionDisabled={(row) => row?.disabled === true}
               renderers={{
                 noRowsFallback: <NoRowsOverlay />,
               }}

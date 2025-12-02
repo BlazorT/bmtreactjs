@@ -371,6 +371,9 @@ p {
 .bg-dark-color {
   background-color: #0a1a2c !important;
 }
+.bg-overlay {
+  background-color: #102c484f !important;
+}
 .text-dull-color {
   color: #dbdac2 !important;
 }
@@ -2276,6 +2279,9 @@ input-bill-qty {
   /* position:unset !important;*/
 }
 @media (max-width: 550px) {
+  .import-modal-dialog {
+    width: 100% !important;
+  }
   .circular-image {
     width: 2em;
     height: 2em;
@@ -4192,4 +4198,53 @@ fieldset.legend {
 }
 .section {
   background-color: #303c54 !important;
+}
+.btn-close {
+  position: absolute;
+  top: 7px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 40px;
+  font-weight: bold;
+  color: white !important; /* white cross */
+  cursor: pointer;
+  line-height: 1;
+  opacity: 1 !important;
+  background-color: transparent !important;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-close::before {
+  content: '×'; /* Cross symbol */
+}
+
+.btn-close:hover {
+  color: #ff4d4d; /* Light red hover */
+  /*    transform: scale(1.1);
+*/
+  border: none;
+  background-color: transparent !important;
+}
+.hover-scale {
+  cursor: pointer;
+}
+.hover-scale:hover {
+  transform: translateY(-6px) scale(1.07);
+}
+.drop-shadow {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.spinner-border {
+  animation: spin 1s linear infinite;
 }
