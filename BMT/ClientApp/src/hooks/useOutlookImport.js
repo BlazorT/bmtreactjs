@@ -11,7 +11,7 @@ const msalConfig = {
   auth: {
     // eslint-disable-next-line no-undef
     clientId: process.env.REACT_APP_AZURE_CLIENT_ID, // Replace with your Azure App Client ID
-    authority: 'https://login.microsoftonline.com/common',
+    authority: 'https://login.microsoftonline.com/consumers',
     redirectUri: window.location.origin,
   },
   cache: {

@@ -573,6 +573,7 @@ section .air.air4 {
   color: white !important;
   border: none !important;
 }
+
 .calender-header-select:focus {
   border: none !important;
   box-shadow: none !important;
@@ -4258,4 +4259,7 @@ fieldset.legend {
 }
 .spinner-border {
   animation: spin 1s linear infinite;
+}
+.header-btn {
+  height: auto !important;
 }

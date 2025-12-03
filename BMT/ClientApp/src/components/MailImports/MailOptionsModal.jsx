@@ -7,6 +7,7 @@ import { useOutlookImport } from 'src/hooks/useOutlookImport';
 import { useShowToast } from 'src/hooks/useShowToast';
 import SpinnerOverlay from '../UI/SpinnerOverlay';
 import ImportContactsGrid from './ImportContactsGrid';
+import Button from '../UI/Button';
 
 const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipientList }) => {
   const showToast = useShowToast();
@@ -17,6 +18,7 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
     isSignedIn: isGoogleSignedIn,
     login: googleLogin,
     refetch: refetchGmailData,
+    logout: googleLogout,
   } = useGmailImport();
 
   const {
@@ -26,6 +28,7 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
     isSignedIn: isMicrosoftSignedIn,
     login: microsoftLogin,
     refetch: refetchOutlookData,
+    logout: microsoftLogout,
   } = useOutlookImport();
 
   const [selectedOption, setSelectedOption] = useState(null);
@@ -45,7 +48,6 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
 
   useEffect(() => {
     if (error) {
-      setSelectedOption(null);
       showToast(error || 'Something went wrong, try again later!', 'error');
     }
   }, [error]);
@@ -81,6 +83,22 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
           : selectedOption === 1
             ? 'Gmail Contacts'
             : 'Outlook Contacts'}
+
+        {((isGoogleSignedIn && selectedOption === 1) ||
+          (isMicrosoftSignedIn && selectedOption === 2)) &&
+          !loading && (
+            <Button
+              title="Un-Link Account"
+              className="w-auto p-0 header-btn px-2 ms-2"
+              onClick={
+                selectedOption === 1
+                  ? googleLogout
+                  : selectedOption === 2
+                    ? microsoftLogout
+                    : undefined
+              }
+            />
+          )}
       </ModalHeader>
       <ModalBody className="py-3">
         {data?.length > 0 && !loading && selectedOption && (
