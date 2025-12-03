@@ -196,6 +196,9 @@ p {
   color: #ffffff !important;
   border-bottom: 1px solid #ffffff !important;
 }
+.react-datepicker__header {
+  padding: 0px !important;
+}
 
 .react-datepicker__header--time {
   background: #0c355f !important;
@@ -564,6 +567,16 @@ section .air.air4 {
 }
 .signin-btn {
   background: #1b486d !important;
+}
+.calender-header-select {
+  background: #1b486d !important;
+  color: white !important;
+  border: none !important;
+}
+.calender-header-select:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 button[type='button'] {
   /* background-color: #ccc;

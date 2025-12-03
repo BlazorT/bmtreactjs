@@ -24,7 +24,6 @@ const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
 const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
-const Print = React.lazy(() => import('./components/ModalWindow/PrintInvoice'));
 
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
@@ -50,7 +49,6 @@ export const routes = [
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
-  { path: '/print', name: 'Print', element: Print },
   { path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },

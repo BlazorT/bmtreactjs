@@ -4,12 +4,10 @@ import '../src/CSS/Style.css';
 import '../src/CSS/Form.css';
 import React, { Suspense } from 'react';
 
-import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
-/*import Blazorhub from './Blazorhub';*/
-import { CToast, CToastBody, CToastClose } from '@coreui/react';
 import ToastNotification from './layout/ToastNotification';
 import OrganizationAdd from './pages/DA/organizationadd';
 import ConfirmationModal from './components/Modals/ConfirmationModal';
@@ -72,7 +70,6 @@ const App = () => {
               element={<ForgotPassword />}
             />
             <Route exact path="*" element={isAuthenticated ? <DefaultLayout /> : <Page401 />} />
-            {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
           </Routes>
         </Suspense>
       </BrowserRouter>

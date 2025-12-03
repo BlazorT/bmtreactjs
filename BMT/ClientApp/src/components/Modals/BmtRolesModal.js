@@ -12,16 +12,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import useFetch from 'src/hooks/useFetch';
 import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
 import { transformData } from 'src/navItem';
+dayjs.extend(utc);
 
 const BmtRolesModal = (prop) => {
-  dayjs.extend(utc);
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const { isOpen, toggle, roleId, rolesData, header, canUpdate } = prop;
-  console.log({ rolesData });
-  console.log({ user });
-  const { showSnackbar, showConfirmation } = useNotification();
 
+  const user = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+  const { showToast: showSnackbar, showConfirmation } = useNotification();
   const { loading, postData: postRoles } = useApi('/Common/submitgrouprights');
 
   const {
@@ -233,7 +232,7 @@ const BmtRolesModal = (prop) => {
             <LoadingBtn title="Submitting" />
           ) : (
             <React.Fragment>
-                <Button className="mr10" title="Cancel" onClick={onCancel} />
+              <Button className="mr10" title="Cancel" onClick={onCancel} />
               {canUpdate === 1 && <Button title="Save" onClick={onSave} />}
             </React.Fragment>
           )}

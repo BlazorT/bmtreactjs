@@ -1,16 +1,47 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { useGmailImport } from 'src/hooks/useGmailImport';
-import SpinnerOverlay from '../UI/SpinnerOverlay';
+import { useOutlookImport } from 'src/hooks/useOutlookImport';
 import { useShowToast } from 'src/hooks/useShowToast';
+import SpinnerOverlay from '../UI/SpinnerOverlay';
 import ImportContactsGrid from './ImportContactsGrid';
 
 const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipientList }) => {
   const showToast = useShowToast();
-  const { data, profile, loading, error, isSignedIn, login, refetch, logout } = useGmailImport();
+  const {
+    data: gmailData,
+    loading: gmailDataLoading,
+    error: gmailError,
+    isSignedIn: isGoogleSignedIn,
+    login: googleLogin,
+    refetch: refetchGmailData,
+  } = useGmailImport();
+
+  const {
+    data: outlookData,
+    loading: outlookDataLoading,
+    error: outlookError,
+    isSignedIn: isMicrosoftSignedIn,
+    login: microsoftLogin,
+    refetch: refetchOutlookData,
+  } = useOutlookImport();
 
   const [selectedOption, setSelectedOption] = useState(null);
+
+  const loading = useMemo(
+    () => gmailDataLoading || outlookDataLoading,
+    [gmailDataLoading, outlookDataLoading],
+  );
+  const data = useMemo(
+    () => (selectedOption === 1 ? gmailData : selectedOption === 2 ? outlookData : []),
+    [gmailData, selectedOption, outlookData],
+  );
+  const error = useMemo(
+    () => (selectedOption === 1 ? gmailError : selectedOption === 2 ? outlookError : null),
+    [gmailError, selectedOption, outlookError],
+  );
 
   useEffect(() => {
     if (error) {
@@ -26,16 +57,24 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
 
   const onGmailClick = () => {
     setSelectedOption(1);
-    if (isSignedIn) refetch();
-    else login();
+    if (isGoogleSignedIn) refetchGmailData();
+    else googleLogin();
   };
 
   const onOutlookClick = () => {
-    showToast('Not available right now', 'info');
-    // setSelectedOption(2);
+    setSelectedOption(2);
+    if (isMicrosoftSignedIn) refetchOutlookData();
+    else microsoftLogin();
   };
+
   return (
-    <Modal isOpen={isOpen} toggle={toggle} centered className={!selectedOption ? 'w-25' : 'w-50'}>
+    <Modal
+      isOpen={isOpen}
+      toggle={toggle}
+      centered
+      className={!selectedOption ? 'w-25' : 'w-50'}
+      // modalClassName={`${!selectedOption ? 'w-50' : 'w-50'} d-flex justify-self-center align-self-center`}
+    >
       <ModalHeader toggle={toggle}>
         {!selectedOption
           ? 'Import From'
@@ -43,9 +82,8 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
             ? 'Gmail Contacts'
             : 'Outlook Contacts'}
       </ModalHeader>
-      <ModalBody className="py-3s">
-        <SpinnerOverlay show={loading} />
-        {data && !loading && selectedOption && (
+      <ModalBody className="py-3">
+        {data?.length > 0 && !loading && selectedOption && (
           <ImportContactsGrid
             data={data}
             getRecipientList={getRecipientList}
@@ -53,8 +91,9 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
           />
         )}
         <div className="d-flex justify-content-center align-items-center gap-5 flex-wrap">
+          <SpinnerOverlay show={loading} />
           {/* Gmail Option */}
-          {(!selectedOption || loading) && (
+          {(!selectedOption || loading || data?.length === 0) && (
             <>
               <div
                 className="text-center cursor-pointer hover-scale"

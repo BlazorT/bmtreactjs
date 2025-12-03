@@ -1,8 +1,83 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
+import 'react-datepicker/dist/react-datepicker.css';
 import * as React from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import CIcon from '@coreui/icons-react';
-import 'react-datepicker/dist/react-datepicker.css';
+import dayjs from 'dayjs';
+
+// Month names
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Years list (1990 → current year)
+const currentYear = dayjs().year();
+const years = Array.from({ length: 200 }, (_, i) => currentYear - 100 + i);
+
+const CustomHeader = ({
+  date,
+  changeYear,
+  changeMonth,
+  decreaseMonth,
+  increaseMonth,
+  prevMonthButtonDisabled,
+  nextMonthButtonDisabled,
+}) => {
+  const d = dayjs(date);
+
+  return (
+    <div
+      style={{
+        // margin: 2,
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+      }}
+    >
+      <button
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className="btn_Default w-auto px-3 rounded-0"
+      >
+        {'<'}
+      </button>
+
+      {/* Year dropdown */}
+      <div className="d-flex rounded-2 calender-header-select p-1">
+        {/* Month dropdown */}
+        <select
+          value={MONTHS[d.month()]}
+          className={`calender-header-select px-1`}
+          onChange={({ target: { value } }) => changeMonth(MONTHS.indexOf(value))}
+        >
+          {MONTHS.map((month) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </select>
+        <select
+          className={`calender-header-select px-1`}
+          value={d.year()}
+          onChange={({ target: { value } }) => changeYear(Number(value))}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <button
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className="btn_Default w-auto px-3 rounded-0"
+      >
+        {'>'}
+      </button>
+    </div>
+  );
+};
 
 export default function CustomDatePicker(prop) {
   const {
@@ -63,6 +138,7 @@ export default function CustomDatePicker(prop) {
           name={name}
           selected={value || null}
           onChange={handleChange}
+          renderCustomHeader={CustomHeader}
           dateFormat="MM/dd/yyyy"
           className="form-control item date-picker-custom" // Apply styles to the input
           calendarClassName="date-picker-custom-calendar" // Apply styles to the calendar

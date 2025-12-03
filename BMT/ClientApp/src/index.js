@@ -1,17 +1,18 @@
-import 'react-app-polyfill/stable';
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable no-undef */
 import 'core-js';
-import React from 'react';
+import 'react-app-polyfill/stable';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
 import store from './store';
-//import Blazorhub from './Blazorhub';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
-const GOOGLE_CLIENT_ID = '49666104462-8pmscqjm4e7bskf5ego7os8g0k6vuk12.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 let persistor = persistStore(store);
 
 createRoot(document.getElementById('root')).render(

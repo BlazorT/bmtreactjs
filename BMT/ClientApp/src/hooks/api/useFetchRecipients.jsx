@@ -17,17 +17,17 @@ export const useFetchRecipients = () => {
       orgId: filters ? parseInt(filters.orgId) : 0,
       rowVer: filters ? filters.rowVer : 0,
       networkId: filters ? parseInt(filters.networkId) : 0,
-      contentId: filters ? filters.contentId : '',
+      contentId: filters ? filters.contentId || '' : '',
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       createdAt: filters
-        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        ? dayjs(filters.createdAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
 
       lastUpdatedAt: filters
-        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        ? dayjs(filters.lastUpdatedAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().format('YYYY-MM-DD'),
     };
-
+    // console.log({ recipientssBody });
     const res = await postData(recipientssBody);
     // alert((res.data.status) );
     if (res && res.status) {
