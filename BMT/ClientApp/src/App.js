@@ -1,3 +1,4 @@
+
 import 'react-data-grid/lib/styles.css';
 import './scss/style.scss';
 import '../src/CSS/Style.css';
@@ -12,6 +13,8 @@ import ToastNotification from './layout/ToastNotification';
 import OrganizationAdd from './pages/DA/organizationadd';
 import ConfirmationModal from './components/Modals/ConfirmationModal';
 import PaymentConfirmation from './pages/Admin/EPToken';
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import TermsOfUse from './pages/PrivacyPolicy/TermsOfUse';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));
 
@@ -56,6 +59,8 @@ const App = () => {
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route exact path="/add-org" name="addorganization" element={<OrganizationAdd />} />
+            <Route exact path="/PrivacyPolicy" name="PrivacyPolicy" element={<PrivacyPolicy />} />
+            <Route exact path="/TermsOfUse" name="TermsOfUse" element={<TermsOfUse />} />
             <Route
               exact
               path="/ep-token"

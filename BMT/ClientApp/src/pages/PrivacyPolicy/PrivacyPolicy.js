@@ -1,9 +1,30 @@
 /* eslint-disable react/react-in-jsx-scope */
+import React, { useState, useEffect } from 'react';
+import Loading from 'src/components/UI/Loading'; // your existing loader component
 
 const PrivacyPolicy = () => {
+ const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Ensure loader shows immediately and then content renders
+    setLoading(true);
+
+    // simulate a small delay for loading if needed
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 100); // you can adjust this to 0 if no delay needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />; // Loader shows immediately
+  }
+
+
   return (
     <div className="job-application-form">
-      <div className="bg_Div mt-2 d-flex flex-column ">
+      <div className="bg_Div mt-2 d-flex flex-column">
         <div className="show-stock">
           <div className="row">
             <div className="login-form" id="printTermsOfUse">
@@ -17,6 +38,7 @@ const PrivacyPolicy = () => {
                   objectionable content or abusive users. We reserve the right to not post any
                   vehicle that we deem inappropriate or subversive to the spirit of our platform.
                 </p>
+
                 <strong className="TROUSStrong underline">Do not</strong>
                 <strong className="TROUSStrong"> post, upload, stream, or share:</strong>
                 <ul>
@@ -132,6 +154,7 @@ const PrivacyPolicy = () => {
                     </p>
                   </li>
                 </ul>
+
                 <strong className="TROUSStrong pt-2">Content Integrity</strong>
                 <ul>
                   <p className="TROUSParagraph">
@@ -157,7 +180,7 @@ const PrivacyPolicy = () => {
                   </p>
                 </ul>
                 <p className="TROUSParagraph pt-2">
-                  <strong className="TROUSStrong">Last Updated:</strong> February 14, 2023
+                  <strong className="TROUSStrong">Last Updated:</strong> December 5, 2025
                 </p>
               </div>
             </div>

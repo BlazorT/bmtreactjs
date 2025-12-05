@@ -45,7 +45,7 @@ const recipientslisting = () => {
     rowVer: 0,
     networkId: 0,
     status: 0,
-    createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+    createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
 
@@ -146,7 +146,7 @@ const recipientslisting = () => {
       rowVer: 0,
       networkId: 0,
       status: 0,
-      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
     getRecipientsList({
@@ -156,7 +156,7 @@ const recipientslisting = () => {
       rowVer: 0,
       networkId: 0,
       status: 0,
-      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
@@ -210,7 +210,7 @@ const recipientslisting = () => {
       rowVer: 0,
       networkId: 0,
       status: 0,
-      createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+      createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };

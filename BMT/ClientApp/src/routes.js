@@ -49,7 +49,7 @@ export const routes = [
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
-  { path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
+  //{ path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
   { path: '/pricing', name: 'pricing', element: pricing },

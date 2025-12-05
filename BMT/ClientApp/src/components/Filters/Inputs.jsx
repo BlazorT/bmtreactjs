@@ -4,7 +4,15 @@ import React from 'react';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import Button from '../InputsComponent/Button';
 
-const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle = 'Submit' }) => {
+const Inputs = ({
+  inputFields,
+  yesFn,
+  submitFn,
+  children,
+  isBtn,
+  submitBtnTitle = 'Submit',
+  submitting = false, // ✅ new prop for loading
+}) => {
   const showConfirmation = useShowConfirmation();
 
   const confirmationModal = () => {
@@ -98,12 +106,18 @@ const Inputs = ({ inputFields, yesFn, submitFn, children, isBtn, submitBtnTitle 
 
       {isBtn !== false && (
         <CRow className="CenterAlign gap-3">
-          <Button title="Cancel" onClick={confirmationModal} />
-          <Button title={submitBtnTitle} type="submit" onClick={submitFn} />
+          <Button title="Cancel" onClick={confirmationModal} disabled={submitting} />
+          <Button
+            title={submitting ? 'Submitting...' : submitBtnTitle} // ✅ show submitting text
+            type="submit"
+            onClick={submitFn}
+            disabled={submitting} // ✅ disable button while submitting
+          />
         </CRow>
       )}
     </React.Fragment>
   );
 };
+
 
 export default Inputs;

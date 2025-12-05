@@ -30,6 +30,7 @@ export const getDaAppllyInputs = (
     component: ImagePicker,
     image: daUserData.avatar,
     name: 'avatar',
+    note: 'Maximum width : 1024px. Minimum width : 300px.', // ✅ pass the note
     onChange: (e) => handleUserInput(e, 'avatar'),
   },
   {

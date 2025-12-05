@@ -12,7 +12,7 @@ import Button from './Button';
 
 const ImagePicker = (prop) => {
   dayjs.extend(utc);
-  const { image, onChange } = prop;
+  const { image, onChange, note } = prop; // ✅ added note prop
 
   const [selectedImage, setSelectedImage] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -39,21 +39,19 @@ const ImagePicker = (prop) => {
   });
 
   const uploadimageData = async () => {
-    //alert('uploadimageData');
     const form = new FormData();
     if (selectedImage[0] && logoAvatar) {
       form.append('file', logoAvatar);
     }
-    //  }
     form.append('name', data.name);
     form.append('fileName', data.fileName);
-    form.append('createdBy', user.userId); // need to put using cookie user id
+    form.append('createdBy', user.userId);
 
     const res = await fetch('/BlazorApi/uploadAttachment', {
       method: 'POST',
       body: form,
     }).then((res) => res.json());
-    // console.log(res, 'image');
+
     setData({
       id: 0,
       name: '',
@@ -66,8 +64,9 @@ const ImagePicker = (prop) => {
 
     const fileInputs = document.querySelectorAll('[id^="fileInput"]');
     fileInputs.forEach((fileInput) => {
-      fileInput.value = null; // Clear all file input values
+      fileInput.value = null;
     });
+
     dispatch(
       updateToast({
         isToastOpen: true,
@@ -75,16 +74,13 @@ const ImagePicker = (prop) => {
         toastVariant: 'success',
       }),
     );
-    //  indexArray.splice(0, indexArray.length);
+
     setIsLoading(false);
-    /* clearFormData();*/
   };
-  //};
+
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    // Only update from prop if user hasn't selected a file yet
-    // AND if the prop is a valid image URL/data URL (not a File object)
     if (image && !userHasSelected && typeof image === 'string') {
       setSelectedImage(image);
     }
@@ -99,18 +95,19 @@ const ImagePicker = (prop) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result);
-        setUserHasSelected(true); // Mark that user has selected
-        onChange(file.name); // Pass the entire file object
+        setUserHasSelected(true);
+        onChange(file.name);
       };
       reader.readAsDataURL(file);
     }
   };
+
   const handleIconButtonClick = () => {
     fileInputRef.current.click();
   };
 
   return (
-    <div className="w-100 d-flex justify-content-center  align-items-center ">
+    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
       <div className="image-picker-container">
         <input
           type="file"
@@ -123,21 +120,24 @@ const ImagePicker = (prop) => {
         />
         {selectedImage ? (
           <img
-            // eslint-disable-next-line no-undef
-            src={selectedImage} //../../../../wwwroot/productimages/1f45c509-1137-46a5-a3a0-3aa23215a5ef_.avif
+            src={selectedImage}
             alt="Selected"
-            className="w-100 h-100 object-fit-cover rounded-circle "
+            className="w-100 h-100 object-fit-cover rounded-circle"
           />
         ) : (
           <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
             <Button onClick={handleIconButtonClick} className="w-100 h-100 bg-primary">
-              <img src="Profile-pic.jpg" className="w-100 h-100 object-fit-cover rounded-circle" />
-              {/* <CIcon className="stock-toggle-icon mandatory-control" icon={cilUser}></CIcon> */}
+              <img
+                src="Profile-pic.jpg"
+                className="w-100 h-100 object-fit-cover rounded-circle"
+              />
             </Button>
           </label>
         )}
       </div>
-      {/*  <div><button onClick={uploadimageData}>upload</button></div>*/}
+
+      {/* ✅ Display note under the picker */}
+      {note && <small className="form-text text-muted mt-2">{note}</small>}
     </div>
   );
 };

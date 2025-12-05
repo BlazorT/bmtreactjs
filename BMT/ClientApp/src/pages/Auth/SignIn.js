@@ -302,9 +302,9 @@ function SignIn() {
             <div className="container ContainerView">
               <div className="CarousalMainDiv row py-3 d-flex align-items-center">
                 <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
-                  <Carousel data-bs-theme="dark">
+                  <Carousel controls={false} indicators={false} data-bs-theme="dark">
                     <Carousel.Item>
-                      <img className="d-block w-100 carousalImg" src="BDMT.jpg" alt="First slide" />
+                      <img className="d-block w-100 carousalImg" src="BDMT.png" alt="First slide" />
                       <Carousel.Caption>
                         <h5>Tips for the Amazon</h5>
                         <p>
@@ -353,11 +353,11 @@ function SignIn() {
                   </ul>
                 </div>
                 <div className="CarousalDiv col-12 col-md-6 col-lg-6 col-xl-5">
-                  <Carousel data-bs-theme="dark">
+                  <Carousel controls={true} indicators={false} data-bs-theme="dark">
                     <Carousel.Item>
                       <img
                         className="d-block w-100 carousalImg"
-                        src="email.jpg"
+                        src="email.png"
                         alt="First slide"
                       />
                       <Carousel.Caption>
@@ -379,7 +379,7 @@ function SignIn() {
                     <Carousel.Item>
                       <img
                         className="d-block w-100 carousalImg"
-                        src="instagram.jpg"
+                        src="instagram.png"
                         alt="Third slide"
                       />
                       <Carousel.Caption>
@@ -412,7 +412,7 @@ function SignIn() {
                     <Carousel.Item>
                       <img
                         className="d-block w-100 carousalImg"
-                        src="tiktok.jpg"
+                        src="tiktok.png"
                         alt="Fifth slide"
                       />
                       <Carousel.Caption>
@@ -479,14 +479,14 @@ function SignIn() {
                   <div className="clientImgBackgroundClr">
                     <img
                       className="card-img-top clientImg"
-                      src="Abdul-Razaq.jpg"
-                      alt="Abdul Razaq"
+                      src="qaiser.jpeg"
+                      alt="Qaiser Mehmood"
                     />
                   </div>
                   <div className="card-body rounded-0 clientBodyBackgroundClr">
-                    <span className="card-title AdvisorName">Abdul Razaq</span>
+                    <span className="card-title AdvisorName">Qaiser Mehmood</span>
                     <br />
-                    <p className="ClientPost">Abdul Razaq, Barcelona,Spain </p>
+                    <p className="ClientPost">Qaiser Mehmood, Delware,USA </p>
                     <p className="card-text ClientReview">
                       When i had a problem,recieved quick, prompted and issue resolving response
                       from Blazor

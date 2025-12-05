@@ -26,7 +26,7 @@
     "test:debug": "react-scripts --inspect-brk test --runInBand"
   },
   "dependencies": {
-    "@azure/msal-browser": "^4.26.2",
+    "@azure/msal-browser": "^4.27.0",
     "@coreui/chartjs": "^4.0.0",
     "@coreui/coreui": "^5.4.1",
     "@coreui/icons": "^3.0.1",

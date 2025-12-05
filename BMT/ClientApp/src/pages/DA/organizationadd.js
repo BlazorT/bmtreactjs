@@ -1,11 +1,9 @@
-import { cilChevronBottom } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import AppContainer from 'src/components/UI/AppContainer';
@@ -20,8 +18,9 @@ import useEmailVerification from 'src/hooks/useEmailVerification';
 import useFetch from 'src/hooks/useFetch';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
+import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import Loading from 'src/components/UI/Loading'; // existing loader component
 
 const OrganizationAdd = () => {
   dayjs.extend(utc);
@@ -30,12 +29,10 @@ const OrganizationAdd = () => {
   );
   const user = useSelector((state) => state.user);
   const showConfirmation = useShowConfirmation();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { checkEmailValidation } = useEmailVerification();
-
   const showToast = useShowToast();
   const { uploadAvatar, uploadAttachments } = useUploadAvatar();
   const [daApplyFormData, setDaApplyFormData] = useState(getInitialDaData(user));
@@ -44,23 +41,26 @@ const OrganizationAdd = () => {
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
+  const [submitting, setSubmitting] = useState(false);
+  // Loader states
+  const [loadingModal, setLoadingModal] = useState(false);
 
   useEffect(() => {
     if ((pageRoles == null || pageRoles.canAdd === 0) && user) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: `You dont have a rights of setting up of organization, please contact admin for access`,
+          toastMessage:
+            'You dont have rights to setup an organization, please contact admin for access',
           toastVariant: 'warning',
         }),
       );
-
       navigate(-1);
       return;
     }
+
     formValidator();
     const state = location.state;
-    console.log({ state });
     if (state !== null) {
       const daData = state.user[0];
       const initialData = {
@@ -69,34 +69,22 @@ const OrganizationAdd = () => {
         mailAddress: daData.address,
         dspId: daData.dspid,
       };
-
       setDaApplyFormData(initialData);
     }
   }, [user]);
 
   const { createUpdateOrg } = useUpdateOrg();
-
   const { checkUserAvailability } = useUserAvailability();
 
   const handleDAFormData = (event, label = '') => {
     if (label === 'avatar') {
-      setDaApplyFormData((prevdaApplyFormData) => ({
-        ...prevdaApplyFormData,
-        [label]: event,
-      }));
+      setDaApplyFormData((prev) => ({ ...prev, [label]: event }));
     } else {
       if (label !== '') {
-        setDaApplyFormData((prevdaApplyFormData) => ({
-          ...prevdaApplyFormData,
-          [label]: dayjs(event).utc().format(),
-        }));
+        setDaApplyFormData((prev) => ({ ...prev, [label]: dayjs(event).utc().format() }));
       } else {
-        const { name, value, type, files, checked } = event.target;
-
-        setDaApplyFormData((prevdaApplyFormData) => ({
-          ...prevdaApplyFormData,
-          [name]: type === 'checkbox' ? checked : value,
-        }));
+        const { name, value, type, checked } = event.target;
+        setDaApplyFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
       }
     }
   };
@@ -110,9 +98,8 @@ const OrganizationAdd = () => {
         checkUserAvailability(fieldValue, '', daApplyFormData.id, setEmailMessage);
       } else if (isValidEmail === 'invalid') {
         showToast(`${fieldValue} is not a valid email`, 'error');
-        const emailInputElement = document.getElementById('email');
         setEmailMessage(`${fieldValue} is not a valid email`);
-        emailInputElement.setCustomValidity(`${fieldValue} is not a valid email`);
+        document.getElementById('email')?.setCustomValidity(`${fieldValue} is not a valid email`);
       } else {
         checkUserAvailability(fieldValue, '', daApplyFormData.id, setEmailMessage);
       }
@@ -128,177 +115,105 @@ const OrganizationAdd = () => {
   const getCityList = async () => {
     await GetCity(
       '/Common/cities',
-      {
-        method: 'POST',
-      },
+      { method: 'POST' },
       (res) => {
-        console.log(res, 'city');
-        if (res.status === true) {
-          // setRows(mappedArray);
-        } else {
+        if (!res.status) {
           dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
+            updateToast({ isToastOpen: true, toastMessage: res.message, toastVariant: 'error' }),
           );
         }
       },
     );
   };
+
   const submitDA = async () => {
     formValidator();
     const form = document.querySelector('.apply-org-form');
+    if (!form.checkValidity()) return;
 
-    if (form.checkValidity()) {
-      const daBody = {
-        ...daApplyFormData,
-        contact: daApplyFormData.contact,
-        address: daApplyFormData.mailAddress,
-        cityId: daApplyFormData?.cityId ? parseInt(daApplyFormData?.cityId) : 0,
-        stateId: daApplyFormData?.stateId ? parseInt(daApplyFormData?.stateId) : 0,
-        rowVer: daApplyFormData.rowVer ? daApplyFormData.rowVer : 0,
-        // createdBy: daApplyFormData.createdBy ? daApplyFormData.createdBy : user.orgId,
-        createdAt: dayjs().utc().format(),
-        lastUpdatedAt: dayjs().utc().format(),
-        remarks: 'Organization registered successfully',
-        lastUpdatedBy: user?.userId || 1,
-      };
-      //console.log(daBody);
-      // Upload & Submit
+    setSubmitting(true); // start submitting loader
+
+    const daBody = {
+      ...daApplyFormData,
+      contact: daApplyFormData.contact,
+      address: daApplyFormData.mailAddress,
+      cityId: daApplyFormData?.cityId ? parseInt(daApplyFormData?.cityId) : 0,
+      stateId: daApplyFormData?.stateId ? parseInt(daApplyFormData?.stateId) : 0,
+      rowVer: daApplyFormData.rowVer || 0,
+      createdAt: dayjs().utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
+      remarks: 'Organization registered successfully',
+      lastUpdatedBy: user?.userId || 1,
+    };
+
+    try {
       const fUpload = document.getElementById('fileAvatar');
-      if (fUpload.files !== null && fUpload.files.length > 0) {
-        var avatar = fUpload.files[0];
+      if (fUpload?.files?.length > 0) {
+        const avatar = fUpload.files[0];
         const formData = new FormData();
-
         formData.append('file', avatar);
         formData.append('id', '0');
         formData.append('name', avatar.name);
         formData.append('fileName', avatar.name);
         formData.append('createdBy', user?.userId || 1);
         formData.append('createdAt', dayjs().utc().format());
-        for (const [key, value] of formData.entries()) {
-          console.log(`${key}:`, value);
-        }
 
-        // alert("Upload version before upload");
         const uploadAvatarRes = await uploadAvatar(formData);
-        console.log({ uploadAvatarRes });
         if (uploadAvatarRes?.status === true) {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
-
           const res = await createUpdateOrg({ ...daBody, avatar: avatarPath });
-          console.log(res);
-          if (res.status === true) {
-            await uploadDaAttachments(res.data.id);
-          }
+          if (res.status === true) await uploadDaAttachments(res.data.id);
         }
       } else {
-        console.log({ daBody });
         const res = await createUpdateOrg(daBody);
-        console.log({ res });
-        if (res.status === true) {
-          await uploadDaAttachments(res.data.id);
-        }
+        if (res.status === true) await uploadDaAttachments(res.data.id);
       }
+    } catch (error) {
+      console.error(error);
+      showToast('Error submitting form', 'error');
+    } finally {
+      setSubmitting(false); // stop submitting loader
     }
-  };
-
-  const isFormDataEmpty = (formData) => {
-    // Use the entries() method to get an iterator of key/value pairs
-    const formDataIterator = formData.entries();
-
-    // Check if the iterator has at least one entry
-    return formDataIterator.next().done;
-  };
-
-  const createArrayOfFormData = (fileInputs, userId) => {
-    const formData = new FormData();
-
-    let hasFiles = false; // Flag to check if at least one file is present
-
-    fileInputs.forEach((fileInput, index) => {
-      // Check if files are present in the input
-      if (fileInput && fileInput.files && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        formData.append(index, file);
-        hasFiles = true; // Set the flag to true if at least one file is present
-      }
-    });
-
-    if (hasFiles) {
-      // Append additional attributes only if at least one file is present
-      formData.append('id', '0');
-      formData.append('fileName', '');
-      formData.append('userId', userId);
-      formData.append('daid', userId);
-      formData.append('createdBy', user?.userId || 1);
-      formData.append('lastUpdatedBy', user?.userId || 1);
-      formData.append('createdAt', dayjs().utc().format());
-      formData.append('lastUpdatedAt', dayjs().utc().format());
-      formData.append('rowVer', 1);
-    }
-
-    return formData;
   };
 
   const uploadDaAttachments = async (userId) => {
     const fileInputs = [
-      document.getElementById('licenceImageFront'),
-      document.getElementById('licenceImageBack'),
-      document.getElementById('ssnFront'),
-      document.getElementById('ssnBack'),
-      document.getElementById('idFront'),
-      document.getElementById('idBack'),
-      document.getElementById('bCertificateFile'),
-    ];
+      'licenceImageFront',
+      'licenceImageBack',
+      'ssnFront',
+      'ssnBack',
+      'idFront',
+      'idBack',
+      'bCertificateFile',
+    ].map((id) => document.getElementById(id));
 
-    const formDataArray = createArrayOfFormData(fileInputs, userId);
-
-    if (!isFormDataEmpty(formDataArray)) {
-      const attachmentsRes = await uploadAttachments(formDataArray);
-      //console.log({ attachmentsRes });
-      if (attachmentsRes.status === true) {
-        if (user?.userId !== '') {
-          navigate('/Organizations');
-        } else {
-          navigate('/');
-        }
-      } else {
-        if (attachmentsRes.errorCode == 405) showToast(attachmentsRes.data, 'error');
-        else showToast(attachmentsRes.message, 'error');
-      }
-    } else {
-      if (user?.userId !== '') {
-        navigate('/Organizations');
-      } else {
-        navigate('/');
-      }
-    }
-  };
-
-  const toggleStock = () => {
-    setShowStock(!showStock);
-  };
-
-  const TermsModal = () => {
-    setTermsmodalOpen(!termsmodalOpen);
-  };
-
-  const confirmationModal = () => {
-    setConfirmationModalOpen(!confirmationModalOpen);
-  };
-  const goToAnotherPage = () => {
-    showConfirmation({
-      isOpen: false,
+    const formData = new FormData();
+    fileInputs.forEach((input, i) => {
+      if (input?.files?.length > 0) formData.append(i, input.files[0]);
     });
-    if (user?.userId === '') {
-      navigate('/');
-    } else {
-      navigate('/Organizations');
+
+    if ([...formData].length > 0) {
+      const res = await uploadAttachments(formData);
+      if (!res.status) showToast(res.message, 'error');
     }
+
+    navigate(user?.userId ? '/Organizations' : '/');
+  };
+
+  const toggleStock = () => setShowStock(!showStock);
+
+  const TermsModal = async () => {
+    setLoadingModal(true); // show loader
+    setTermsmodalOpen(true);
+    setTimeout(() => setLoadingModal(false), 500); // simulate load time
+  };
+
+  const confirmationModal = () => setConfirmationModalOpen(!confirmationModalOpen);
+
+  const goToAnotherPage = () => {
+    showConfirmation({ isOpen: false });
+    navigate(user?.userId ? '/Organizations' : '/');
   };
 
   const daApplyInputs = getDaAppllyInputs(
@@ -307,41 +222,41 @@ const OrganizationAdd = () => {
     emailMessage,
     true,
     onBlur,
-    GetCityRes?.current?.data ? GetCityRes.current.data : [],
+    GetCityRes?.current?.data || [],
   );
 
   return (
     <React.Fragment>
       <AppContainer>
-        <DataGridHeader
-          title="Organization Basic Information"
-          otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
-          filterDisable={true}
-        />
         {showStock && (
-          <React.Fragment>
-            <Form name="apply-org-form">
-              <Inputs inputFields={daApplyInputs} yesFn={goToAnotherPage} submitFn={submitDA}>
-                <CFormCheck
-                  className="mt-3 d-flex flex-row justify-content-center"
-                  title="Are you agree for this?"
-                  label={
-                    <span>
-                      By providing this info, you agree to our terms & conditions, read our{' '}
-                      <strong className="lblTerms" onClick={TermsModal}>
-                        Terms & Conditions (EULA)
-                      </strong>
-                    </span>
-                  }
-                  name="isTermsAccepted"
-                  id="isTermsAccepted"
-                  required
-                  checked={daApplyFormData.isTermsAccepted}
-                  onChange={handleDAFormData}
-                />
-              </Inputs>
-            </Form>
-          </React.Fragment>
+          <Form name="apply-org-form">
+            <Inputs
+              inputFields={daApplyInputs}
+              yesFn={goToAnotherPage}
+              submitFn={submitDA}
+              submitting={submitting} // ✅ pass submitting state
+            >
+              <CFormCheck
+                className="mt-3 d-flex flex-row justify-content-center"
+                title="Are you agree for this?"
+                label={
+                  <span>
+                    By providing this info, you agree to our terms & conditions, read our{' '}
+                    <strong className="lblTerms" onClick={TermsModal}>
+                      Terms & Conditions (EULA)
+                    </strong>
+                  </span>
+                }
+                name="isTermsAccepted"
+                id="isTermsAccepted"
+                required
+                checked={daApplyFormData.isTermsAccepted}
+                onChange={handleDAFormData}
+              />
+            </Inputs>
+
+          
+          </Form>
         )}
 
         <ConfirmationModal
@@ -353,7 +268,11 @@ const OrganizationAdd = () => {
         />
       </AppContainer>
 
-      <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
+      {/* Terms & Conditions Modal */}
+      <TermsAndConditionModal isOpen={termsmodalOpen} toggle={() => setTermsmodalOpen(false)} />
+
+      {/* Loader while modal content loads */}
+      {loadingModal && <Loading />}
     </React.Fragment>
   );
 };
