@@ -52,6 +52,7 @@ export const useOutlookImport = () => {
   const [profile, setProfile] = useState(null);
   const [combinedData, setCombinedData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isAuthInProgress, setIsAuthInProgress] = useState(false);
   const [error, setError] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
 
@@ -258,6 +259,7 @@ export const useOutlookImport = () => {
   };
 
   const login = useCallback(async () => {
+    setIsAuthInProgress(true);
     try {
       const response = await msalInstance.loginPopup(loginRequest);
       const token = response.accessToken;
@@ -266,6 +268,8 @@ export const useOutlookImport = () => {
     } catch (err) {
       setError('Login failed: ' + (err.message || 'Unknown error'));
       console.error('Login error:', err);
+    } finally {
+      setIsAuthInProgress(false);
     }
   }, []);
 
@@ -276,23 +280,27 @@ export const useOutlookImport = () => {
   }, [accessToken]);
 
   const logout = useCallback(async () => {
+    setIsAuthInProgress(true);
+
     try {
       await msalInstance.logoutPopup();
     } catch (err) {
       console.error('Logout error:', err);
+    } finally {
+      setIsAuthInProgress(false);
     }
     setProfile(null);
     setAccessToken(null);
     setCombinedData([]);
     clearStorage();
   }, []);
-
   return {
     data: combinedData,
     profile,
     loading,
     error,
     isSignedIn,
+    isAuthInProgress,
     login,
     refetch,
     logout,

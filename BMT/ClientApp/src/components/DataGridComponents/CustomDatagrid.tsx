@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Make sure this is imported at the top level of your app or this component
 import React, { useState, useMemo } from 'react';
 import { DataGrid } from 'react-data-grid';
 import {
@@ -29,6 +28,7 @@ interface CustomDatagridProps {
   columns: Column<any>[];
   rowHeight?: number;
   pagination?: boolean;
+  maxHeight?: number | string;
   summary?: any;
   loading?: boolean;
   rowSelection?: boolean;
@@ -87,6 +87,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   onRowClick,
   selectedRows = new Set(),
   onSelectedRowsChange,
+  maxHeight = 500,
 }) => {
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,6 +146,8 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
   // Row class name function
   const getRowClassName = (row: any, idx: number): string => {
+    const isRowSelected = selectedRows.has(row.content);
+
     let classNames = 'rdg-row-even';
 
     if (idx % 2 !== 0) {
@@ -170,12 +173,24 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
       classNames += ' disabled-row-red';
     }
 
+    if (isRowSelected) {
+      classNames += ' selected-row';
+    }
+
     return classNames;
   };
 
+  // Determine grid height based on pagination
+  const gridHeight = useMemo(() => {
+    if (pagination) {
+      return undefined; // Let it auto-size
+    }
+    // When pagination is off, set explicit height for scrolling
+    return typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight;
+  }, [pagination, maxHeight]);
+
   // Custom styles for React Data Grid
   const gridStyles = {
-    height: 'auto',
     '--rdg-color-scheme': 'dark !important',
     '--rdg-header-background-color': '#0A1A2C !important',
     '--rdg-header-text-color': 'white !important',
@@ -344,11 +359,11 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
         <NoRowsOverlay />
       ) : (
         <>
-          {/* Data Grid */}
+          {/* Data Grid - now with fixed height when pagination is off */}
           <div style={gridStyles}>
             <DataGrid
               columns={finalColumns}
-              rows={paginatedRows}
+              rows={pagination ? paginatedRows : sortedRows}
               sortColumns={sortColumns}
               onSortColumnsChange={handleSortColumnsChange}
               onRowsChange={handleRowsChange}
@@ -356,12 +371,13 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
               onSelectedRowsChange={onSelectedRowsChange}
               rowClass={getRowClassName}
               rowKeyGetter={(row) => row?.content}
-              className="rdg-dark"
+              className="rdg-dark fill-grid"
               rowHeight={rowHeight}
               isRowSelectionDisabled={(row) => row?.disabled === true}
               renderers={{
                 noRowsFallback: <NoRowsOverlay />,
               }}
+              style={gridHeight ? { height: gridHeight } : undefined}
             />
           </div>
 

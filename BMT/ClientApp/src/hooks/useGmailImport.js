@@ -39,6 +39,7 @@ export const useGmailImport = () => {
   const [profile, setProfile] = useState(null);
   const [combinedData, setCombinedData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isAuthInProgress, setIsAuthInProgress] = useState(false);
   const [error, setError] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
 
@@ -278,14 +279,20 @@ export const useGmailImport = () => {
     }
   };
 
-  const login = useGoogleLogin({
+  const rawLogin = useGoogleLogin({
     onSuccess: (res) => {
+      setIsAuthInProgress(false); // clear on auth error
       const token = res.access_token;
       setAccessToken(token);
+      // fetchAllData will turn off isAuthInProgress when done
       fetchAllData(token);
     },
     onError: (err) => {
-      setError('Login failed: ' + err.error_description);
+      setError('Login failed: ' + (err.error_description || err.error || 'unknown'));
+      setIsAuthInProgress(false); // clear on auth error
+    },
+    onNonOAuthError: () => {
+      setIsAuthInProgress(false); // clear on popup/user cancellation
     },
     scope: [
       'https://www.googleapis.com/auth/contacts.readonly',
@@ -295,6 +302,12 @@ export const useGmailImport = () => {
     ].join(' '),
     flow: 'implicit',
   });
+
+  // Wrap the raw login to start auth progress immediately on call
+  const login = useCallback(() => {
+    setIsAuthInProgress(true);
+    rawLogin();
+  }, [rawLogin]);
 
   const refetch = useCallback(() => {
     if (accessToken) {
@@ -319,5 +332,6 @@ export const useGmailImport = () => {
     login, // first time: login + fetch
     refetch, // already logged in: just refresh data
     logout,
+    isAuthInProgress,
   };
 };

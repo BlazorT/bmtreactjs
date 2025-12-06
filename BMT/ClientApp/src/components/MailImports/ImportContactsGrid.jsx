@@ -50,6 +50,15 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList }) => {
     }));
   }, [data, recipientsList]);
 
+  // Calculate counts
+  const counts = useMemo(() => {
+    const existingCount = rowsWithDisabled.filter((row) => row.disabled).length;
+    const importedCount = rowsWithDisabled.length;
+    const selectedCount = selectedRows.size;
+
+    return { existingCount, importedCount, selectedCount };
+  }, [rowsWithDisabled, selectedRows]);
+
   const submitRecipients = async () => {
     if (selectedRows?.size === 0) {
       showToast('Select at least 1 contact to add', 'info');
@@ -134,8 +143,31 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList }) => {
         rowSelectable={(row) => !row.disabled}
         pageSize={10}
         pageSizeOptions={[10, 25, 50, 100]}
+        pagination={false}
+        maxHeight={rowsWithDisabled?.length > 10 ? 400 : 'auto'}
         footer={
-          <div className="bg-dark-color text-white p-2">Selected contacts: {selectedRows.size}</div>
+          <div className="bg-dark-color text-white p-2 d-flex flex-row justify-content-between align-items-center">
+            <div className="d-flex flex-row align-items-center gap-3">
+              <div className="d-flex flex-row align-items-center gap-2">
+                <span>Existing :</span>
+                <span className="disabled-row-red rounded-1 px-2 py-1 fw-bold">
+                  {counts.existingCount}
+                </span>
+              </div>
+              <div className="d-flex flex-row align-items-center gap-2">
+                <span>Imported :</span>
+                <span className="rdg-row-even rounded-1 px-2 py-1 fw-bold">
+                  {counts.importedCount}
+                </span>
+              </div>
+              <div className="d-flex flex-row align-items-center gap-2">
+                <span>Selected :</span>
+                <span className="selected-row rounded-1 px-2 py-1 fw-bold">
+                  {counts.selectedCount}
+                </span>
+              </div>
+            </div>
+          </div>
         }
       />
       <div className="mt-2 align-items-center justify-content-end flex-row d-flex">

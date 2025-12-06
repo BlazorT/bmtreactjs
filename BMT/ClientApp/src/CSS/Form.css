@@ -45,6 +45,9 @@
 .disabled-row-red {
   background: #859ebb94 !important;
 }
+.selected-row {
+  background: #0e3c69af !important;
+}
 .css-1ix9f8n-MuiDataGrid-root .MuiDataGrid-row.Mui-selected {
   background: #0c2842 !important;
 }

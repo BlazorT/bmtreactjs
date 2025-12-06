@@ -2966,6 +2966,9 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 @media only screen and (min-width: 200px) and (max-width: 767px) {
+  .modal-dialog {
+    width: 100% !important;
+  }
   .inlinedisplay {
     display: -webkit-inline-box !important;
     list-style: none;
@@ -4302,4 +4305,17 @@ fieldset.legend {
   height: 44px;
   border-radius: 6px;
   margin-top: -12px;
+}
+.transform-transition {
+  transition: all 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15) !important;
+}
+.drop-shadow {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+.btn-sm {
+  height: auto !important;
 }
