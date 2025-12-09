@@ -445,7 +445,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         command.CommandText = @"
   SELECT 
     `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
-    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,`albumid`  
+    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
   FROM `compaignrecipients` 
   WHERE orgid = @p_OrgId AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
 ";
