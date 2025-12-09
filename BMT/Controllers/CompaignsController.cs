@@ -268,7 +268,30 @@ namespace com.blazor.bmt.controllers
             }
             return Ok(response);
         }
-       
+        [HttpPost("submitalbumlist")]
+        [Route("submitalbumlist")]
+        public async Task<ActionResult> CreateAlbumList([FromBody] ContactsalbumModel model)
+        {
+            //  if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            try
+            {
+                model.LastUpdatedBy = model.LastUpdatedBy == null ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : model.LastUpdatedBy;
+                model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                model.Status = 1;
+                model.RowVer = 1;
+                response.data = await _contactAlbumService.Create(model, Convert.ToInt32(model.CreatedBy));
+                //response.id= response.data
+                response.status = true;
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+                response.status = false;
+            }
+            return Ok(response);
+        }
+
         [HttpPost("updatecompaign")]   
         [Route("updatecompaign")]
         public async Task<ActionResult> updateCompaign(CompaignsViewModel model)
