@@ -280,7 +280,7 @@ namespace com.blazor.bmt.controllers
                 model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                 model.Status = 1;
                 model.RowVer = 1;
-                response.data = await _contactAlbumService.Create(model, Convert.ToInt32(model.CreatedBy));
+                response.data = await _contactAlbumService.Create(model);
                 //response.id= response.data
                 response.status = true;
             }
