@@ -12,7 +12,8 @@ public partial class CampaignRecipientsViewModel
     public int? SourceId { get; set; }
 
     public int Status { get; set; }
-
+    public int? albumid { get; set; }
+    
     public int? CreatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; }

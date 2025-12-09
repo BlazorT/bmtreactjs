@@ -33,7 +33,7 @@ public partial class Compaignexecutionschedule : EntityTransaction
     public int? LastUpdatedBy { get; set; }
 
     public int Status { get; set; }
-
+    public string? ContactsAlbums { get; set; }
     public int RowVer { get; set; }
 
     //public virtual ICollection<Compaignscheduleday> Compaignscheduledays { get; } = new List<Compaignscheduleday>();

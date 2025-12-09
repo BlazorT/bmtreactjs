@@ -297,6 +297,7 @@ namespace Blazor.Web.UI.Services
                                 CompaignrecipientModel contact = new CompaignrecipientModel();
                                 contact.NetworkId = Convert.ToInt32(dr["NetworkId"]);
                                 contact.ContentId = "" + dr["ContentId"];
+                                contact.albumid = Convert.ToInt32(dr["albumid"]);
                                 //contact.NetworkName = "" + dr["Name"];
                                 ls.Add(contact);
                             }//while (dr.Read())

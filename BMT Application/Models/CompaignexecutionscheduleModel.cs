@@ -12,7 +12,7 @@ public partial class CompaignexecutionscheduleModel : BaseModelTransactions
     public int? NetworkId { get; set; }
 
     public long CompaignDetailId { get; set; }
-
+    public string? ContactsAlbums { get; set; }
     public double? Budget { get; set; }
     public string? days { get; set; }
     public int? Intervalval { get; set; }

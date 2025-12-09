@@ -36,7 +36,8 @@ namespace com.blazor.bmt
             CreateMap<PackageModel, PackageViewModel>();
             CreateMap<MediacontentViewModel, MediacontentModel>();
             CreateMap<CompaigntemplateViewModel, CompaigntemplateModel>();
-           // CreateMap<CompaignrecipientViewModel, CompaigntemplateModel>();
+            CreateMap<ContactsalbumViewModel, ContactsalbumModel>();
+            // CreateMap<CompaignrecipientViewModel, CompaigntemplateModel>();
 
             // CreateMap<DspViewModel, DspModel>();
         }
@@ -78,6 +79,7 @@ namespace com.blazor.bmt
             CreateMap<Compaigntemplate, CompaigntemplateModel>().ReverseMap();
             CreateMap<Compaignrecipient, CompaignrecipientModel>().ReverseMap();
             CreateMap<Orgpackagedetail, OrgpackagedetailModel>().ReverseMap();
+            CreateMap<Contactsalbum, ContactsalbumModel>().ReverseMap();
             // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }

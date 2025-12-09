@@ -1,8 +1,4 @@
 ﻿using Blazor.Web.Application.Models.Base;
-using com.blazor.bmt.core.baseentity;
-using System;
-using System.Collections.Generic;
-
 namespace com.blazor.bmt.application.model;
 
 public partial class CompaignrecipientModel : BaseModel
@@ -15,7 +11,7 @@ public partial class CompaignrecipientModel : BaseModel
     public string[]? Contentlst { get; set; } 
 
     public int? SourceId { get; set; }
-
+    public int? albumid { get; set; }
     public string? Desc { get; set; }
 
     public int? OrgId { get; set; }

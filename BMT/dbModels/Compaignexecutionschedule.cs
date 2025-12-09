@@ -1,17 +1,20 @@
-﻿namespace com.blazor.bmt.viewmodels;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class CompaignexecutionscheduleViewModel 
+namespace bmt.web.dbModels;
+
+public partial class Compaignexecutionschedule
 {
-    public Int64 Id { get; set; }
+    public long Id { get; set; }
 
     public int? NetworkId { get; set; }
 
-    public Int64 CompaignDetailId { get; set; }
+    public long CompaignDetailId { get; set; }
 
-    public double? Budget { get; set; }
-    public string? ContactsAlbums { get; set; }
+    public float? Budget { get; set; }
+
     public int? Intervalval { get; set; }
-   // public string? days { get; set; }
+
     public int? IntervalTypeId { get; set; }
 
     public long? MessageCount { get; set; }
@@ -31,6 +34,8 @@ public partial class CompaignexecutionscheduleViewModel
     public int Status { get; set; }
 
     public int RowVer { get; set; }
-    public string? days { get; set; }
-    //public virtual ICollection<CompaignscheduledayViewModel>? days { get; } //= new List<CompaignscheduledayViewModel>();
+
+    public string? Days { get; set; }
+
+    public string? ContactAllbums { get; set; }
 }
