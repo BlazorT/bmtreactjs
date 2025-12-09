@@ -17,12 +17,12 @@ namespace com.blazor.bmt.infrastructure.repositories
 
         }
        // Task<IEnumerable<Contactsalbum>> GetContactAlbumsByNetworkLAndOrgist(int NetworkId, int OrgId);
-       // Task<IEnumerable<Contactsalbum>> GetContactAlbumsListAllFilters(Contactsalbum model);
-       // Task<Contactsalbum> GetContactAlbumsByIdAsnc(Int64 id);
-        public async Task<IEnumerable<Compaignrecipient>> GetContactAlbumsByNetworkLAndOrgist(int NetworkId, int OrgId)
+        //Task<IEnumerable<Contactsalbum>> GetContactAlbumsListAllFilters(Contactsalbum model);
+      //  Task<Contactsalbum> GetContactAlbumsByIdAsnc(Int64 id);
+        public async Task<IEnumerable<Contactsalbum>> GetContactAlbumsByNetworkLAndOrgist(int NetworkId, int OrgId)
         {
-            return await _dbContext.Compaignrecipients.AsNoTracking()
-               .Where(x => x.NetworkId == (NetworkId == 0 ? x.NetworkId : NetworkId) && x.OrgId == (OrgId == 0 ? x.OrgId : OrgId)).OrderBy(x => x.Id)
+            return await _dbContext.Contactsalbums.AsNoTracking()
+               .Where(x => x.Networkid == (NetworkId == 0 ? x.Networkid : NetworkId) && x.Orgid == (OrgId == 0 ? x.Orgid : OrgId)).OrderBy(x => x.Id)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Contactsalbum>> GetContactAlbumsListAllFilters(Contactsalbum model)
