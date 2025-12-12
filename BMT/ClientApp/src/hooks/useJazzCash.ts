@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useShowToast } from './useShowToast';
 
-export const SOCKET_URL = 'http://167.88.45.70:5000';
+export const SOCKET_URL = 'http://72.61.77.197:5000';
 
 export function useJazzCash(
   isPopUp: boolean = false,

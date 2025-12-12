@@ -25,7 +25,7 @@ const SendTestEmailModel = ({
 }) => {
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
-  const { postData, loading } = useApi('http://192.168.18.163:5000/email/send');
+  const { postData, loading } = useApi('http://72.61.77.197:5001/email/send');
   const [email, setEmail] = useState('');
   const onSubmit = async () => {
     if (!validateEmail(email)) {
