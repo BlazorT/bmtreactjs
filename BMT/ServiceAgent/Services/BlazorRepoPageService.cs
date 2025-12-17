@@ -431,6 +431,9 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         MySqlParameter pNetworkId = new MySqlParameter("@p_NetworkId", MySqlDbType.Int32);
                         pNetworkId.Value = cModel.NetworkId;
                         parameter.Add(pNetworkId); // ✅ Fix: Add this line
+                        MySqlParameter pAlbumId = new MySqlParameter("@p_AlbumId", MySqlDbType.Int32);
+                        pAlbumId.Value = cModel.albumid;
+                        parameter.Add(pAlbumId); // ✅ Fix: Add this line
 
                         MySqlParameter pContentId = new MySqlParameter("@p_ContentId", MySqlDbType.VarChar,200);
                         pContentId.Value = cModel.ContentId;
@@ -445,9 +448,9 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         command.CommandText = @"
   SELECT 
     `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
-    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
+    `CreatedBy`,  `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
   FROM `compaignrecipients` 
-  WHERE orgid = @p_OrgId AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
+  WHERE orgid = @p_OrgId AND (AlbumId = @p_AlbumId OR ifnull(@p_AlbumId,0) =0) AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
 ";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
@@ -461,7 +464,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 {
                                     Id = Convert.ToInt64(dr["id"]),
                                     NetworkId = Convert.ToInt32(dr["networkId"]),
-                                    SourceId = Convert.ToInt32(dr["SourceId"]),
+                                    SourceId = Convert.ToInt32(dr["SourceId"]),                                    
                                     ContentId = ""+ dr["ContentId"]  ,                                 
                                     Status = Convert.ToInt32(dr["Status"]),
                                     albumid = Convert.ToInt32(dr["albumid"]),
