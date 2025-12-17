@@ -8,7 +8,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-export const getRecipientsFilterConfig = (filters, changeFilter, orgs, Role) => [
+export const getRecipientsFilterConfig = (filters, changeFilter, orgs, Role, albums) => [
   {
     component: CustomSearch,
     label: 'Organization',
@@ -36,6 +36,21 @@ export const getRecipientsFilterConfig = (filters, changeFilter, orgs, Role) => 
     options: globalutil.networks(),
     className: 'form-control item form-select',
     title: 'Networks',
+  },
+  {
+    component: CustomSelectInput,
+    label: 'Album',
+    value: filters.albumid,
+    onChange: changeFilter,
+    icon: cilFlagAlt,
+    id: 'albumid',
+    name: 'albumid',
+    optionsList: (ol) =>
+      `${ol?.name} (${globalutil.networks()?.find((n) => n?.id === ol?.networkid)?.name || ''})`,
+    disableOption: 'Select Networks',
+    options: albums,
+    className: 'form-control item form-select',
+    title: 'Album',
   },
   {
     component: CustomInput,

@@ -34,5 +34,5 @@ export const useFetchAlbums = () => {
     return [];
   };
 
-  return { data, error, loading, fetchAlbums };
+  return { data: data?.data || [], error, loading, fetchAlbums };
 };

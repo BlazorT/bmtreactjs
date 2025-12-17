@@ -19,6 +19,7 @@ export const useFetchRecipients = () => {
       networkId: filters ? parseInt(filters.networkId) : 0,
       contentId: filters ? filters.contentId || '' : '',
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      albumid: filters ? (filters?.albumid === '' ? 0 : Number(filters.albumid)) : 0,
       createdAt: filters
         ? dayjs(filters.createdAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),

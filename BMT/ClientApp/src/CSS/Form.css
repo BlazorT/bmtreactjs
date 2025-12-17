@@ -256,13 +256,13 @@ button[type='submit']:hover {
   top: 0;
   z-index: -1;
 }
-@media (min-width: 576px) {
+/* @media (min-width: 576px) {
   .modal-dialog {
     max-width: 80%;
     margin-right: auto;
     margin-left: auto;
   }
-}
+} */
 .cj343x07-0-0-beta-40[aria-selected='true'] {
   outline: 0px solid var(--rdg-selection-color);
   outline-offset: -2px;

@@ -16,6 +16,8 @@ import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
+import _ from 'lodash';
+import AddAlbumModel from 'src/components/Modals/AddAlbumModel';
 
 const recipientslisting = () => {
   dayjs.extend(utc);
@@ -28,7 +30,7 @@ const recipientslisting = () => {
     loading: orgsLoading,
     data: orgsData,
   } = useApi('/BlazorApi/orgsfulldata');
-  console.log({ albums });
+
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Recipients',
   );
@@ -37,6 +39,7 @@ const recipientslisting = () => {
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
+  const [isShowAlbumMdl, setIsShowAlbumMdl] = useState(false);
   const [isShowImportOptions, setIsShowImportOptions] = useState(false);
   const [rows, setRows] = useState([]);
   const [fullRecipientsData, setFullRecipientsData] = useState([]);
@@ -47,16 +50,18 @@ const recipientslisting = () => {
     rowVer: 0,
     networkId: 0,
     status: 0,
+    albumid: 0,
     createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
 
   useEffect(() => {
-    fetchAlbums();
     fetchFullRecipients();
     getRecipientsList(filters);
     getOrganizationLst();
   }, []);
+
+  const toggleAlbumMdl = () => setIsShowAlbumMdl((prev) => !prev);
 
   const fetchFullRecipients = async () => {
     const body = {
@@ -65,6 +70,7 @@ const recipientslisting = () => {
       contentId: '',
       rowVer: 0,
       networkId: 0,
+      albumid: 0,
       status: 0,
       createdAt: dayjs().subtract(5, 'year').startOf('year').format(),
       lastUpdatedAt: dayjs().utc().endOf('day').format(),
@@ -76,28 +82,122 @@ const recipientslisting = () => {
 
   const getRecipientsList = async (filters) => {
     const recipientsList = await getRecipientList(filters);
-
+    const albumsList = await fetchAlbums();
     // If this is the first load (no filters applied yet)
     if (fullRecipientsData.length === 0) {
       setFullRecipientsData(recipientsList); // <-- store full list once
     }
 
     const networks = globalutil.networks();
+    const groupedData = getGroupedRecipients(recipientsList, albumsList || [], networks);
 
-    const mappedArray = recipientsList.map((data) => {
-      const network = networks.find((n) => n.id === data.networkId);
+    setRows(groupedData);
+    // const mappedArray = recipientsList.map((data) => {
+    //   const network = networks.find((n) => n.id === data.networkId);
 
-      return {
-        id: data.id,
-        contentId: data.contentId,
-        networkId: network ? network.name : '',
-        orgName: data.orgName,
-        status: data.status,
-        createdAt: formatDateTime(data.createdAt),
-      };
+    //   return {
+    //     id: data.id,
+    //     contentId: data.contentId,
+    //     albumid: data.albumid,
+    //     networkId: network ? network.name : '',
+    //     orgName: data.orgName,
+    //     status: data.status,
+    //     createdAt: formatDateTime(data.createdAt),
+    //   };
+    // });
+
+    // setRows(mappedArray);
+  };
+
+  const getGroupedRecipients = (recipients, albums, networks) => {
+    const groupedRows = [];
+
+    // 1. Sort recipients by createdAt (latest first)
+    const sortedRecipients = [...recipients].sort(
+      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
+    );
+
+    // 2. Group recipients by networkId
+    const recipientsByNetwork = _.groupBy(sortedRecipients, 'networkId');
+
+    Object.entries(recipientsByNetwork).forEach(([networkId, networkRecipients]) => {
+      const network = networks.find((n) => n.id === parseInt(networkId));
+      const networkName = network ? network.name : `Network ${networkId}`;
+
+      // Network header
+      groupedRows.push({
+        id: `network-${networkId}`,
+        type: 'network-header',
+        networkId: networkName,
+        albumid: '',
+        contentId: '',
+        createdAt: '',
+        isGroupHeader: true,
+        level: 0,
+      });
+
+      // 3. Group by albumId
+      const recipientsByAlbum = _.groupBy(networkRecipients, 'albumid');
+
+      Object.entries(recipientsByAlbum).forEach(([albumId, albumRecipients]) => {
+        // 4. Sort again inside album (latest first)
+        const sortedAlbumRecipients = [...albumRecipients].sort(
+          (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
+        );
+
+        const album = albums.find((a) => a.id === parseInt(albumId));
+
+        // No album case
+        if (!album) {
+          sortedAlbumRecipients.forEach((recipient) => {
+            groupedRows.push({
+              id: recipient.id,
+              type: 'recipient-no-album',
+              networkId: '',
+              albumid: '--',
+              contentId: recipient.contentId,
+              createdAt: formatDateTime(recipient.createdAt),
+              orgName: recipient.orgName,
+              status: recipient.status,
+              isGroupHeader: false,
+              level: 1,
+              originalData: recipient,
+            });
+          });
+        } else {
+          // Album header
+          groupedRows.push({
+            id: `album-${networkId}-${albumId}`,
+            type: 'album-header',
+            networkId: '',
+            albumid: album.name,
+            contentId: '',
+            createdAt: '',
+            isGroupHeader: true,
+            level: 1,
+          });
+
+          // Album recipients
+          sortedAlbumRecipients.forEach((recipient) => {
+            groupedRows.push({
+              id: recipient.id,
+              type: 'recipient',
+              networkId: '',
+              albumid: '',
+              contentId: recipient.contentId,
+              createdAt: formatDateTime(recipient.createdAt),
+              orgName: recipient.orgName,
+              status: recipient.status,
+              isGroupHeader: false,
+              level: 2,
+              originalData: recipient,
+            });
+          });
+        }
+      });
     });
 
-    setRows(mappedArray);
+    return groupedRows;
   };
 
   const changeFilter = (event, key, label) => {
@@ -149,6 +249,7 @@ const recipientslisting = () => {
       rowVer: 0,
       networkId: 0,
       status: 0,
+      albumid: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
@@ -159,6 +260,7 @@ const recipientslisting = () => {
       rowVer: 0,
       networkId: 0,
       status: 0,
+      albumid: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
@@ -202,6 +304,7 @@ const recipientslisting = () => {
     changeFilter,
     orgsData?.data || [],
     Role,
+    albums,
   );
 
   const getBothLists = () => {
@@ -228,10 +331,15 @@ const recipientslisting = () => {
         recipientsList={fullRecipientsData}
         getRecipientList={getBothLists}
       />
+      <AddAlbumModel
+        isOpen={isShowAlbumMdl}
+        toggle={toggleAlbumMdl}
+        refreshRecipients={() => getRecipientsList(filters)}
+      />
       <React.Fragment>
         <AppContainer>
           <DataGridHeader
-            title="Recipients Grid -> Advance Search (Organization, Network, Recipients, Date(>=))"
+            title="Recipients"
             onClick={toggleFilters}
             otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
             filterDisable={true}
@@ -255,6 +363,12 @@ const recipientslisting = () => {
             addSecBtnClick={() => navigate('/campaignContacts')}
             addButton="Import From Gmail | Outlook"
             addBtnClick={toggleIsShowImportOptions}
+            actions={[
+              {
+                title: 'Add Album (+)',
+                onClick: toggleAlbumMdl,
+              },
+            ]}
             otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
             filterDisable={true}
           />

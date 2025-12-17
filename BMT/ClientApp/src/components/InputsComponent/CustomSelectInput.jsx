@@ -53,35 +53,36 @@ const CustomSelectInput = (prop) => {
             <option className="text-dim" value="">
               {disableOption ? disableOption : 'Please select an option'}
             </option>
-           {/* <optgroup className="option-border"></optgroup>*/}
-            {Array.isArray(options)&&options.map((option, index) => (
-              <React.Fragment key={index}>
-                {/* <optgroup className="padding-options"></optgroup> */}
-                <option value={option.id ? option.id : index}>
-                  {optionsList
-                    ? optionsList(option)
-                    : name === 'productName'
-                    ? option.name + ' ,' + option.shortCode
-                    : name === 'dispatchAssign' ||
-                      name === 'driverName' ||
-                      name == 'assistantDriver' ||
-                      name == 'associate' ||
-                      name == 'createdBy'
-                    ? option.firstName + ' ' + option.lastName
-                    : name === 'currRosterId'
-                    ? index +
-                      1 +
-                      '. ' +
-                      ' From ' +
-                      formatDate(option.rosterDate) +
-                      ' To ' +
-                      formatDate(option.rosterEndDate)
-                    : option.name}
-                </option>
-                {/* <optgroup className="padding-options"></optgroup> */}
-                <optgroup className="option-border"></optgroup>
-              </React.Fragment>
-            ))}
+            {/* <optgroup className="option-border"></optgroup>*/}
+            {Array.isArray(options) &&
+              options.map((option, index) => (
+                <React.Fragment key={index}>
+                  {/* <optgroup className="padding-options"></optgroup> */}
+                  <option value={option.id ? option.id : index}>
+                    {optionsList
+                      ? optionsList(option)
+                      : name === 'productName'
+                        ? option.name + ' ,' + option.shortCode
+                        : name === 'dispatchAssign' ||
+                            name === 'driverName' ||
+                            name == 'assistantDriver' ||
+                            name == 'associate' ||
+                            name == 'createdBy'
+                          ? option.firstName + ' ' + option.lastName
+                          : name === 'currRosterId'
+                            ? index +
+                              1 +
+                              '. ' +
+                              ' From ' +
+                              formatDate(option.rosterDate) +
+                              ' To ' +
+                              formatDate(option.rosterEndDate)
+                            : option.name}
+                  </option>
+                  {/* <optgroup className="padding-options"></optgroup> */}
+                  <optgroup className="option-border"></optgroup>
+                </React.Fragment>
+              ))}
           </select>
           {isRequired && <span className="invalid-tooltip">{message}</span>}
         </div>

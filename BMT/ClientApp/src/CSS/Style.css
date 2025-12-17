@@ -112,6 +112,7 @@ p {
 .networksListWidth {
   width: 20% !important;
 }
+
 .css-1mhxotf-MuiSvgIcon-root {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4319,4 +4320,7 @@ fieldset.legend {
 }
 .btn-sm {
   height: auto !important;
+}
+select {
+  font-size: 1.1rem !important;
 }

@@ -1,13 +1,14 @@
-// <reference path="../../components/component/downloadcontactstemplate .js" />
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { CCard, CTooltip, CCol, CRow } from '@coreui/react';
+import { CCard, CTooltip, CCol, CRow, CFormSelect, CButton, CAlert } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilPlus } from '@coreui/icons';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
 import ImportContactsListData from 'src/components/InputsComponent/ImportContactsList';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import AddAlbumModel from 'src/components/Modals/AddAlbumModel'; // Import your modal
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import { CContainer } from '@coreui/react';
 import globalutil from 'src/util/globalutil';
@@ -19,6 +20,7 @@ import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { CPopover } from '@coreui/react';
+import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import {
   cibFacebook,
   cibGmail,
@@ -30,101 +32,100 @@ import {
   cibWhatsapp,
   cilShortText,
 } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
+import Button from 'src/components/UI/Button';
 
 const campaignContacts = () => {
-  // let state;
   const user = useSelector((state) => state.user);
-  console.log('user data', user);
   const navigate = useNavigate();
+  const showToast = useShowToast();
 
+  // Album management
+  const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
+  const [networkAlbums, setNetworkAlbums] = useState({}); // { networkId: albumId }
+  const [isShowAlbumMdl, setIsShowAlbumMdl] = useState(false);
+  const [selectedNetworkForAlbum, setSelectedNetworkForAlbum] = useState(null);
+  // Existing states
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
-  const showConfirmation = useShowConfirmation();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-
   const allNetworkNames = globalutil.networks().map((n) => n.name);
-
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
-  const [importedData, setImportedData] = useState({}); // { Twitter: ['abc', 'xyz'], ... }
-  const [selectedFiles, setSelectedFiles] = useState({}); // { Twitter: File }
-  const [cityData, setCityData] = useState([]); // Your table data
-  const showToast = useShowToast();
+  const [importedData, setImportedData] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState({});
+  const [cityData, setCityData] = useState([]);
   const [groupedContacts, setGroupedContacts] = useState([]);
   const [showTableModal, setShowTableModal] = useState(false);
-
-  const handleCampaignAddContacts = (e, networkId) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = [
-      'text/csv',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    ];
-    const fileName = file.name.toLowerCase();
-    const fileExt = fileName.split('.').pop();
-    const allowedExtensions = ['csv', 'xls', 'xlsx'];
-
-    const isValidType = allowedTypes.includes(file.type);
-    const isValidExt = allowedExtensions.includes(fileExt);
-
-    if (!isValidType || !isValidExt) {
-      e.target.value = null;
-      showToast('Only CSV or Excel (.csv, .xls, .xlsx) files are allowed.', 'error');
-      return;
-    }
-
-    showToast(`File "${file.name}" selected successfully.`, 'success');
-
-    setSelectedFiles((prev) => ({
-      ...prev,
-      [networkId]: file,
-    }));
-  };
+  const [recipientInput, setRecipientInput] = useState({});
+  const [recipientsList, setRecipientsList] = useState({});
 
   const tableRef = useRef(null);
 
-  const TermsModal = () => {
-    setTermsmodalOpen(!termsmodalOpen);
-  };
-  const confirmationModal = () => {
-    setConfirmationModalOpen(!confirmationModalOpen);
-  };
-  const goToAnotherPage = () => {
-    setConfirmationModalOpen(false); // close the modal
-    navigate('/Dashboard');
-  };
-  const icons = {
-    Tiktock: cibTiktok,
-    Snapchat: cibSnapchat,
-    Facebook: cibFacebook,
-    Sms: cilShortText,
-    Linkedin: cibLinkedin,
-    Twitter: cibTwitter,
-    Instagram: cibInstagram,
-    Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
-    Email: cibGmail, // Assuming Email is your component for Email icon
+  // Fetch albums on mount
+  useEffect(() => {
+    fetchAlbums();
+  }, []);
+
+  // Filter albums per network
+  const getAlbumsForNetwork = (networkId) => {
+    return albums?.filter((album) => album.networkid === networkId) || [];
   };
 
-  const [recipientInput, setRecipientInput] = useState({}); // current input text
-  const [recipientsList, setRecipientsList] = useState({}); // network-wise array
+  // Toggle album modal
+  const toggleAlbumMdl = () => setIsShowAlbumMdl((prev) => !prev);
 
+  // Handle album selection for a network
+  const handleAlbumChange = (networkId, albumId) => {
+    setNetworkAlbums((prev) => ({
+      ...prev,
+      [networkId]: parseInt(albumId),
+    }));
+  };
+
+  // Open modal to add album for specific network
+  const handleAddAlbumClick = (networkId) => {
+    setSelectedNetworkForAlbum(networkId);
+    setIsShowAlbumMdl(true);
+  };
+
+  // Handle network checkbox change
   const handleCheckboxChange = (network) => {
+    const allNetworks = globalutil.networks();
+    const networkObj = allNetworks.find((n) => n.name === network);
+
     if (selectedNetworks.includes(network)) {
       setSelectedNetworks(selectedNetworks.filter((n) => n !== network));
+      // Remove album selection when network is unchecked
+      if (networkObj) {
+        setNetworkAlbums((prev) => {
+          const updated = { ...prev };
+          delete updated[networkObj.id];
+          return updated;
+        });
+      }
     } else {
       setSelectedNetworks([...selectedNetworks, network]);
+
+      // Auto-select first album if available
+      if (networkObj) {
+        const availableAlbums = getAlbumsForNetwork(networkObj.id);
+        if (availableAlbums.length > 0) {
+          setNetworkAlbums((prev) => ({
+            ...prev,
+            [networkObj.id]: availableAlbums[0].id,
+          }));
+        }
+      }
     }
   };
 
   const handleInputChange = (network, value) => {
     setRecipientInput((prev) => ({ ...prev, [network]: value }));
   };
+
   const validateRecipient = (network, value) => {
     if (!value) return false;
 
-    const phonePattern = /^\+?\d+$/; // ✅ allows digits with optional leading +
+    const phonePattern = /^\+?\d+$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const idPattern = /^[a-zA-Z0-9_]+$/;
 
@@ -141,7 +142,6 @@ const campaignContacts = () => {
     return idPattern.test(value);
   };
 
-  // ✅ Common add function with validation + duplicate check
   const addRecipient = (value, network) => {
     const lowerNetwork = network.toLowerCase();
     const currentList = recipientsList[network] || [];
@@ -178,7 +178,6 @@ const campaignContacts = () => {
     return true;
   };
 
-  // ✅ Handle Enter or Comma
   const handleKeyDown = (e, network) => {
     let value = recipientInput[network]?.trim();
 
@@ -192,7 +191,6 @@ const campaignContacts = () => {
 
       addRecipient(value, network);
 
-      // Always clear input after attempt
       setRecipientInput((prev) => ({
         ...prev,
         [network]: '',
@@ -200,34 +198,25 @@ const campaignContacts = () => {
     }
   };
 
-  // ✅ Handle Paste → instantly consume & clear input
   const handlePaste = (e, network) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text');
 
-    console.log('📋 Raw pasteData:', pasteData);
-
     if (!pasteData) return;
 
     const values = pasteData
-      .split(/[\s,;]+/) // ✅ handles spaces too
+      .split(/[\s,;]+/)
       .map((v) => v.trim())
       .filter((v) => v.length > 0);
 
-    console.log('🔎 Parsed values:', values);
-
     values.forEach((val) => {
-      console.log(`➡️ Trying to add recipient: "${val}" for network: ${network}`);
-      const added = addRecipient(val, network);
-      console.log('✅ Added?', added);
+      addRecipient(val, network);
     });
 
     setRecipientInput((prev) => ({
       ...prev,
       [network]: '',
     }));
-
-    console.log('✅ Input cleared for network:', network);
   };
 
   const handleDeleteRecipient = (network, index) => {
@@ -236,36 +225,66 @@ const campaignContacts = () => {
 
     setRecipientsList((prev) => ({ ...prev, [network]: updated }));
 
-    // 👇 Hide dropdown if last item removed
     if (updated.length === 0) {
       const dropdown = document.getElementById(`recipients-${network}`);
       if (dropdown) dropdown.style.display = 'none';
     }
   };
+
+  const handleCampaignAddContacts = (e, networkId) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = [
+      'text/csv',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ];
+    const fileName = file.name.toLowerCase();
+    const fileExt = fileName.split('.').pop();
+    const allowedExtensions = ['csv', 'xls', 'xlsx'];
+
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidExt = allowedExtensions.includes(fileExt);
+
+    if (!isValidType || !isValidExt) {
+      e.target.value = null;
+      showToast('Only CSV or Excel (.csv, .xls, .xlsx) files are allowed.', 'error');
+      return;
+    }
+
+    showToast(`File "${file.name}" selected successfully.`, 'success');
+
+    setSelectedFiles((prev) => ({
+      ...prev,
+      [networkId]: file,
+    }));
+  };
+
   const handleImportClick = async (networkKey, networkId) => {
     const selectedFile = selectedFiles[networkId];
-    const selectedNetworkId = networkId;
-    console.log('Selected Network ID:', networkId);
-    console.log('Selected File:', selectedFile);
 
     if (!selectedFile) {
       showToast('Please select a file first.', 'error');
       return;
     }
+
     const formData = new FormData();
-    formData.append('files', selectedFile); // actual File object
-    formData.append('netowrkid', selectedNetworkId); // keep key same as in C#
+    formData.append('files', selectedFile);
+    formData.append('netowrkid', networkId);
+
     try {
       const response = await fetch('/Compaigns/ImportFileData', {
         method: 'POST',
         body: formData,
       });
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
+
       const result = await response.json();
-      console.log('Server Response:', result);
 
       if (result.status === true && result.data) {
         setImportedData((prev) => ({
@@ -281,15 +300,11 @@ const campaignContacts = () => {
       showToast('Error during import.', 'error');
     }
   };
-  console.log('Selected Networks:', selectedNetworks);
-  console.log('Recipients List:', recipientsList);
-  console.log('importedData List:', importedData);
 
   const buildCampaignPayload = () => {
     const payload = [];
     const allNetworks = globalutil.networks();
 
-    // Combine keys from both sources
     const allNetworkKeys = new Set([
       ...Object.keys(recipientsList || {}),
       ...Object.keys(importedData || {}),
@@ -300,19 +315,27 @@ const campaignContacts = () => {
       if (!networkObj) return;
 
       const networkId = parseInt(networkObj.id);
+      const albumId = networkAlbums[networkId];
+
+      // Validate album selection
+      if (!albumId) {
+        showToast(`Please select an album for ${networkKey}`, 'error');
+        throw new Error(`Album not selected for ${networkKey}`);
+      }
+
       const manualContacts = recipientsList?.[networkKey] || [];
       const importedContacts = importedData?.[networkKey] || [];
       const allContacts = [...manualContacts, ...importedContacts];
 
       if (allContacts.length === 0) {
-        console.log(`No contacts for network ID: ${networkId}`);
         return;
       }
-      console.log('allContacts', allContacts);
+
       payload.push({
         Id: 0,
         OrgId: user.orgId,
         NetworkId: networkId,
+        Albumid: albumId, // Include album ID
         Contentlst: allContacts,
         Desc: '',
         CreatedBy: user.userId,
@@ -322,20 +345,18 @@ const campaignContacts = () => {
       });
     });
 
-    console.log('payload', payload);
     return payload;
   };
 
   const handleSubmitCampaignContacts = async () => {
-    const payload = buildCampaignPayload();
-    console.log({ payload });
-    console.log(JSON.stringify(payload));
-
-    if (payload.length === 0) {
-      showToast('No contacts to send.', 'error');
-      return;
-    }
     try {
+      const payload = buildCampaignPayload();
+
+      if (payload.length === 0) {
+        showToast('No contacts to send.', 'error');
+        return;
+      }
+
       setIsLoading(true);
       const response = await fetch('/Compaigns/postCompaignContactData', {
         method: 'POST',
@@ -345,21 +366,16 @@ const campaignContacts = () => {
 
       if (!response.ok) {
         const errorResult = await response.json().catch(() => ({}));
-        console.error('Response not OK:', response.status, errorResult);
         showToast(errorResult.message || 'Server error occurred.', 'error');
         return;
       }
 
       const result = await response.json();
-      console.log('Server response:', result);
 
       if (result.status) {
         showToast(result.message, 'success');
 
-        // First: group contacts you sent per network
         const networksList = globalutil.networks();
-
-        // Step 1: Build a flat list of contacts from payload
         const flatPayload = [];
 
         payload.forEach((p) => {
@@ -372,7 +388,6 @@ const campaignContacts = () => {
           });
         });
 
-        // Step 2: Group them by network
         const networkGroups = {};
 
         flatPayload.forEach((p) => {
@@ -390,7 +405,6 @@ const campaignContacts = () => {
           });
         });
 
-        // Step 3: If server returned any found contacts, update them
         if (Array.isArray(result.data) && result.data.length > 0) {
           result.data.forEach((item) => {
             const contactId = item.contentId;
@@ -398,36 +412,60 @@ const campaignContacts = () => {
               networkGroups[item.networkId].contacts = networkGroups[item.networkId].contacts.map(
                 (c) => ({
                   ...c,
-                  found: c.contact === contactId || c.found, // preserve already found ones
+                  found: c.contact === contactId || c.found,
                 }),
               );
             }
           });
         }
 
-        // Step 4: Convert to array for rendering
         const groupedData = Object.values(networkGroups);
-        console.log('Grouped data to display:', groupedData);
         setGroupedContacts(groupedData);
-        setShowTableModal(true); // Show the modal immediately
+        setShowTableModal(true);
+
         setTimeout(() => {
           tableRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100); // slight delay to ensure rendering
+        }, 100);
       } else {
         showToast(result.message || 'Submission failed.', 'error');
       }
     } catch (error) {
       console.error('Submit error:', error);
-      showToast('Error while submitting contacts.', 'error');
+      showToast(error.message || 'Error while submitting contacts.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleCloseModal = () => {
     setShowTableModal(false);
-    navigate('/recipientsGrid'); // navigate when modal hides
+    navigate('/recipientsGrid');
   };
-  console.log({ selectedFiles });
+
+  const TermsModal = () => {
+    setTermsmodalOpen(!termsmodalOpen);
+  };
+
+  const confirmationModal = () => {
+    setConfirmationModalOpen(!confirmationModalOpen);
+  };
+
+  const goToAnotherPage = () => {
+    setConfirmationModalOpen(false);
+    navigate('/Dashboard');
+  };
+
+  const icons = {
+    Tiktock: cibTiktok,
+    Snapchat: cibSnapchat,
+    Facebook: cibFacebook,
+    Sms: cilShortText,
+    Linkedin: cibLinkedin,
+    Twitter: cibTwitter,
+    Instagram: cibInstagram,
+    Whatsapp: cibWhatsapp,
+    Email: cibGmail,
+  };
 
   return (
     <Form name="dsp-reg-form">
@@ -442,6 +480,7 @@ const campaignContacts = () => {
               <AppContainer>
                 <DataGridHeader title="Networks" filterDisable />
               </AppContainer>
+
               {globalutil.networks().map((network, index) => {
                 const networkKey = network.name;
                 const networkId = network.id;
@@ -449,6 +488,9 @@ const campaignContacts = () => {
                   networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
                 const isChecked = selectedNetworks.includes(networkKey);
                 const recipientCount = (recipientsList[networkKey] || []).length;
+                const availableAlbums = getAlbumsForNetwork(networkId);
+                const selectedAlbum = networkAlbums[networkId];
+
                 return (
                   <CCol md={12} key={index}>
                     <ul className="inlinedisplay">
@@ -493,7 +535,7 @@ const campaignContacts = () => {
                               placeholder="Enter recipient and press Enter, Comma, or Paste"
                               onChange={(e) => handleInputChange(networkKey, e.target.value)}
                               onKeyDown={(e) => handleKeyDown(e, networkKey)}
-                              onPaste={(e) => handlePaste(e, networkKey)} // ✅ Add paste handler
+                              onPaste={(e) => handlePaste(e, networkKey)}
                             />
                           </div>
                         </CTooltip>
@@ -515,7 +557,7 @@ const campaignContacts = () => {
                                 ))}
                               </div>
                             }
-                            placement="left" // you can change to 'bottom', 'top', etc.
+                            placement="left"
                             trigger="click"
                             className="recipient-popover"
                           >
@@ -532,12 +574,8 @@ const campaignContacts = () => {
                           onChange={(e) => handleCampaignAddContacts(e, networkId)}
                           className="form-control item"
                         />
-                        {/* {selectedFiles?.[networkId]?.name ? (
-                          <span className="text-truncate ps-0 ">
-                            {selectedFiles?.[networkId]?.name}
-                          </span>
-                        ) : null} */}
                       </li>
+
                       {importedData[networkKey]?.length > 0 && (
                         <ImportContactsListData
                           networkKey={networkKey}
@@ -554,6 +592,39 @@ const campaignContacts = () => {
                           Import
                         </button>
                       </li>
+                      {/* Album Selection Dropdown */}
+                      <div style={{ minWidth: '200px' }}>
+                        {!isChecked && (
+                          <>
+                            {availableAlbums.length > 0 ? (
+                              <CFormSelect
+                                value={selectedAlbum || ''}
+                                onChange={(e) => handleAlbumChange(networkId, e.target.value)}
+                                disabled={isChecked}
+                              >
+                                <option value="">Select Album</option>
+                                {availableAlbums.map((album) => (
+                                  <option key={album.id} value={album.id}>
+                                    {album.name}
+                                  </option>
+                                ))}
+                              </CFormSelect>
+                            ) : (
+                              <div className="d-flex align-items-center gap-2">
+                                <CAlert color="warning" className="mb-0 py-1 px-2 small">
+                                  No albums available
+                                </CAlert>
+
+                                <Button
+                                  onClick={() => handleAddAlbumClick(networkId)}
+                                  title=" Add Album"
+                                  className="w-auto py-1 h-auto"
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </ul>
                   </CCol>
                 );
@@ -577,14 +648,13 @@ const campaignContacts = () => {
                     Save
                   </button>
                 </div>
-                {/* Modal */}
+
                 {showTableModal && (
                   <div className="modal show fade d-block" tabIndex="-1" role="dialog">
                     <div className="modal-dialog modal-lg" role="document">
                       <div className="modal-content">
                         <div className="modal-header">
                           <h5 className="modal-title">Contact Status</h5>
-                          {/*<button type="button" className="btn-close" onClick={() => setShowTableModal(false)}></button>*/}
                         </div>
                         <div className="modal-body">
                           <div className="table-responsive">
@@ -626,8 +696,7 @@ const campaignContacts = () => {
                           <button
                             type="button"
                             className="btn btn-secondary"
-                            // onClick={() => setShowTableModal(false)}
-                            onClick={handleCloseModal} // ⬅️ Updated
+                            onClick={handleCloseModal}
                           >
                             Close
                           </button>
@@ -641,6 +710,14 @@ const campaignContacts = () => {
           </>
         )}
       </CContainer>
+
+      {/* Add Album Modal */}
+      <AddAlbumModel
+        isOpen={isShowAlbumMdl}
+        toggle={toggleAlbumMdl}
+        refreshRecipients={fetchAlbums}
+        networkId={selectedNetworkForAlbum}
+      />
 
       <ConfirmationModal
         header="Confirmation!"

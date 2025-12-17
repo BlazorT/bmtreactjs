@@ -11,6 +11,7 @@ export interface FilterField {
   type?: string;
   id?: string;
   name?: string;
+  optionsList?: any;
   options?: any[];
   data?: any;
   placeholder?: string;
@@ -64,6 +65,7 @@ const CustomFilters: React.FC<CustomFiltersProps> = ({
                   message={field.message}
                   disabled={field.disabled}
                   disableOption={field.disableOption}
+                  optionsList={field.optionsList}
                 />
               </CCol>
             );
