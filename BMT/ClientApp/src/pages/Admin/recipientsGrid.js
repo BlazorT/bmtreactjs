@@ -12,6 +12,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
 import { formatDateTime } from 'src/helpers/formatDate';
+import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
@@ -21,12 +22,13 @@ const recipientslisting = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const {
     postData: getOrgs,
     loading: orgsLoading,
     data: orgsData,
   } = useApi('/BlazorApi/orgsfulldata');
-
+  console.log({ albums });
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Recipients',
   );
@@ -50,6 +52,7 @@ const recipientslisting = () => {
   });
 
   useEffect(() => {
+    fetchAlbums();
     fetchFullRecipients();
     getRecipientsList(filters);
     getOrganizationLst();
@@ -261,7 +264,7 @@ const recipientslisting = () => {
               columns={recipientslistingCols}
               rowHeight={50}
               pagination={true}
-              loading={loading || orgsLoading}
+              loading={loading || orgsLoading || albumsLoading}
               // loading={rows.length < 1 ? true : false}
               sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
               hiddenCols={{

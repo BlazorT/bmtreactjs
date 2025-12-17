@@ -4223,7 +4223,8 @@ fieldset.legend {
   font-size: 40px;
   font-weight: bold;
   color: white !important; /* white cross */
-  cursor: pointer;
+  cursor: pointer !important;
+  z-index: 9999;
   line-height: 1;
   opacity: 1 !important;
   background-color: transparent !important;

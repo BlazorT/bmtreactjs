@@ -92,11 +92,7 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
       className={!isProviderSelected ? 'w-50' : 'w-50'}
       contentClassName="border-0 shadow-lg rounded-3 overflow-hidden"
     >
-      <ModalHeader
-        toggle={toggle}
-        className="border-0 pb-2 pt-2 px-2 bg-gradient text-dark"
-        close={<button className="btn-close" onClick={toggle} aria-label="Close" />}
-      >
+      <ModalHeader className="border-0 pb-2 pt-2 px-2 bg-gradient text-dark" toggle={toggle}>
         <div className="d-flex align-items-center gap-2 w-100">
           <h4 className="mb-0 fw-bold text-white">
             {!selectedOption
@@ -116,7 +112,7 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
         </div>
       </ModalHeader>
 
-      <ModalBody className="p-2">
+      <ModalBody className="p-2 mt-2">
         {/* Contacts Grid */}
         {isProviderSelected && data?.length > 0 && !loading && (
           <div className="">

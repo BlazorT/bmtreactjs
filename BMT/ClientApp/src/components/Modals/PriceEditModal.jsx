@@ -133,7 +133,6 @@ const PricingModal = ({
       onNo: () => showConfirmation({ isOpen: false }),
     });
   };
-
   const inputFields = [
     {
       component: CustomSelectInput,
