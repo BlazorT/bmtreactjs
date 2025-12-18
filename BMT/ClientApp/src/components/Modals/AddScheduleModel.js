@@ -20,6 +20,8 @@ import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import Button from '../UI/Button';
 import PaymentModel from './PaymentModel';
 import { calculateValidDays } from 'src/helpers/campaignHelper';
+import { AlbumListModel } from './AlbumListModel';
+import AlbumListSelector from '../CustomComponents/AlbumListSelector';
 
 dayjs.extend(utc);
 
@@ -66,7 +68,9 @@ const AddScheduleModel = (prop) => {
 
   const showToast = useShowToast();
   const [scheduleJson, setScheduleJson] = useState([]);
+  const [selectedAlbumList, setSelectedAlbumList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isShowAlbumList, setIsShowAlbumList] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [initialVisibleNetworks, setInitialVisibleNetworks] = useState([]);
   const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
@@ -76,6 +80,8 @@ const AddScheduleModel = (prop) => {
     const rec = recipients?.filter((r) => r?.networkId === nId)?.length || 1;
     return rec;
   };
+
+  const toggleIsShowAlbumList = () => setIsShowAlbumList((prev) => !prev);
 
   const calculateBudget = (
     networks,
@@ -273,15 +279,34 @@ const AddScheduleModel = (prop) => {
   };
 
   const handleNetworkChange = (networkName) => {
-    setSelected(
-      (prevSelected) =>
-        prevSelected.includes(networkName)
-          ? prevSelected.filter((n) => n !== networkName) // remove if unchecked
-          : [...prevSelected, networkName], // add if checked
-    );
+    const findNetworkId = globalutil.networks().find((n) => n.name === networkName)?.id;
+    if (!findNetworkId) return;
+
+    setSelected((prevSelected) => {
+      const isAlreadySelected = prevSelected.includes(networkName);
+      const updatedSelected = isAlreadySelected
+        ? prevSelected.filter((n) => n !== networkName)
+        : [...prevSelected, networkName];
+
+      // Filter selectedAlbumList based on updated selected networks
+      setSelectedAlbumList((prevAlbumList) =>
+        prevAlbumList.filter((album) =>
+          updatedSelected.some(
+            (network) =>
+              globalutil.networks().find((n) => n.name === network)?.id === album.networkid,
+          ),
+        ),
+      );
+
+      return updatedSelected;
+    });
   };
 
   const onSave = () => {
+    if (selectedAlbumList?.length !== selectedNetworks?.length) {
+      showToast('Select contact list for selected networks', 'error');
+      return;
+    }
     if (!campaignRegData.intervalTypeId || selectedNetworks.length === 0) {
       // console.error('Validation failed', campaignRegData);
       showToast('All required fields must be filled.', 'error');
@@ -365,6 +390,9 @@ const AddScheduleModel = (prop) => {
         Budget:
           budgetData?.TotalSchNetworkBudget?.find((bd) => bd?.networkId === ntwk.NetworkId)
             ?.totalNetworkPrice || 0,
+        ContactsAlbums: JSON.stringify(
+          selectedAlbumList?.filter((a) => a.networkid === ntwk?.NetworkId)?.map((a) => a.id),
+        ),
       };
       schedulePayload.push(payloadItem);
     }
@@ -580,6 +608,10 @@ const AddScheduleModel = (prop) => {
                   })}
               </CRow>
             </React.Fragment>
+            <AlbumListSelector
+              selectedAlbumList={selectedAlbumList}
+              toggleIsShowAlbumList={toggleIsShowAlbumList}
+            />
             <CRow>
               <CCol md="6">
                 <CustomSelectInput
@@ -770,6 +802,13 @@ const AddScheduleModel = (prop) => {
           </form>
         </ModalBody>
       </Modal>
+      <AlbumListModel
+        isOpen={isShowAlbumList}
+        toggle={toggleIsShowAlbumList}
+        networkIds={selectedNetworks}
+        selectedAlbumList={selectedAlbumList}
+        setSelectedAlbumList={setSelectedAlbumList}
+      />
       <PaymentModel
         isOpen={isPaymentOpen}
         toggle={togglePaymentMdl}
