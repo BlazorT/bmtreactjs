@@ -1,18 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
-import { useEffect, useState, useMemo } from 'react';
-import Button from '../UI/Button';
-import BlazorTabs from '../CustomComponents/BlazorTabs';
-import globalutil from 'src/util/globalutil';
+import dayjs from 'dayjs';
+import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
-import Loading from '../UI/Loading';
-import { useNavigate } from 'react-router-dom';
+import globalutil from 'src/util/globalutil';
+import BlazorTabs from '../CustomComponents/BlazorTabs';
+import Button from '../UI/Button';
 import Spinner from '../UI/Spinner';
 import AddAlbumModel from './AddAlbumModel';
-import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
 
 export const AlbumListModel = ({
   isOpen,
@@ -151,30 +149,51 @@ export const AlbumListModel = ({
                     {currentAlbums.map((item) => {
                       const isSelected = selectedAlbums[currentNetworkId] === item.id;
                       const contactCount =
-                        recipients?.data?.filter((r) => r?.albumid === item.id)?.length || 0;
+                        recipients?.data?.filter(
+                          (r) => r?.albumid === item.id && r?.networkId === item.networkid,
+                        )?.length || 0;
 
                       return (
                         <div
                           key={item.id}
                           onClick={() => handleAlbumSelect(currentNetworkId, item.id)}
-                          className={`album-item p-3 mb-2 rounded border ${
+                          className={`album-item mb-2 rounded-3 border position-relative ${
                             isSelected
-                              ? 'border-primary bg-primary bg-opacity-10'
+                              ? 'border-primary bg-primary bg-opacity-10 shadow-sm'
                               : 'border-secondary'
                           }`}
-                          style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+                          style={{
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            padding: '0.85rem 1rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '0.75rem',
+                          }}
                         >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div>
-                              <div className="fw-semibold">{item.name}</div>
-                              <small className="text-muted">{contactCount} contacts</small>
+                          {/* Left accent bar */}
+                          <span
+                            style={{
+                              width: '4px',
+                              alignSelf: 'stretch',
+                              borderRadius: '999px',
+                              backgroundColor: isSelected ? '#0d6efd' : '#dee2e6',
+                            }}
+                          />
+
+                          <div className="flex-grow-1">
+                            <div className="d-flex align-items-center gap-2">
+                              <div className="fw-semibold text-truncate">{item.name}</div>
+                              {isSelected && (
+                                <span className="badge bg-primary bg-opacity-75 text-white">
+                                  Selected
+                                </span>
+                              )}
                             </div>
-                            {isSelected && (
-                              <i
-                                className="bi bi-check-circle-fill text-primary"
-                                style={{ fontSize: '20px' }}
-                              ></i>
-                            )}
+                            <small className="text-muted d-block mt-1">
+                              {contactCount} contact{contactCount === 1 ? '' : 's'}
+                            </small>
                           </div>
                         </div>
                       );

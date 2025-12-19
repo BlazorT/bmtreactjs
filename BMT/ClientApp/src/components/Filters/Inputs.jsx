@@ -79,7 +79,7 @@ const Inputs = ({
                         inline
                         checked={input.value === opt.value}
                         onChange={input.onChange}
-                        className="me-3 d-flex"
+                        className="me-3 d-flex align-items-center"
                       />
                     );
                   })}
@@ -118,6 +118,5 @@ const Inputs = ({
     </React.Fragment>
   );
 };
-
 
 export default Inputs;

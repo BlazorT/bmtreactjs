@@ -3,8 +3,10 @@ import React from 'react';
 import { CRow, CCol } from '@coreui/react';
 import Button from '../UI/Button';
 import globalutil from 'src/util/globalutil';
+import { useShowToast } from 'src/hooks/useShowToast';
 
-const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList }) => {
+const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedNetworks }) => {
+  const showToast = useShowToast();
   const getNetworkName = (networkId) => {
     const networks = globalutil.networks();
     return networks?.find((n) => n.id === networkId)?.name || 'Unknown';
@@ -20,8 +22,15 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList }) => {
     return colorMap[networkId] || 'secondary';
   };
 
+  const onSelectClick = () => {
+    if (selectedNetworks?.length === 0) {
+      showToast('Select at least one network first to select contact list', 'info');
+      return;
+    }
+    toggleIsShowAlbumList();
+  };
   return (
-    <CRow className="mb-3">
+    <CRow>
       <CCol>
         <div className="border rounded p-3 position-relative">
           <div className="d-flex justify-content-between align-items-start">
@@ -66,7 +75,7 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList }) => {
 
             <Button
               className="w-auto flex-shrink-0"
-              onClick={toggleIsShowAlbumList}
+              onClick={onSelectClick}
               title={
                 <span className="d-flex align-items-center">
                   <i

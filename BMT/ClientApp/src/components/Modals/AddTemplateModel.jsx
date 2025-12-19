@@ -138,9 +138,9 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
     <CModal
       visible={isOpen}
       alignment="center"
-      size="sm"
-      aria-labelledby="template-modal"
-      aria-describedby="template-in-full-view"
+      size="lg"
+      // aria-labelledby="template-modal"
+      // aria-describedby="template-in-full-view"
       backdrop="static" // ⬅️ prevents closing on backdrop press
     >
       <CModalHeader closeButton={false}>

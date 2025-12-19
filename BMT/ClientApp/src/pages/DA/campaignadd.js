@@ -604,8 +604,8 @@ const campaignadd = () => {
                         {/* Gender Selection */}
                         <CRow>
                           <CCol md="6" className="mt-3">
-                            <div className="btn-group">
-                              <CFormLabel className="labelName" htmlFor="gender-radio-group">
+                            <div className="btn-group align-items-center gap-2">
+                              <CFormLabel className="labelName mb-0" htmlFor="gender-radio-group">
                                 Gender
                               </CFormLabel>
                               <div className="d-flex">

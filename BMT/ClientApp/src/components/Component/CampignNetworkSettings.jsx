@@ -193,7 +193,7 @@ const CampignNetworkSettings = ({
                             }
                             checked={isSelected}
                             onChange={() => handleCheckboxChange(network.name)}
-                            className="mb-0"
+                            className="mb-0 d-flex align-items-center"
                           />
 
                           <Button

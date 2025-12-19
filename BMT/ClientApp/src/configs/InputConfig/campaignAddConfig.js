@@ -91,7 +91,7 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     onChange: handleCampaignAddForm,
     id: 'autoGenerateLeads',
     name: 'autoGenerateLeads',
-    className: 'item mt-5',
+    className: 'item mt-4 pt-2 d-flex align-items-center',
   },
   {
     component: CustomDatePicker,

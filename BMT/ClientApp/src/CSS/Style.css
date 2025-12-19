@@ -178,6 +178,7 @@ p {
   color: #ffffff !important;
   border: 1px solid #0c355f;
   border-radius: 4px;
+  z-index: 999 !important;
 }
 .react-datepicker-wrapper {
   display: flex;
@@ -186,6 +187,7 @@ p {
 .date-picker-custom-calendar {
   background: #0c355f !important;
   color: #ffffff !important;
+  z-index: 999 !important;
 }
 
 .react-datepicker-popper {
@@ -457,7 +459,7 @@ p {
 }
 .card {
   position: relative;
-  z-index: 2;
+  /* z-index: 1; */
 }
 .login-footer {
   text-align: center;
@@ -2976,7 +2978,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
     padding-left: 0px;
   }
   html:not([dir='rtl']) .form-check .form-check-input {
-    margin-left: -2.5em !important;
+    /* margin-left: -2.5em !important; */
   }
   .network-checkbox-animate label {
     float: left;
@@ -3006,9 +3008,9 @@ input[type='date']::-webkit-calendar-picker-indicator {
     --cui-form-check-bg: #9ebef08f !important;
     flex-shrink: 0;
     width: 1.2em !important;
-    padding-top: 1em;
+    /* padding-top: 1em;
     height: 1.2em !important;
-    margin-top: 0.25em !important;
+    margin-top: 0.25em !important; */
     vertical-align: top;
     appearance: none;
     background-color: var(--cui-form-check-bg);
@@ -3463,9 +3465,9 @@ input[type='date']::-webkit-calendar-picker-indicator {
   margin-bottom: 0.5em;
   --cui-form-check-bg: #9ebef08f !important;
   flex-shrink: 0;
-  width: 1.5em;
-  height: 1.5em;
-  margin-top: 0.25em;
+  /* width: 1.5em;
+  height: 1.5em; */
+  /* margin-top: 0.25em; */
   vertical-align: top;
   appearance: none;
   background-color: var(--cui-form-check-bg);
@@ -3772,6 +3774,10 @@ input[type='number']::-webkit-outer-spin-button {
 .form-check-label {
   color: white;
 }
+.form-check {
+  align-items: center !important;
+  display: flex !important;
+}
 .pointer {
   color: white;
 }
@@ -3915,7 +3921,7 @@ fieldset.legend {
 .divCircle {
   height: 46px;
   width: 46px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   border: 1.1px solid #dc3545;
   background-color: #e7eaec;
   border-radius: 50%;
