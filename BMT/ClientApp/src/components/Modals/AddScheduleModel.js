@@ -103,19 +103,8 @@ const AddScheduleModel = (prop) => {
       intervalTypeId,
       interval,
     });
-    console.log(getNetworkRecipients(2));
-    // ✅ sum total of selected networks' prices from pricingData
-    const totalNetworkPrice = networks?.reduce((sum, network) => {
-      const networkId = globalutil
-        .networks()
-        .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
-      const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
-      return sum + matchedPricing?.unitPrice * getNetworkRecipients(networkId);
-    }, 0);
 
-    // ✅ calculate total schedule budget using the summed prices
-    const totalScheduleBudget = totalNetworkPrice * validDays;
-    // ✅ optionally calculate total messages (example multiplier)
+    // ✅ sum total of selected networks' prices from pricingData
     const totalScheduleMessages = networks?.reduce((sum, network) => {
       const networkId = globalutil
         .networks()
@@ -123,9 +112,23 @@ const AddScheduleModel = (prop) => {
       return sum + validDays * getNetworkRecipients(networkId);
     }, 0);
 
+    const totalNetworkPrice = networks?.reduce((sum, network) => {
+      const networkId = globalutil
+        .networks()
+        .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
+      const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
+      const freeAllowed = matchedPricing?.freeAllowed;
+      if (totalScheduleMessages <= freeAllowed) return 0;
+      return sum + matchedPricing?.unitPrice * getNetworkRecipients(networkId);
+    }, 0);
+
+    // ✅ calculate total schedule budget using the summed prices
+    console.log({ totalNetworkPrice });
+    const totalScheduleBudget = totalNetworkPrice * validDays;
+    // ✅ optionally calculate total messages (example multiplier)
+
     // ✅ if you have multiple schedule budgets to sum
     const totalCampBudget = scheduleJson?.reduce((acc, curr) => acc + (curr.Budget || 0), 0) || 0;
-
     setBudgetData({
       TotalCampBudget: parseFloat(totalCampBudget?.toFixed(2)),
       TotalSchBudget: parseFloat(totalScheduleBudget?.toFixed(2)),
@@ -135,14 +138,16 @@ const AddScheduleModel = (prop) => {
           .networks()
           .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
         const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
+        const freeAllowed = matchedPricing?.freeAllowed;
         const totalNetworkPrice =
-          (matchedPricing?.unitPrice || 0) *
-          (getNetworkRecipients(networkId) || 0) *
-          (validDays || 1);
-
+          totalScheduleMessages <= freeAllowed
+            ? 0
+            : (matchedPricing?.unitPrice || 0) *
+              (getNetworkRecipients(networkId) || 0) *
+              (validDays || 1);
         return {
           networkId,
-          totalNetworkPrice: parseFloat((totalNetworkPrice || '0')?.toFixed(2)),
+          totalNetworkPrice: parseFloat((totalNetworkPrice || 0)?.toFixed(2)),
           totalNetworkMessageCount: validDays * getNetworkRecipients(networkId),
         };
       }),
@@ -595,6 +600,10 @@ const AddScheduleModel = (prop) => {
                         const IconName =
                           network.name.charAt(0).toUpperCase() +
                           network.name.slice(1).toLowerCase();
+
+                        const matchedPricing = pricingData?.find(
+                          (price) => network?.id === price.networkId,
+                        );
                         return (
                           <div
                             key={index}
@@ -607,7 +616,14 @@ const AddScheduleModel = (prop) => {
                               id={IconName}
                               name={IconName}
                               disabled={loading}
-                              label={network.name}
+                              label={
+                                <label>
+                                  {network.name}
+                                  <span className="text-dim" style={{ fontSize: 12 }}>
+                                    {` (Free Allowed: ${matchedPricing?.freeAllowed ?? 0})`}
+                                  </span>
+                                </label>
+                              }
                               checked={selectedNetworks.includes(network.name)}
                               onChange={() => handleNetworkChange(network.name)}
                               className="d-flex align-items-center m-0 fw-semibold text-capitalize"
@@ -849,7 +865,9 @@ const AddScheduleModel = (prop) => {
                         }
                         disabled={loading || scheduleJson?.length === 0}
                         loading={loading}
-                        onClick={togglePaymentMdl}
+                        onClick={() =>
+                          budgetData?.TotalCampBudget < 1 ? submitCompaign('') : togglePaymentMdl()
+                        }
                         type="submit"
                         className="w-auto px-4"
                       >
