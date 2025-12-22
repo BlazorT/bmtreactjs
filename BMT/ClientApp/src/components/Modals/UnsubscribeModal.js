@@ -262,7 +262,7 @@ const UnsubscribeModal = (prop) => {
 
       if (result.status) {
         showToast(result.message, 'success');
-
+        toggle();
       }
     } catch (error) {
       console.error('Submit error:', error);
