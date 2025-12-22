@@ -423,74 +423,113 @@ namespace com.blazor.bmt.controllers
         {
             string emailOrloginName = string.IsNullOrWhiteSpace(user.Email) ? user.UserName : user.Email;
             BlazorResponseViewModel BlazorResponseViewModel = new BlazorResponseViewModel();
+
             try
             {
-
                 var alreadySent = _cache.Get(util.BlazorConstant.CACHE_KEY_FORGOTPWD + "_" + emailOrloginName);
 
                 if (alreadySent == null || (Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.DELETED))
                 {
-                    int StoreId = Convert.ToInt32(this.User.Claims.Where(x => x.Type == "OrgId").FirstOrDefault() == null ? 0 : this.User.Claims.Where(x => x.Type == "OrgId").FirstOrDefault().Value);
-                    if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.Where(x => x.OrgId == StoreId).FirstOrDefault() == null)
+                    int StoreId = Convert.ToInt32(this.User.Claims.FirstOrDefault(x => x.Type == "OrgId")?.Value ?? "0");
+                    if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.FirstOrDefault(x => x.OrgId == StoreId) == null)
                         GlobalUTIL.loadConfigurations(StoreId);
-                    // Store Configuration Loaded
-                    ConfigurationsViewModel viewModel = GlobalSettings.Configurations.Where(x => x.OrgId == StoreId).FirstOrDefault();
 
-
-                    UserViewModel uvm = await _userPageService.GetUserByEmailOrLoginNameAsynch(emailOrloginName, Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.ACTIVE ? "" : user.SecurityToken);
-
-                    if (Convert.ToInt32(user.Status) != (int)util.STATUS_USERS.DELETED)
-                    {
-                        string token = (new Random()).Next(100000, 1000000).ToString();
-                        user.SecurityToken = string.IsNullOrWhiteSpace(user.SecurityToken) ? token : user.SecurityToken;
-                    }
+                    UserViewModel uvm = await _userPageService.GetUserByEmailOrLoginNameAsynch(
+                        emailOrloginName,
+                        Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.ACTIVE ? "" : user.SecurityToken
+                    );
 
                     if (uvm != null)
                     {
                         if (Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.DELETED)
-                            uvm.Status = (int)util.STATUS_USERS.DELETED;
+                        {
+                            // ✅ Security token present → delete user
+                            if (uvm.SecurityToken == user.SecurityToken)
+                            {
+                                await _userPageService.DeleteUser(uvm); // Actually delete
+                                BlazorResponseViewModel.message = string.Format(
+                                    util.BlazorConstant.ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY,
+                                    emailOrloginName,
+                                    System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+                                );
+                                BlazorResponseViewModel.status = true;
+                                BlazorResponseViewModel.data = null;
+                                return BlazorResponseViewModel;
+                            }
+                            else
+                            {
+                                // Token mismatch
+                                BlazorResponseViewModel.message = $"Security token mismatch for {emailOrloginName}.";
+                                BlazorResponseViewModel.status = false;
+                                return BlazorResponseViewModel;
+                            }
+                        }
                         else
-                            uvm.SecurityToken = user.SecurityToken;
+                        {
+                            // Token request → generate token and send
+                            string token = string.IsNullOrWhiteSpace(user.SecurityToken)
+                                ? (new Random()).Next(100000, 1000000).ToString()
+                                : user.SecurityToken;
 
-                        uvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                        uvm.RowVer = uvm.RowVer + 1;
-                        uvm.Remarks = user.Remarks;
-                        await _userPageService.DeleteUser(uvm);
+                            uvm.SecurityToken = token;
+                            uvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                            uvm.RowVer += 1;
+                            uvm.Remarks = user.Remarks;
+                            await _userPageService.UpdateUser(uvm);
+
+                            await _utilPageService.sendUnsubscribeEmailNotfification(
+                                StoreId, uvm.Email, Convert.ToInt16(uvm.Status), token
+                            );
+
+                            var cacheOption = new MemoryCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(BlazorConstant.REQUEST_INTERVAL_EMAIL_SECONDS)
+                            };
+                            _cache.Set(util.BlazorConstant.CACHE_KEY_FORGOTPWD + "_" + emailOrloginName,
+                                System.Web.HttpUtility.HtmlEncode(token), cacheOption);
+
+                            BlazorResponseViewModel.message = string.Format(
+                                util.BlazorConstant.ACCOUNT_DELETE_TOKEN_SENT_SUCCESSFULLY,
+                                emailOrloginName,
+                                System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+                            );
+                            BlazorResponseViewModel.status = true;
+                            BlazorResponseViewModel.data = uvm;
+                        }
                     }
-                    // UsersViewModel uvm = uvmls.Any() ? uvmls.FirstOrDefault() : null;
-                    if (uvm == null)
+                    else
                     {
-                        BlazorResponseViewModel.data = uvm;
-                        BlazorResponseViewModel.message = string.Format(util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED, emailOrloginName, "User does not exists or secutiry code mismatch, for help please contact administrator.!"); ;
                         BlazorResponseViewModel.status = false;
+                        BlazorResponseViewModel.message = string.Format(
+                            util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED,
+                            emailOrloginName,
+                            "User does not exist or security token mismatch!"
+                        );
                         return BlazorResponseViewModel;
                     }
-                    await _utilPageService.sendUnsubscribeEmailNotfification(StoreId, uvm.Email, Convert.ToInt16(uvm.Status), user.SecurityToken);
-                    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                      .AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(BlazorConstant.REQUEST_INTERVAL_EMAIL_SECONDS);
-                    // Save data in cache.
-                    MemoryCacheEntryOptions cacheOption = new MemoryCacheEntryOptions()
-                    {
-                        AbsoluteExpirationRelativeToNow = (DateTime.Now.AddSeconds(BlazorConstant.REQUEST_INTERVAL_EMAIL_SECONDS) - DateTime.Now)
-                    };
-                    _cache.Set(util.BlazorConstant.CACHE_KEY_FORGOTPWD + "_" + emailOrloginName, System.Web.HttpUtility.HtmlEncode(user.SecurityToken), cacheOption);
-
-                    BlazorResponseViewModel.data = uvm;
-                    BlazorResponseViewModel.message = string.Format(util.BlazorConstant.ACCOUNT_DELETE_TOKEN_SENT_SUCCESSFULLY, emailOrloginName, System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
-                    BlazorResponseViewModel.status = true;
-                }//if(alreadySent == null) { 
+                }
                 else
-                {// Already email recived
-                    BlazorResponseViewModel.message = string.Format(util.BlazorConstant.RESET_EMAIL_ALREADY_RECIEVED, emailOrloginName, "there must be 20 minutes between tries");
+                {
+                    // Already requested recently
+                    BlazorResponseViewModel.message = string.Format(
+                        util.BlazorConstant.RESET_EMAIL_ALREADY_RECIEVED,
+                        emailOrloginName,
+                        "there must be 20 minutes between tries"
+                    );
                     BlazorResponseViewModel.status = false;
                     return BlazorResponseViewModel;
                 }
             }
             catch (Exception ex)
             {
-                BlazorResponseViewModel.message = string.Format(util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED, emailOrloginName, (ex.InnerException == null ? ex.Message : ex.InnerException.Message)); ;
+                BlazorResponseViewModel.message = string.Format(
+                    util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED,
+                    emailOrloginName,
+                    ex.InnerException?.Message ?? ex.Message
+                );
                 BlazorResponseViewModel.status = false;
             }
+
             return BlazorResponseViewModel;
         }
 

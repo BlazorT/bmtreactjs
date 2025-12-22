@@ -88,7 +88,19 @@ export const getUserInputFields = (
     // pattern: '.*[A-Z].*',
     message: 'Enter Last Name',
   },
-
+    {
+      component: CustomInput,
+      label: 'Whatsapp',
+      value: UserData.ims,
+      onChange: handleUserInput,
+      icon: cilScreenSmartphone,
+      type: 'text',
+      id: 'ims',
+      name: 'ims',
+      placeholder: 'Whatsapp number',
+      className: 'form-control item',
+      isRequired: false,
+    },
   {
     component: CustomInput,
     label: 'Email',
@@ -104,7 +116,8 @@ export const getUserInputFields = (
 
     // pattern: '.*[A-Z].*',
     message: emailMessage,
-  },
+    },
+
   {
     component: CustomInput,
     label: 'Password',
@@ -153,19 +166,7 @@ export const getUserInputFields = (
     // pattern: '[0-9]{3}[0-9]{3}[0-9]{4}',
     message: 'Enter valid contact number',
   },
-  {
-    component: CustomInput,
-    label: 'Whatsapp',
-    value: UserData.ims,
-    onChange: handleUserInput,
-    icon: cilEnvelopeClosed,
-    type: 'text',
-    id: 'ims',
-    name: 'ims',
-    placeholder: 'Instant message Id',
-    className: 'form-control item',
-    isRequired: false,
-  },
+  
   //{
   //  component: CFormCheck,
   //  name: 'isWhatsappAsso',
@@ -300,7 +301,6 @@ export const getInitialUserData = (user, role) => ({
   address: '',
   cityId: '',
   password: '',
-  address: '',
   userName: '',
   ims: '',
   securityToken: '',

@@ -89,7 +89,7 @@ function AppFooter() {
       <div className="row">
         <div className="col-md-4 order1">
           <a className="labelName pointer" onClick={UnsubscribeModal}>
-            Unsubscribe
+            Account Closed ?
           </a>
         </div>
       </div>
