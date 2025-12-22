@@ -1111,6 +1111,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                     OrgName = "" + (dr["orgName"]),                                    
                                     //  ExpiryDate = Convert.ToDateTime(dr["ExpiryDate"]),                                            
                                     LastUpdatedAt = Convert.ToDateTime(dr["LastUpdatedAt"]),
+                                    CreatedAt = Convert.ToDateTime(dr["CreatedAt"]),
                                     CreatedBy = Convert.ToInt32(dr["CreatedBy"]),
                                     Title = "" + (dr["Compaigntitle"]),
                                     NetworkName = "" + (dr["NetworkName"]),

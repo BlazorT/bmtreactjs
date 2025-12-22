@@ -32,7 +32,7 @@ public partial class _bmtContext : DbContext
     public virtual DbSet<Auditentity> Auditentities { get; set; }
 
     public virtual DbSet<Auditlog> Auditlogs { get; set; }
-
+    public virtual DbSet<Unsubscriber> Unsubscribers { get; set; }
     public virtual DbSet<Contactsalbum> Contactsalbums { get; set; }
     public virtual DbSet<Compaignrecipient> Compaignrecipients { get; set; }
     public virtual DbSet<Bundlingpackagedetail> Bundlingpackagedetails { get; set; }
@@ -463,6 +463,19 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Symbol).HasMaxLength(100);
+        });
+        modelBuilder.Entity<Unsubscriber>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("unsubscriber");
+
+            entity.Property(e => e.Contactid)
+                .HasMaxLength(150)
+                .HasColumnName("contactid");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.Networkid).HasColumnName("networkid");
+            entity.Property(e => e.Remarks).HasMaxLength(1000);
         });
 
         modelBuilder.Entity<Efmigrationshistory>(entity =>
