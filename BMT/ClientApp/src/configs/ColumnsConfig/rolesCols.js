@@ -1,19 +1,19 @@
 /* eslint-disable react/react-in-jsx-scope */
 import BmtRolesCustomCell from 'src/components/DataGridCustomCells/BmtRolesCustomCell';
 export const getRolesCols = (pageRoles) => [
-  {
-    key: 'id',
-    headerCellClass: 'custom-header-data-grid',
-    editable: false,
-    filterable: false,
-    disableColumnMenu: true,
-    name: 'id',
-    hidable: false,
-    headerAlign: 'center',
-    align: 'center',
-    cellClassName: 'centered-cell',
-    width: 60,
-  },
+  //{
+  //  key: 'id',
+  //  headerCellClass: 'custom-header-data-grid',
+  //  editable: false,
+  //  filterable: false,
+  //  disableColumnMenu: true,
+  //  name: 'id',
+  //  hidable: true,
+  //  headerAlign: 'center',
+  //  align: 'center',
+  //  cellClassName: 'centered-cell',
+  //  width: 60,
+  //},
   {
     key: 'roleName',
     headerCellClass: 'custom-header-data-grid',

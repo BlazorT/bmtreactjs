@@ -200,14 +200,14 @@ const AppHeaderDropdown = () => {
           Profile
         </CDropdownItem>
         {/* <CDropdownDivider /> */}
-        <CDropdownItem
-          className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
-          role="button"
-          onClick={toggleStatus}
-        >
-          <CIcon icon={cilUserX} className="me-2 " />
-          Unsubscribe
-        </CDropdownItem>
+        {/*<CDropdownItem*/}
+        {/*  className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"*/}
+        {/*  role="button"*/}
+        {/*  onClick={toggleStatus}*/}
+        {/*>*/}
+        {/*  <CIcon icon={cilUserX} className="me-2 " />*/}
+        {/*  Unsubscribe*/}
+        {/*</CDropdownItem>*/}
         <CDropdownItem
           className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
           role="button"
