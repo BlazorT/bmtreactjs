@@ -41,6 +41,7 @@ public partial class UserViewModel
     public string? Ims { get; set; }
 
     public int? AddressId { get; set; }
+    public string? Address { get; set; }
 
     public int GenderId { get; set; }
 
