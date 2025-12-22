@@ -735,7 +735,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 //uvmi.RoleId = (int)UTIL.USERROLES.MERCHANT;
                                 uvmi.Gpslocation = "";
                                 uvmi.Title = "" + reader["Title"];
-                                uvmi.Ims = "";
+                               
                                 uvmi.GenderId = Convert.ToInt32(reader["GenderID"]);
                                 uvmi.Status = Convert.ToInt32(reader["Status"]);
                                 //uvmi.CreditCardExpiryDate = Convert.ToDateTime(reader["CreditCardExpiryDate"]);
@@ -743,7 +743,8 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 uvmi.OrgName = "" + reader["OrgName"];
                                 uvmi.Avatar = "" + reader["Avatar"];
                                 //uvmi.ZipPostalCode = "" + reader["ZipPostalCode"];
-                                uvmi.AddressId = Convert.ToInt32(reader["AddressId"]);
+                                uvmi.Ims = ""+reader["IMs"];
+                                uvmi.Address = "" + reader["Address"];
                                 uvmi.UserName = "" + reader["UserName"];
                                 //uvmi.Contact = "" + reader["PhoneNumber"];
                                 //uvmi.FileUniqueId = "" + reader["FileUniqueId"];
