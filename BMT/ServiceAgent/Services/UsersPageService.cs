@@ -100,6 +100,12 @@ namespace Blazor.Web.UI.Services
             // var mappedByName = _mapper.Map<IEnumerable<EnumViewModel>>(authors);
             return sbrlist;
         }
+        public async Task<UserViewModel> GetUserByEmailOrLoginNameAsynch(string emailOrLogin, string securityCode)
+        {
+            var model = await _usersAppService.GetUserByEmailORLoginnameSync(emailOrLogin, securityCode);
+            var mapped = _mapper.Map<UserViewModel>(model);
+            return mapped;
+        }
         public async Task<AddressViewModel> GetUserAddress(int userId)
         {
             try

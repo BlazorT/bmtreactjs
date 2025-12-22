@@ -20,7 +20,8 @@ namespace com.blazor.bmt.controllers
         private IMemoryCache _cache;
         private readonly ILogger<BlazorApiController> _logger;
         private readonly IOrgPageService _orgPageService;
-       // private readonly IProductPageService _productPageService;
+        private readonly IBlazorUtilPageService _utilPageService;
+        // private readonly IProductPageService _productPageService;
         private readonly IMediaContentPageService _mediaContentPageService;
         private readonly IBlazorRepoPageService _blazorRepoPageService;
         private readonly IAppLogPageService _appLogPageService;
@@ -28,12 +29,14 @@ namespace com.blazor.bmt.controllers
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         string applicationPath = string.Empty;
         private _bmtContext? dbContext;
-        public BlazorApiController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IMediaContentPageService mediaContentPageService, IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IOrgPageService orgPageService, IUsersPageService userPageService,  ILogger<BlazorApiController> logger,  IMemoryCache cache)
+        public BlazorApiController(IBlazorUtilPageService utilPageService ,Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IMediaContentPageService mediaContentPageService, IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IOrgPageService orgPageService, IUsersPageService userPageService,  ILogger<BlazorApiController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration; 
             this.dbContext = new _bmtContext();
             _cache = cache;
+            _utilPageService = utilPageService ?? throw new ArgumentNullException(nameof(utilPageService));
+
             _orgPageService = orgPageService ?? throw new ArgumentNullException(nameof(orgPageService));
             _userPageService = userPageService ?? throw new ArgumentNullException(nameof(userPageService));
            // _productPageService = productPageService ?? throw new ArgumentNullException(nameof(productPageService));
@@ -414,6 +417,123 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
+        [HttpPost]
+        [Route("deletaccount")]
+        public async Task<BlazorResponseViewModel> submitUnsubscribeRequest([FromBody] UserViewModel user)
+        {
+            string emailOrloginName = string.IsNullOrWhiteSpace(user.Email) ? user.UserName : user.Email;
+            BlazorResponseViewModel BlazorResponseViewModel = new BlazorResponseViewModel();
+
+            try
+            {
+                var alreadySent = _cache.Get(util.BlazorConstant.CACHE_KEY_FORGOTPWD + "_" + emailOrloginName);
+
+                if (alreadySent == null || (Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.DELETED))
+                {
+                    int StoreId = Convert.ToInt32(this.User.Claims.FirstOrDefault(x => x.Type == "OrgId")?.Value ?? "0");
+                    if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.FirstOrDefault(x => x.OrgId == StoreId) == null)
+                        GlobalUTIL.loadConfigurations(StoreId);
+
+                    UserViewModel uvm = await _userPageService.GetUserByEmailOrLoginNameAsynch(
+                        emailOrloginName,
+                        Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.ACTIVE ? "" : user.SecurityToken
+                    );
+
+                    if (uvm != null)
+                    {
+                        if (Convert.ToInt32(user.Status) == (int)util.STATUS_USERS.DELETED)
+                        {
+                            // ✅ Security token present → delete user
+                            if (uvm.SecurityToken == user.SecurityToken)
+                            {
+                                await _userPageService.DeleteUser(uvm); // Actually delete
+                                BlazorResponseViewModel.message = string.Format(
+                                    util.BlazorConstant.ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY,
+                                    emailOrloginName,
+                                    System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+                                );
+                                BlazorResponseViewModel.status = true;
+                                BlazorResponseViewModel.data = null;
+                                return BlazorResponseViewModel;
+                            }
+                            else
+                            {
+                                // Token mismatch
+                                BlazorResponseViewModel.message = $"Security token mismatch for {emailOrloginName}.";
+                                BlazorResponseViewModel.status = false;
+                                return BlazorResponseViewModel;
+                            }
+                        }
+                        else
+                        {
+                            // Token request → generate token and send
+                            string token = string.IsNullOrWhiteSpace(user.SecurityToken)
+                                ? (new Random()).Next(100000, 1000000).ToString()
+                                : user.SecurityToken;
+
+                            uvm.SecurityToken = token;
+                            uvm.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                            uvm.RowVer += 1;
+                            uvm.Remarks = user.Remarks;
+                            await _userPageService.UpdateUser(uvm);
+
+                            await _utilPageService.sendUnsubscribeEmailNotfification(
+                                StoreId, uvm.Email, Convert.ToInt16(uvm.Status), token
+                            );
+
+                            var cacheOption = new MemoryCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(BlazorConstant.REQUEST_INTERVAL_EMAIL_SECONDS)
+                            };
+                            _cache.Set(util.BlazorConstant.CACHE_KEY_FORGOTPWD + "_" + emailOrloginName,
+                                System.Web.HttpUtility.HtmlEncode(token), cacheOption);
+
+                            BlazorResponseViewModel.message = string.Format(
+                                util.BlazorConstant.ACCOUNT_DELETE_TOKEN_SENT_SUCCESSFULLY,
+                                emailOrloginName,
+                                System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+                            );
+                            BlazorResponseViewModel.status = true;
+                            BlazorResponseViewModel.data = uvm;
+                        }
+                    }
+                    else
+                    {
+                        BlazorResponseViewModel.status = false;
+                        BlazorResponseViewModel.message = string.Format(
+                            util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED,
+                            emailOrloginName,
+                            "User does not exist or security token mismatch!"
+                        );
+                        return BlazorResponseViewModel;
+                    }
+                }
+                else
+                {
+                    // Already requested recently
+                    BlazorResponseViewModel.message = string.Format(
+                        util.BlazorConstant.RESET_EMAIL_ALREADY_RECIEVED,
+                        emailOrloginName,
+                        "there must be 20 minutes between tries"
+                    );
+                    BlazorResponseViewModel.status = false;
+                    return BlazorResponseViewModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                BlazorResponseViewModel.message = string.Format(
+                    util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED,
+                    emailOrloginName,
+                    ex.InnerException?.Message ?? ex.Message
+                );
+                BlazorResponseViewModel.status = false;
+            }
+
+            return BlazorResponseViewModel;
+        }
+
+
         [HttpPost]
         [Route("updateuserstatus")]
         public async Task<ActionResult> UpdateUserStatus([FromBody] UserViewModel uvm)

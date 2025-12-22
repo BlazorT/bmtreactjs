@@ -3,18 +3,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import ContactUs from 'src/components/Modals/ContactUs';
+import Unsubscribe from 'src/components/Modals/Unsubscribe';
 import TermOfUse from 'src/components/Modals/TermOfUse';
 
 function AppFooter() {
   const navigate = useNavigate();
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [contactUsmodalOpen, setContactUsmodalOpen] = useState(false);
+  const [UnsubscribeModalOpen, setUnsubscribeModalOpen] = useState(false);
   const [termOfUsemodalOpen, setTermOfUsemodalOpen] = useState(false);
   const TermsModal = () => {
     setTermsmodalOpen((prev) => !prev);
   };
   const ContactModal = () => {
     setContactUsmodalOpen((prev) => !prev);
+  };
+  const UnsubscribeModal = () => {
+    setUnsubscribeModalOpen((prev) => !prev);
   };
   const TermOfUseModal = () => {
     setTermOfUsemodalOpen((prev) => !prev);
@@ -59,6 +64,7 @@ function AppFooter() {
             Register Organization
           </a>
         </div>
+       
         <div className="col-md-4 order3 mt-2">
           <img className="socialMediaIcon" src="insta-removebg-preview.png" alt="logo" />
           <img className="socialMediaIcon" src="twitter.png" alt="logo" />
@@ -80,8 +86,16 @@ function AppFooter() {
           {/* <a className="labelName pointer">FAQs</a> */}
         </div>
       </div>
+      <div className="row">
+        <div className="col-md-4 order1">
+          <a className="labelName pointer" onClick={UnsubscribeModal}>
+            Account Closed ?
+          </a>
+        </div>
+      </div>
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
       <ContactUs isOpen={contactUsmodalOpen} toggle={ContactModal} />
+      <Unsubscribe isOpen={UnsubscribeModalOpen} toggle={UnsubscribeModal} />
       <TermOfUse isOpen={termOfUsemodalOpen} toggle={TermOfUseModal} />
     </div>
   );

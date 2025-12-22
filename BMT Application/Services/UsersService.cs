@@ -28,7 +28,13 @@ namespace com.blazor.bmt.application.services
             var ulist = await _userRepository.GetUsersAllFiltersAsync(umodal);
             var mapped = _mapper.Map<IEnumerable<UserModel>>(ulist);
             return mapped;
-        }       
+        }
+        public async Task<UserModel> GetUserByEmailORLoginnameSync(string EmailOrLogin, string SecurityCode)
+        {
+            var model = await _userRepository.GetUserByEmailORLoginnameSync(EmailOrLogin, SecurityCode);
+            var mapped = _mapper.Map<UserModel>(model);
+            return mapped;
+        }
         public async Task<IEnumerable<UserModel>> GetMobileUsersByAllFiltersAsync(UserModel model) {
             var umodal = _mapper.Map<User>(model);
             var ulist = await _userRepository.GetOrgMobileUsersAllFiltersAsync(umodal);

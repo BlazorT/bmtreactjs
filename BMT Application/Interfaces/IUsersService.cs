@@ -15,6 +15,7 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<UserModel>> GetAllUsersList(UserModel model);
         Task<IEnumerable<UserModel>> GetAllDspUsersList(UserModel model);
         Task<UserModel> Create(UserModel model);
+        Task<UserModel> GetUserByEmailORLoginnameSync(string EmailOrLogin, string SecurityCode);
         Task Update(UserModel model);
         Task Delete(UserModel model);
     }
