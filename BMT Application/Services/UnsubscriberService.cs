@@ -50,19 +50,23 @@ namespace com.blazor.bmt.application.services
             var mapped = _mapper.Map<IEnumerable<UnsubscriberModel>>(mediaContentList);
             return mapped;
         }
-        public async Task<UnsubscriberModel> Create(UnsubscriberModel model)
+        public async Task<List<UnsubscriberModel>> Create(List<UnsubscriberModel> models)
         {
-            // await ValidateProductIfExist(PaymentModel);
+            var resultList = new List<UnsubscriberModel>();
 
-            var mappedEntity = _mapper.Map<Unsubscriber>(model);
-            if (mappedEntity == null)
-                throw new ApplicationException($"Entity could not be mapped.");
+            foreach (var model in models)
+            {
+                var mappedEntity = _mapper.Map<Unsubscriber>(model);
+                if (mappedEntity == null) throw new ApplicationException("Entity could not be mapped.");
 
-            var newEntity = await _unsubscriberRepository.AddAsync(mappedEntity);
-            _logger.LogInformation($"Entity successfully added - PaymentService");
+                var newEntity = await _unsubscriberRepository.AddAsync(mappedEntity);
+                _logger.LogInformation("Entity successfully added - UnsubscriberService");
 
-            var newMappedEntity = _mapper.Map<UnsubscriberModel>(newEntity);
-            return newMappedEntity;
+                var newMappedEntity = _mapper.Map<UnsubscriberModel>(newEntity);
+                resultList.Add(newMappedEntity);
+            }
+
+            return resultList;
         }
 
         public async Task Update(UnsubscriberModel model)

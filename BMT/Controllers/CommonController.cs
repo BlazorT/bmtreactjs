@@ -24,7 +24,8 @@ namespace com.blazor.bmt.controllers
         private readonly ILogger<CommonController> _logger;
         private readonly IAppLogPageService _appLogPageService;
         private readonly IConfigurationsService _configurationsService;
-       private readonly IStatesService _stateService;
+        private readonly IStatesService _stateService;
+        private readonly IUnsubscriberService _unsubscriberService;
         private readonly ICitiesService _citiesService;
 		//private readonly ICampaignTemplateService _citiesService;
 		private readonly INotificationPageService _notificationPageService;  
@@ -35,15 +36,16 @@ namespace com.blazor.bmt.controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public CommonController(Microsoft.Extensions.Hosting.IHostingEnvironment hostingEnvironment, ICampaignTemplateService campaignTemplateService, IStatesService stateService, ICitiesService citiesService, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
+        public CommonController(Microsoft.Extensions.Hosting.IHostingEnvironment hostingEnvironment, IUnsubscriberService unsubscriberService, ICampaignTemplateService campaignTemplateService, IStatesService stateService, ICitiesService citiesService, IBlazorUtilPageService blazorUtilPageService, INotificationPageService notificationPageService,IAppLogPageService appLogPageService, IBlazorRepoPageService blazorRepoPageService, IConfigurationsService configurationsService, IStatesService statesService, IHttpContextAccessor httpContextAccessor, ILogger<CommonController> logger,  IMemoryCache cache)
         {
             _logger = logger;
             // _Configuration = configuration;
             // this.dbContext = new _bmtContext();
-             _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
+            _stateService = statesService ?? throw new ArgumentNullException(nameof(statesService));
             _citiesService = citiesService ?? throw new ArgumentNullException(nameof(citiesService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
             _campaignTemplateService = campaignTemplateService ?? throw new ArgumentNullException(nameof(campaignTemplateService));
+            _unsubscriberService = unsubscriberService ?? throw new ArgumentNullException(nameof(unsubscriberService));
             _configurationsService = configurationsService ?? throw new ArgumentNullException(nameof(configurationsService));
           //  _onlineUsersService = onlineUsersService ?? throw new ArgumentNullException(nameof(onlineUsersService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
@@ -589,6 +591,32 @@ namespace com.blazor.bmt.controllers
         //    //  return View(Url.Action("Dashboard_5", "Dashboards"));
         //    return Ok(response);
         //}      
+
+        [HttpPost("unsubscriberrequest")]
+        [Route("unsubscriberrequest")]
+        public async Task<BlazorResponseViewModel> PostUnsubscriberContactData([FromBody] List<UnsubscriberModel> mlst)
+        {
+            var response = new BlazorResponseViewModel();
+
+            if (mlst == null || !mlst.Any())
+                return new BlazorResponseViewModel { status = false, message = "No data provided" };
+
+            try
+            {
+                var createdModels = await _unsubscriberService.Create(mlst);
+
+                response.status = true;
+                response.message = $"{createdModels.Count} unsubscriber(s) Request created successfully";
+                response.data = createdModels;
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = ex.Message;
+            }
+
+            return response;
+        }
 
         [HttpPost("submitgrouprights")]
         [Route("submitgrouprights")]

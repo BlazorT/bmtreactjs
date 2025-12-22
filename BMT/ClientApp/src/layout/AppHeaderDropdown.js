@@ -31,6 +31,7 @@ import Spinner from 'src/components/UI/Spinner';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { faMonument } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
+import Unsubscribe from 'src/components/Modals/UnsubscribeModal';
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
@@ -44,10 +45,13 @@ const AppHeaderDropdown = () => {
 
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [UnsubscribeModalOpen, setUnsubscribeModalOpen] = useState(false);
 
   const toggleModal = () => setIsUserProfileModalOpen((prev) => !prev);
   const togglePasswordModal = () => setIsPasswordModalOpen((prev) => !prev);
-
+  const UnsubscribeModal = () => {
+    setUnsubscribeModalOpen((prev) => !prev);
+  };
   const {
     response: logoutRes,
     error: logoutmenuErr,
@@ -199,15 +203,15 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
-        {/* <CDropdownDivider /> */}
-        {/*<CDropdownItem*/}
-        {/*  className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"*/}
-        {/*  role="button"*/}
-        {/*  onClick={toggleStatus}*/}
-        {/*>*/}
-        {/*  <CIcon icon={cilUserX} className="me-2 " />*/}
-        {/*  Unsubscribe*/}
-        {/*</CDropdownItem>*/}
+         <CDropdownDivider /> 
+        <CDropdownItem
+          className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
+          role="button"
+          onClick={UnsubscribeModal}
+        >
+          <CIcon icon={cilUserX} className="me-2 " />
+          Unsubscribe
+        </CDropdownItem>
         <CDropdownItem
           className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
           role="button"
@@ -227,6 +231,7 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
       </CDropdownMenu>
       <UserProfileModal isOpen={isUserProfileModalOpen} toggle={toggleModal} />
+      <Unsubscribe isOpen={UnsubscribeModalOpen} toggle={UnsubscribeModal} />
       <UserProfileModal
         isOpen={isPasswordModalOpen}
         toggle={togglePasswordModal}

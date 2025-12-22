@@ -13,8 +13,10 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<UnsubscriberModel>> GetUnsubscribersListByContactIdAsync(string contacid);
         Task<UnsubscriberModel> GetUnsubscriberByIdAsync(Int64 id);
         Task<IEnumerable<UnsubscriberModel>> GetUnsubscribersListAllFiltersAsync(UnsubscriberModel compaign);
-        Task<UnsubscriberModel> Create(UnsubscriberModel model);
+       // Task<UnsubscriberModel> Create(UnsubscriberModel model);
         Task Update(UnsubscriberModel configurationsModel);
+        Task<List<UnsubscriberModel>> Create(List<UnsubscriberModel> models);
+
 
 
     }
