@@ -19,7 +19,7 @@ import Form from 'src/components/UI/Form';
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
 import useFetch from 'src/hooks/useFetch';
-//import { setUserData } from 'src/redux/user/userSlice';
+import { setUserData as setLoginUser } from 'src/redux/user/userSlice';
 import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
@@ -61,7 +61,6 @@ const UserRegister = () => {
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
   const [userNameMessage, setUserNameMessage] = useState('Enter Valid User Name');
-
   // useEffect to handle initial setup
   useEffect(() => {
     formValidator();
@@ -96,9 +95,6 @@ const UserRegister = () => {
         checkUserAvailability('', fieldValue, UserData.id, setEmailMessage, setUserNameMessage);
       }
 
-      if (name === 'roleId' && user.userId === UserData.id) {
-        dispatch(setUserData({ roleId: parseInt(fieldValue) }));
-      }
       setEmailMessage('Enter Valid Email Address');
       setUserNameMessage('Enter Valid User Name');
       setUserData((prevData) => ({ ...prevData, [name]: fieldValue }));
@@ -169,6 +165,17 @@ const UserRegister = () => {
         //console.log({ userBody, avatarPath });
         const res = await createUpdateUser(userBody);
         if (res.status === true) {
+          if (user.userId === UserData.id) {
+            dispatch(
+              setLoginUser({
+                roleId: parseInt(userBody?.roleId),
+                userInfo: {
+                  ...user?.userInfo,
+                  roleId: parseInt(userBody?.roleId),
+                },
+              }),
+            );
+          }
           navigate('/Users');
         } else if (res.errorCode) {
           showToast(res?.message || res?.errorCode, 'danger');
@@ -281,6 +288,7 @@ const UserRegister = () => {
       },
     );
   };
+
   // Define user input fields
   const userInputFields = getUserInputFields(
     UserData,
@@ -298,6 +306,50 @@ const UserRegister = () => {
     GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
 
+  const comparableFields = [
+    'firstName',
+    'middleName',
+    'lastName',
+    'email',
+    'contact',
+    'address',
+    'cityId',
+    'status',
+    'orgId',
+    'roleId',
+    'genderId',
+  ];
+
+  const DEFAULTS = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    contact: '',
+    address: '',
+    cityId: '',
+    status: 1,
+    orgId: user.orgId,
+    roleId: '',
+    genderId: 1,
+  };
+
+  const state = location?.state?.user?.[0];
+
+  const isDiscard =
+    UserData?.id === 0
+      ? // CREATE MODE: check if any field differs from default
+        comparableFields.some((key) => {
+          const value = UserData?.[key];
+          const defaultValue = DEFAULTS[key];
+          console.log({ key, value, defaultValue });
+          // treat null / undefined / empty string as default
+          if (value === null || value === undefined) return false;
+
+          return value !== defaultValue;
+        })
+      : // EDIT MODE: compare against original data
+        comparableFields.some((key) => UserData?.[key] !== state?.[key]);
   return (
     <React.Fragment>
       {userLoading || avatarLoading ? (
@@ -313,7 +365,12 @@ const UserRegister = () => {
             />
             <Form name="da-user-form">
               {showForm && (
-                <Inputs inputFields={userInputFields} yesFn={goToAnotherPage} submitFn={addUser}>
+                <Inputs
+                  inputFields={userInputFields}
+                  yesFn={goToAnotherPage}
+                  submitFn={addUser}
+                  isDiscard={isDiscard}
+                >
                   <CRow className="w-50 align-self-center mt-2 mb-3">
                     <CCol md="6">
                       <CForm>

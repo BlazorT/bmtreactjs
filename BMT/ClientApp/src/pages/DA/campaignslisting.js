@@ -1,69 +1,104 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import useFetch from 'src/hooks/useFetch';
-import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
+import _ from 'lodash';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import Loading from 'src/components/UI/Loading';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
+import AppContainer from 'src/components/UI/AppContainer';
 import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslistingCols';
-import { updateToast } from 'src/redux/toast/toastSlice';
+import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
-import AppContainer from 'src/components/UI/AppContainer';
-import _ from 'lodash';
-const campaignslisting = () => {
-  dayjs.extend(utc);
-  const user = useSelector((state) => state.user);
+import useApi from 'src/hooks/useApi';
+import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
 
+dayjs.extend(utc);
+
+const campaignslisting = () => {
+  const user = useSelector((state) => state.user);
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Campaigns Listing',
   );
+
   const navigate = useNavigate();
+
+  const {
+    data: orgsRes,
+    loading: orgLoading,
+    postData: getOrgs,
+  } = useApi('/BlazorApi/orgsfulldata');
+  const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
+  const { data: usersRes, loading: usersLoading, error, fetchUsers } = useFetchUsers();
+
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
   const [campaignData, setCampaignData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-
-  const orgId = user.orgId;
-  const Role = user.roleId;
+  const [rows, setRows] = useState([]);
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
     rowVer: 0,
     networkId: 0,
-    Name: '',
+    name: '',
     HashTags: '',
     status: 0,
-    createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
+    createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-  console.log('filters', filters);
 
-  const [rows, setRows] = useState([]);
-  const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
+  const orgId = user.orgId;
 
   useEffect(() => {
-    getCampaignsList(filters);
+    getOrganizationLst();
+    fetchUsers(0, {
+      UserName: '',
+      status: '',
+      lastUpdatedAt: dayjs().utc().startOf('day').format(),
+      createdAt: dayjs().subtract(100, 'years').startOf('month').format(),
+    });
   }, []);
+
+  useEffect(() => {
+    if (usersRes?.status) {
+      getCampaignsList(filters);
+    }
+  }, [usersRes]);
+
+  useEffect(() => {
+    if (orgsRes?.data?.length > 0) {
+      const orgData = orgsRes?.data;
+      const findUserOrg = orgData?.find((item) => item.id === orgId);
+      if (findUserOrg)
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          orgId: findUserOrg?.id,
+        }));
+    }
+  }, [orgsRes?.data, orgId]);
 
   const getCampaignsList = async (filters) => {
     const campaignsList = await getCompaignsList(filters);
     setCampaignData(campaignsList);
 
-    const mappedArray = campaignsList.map((data) => ({
-      id: data.id,
-      name: data.name,
-      orgName: data.orgName,
-      startTime: formatDateTime(data.startTime),
-      finishTime: formatDateTime(data.finishTime),
-    }));
+    const mappedArray = campaignsList.map((data) => {
+      const findUser = usersRes?.data?.find((u) => u.id === data.createdBy);
+      return {
+        id: data.id,
+        name: data.name,
+        orgName: data.orgName,
+        totalBudget: data?.totalBudget > 0 ? data?.totalBudget?.toFixed(2) || '--' : 'free',
+        createdBy: (findUser?.firstName || '--') + ' ' + (findUser?.lastName || '--'),
+        createdAt: formatDateTime(data.createdAt),
+        startTime: formatDateTime(data.startTime),
+        finishTime: formatDateTime(data.finishTime),
+        status: data?.status,
+      };
+    });
 
     // ✅ Group ONLY by name
     const groupedData = _.groupBy(mappedArray, (item) => item.name);
@@ -82,7 +117,12 @@ const campaignslisting = () => {
       // Child rows
       const childRows = groupItems.map((item, i) => ({
         id: `${item.id}-${i}`,
+        campaignId: item.id,
         name: '', // hide name in children
+        totalBudget: item?.totalBudget || '--',
+        createdBy: item.createdBy,
+        createdAt: formatDateTime(item.createdAt),
+        status: item?.status,
         startTime: item.startTime,
         finishTime: item.finishTime,
         orgName: item.orgName,
@@ -93,34 +133,28 @@ const campaignslisting = () => {
     });
 
     setRows(groupedRows);
-    console.log(groupedRows, 'Grouped ONLY by name');
   };
-  const changeFilter = (event, fieldName, label) => {
-    let colName = fieldName;
 
+  const changeFilter = (event, fieldName, label) => {
     if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [colName]: dayjs(event).utc().format(),
+        [fieldName]: event,
+      }));
+    } else if (fieldName === 'orgId') {
+      // 👉 Handle autocomplete / object case
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        orgId: event?.id || 0,
       }));
     } else if (event?.target) {
       // 👉 Normal text input
       const { name, value } = event.target;
-      colName = name === 'networks' ? 'networkId' : name;
 
       setFilters((prevData) => ({
         ...prevData,
-        [colName]: value,
+        [name]: value,
       }));
-    } else if (fieldName === 'Name') {
-      // 👉 Handle autocomplete / object case
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        //name: typeof event === 'string' ? event : event?.label || '',
-        orgId: event?.id || 0,
-      }));
-    } else {
-      console.warn('Unsupported event type:', event);
     }
   };
 
@@ -133,101 +167,71 @@ const campaignslisting = () => {
   };
 
   const handleReset = () => {
-    // getCampaignsList();
-    //setFilters({
-    //  id: 0,
-    //  orgId: user.orgId,
-    //  rowVer: 0,
-    //  networkId: 0,
-    //  name: '',
-    //  status: 0,
-    //  createdAt: dayjs().subtract(5, 'month').startOf('month').format(),
-    //  lastUpdatedAt: dayjs().utc().startOf('day').format()
-    //});
-  };
-  const {
-    response: GetOrgRes,
-    loading: OrgLoading,
-    error: GetOrgError,
-    fetchData: GetOrg,
-  } = useFetch();
-  useEffect(() => {
-    getOrganizationLst(filters);
-  }, []);
-  const getOrganizationLst = async (compaign) => {
-    const compaignBody = {
+    getCampaignsList({
       id: 0,
-      roleId: compaign,
+      orgId: user.orgId,
+      rowVer: 0,
+      networkId: 0,
+      name: '',
+      HashTags: '',
+      status: 0,
+      createdAt: dayjs().startOf('month').format(),
+      lastUpdatedAt: dayjs().local().startOf('day').format(),
+    });
+    setFilters({
+      id: 0,
+      orgId: user.orgId,
+      rowVer: 0,
+      networkId: 0,
+      name: '',
+      HashTags: '',
+      status: 0,
+      createdAt: dayjs().startOf('month').format(),
+      lastUpdatedAt: dayjs().local().startOf('day').format(),
+    });
+  };
+
+  const getOrganizationLst = async () => {
+    const orgBody = {
+      id: 0,
+      roleId: 0,
       orgId: 0,
       email: '',
       name: '',
       HashTags: '',
       contact: '',
       rowVer: 0,
-      cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
+      cityId: 0,
+      status: 0,
       // keyword: filters ? filters.keyword : '',
-      createdAt: filters
-        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
-        : dayjs().subtract(1, 'year').utc().format(),
-      lastUpdatedAt: filters
-        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format(),
+      createdAt: dayjs().subtract(100, 'year').utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
       createdBy: 0,
       lastUpdatedBy: 0,
-      ...filters,
     };
-    await GetOrg(
-      '/BlazorApi/orgsfulldata',
-      { method: 'POST', body: JSON.stringify(compaignBody) },
-      (res) => {
-        console.log(res, 'orgs');
-        if (res.status === true) {
-          // setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          /*   setRows([]);*/
-        }
-        setIsLoading(OrgLoading.current);
-      },
-    );
+    await getOrgs(orgBody);
   };
-  useEffect(() => {
-    if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data;
-      const findUserOrg = orgData?.find((item) => item.id === orgId);
-      // console.log(findUserOrg, 'findUserOrg')
-      if (findUserOrg)
-        setFilters((prevFilters) => ({
-          ...prevFilters,
-          name: findUserOrg,
-        }));
-    }
-  }, [GetOrgRes?.current?.data, orgId]);
+
   const orgFilterFields = getOrgFiltersFields(
     filters,
     changeFilter,
-    GetOrgRes?.current?.data || [],
-    Role,
+    orgsRes?.data || [],
+    user?.roleId,
   );
-  const campaignslistingCols = getcampaignslistingCols(getCampaignsList, campaignData, pageRoles);
+  const campaignslistingCols = getcampaignslistingCols(
+    getCampaignsList,
+    campaignData,
+    pageRoles,
+    filters,
+  );
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
     <React.Fragment>
       {data && (
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Campaigns Listing -> Advance Search (Organization, Network, Date To, #Tag)"
+              title="Advance Search"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
@@ -246,7 +250,7 @@ const campaignslisting = () => {
 
           <AppContainer>
             <DataGridHeader
-              title="Campaigns Listing"
+              title="Campaigns"
               onClick={toggleGrid}
               addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
               addBtnClick={() => navigate('/campaignadd')}
@@ -259,10 +263,29 @@ const campaignslisting = () => {
                 columns={campaignslistingCols}
                 rowHeight={50}
                 pagination={true}
+                loading={orgLoading || loading || usersLoading}
                 // loading={rows.length < 1 ? true : false}
                 sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
                 canExport={pageRoles.canExport}
                 canPrint={pageRoles.canPrint}
+                summary={[
+                  {
+                    field: 'totalBudget',
+                    aggregates: [{ aggregate: 'sum', caption: 'Total Budget' }],
+                  },
+                  {
+                    field: 'startTime',
+                    aggregates: [{ aggregate: 'max', caption: 'Max Start Time' }],
+                  },
+                  {
+                    field: 'startTime',
+                    aggregates: [{ aggregate: 'min', caption: 'Min Start Time' }],
+                  },
+                  // {
+                  //   field: 'delivered',
+                  //   aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
+                  // },
+                ]}
               />
             )}
           </AppContainer>

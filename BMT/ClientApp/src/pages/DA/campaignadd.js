@@ -554,9 +554,14 @@ const campaignadd = () => {
 
   // console.log({ campaignRegData });
 
-  if (loading || pricingLoading) {
+  if (pricingLoading) {
     return <Loading />;
   }
+
+  // ✅ Helper to get hashtags as string (for backend submission)
+  const getHashTagsString = () => {
+    return campaignRegData.hashTags.map((tag) => `#${tag}`).join(' ');
+  };
   // console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
@@ -807,6 +812,7 @@ const campaignadd = () => {
         paymentRef={paymentRef}
         pricingData={pricingData}
         recipients={recipients}
+        fetchRecipientList={fetchRecipientList}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
-
+dayjs.extend(timezone);
 export const formatDate = (dateString) => {
   // Parse the date using moment
   const parsedDate = dayjs(dateString);
@@ -13,12 +14,10 @@ export const formatDate = (dateString) => {
 };
 
 export const formatDateTime = (dateTimeString) => {
-  // Parse the date and time using moment in UTC mode
-  const parsedDateTime = dayjs.utc(dateTimeString);
-  // console.log(dayjs.utc(dateTimeString).format(), dayjs.locale(dateTimeString).format());
-  // Format the parsed date and time in the desired format
-  const formattedDateTime = parsedDateTime.format('MM/DD/YYYY HH:mm:ss');
-  return formattedDateTime;
+  // Parse the input as UTC and convert to local time
+  const localDateTime = dayjs.utc(dateTimeString).local();
+  // Format in desired format
+  return localDateTime.format('MM/DD/YYYY hh:mm:ss A');
 };
 export const formatTime = (TimeString) => {
   const parsedTime = dayjs.utc(TimeString);

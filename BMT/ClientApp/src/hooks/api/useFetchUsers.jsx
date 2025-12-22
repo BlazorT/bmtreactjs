@@ -40,9 +40,7 @@ export const useFetchUsers = () => {
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : dayjs().utc().format('YYYY-MM-DD'),
     };
-    console.log({ userBody });
     const res = await postData(userBody);
-    console.log(res, 'new user');
     if (res.status) {
       return res.data;
     } else {

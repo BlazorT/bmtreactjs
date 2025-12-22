@@ -41,6 +41,7 @@ const AddScheduleModel = (prop) => {
     pricingData,
     recipients,
     campaignRegData: submitData,
+    fetchRecipientList,
   } = prop;
 
   const [budgetData, setBudgetData] = useState({
@@ -413,6 +414,12 @@ const AddScheduleModel = (prop) => {
 
     showToast('Schedule saved successfully!', 'success');
   };
+
+  // ✅ Helper to get hashtags as clean comma-separated string (for backend)
+  const getHashTagsForDB = () => {
+    return submitData?.hashTags?.join(','); // Returns: "tag1,tag2,tag3"
+  };
+
   const submitCompaign = async (ref = '') => {
     if (!Array.isArray(scheduleJson) || scheduleJson.length === 0) {
       showToast('Please add at least one schedule before submitting.', 'warning');
@@ -435,7 +442,6 @@ const AddScheduleModel = (prop) => {
       showToast('Please add a campaign name || Title before submit.', 'warning');
       return;
     }
-
     // 🔹 STEP 1: Find the max time from scheduleJson.FinishTime
     let maxFinishTime = null;
     if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
@@ -459,7 +465,7 @@ const AddScheduleModel = (prop) => {
       Name: name,
       description: name,
       Title: name,
-      HashTags: tag,
+      HashTags: getHashTagsForDB(),
       targetaudiance: JSON.stringify({
         interests: interests || [],
         genderId: genderId || null,
@@ -887,6 +893,7 @@ const AddScheduleModel = (prop) => {
         networkIds={selectedNetworks}
         selectedAlbumList={selectedAlbumList}
         setSelectedAlbumList={setSelectedAlbumList}
+        fetchRecipientList={fetchRecipientList}
       />
       <PaymentModel
         isOpen={isPaymentOpen}

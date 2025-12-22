@@ -125,8 +125,12 @@ export default function CustomDatePicker(prop) {
   };
 
   return (
-    <div>
-      {label && <label htmlFor={id}>{label}</label>}
+    <div className={`form-outline text-start ${label ? 'mt-2' : icon ? '' : ''} `}>
+      {label && (
+        <label htmlFor={id} className="login_label labelName ">
+          {label}
+        </label>
+      )}
       <div className="input-group ">
         {icon && (
           <span className="input-group-addon">

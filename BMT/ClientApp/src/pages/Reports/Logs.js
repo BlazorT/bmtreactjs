@@ -142,7 +142,7 @@ const Logs = () => {
     <>
       <AppContainer>
         <DataGridHeader
-          title=" Log → Advance Search ( Log name, Date From, Date To)"
+          title="Advance Search"
           onClick={toggleFilters}
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}

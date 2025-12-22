@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { CCol, CRow, CTooltip } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import FilterIconMenu from './FilterIconMenu';
-import { cilCloudDownload } from '@coreui/icons';
+import { cilArrowThickToBottom, cilCloudDownload } from '@coreui/icons';
 
 interface OtherControl {
   icon: any; // Replace with the actual type of your icon
@@ -133,7 +133,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
           {exportFn && (
             <CTooltip content="Download Report">
               <CIcon
-                icon={cilCloudDownload}
+                icon={cilArrowThickToBottom}
                 className="stock-toggle-icon cursor-pointer"
                 onClick={exportFn}
                 role="button"

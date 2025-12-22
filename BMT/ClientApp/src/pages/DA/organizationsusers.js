@@ -215,7 +215,7 @@ const organizationsusers = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Organizations User -> Advance Search (Organization, Networks, Status, Date From)"
+              title="Advance Search"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

@@ -13,17 +13,20 @@ import CustomInput from '../InputsComponent/CustomInput';
 import Button from '../UI/Button';
 import { formValidator } from 'src/helpers/formValidator';
 import { useShowToast } from 'src/hooks/useShowToast';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 
 const AddAlbumModel = ({ isOpen, toggle, networkId, refreshRecipients }) => {
   const user = useSelector((state) => state.user);
   const showToast = useShowToast();
+  const showConfirmation = useShowConfirmation();
+
   const { loading, postData } = useApi('/Compaigns/submitalbumlist');
 
   const defaultAlbumData = {
     id: 0,
     networkid: 0,
     name: '',
-    code: '',
+    code: dayjs().local().format('DDMMYYYY'),
     desc: '',
     lastUpdatedBy: user?.userId,
     orgid: user?.orgId,
@@ -70,10 +73,30 @@ const AddAlbumModel = ({ isOpen, toggle, networkId, refreshRecipients }) => {
       showToast(res?.message || `Something went wrong, try again later`, 'error');
     }
   };
+
+  const confirmationModal = () => {
+    showConfirmation({
+      header: 'Confirmation!',
+      body: `Are you sure you want to cancel?`,
+      isOpen: true,
+      onYes: () => onClose(),
+      onNo: () =>
+        showConfirmation({
+          isOpen: false,
+        }),
+    });
+  };
+  const onClose = () => {
+    showConfirmation({
+      isOpen: false,
+    });
+    setAlbumData(defaultAlbumData);
+    toggle();
+  };
   return (
     <Modal isOpen={isOpen} size="lg" centered>
       <Form name="album-form">
-        <ModalHeader toggle={toggle}>Add Album</ModalHeader>
+        <ModalHeader toggle={confirmationModal}>Add Album</ModalHeader>
         <ModalBody className="paddingAllSide">
           <CRow>
             <CCol md="6">
@@ -142,7 +165,7 @@ const AddAlbumModel = ({ isOpen, toggle, networkId, refreshRecipients }) => {
           </CRow>
         </ModalBody>
         <ModalFooter>
-          <Button title="Cancel" disabled={loading} onClick={toggle} />
+          <Button title="Cancel" disabled={loading} onClick={confirmationModal} />
           <Button
             title="Submit"
             disabled={loading}

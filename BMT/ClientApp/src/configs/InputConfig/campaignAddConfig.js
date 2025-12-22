@@ -6,6 +6,7 @@ import { cilCalendar, cilEnvelopeClosed, cilUser } from '@coreui/icons';
 import { CFormCheck } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
+import HashtagInput from 'src/components/UI/HashtagInput';
 
 export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, TermsModal) => [
   {
@@ -25,18 +26,12 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     autoFocus: true,
   },
   {
-    component: CustomInput,
+    component: HashtagInput, // ✅ Use custom component
     label: '# Tag',
-    value: campaignRegData.hashTags,
+    value: campaignRegData.hashTags, // array
     onChange: handleCampaignAddForm,
-    icon: cilUser,
-    type: 'text',
-    id: 'hashTags',
     name: 'hashTags',
-    placeholder: '#tag',
-    className: 'form-control item',
-    isRequired: false,
-    message: 'Enter #Tag',
+    placeholder: 'Enter hashtag and press Enter or comma',
   },
   {
     component: CustomInput,
@@ -140,6 +135,7 @@ export const getInitialCampaignData = (user) => {
     id: 0,
     logoPath: '',
     name: '',
+    hashTags: [], // ✅ Store as array
     genderId: user?.genderId ?? 2, // ✅ if undefined, default to Men
     status: 1,
     rowVer: 1,
