@@ -4,6 +4,8 @@ import { CRow, CCol } from '@coreui/react';
 import Button from '../UI/Button';
 import globalutil from 'src/util/globalutil';
 import { useShowToast } from 'src/hooks/useShowToast';
+import CIcon from '@coreui/icons-react';
+import { cilCheckCircle, cilPlus, cilPencil } from '@coreui/icons';
 
 const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedNetworks }) => {
   const showToast = useShowToast();

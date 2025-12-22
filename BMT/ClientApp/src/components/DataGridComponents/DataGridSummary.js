@@ -51,7 +51,7 @@ const CustomSummary = ({ rows, columns, summary }) => {
           case 'min':
             if (columnType === 'timestamp' || columnType === 'date') {
               const timestamps = columnValues
-                .filter((timestamp) => timestamp !== undefined)
+                .filter((timestamp) => timestamp !== undefined && timestamp !== '')
                 .map((timestamp) => new Date(timestamp));
 
               if (timestamps.length > 0) {
@@ -77,7 +77,7 @@ const CustomSummary = ({ rows, columns, summary }) => {
           case 'max':
             if (columnType === 'timestamp' || columnType === 'date') {
               const timestamps = columnValues
-                .filter((timestamp) => timestamp !== undefined)
+                .filter((timestamp) => timestamp !== undefined && timestamp !== '')
                 .map((timestamp) => new Date(timestamp));
 
               if (timestamps.length > 0) {
@@ -163,11 +163,11 @@ const CustomSummary = ({ rows, columns, summary }) => {
   return (
     <div className="summary-container mt-0 p-1 bg-dark-color text-white ">
       <div className="grid-footer-summary">
-        {calculatedSummary.map((summaryItem) => {
+        {calculatedSummary.map((summaryItem, index) => {
           const entries = Object.entries(summaryItem).filter(([key]) => key !== 'field');
 
           return (
-            <div key={summaryItem.field} className="align-self-start">
+            <div key={`${summaryItem.field}_${index}`} className="align-self-start">
               <ul className="m-0 p-2 grid-footer-summary list-unstyled">
                 {entries.map(([aggregate, value], sIndex) => (
                   <li className="p-1 d-inline-block" key={aggregate}>

@@ -71,7 +71,7 @@ const GlobalTemplates = () => {
     <React.Fragment>
       <AppContainer>
         <DataGridHeader
-          title="Templates -> Advance Search (Name, Title, Network, Status)"
+          title="Advance Search"
           onClick={toggleShowFilters}
           otherControls={[{ icon: cilChevronBottom, fn: toggleShowFilters }]}
           filterDisable={true}

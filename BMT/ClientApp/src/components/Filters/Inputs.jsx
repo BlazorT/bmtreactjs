@@ -12,13 +12,13 @@ const Inputs = ({
   isBtn,
   submitBtnTitle = 'Submit',
   submitting = false, // ✅ new prop for loading
+  isDiscard = false,
 }) => {
   const showConfirmation = useShowConfirmation();
-
   const confirmationModal = () => {
     showConfirmation({
       header: 'Confirmation!',
-      body: 'Are you sure you want to cancel?',
+      body: `Are you sure you want to ${isDiscard ? 'discard' : 'cancel'}?`,
       isOpen: true,
       onYes: () => yesFn(),
       onNo: () =>
@@ -106,7 +106,7 @@ const Inputs = ({
 
       {isBtn !== false && (
         <CRow className="CenterAlign gap-3">
-          <Button title="Cancel" onClick={confirmationModal} disabled={submitting} />
+          <Button title="Cancel" onClick={() => confirmationModal()} disabled={submitting} />
           <Button
             title={submitting ? 'Submitting...' : submitBtnTitle} // ✅ show submitting text
             type="submit"

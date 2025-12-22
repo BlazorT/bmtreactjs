@@ -1,12 +1,10 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useSelector } from 'react-redux';
-import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
+import { useShowToast } from '../useShowToast';
 
 export const useFetchCampaigns = () => {
   dayjs.extend(utc);
-  const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
 
@@ -18,21 +16,19 @@ export const useFetchCampaigns = () => {
       id: 0,
       orgId: filters ? filters.orgId : 0,
       rowVer: filters ? filters.rowVer : 0,
-      networkId: filters ? filters.networkId : 0,
-      Name: filters ? filters.Name : '',
+      networkId: filters ? parseInt(filters.networkId || '0') : 0,
+      Name: filters ? filters.name : '',
       HashTags: filters ? filters.HashTags : '',
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
       createdAt: filters
-        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
+        ? dayjs(filters.createdAt).local().format('YYYY-MM-DD')
         : dayjs().subtract(1, 'year').utc().format(),
       lastUpdatedAt: filters
-        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
+        ? dayjs(filters.lastUpdatedAt).local().format('YYYY-MM-DD')
         : dayjs().utc().format(),
     };
 
-    console.log({ compaignsBody });
     const res = await postData(compaignsBody);
-    console.log(res, 'campaignData');
     // alert((res.data.status) );
     if (res && res.status) {
       return res.data;

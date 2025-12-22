@@ -7,21 +7,20 @@ export const useToggleCampaignStatus = () => {
   dayjs.extend(utc);
   const { data, error, loading, postData } = useApi('/Compaigns/updatecompaign');
 
-  const updateStatus = async (user, status) => {
+  const updateStatus = async (campaign, status) => {
     const deleteBody = {
-      id: user[0].id,
+      id: campaign[0].id,
       status: status,
-      createdBy: user[0].createdBy,
-      createdAt: user[0].createdAt,
-      lastUpdatedBy: user[0].lastUpdatedBy,
+      createdBy: campaign[0].createdBy,
+      createdAt: campaign[0].createdAt,
+      lastUpdatedBy: campaign[0].lastUpdatedBy,
       lastUpdatedAt: dayjs().utc().format(),
-      rowVer: user[0].rowVer
+      rowVer: campaign[0].rowVer,
     };
 
     const response = await postData(deleteBody);
     return response;
   };
-
 
   return { data, error, loading, updateStatus };
 };

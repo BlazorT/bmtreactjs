@@ -159,7 +159,7 @@ const AuditLogs = () => {
     <>
       <AppContainer>
         <DataGridHeader
-          title="Audit Logs → Advance Search (atribute name, Previous Value, New value, Update Date)"
+          title="Advance Search"
           onClick={toggleFilters}
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
@@ -216,7 +216,7 @@ const AuditLogs = () => {
         ) : null}
       </AppContainer>
       <AppContainer>
-        <DataGridHeader exportFn={() => ''} title="Log Viewer" filterDisable />
+        <DataGridHeader title="Log Viewer" filterDisable />
         <CustomDatagrid
           rows={rows}
           columns={columns}

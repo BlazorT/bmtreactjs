@@ -160,7 +160,7 @@ const OrgList = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Organizations -> Advance Search (Name, Reg Date, City)"
+              title="Advance Search"
               onClick={toggleStock}
               otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
               filterDisable={true}

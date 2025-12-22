@@ -2649,7 +2649,9 @@ input[type='date']::-webkit-calendar-picker-indicator {
   border: 1px #cccccc solid;
   height: 2.375em;
 }
-
+.btn-bg {
+  background-color: #547ea1 !important;
+}
 .btn_Default {
   border-radius: 6px;
   color: white !important;
@@ -4329,4 +4331,7 @@ fieldset.legend {
 }
 select {
   font-size: 1.1rem !important;
+}
+.fit-content-width {
+  width: fit-content;
 }

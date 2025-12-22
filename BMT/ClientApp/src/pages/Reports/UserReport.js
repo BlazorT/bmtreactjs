@@ -261,7 +261,7 @@ const UserReport = () => {
         <>
           <AppContainer>
             <DataGridHeader
-              title="User Report → Advance Search (Name, Contact, Status, Date To, Date From)"
+              title="Advance Search"
               onClick={toggleFilters}
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}

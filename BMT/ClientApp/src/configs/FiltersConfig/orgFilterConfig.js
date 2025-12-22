@@ -8,12 +8,12 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
 import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 
-export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
+export const getOrgFiltersFields = (filters, changeFilter, orgs, Role) => [
   {
     component: CustomSearch,
     label: 'Organization',
-    value: filters.name,
-    onChange: (e) => changeFilter(e, 'name'),
+    value: orgs?.find((o) => o.id == filters.orgId) || '',
+    onChange: (e) => changeFilter(e, 'orgId'),
     icon: cilUser,
     type: 'text',
     id: 'name',
@@ -22,30 +22,29 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
     placeholder: 'Organization',
     isRequired: false,
     title: 'Name Of Organization',
-    disabled: Role !== 1 // <-- This disables unless roleId is 1
-
+    disabled: Role !== 1, // <-- This disables unless roleId is 1
   },
   {
     component: CustomSelectInput,
     label: 'Networks',
-    value: filters.state,
+    value: filters.networkId,
     onChange: changeFilter,
     icon: cilFlagAlt,
-    id: 'networks',
-    name: 'networks',
+    id: 'networkId',
+    name: 'networkId',
     disableOption: 'Select Networks',
     options: globalutil.networks(),
     className: 'form-control item form-select',
     title: 'Networks',
   },
-  
+
   {
     component: CustomDatePicker,
-    label: 'Date To (Apply, Join)',
-    value: filters.lastUpdatedAt,
-    onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
+    label: 'Date >=',
+    value: filters.createdAt,
+    onChange: (e) => changeFilter(e, 'createdAt'),
     icon: cilCalendar,
-   // title: ' DA Registration Date',
+    // title: ' DA Registration Date',
     isRequired: true,
     min: dayjs(filters.createdAt),
     message: 'Enter Valid To Date',
@@ -64,15 +63,14 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs,Role) => [
   //},
   {
     component: CustomInput,
-    label: '#Tag',
-    value: filters.Name,
-    onChange: (e) => changeFilter(e, 'Name'), // ✅ pass fieldName
+    label: 'Campaign Name',
+    value: filters.name,
+    onChange: (e) => changeFilter(e, 'name'), // ✅ pass fieldName
     icon: cilFlagAlt,
-    id: 'Name',
-    name: 'Name',
-    placeholder: '# hash tags',
+    id: 'name',
+    name: 'name',
+    placeholder: 'Campaign Name',
     className: 'form-control item',
-    title: '# tags',
-  }
-
+    title: 'Campaign Names  ',
+  },
 ];
