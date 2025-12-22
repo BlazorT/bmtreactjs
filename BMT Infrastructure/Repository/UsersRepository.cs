@@ -37,7 +37,16 @@ namespace com.blazor.bmt.infrastructure.repositories
                 .Where(x => x.UserName.Contains(Name)).OrderBy(x => x.FirstName)
                 .ToListAsync();
         }
-        
+        public async Task<User> GetUserByEmailORLoginnameSync(string EmailOrLogin, string SecurityCode)
+        {
+            return await _dbContext.Users.AsNoTracking()
+            .Where(x => (x.Email == EmailOrLogin || x.UserName == EmailOrLogin) && x.SecurityToken == (string.IsNullOrEmpty(SecurityCode) ? x.SecurityToken : "" + SecurityCode) && x.Status == 1)
+               .FirstOrDefaultAsync();
+
+            // second way
+            // return await GetAllAsync();
+        }
+
         public async Task<IEnumerable<User>> GetOrgUsersAllFiltersAsync(User model) {
             var sUsers= await _dbContext.Users.AsNoTracking()
                 .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.RoleId == (model.RoleId == 0 ? x.RoleId : model.RoleId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && x.Email.Contains((String.IsNullOrWhiteSpace(model.Email) ? x.Email : model.Email)) && x.CreatedAt >= (model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddYears(-1) : model.CreatedAt) && x.CreatedAt <= (Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? System.DateTime.Now : model.LastUpdatedAt) && x.OrgId == ((model.OrgId== null || model.OrgId== 0) ? x.OrgId: model.OrgId) && x.UserName.Contains(("" + model.UserName).Trim())).OrderBy(x => x.FirstName)

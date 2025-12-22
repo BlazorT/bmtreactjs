@@ -14,5 +14,6 @@ namespace com.blazor.bmt.core.repositries
         Task<IEnumerable<User>> GetUsersAllFiltersAsync(User model);
         Task<IEnumerable<User>> GetOrgUsersAllFiltersAsync(User model);
         Task<IEnumerable<User>> GetOrgMobileUsersAllFiltersAsync(User model);
+        Task<User> GetUserByEmailORLoginnameSync(string EmailOrLogin, string SecurityCode);
     }
 }

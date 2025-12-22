@@ -26,6 +26,7 @@ namespace Blazor.Web.UI.Interfaces
         Task merchantVideoStatusChangeEmailNotification(string recipientEmailId, int status, string remarks);
 
 
+        Task sendUnsubscribeEmailNotfification(int orgId, string email, int status, string code);
 
 
 

@@ -137,7 +137,7 @@ namespace com.blazor.bmt.util
         MEDIA_NETWORKS = 20,
         INTERVAL_TYPES = 21,
         POST_TYPES = 22,
-        CAMPAIGN_UNITS = 23
+        CAMPAIGN_UNITS = 23,
     }
     public enum USERROLES
     {
@@ -190,6 +190,18 @@ namespace com.blazor.bmt.util
         [Description("Debit")]
         DEBIT = 2,
     }
+    public enum STATUS_USERS
+    {
+        [Description("ACTIVE")]
+        ACTIVE = 1,
+        [Description("INACTIVE")]
+        INACTIVE = 2,
+        [Description("DELETED")]
+        DELETED = 4,
+        [Description("BLOCKED")]
+        BLOCKED = 3,
+
+    }
     public enum PAYMENT_METHODS
     {
         [Description("Credit Card")]
@@ -237,19 +249,7 @@ namespace com.blazor.bmt.util
     }
 
 
-    public enum STATUS_USERS
-    {
-        [Description("Active")]
-        ACTIVE = 1,
-        [Description("In-active")]
-        INACTIVE = 2,
-        [Description("Invited")]
-        INVITED = 3,
-        [Description("Blocked")]
-        ACCESS_BLOCKED = 4,
-
-    }
-
+  
     public enum STATUS_NOTIFICATION
     {
         [Description("Candidate")]

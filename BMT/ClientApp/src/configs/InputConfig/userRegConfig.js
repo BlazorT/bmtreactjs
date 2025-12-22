@@ -300,6 +300,7 @@ export const getInitialUserData = (user, role) => ({
   address: '',
   cityId: '',
   password: '',
+  address: '',
   userName: '',
   ims: '',
   securityToken: '',

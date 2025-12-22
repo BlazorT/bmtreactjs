@@ -31,6 +31,8 @@ namespace com.blazor.bmt.util
         public static string Block_VEHICLE_CONFIRMATION_MESSAGE = "Are you sure, you want to Block the selected vehicle ? ";
         public static string SOLD_VEHICLE_CONFIRMATION_MESSAGE = "Are you sure, you want to change the selected vehicle status to Sold? ";
         public static string LIKE_VEHICLE_CONFIRMATION_MESSAGE = "Are you sure, you want to like vehicle? ";
+        public static string UNSUBSCRIPTION_CONFIRMATION_EMAIL = " Dear {0} <br > Thank you for using Blazor Media Toolkit (BMT) service, Your account is closed at {1}, its no more accessible, <br><br> For data retrieval, can contact BMT Admin till <b>{2}</b> date via phone , Charges may apply.  Thank you!!! <br><br> Blazor Media Toolkit (BMT), Admin <br> +92(42) 35132337  <br> https://bmt.blazortech.com/ ";
+        public static string UNSUBSCRIPTION_REQUEST_EMAIL = " Dear {0} <br > Thank you for using Blazor Media Toolkit (BMT) service, we received your account close request at {1}, please use this confirmation code <b>{2} </b> to complete this process. <br><br> As a result your all data will be deleted and within 7 days only retreival can be possible, for that you need to contact Blazor Media Toolkit (BMT) admin.  Thank you!!! <br><br> Blazor Media Toolkit (BMT), Admin <br> +92(42) 35132337  <br> https://bmt.blazortech.com/ ";
 
         public static string LOGGEDOUT_MESSAGE = "You are logged out....!";
         public static string LOGGEDOUT_MESSAGE_CONFIRMATION = "Are you sure, you want to log-out ? ";
@@ -41,7 +43,10 @@ namespace com.blazor.bmt.util
         public static string INVITATION_EMAIL_FAILED = "Invitation request from <b>{0}</b> is failed. Try later or contact 4DSPS team. Error {1}";
         public static string RESEND_INVITATION_EMAIL_FAILED = "Reset request from <b>{0}</b> is failed. Try later or contact 4DSPS team. Error {1}";
         public static string RESET_EMAIL_SENT_SUCCESSFULLY = "Password reset request recieved and confirmation code has been sent at email address <b>{0}</b> successfully, at {1}. ";
-        public static string RESET_EMAIL_FAILED = "Password reset request request failed for email address <b>{0}</b>, Error Details- {1}, ";
+        public static string ACCOUNT_DELETE_TOKEN_SENT_SUCCESSFULLY = "Account delete request recieved and confirmation code has been sent at email address <b>{0}</b> successfully, at {1}. ";
+        public static string ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY = "Your Account <b>{0}</b> is closed successfully, at {1}. ";
+        public static string RESET_EMAIL_FAILED = "Unsubscribe reset request failed for email address <b>{0}</b>, Error Details- {1}, ";
+        public static string UNSUBSCRIBE_EMAIL_FAILED = "Password reset request request failed for email address <b>{0}</b>, Error Details- {1}, ";
         public static string RESET_EMAIL_ALREADY_RECIEVED = "Password Reset request already sent at email address <b>{0}</b> please wait 30 minutes for another reset request,  {1}!";
         public static string LOGGED_OUT_MSG = "4DSPS Logged-Out";
         public static string LOGGED_IN_MSG = "4DSPS Logged-In";
@@ -51,7 +56,7 @@ namespace com.blazor.bmt.util
         public static string COOKIES_AUTHENTICATION_KEY = "ShowRoomCookieAuthentication"; 
         public static string CORS_POLICY_KEY = "BlazorCorsPolicy";
         public static string UPLOAD_SUCCESS = "<b> {0} </b> is uploaded successfully, at {1}";
-        public static string UPLOAD_FAILED = "<b> {0} </b> upload failed,try another time or contact Car Dealz Point administrator, Error - {1}";
+        public static string UPLOAD_FAILED = "<b> {0} </b> upload failed,try another time or contact Blazor Media Toolkit administrator, Error - {1}";
         public const string DELIMETER = ",";
         public static string EXTERNAL_DELIMETER = "$";
         public const string SECKEY = "8102@RoZaLb";

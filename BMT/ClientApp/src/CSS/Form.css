@@ -270,6 +270,7 @@ button[type='submit']:hover {
 .Modal_Term_Condition {
   width: 80% !important;
   color: white;
+  max-width: 50%;
   top: 0.5em;
 }
 .lblTerms {

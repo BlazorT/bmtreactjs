@@ -4,6 +4,7 @@ using Blazor.Web.Application.Models;
 using Blazor.Web.UI.Interfaces;
 using Blazor.Web.ViewModels;
 using AutoMapper;
+using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
 using com.blazor.bmt.application.interfaces;
@@ -256,6 +257,26 @@ namespace Blazor.Web.UI.Services
             ////}
 
             return config;
+        }
+        public async Task sendUnsubscribeEmailNotfification(int ShowRoomId, string email, int status, string code)
+        {
+            try
+            {
+                EmailSender EmailSender = new EmailSender();
+                if (string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.SmtpUser) || string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.SmtpServer))
+                    GlobalUTIL.loadConfigurations();
+                if (status != (int)STATUS_USERS.DELETED)
+                    await EmailSender.SendUnsubscribeRequestEmailAsync(ShowRoomId, email, code);
+                else
+                    await EmailSender.SendUnsubscribeConfrimationEmailAsync(ShowRoomId, email);
+
+                _logger.LogInformation("User Registration email has been sent to " + email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to send email, Error - " + ex.Message);
+                throw ex;
+            }
         }
         public async Task<IEnumerable<StatesViewModel>> GetStatesList(string  keyword)
         {

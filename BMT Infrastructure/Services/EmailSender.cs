@@ -191,6 +191,107 @@ namespace Blazor.Web.Infrastructure.Services
             }
 
         }
+        public Task SendUnsubscribeRequestEmailAsync(int orgId, string recipientEmail, string code = "")
+        {
+            SmtpClient client = new SmtpClient();
+            try
+            {
+                if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.Where(x => x.OrgId == orgId).FirstOrDefault() == null)
+                    GlobalUTIL.loadConfigurations(orgId);
+                // Store Configuration Loaded
+                ConfigurationsViewModel viewModel = GlobalSettings.Configurations.Where(x => x.OrgId == orgId).FirstOrDefault();
+
+                var fromAddress = new MailAddress(GlobalBasicConfigurationsViewModel.SmtpUser, "Account Deletion");
+                var toAddress = new MailAddress(recipientEmail, "Blazor Media Toolkit - Account Deletion");
+                // const string fromPassword = "fromPassword";
+                string subject = "Account Deletion";
+                string body = string.Format(BlazorConstant.UNSUBSCRIPTION_REQUEST_EMAIL, recipientEmail, GlobalUTIL.CurrentDateTime, code);
+                var smtp = new SmtpClient
+                {
+                    Host = GlobalBasicConfigurationsViewModel.SmtpServer,// BasicConfigurationsViewModel.smtpServer,
+                    Port = Convert.ToInt32(GlobalBasicConfigurationsViewModel.Smtpport),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(GlobalBasicConfigurationsViewModel.SmtpUser, GlobalBasicConfigurationsViewModel.SmtpUserPwd)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body,
+                    BodyEncoding = Encoding.UTF8,
+                    IsBodyHtml = true
+
+                })
+                {
+                    if (!string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.OrgAdminEmail) && recipientEmail.ToLower() != GlobalBasicConfigurationsViewModel.OrgAdminEmail.ToLower())
+                    {
+                        MailAddress toAdminAddress = new MailAddress(GlobalBasicConfigurationsViewModel.OrgAdminEmail, subject);// Blazor.Web.UTIL.BlazorConstants.VIDEO_FLAG_REPORT_SUBJECT);
+                        message.CC.Add(toAdminAddress);
+                    }
+                    smtp.Send(message);
+                }
+
+
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        public Task SendUnsubscribeConfrimationEmailAsync(int orgId, string recipientEmail)
+        {
+            SmtpClient client = new SmtpClient();
+            try
+            {
+                if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.Where(x => x.OrgId == orgId).FirstOrDefault() == null)
+                    GlobalUTIL.loadConfigurations(orgId);
+                // Store Configuration Loaded
+                ConfigurationsViewModel viewModel = GlobalSettings.Configurations.Where(x => x.OrgId == orgId).FirstOrDefault();
+
+                var fromAddress = new MailAddress(GlobalBasicConfigurationsViewModel.SmtpUser, "Account Deletion Intimation");
+                var toAddress = new MailAddress(recipientEmail, "Blazor Media Toolkit - Account Deletion Intimation");
+                // const string fromPassword = "fromPassword";
+                string subject = "Account Deletion Intimation";
+                string body = string.Format(BlazorConstant.UNSUBSCRIPTION_CONFIRMATION_EMAIL, recipientEmail, GlobalUTIL.CurrentDateTime, GlobalUTIL.CurrentDateTime.AddDays(7));
+                var smtp = new SmtpClient
+                {
+                    Host = GlobalBasicConfigurationsViewModel.SmtpServer,// BasicConfigurationsViewModel.smtpServer,
+                    Port = Convert.ToInt32(GlobalBasicConfigurationsViewModel.Smtpport),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(GlobalBasicConfigurationsViewModel.SmtpUser, GlobalBasicConfigurationsViewModel.SmtpUserPwd)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body,
+                    BodyEncoding = Encoding.UTF8,
+                    IsBodyHtml = true
+
+                })
+                {
+                    if (!string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.OrgAdminEmail) && recipientEmail.ToLower() != GlobalBasicConfigurationsViewModel.OrgAdminEmail.ToLower())
+                    {
+                        MailAddress toAdminAddress = new MailAddress(GlobalBasicConfigurationsViewModel.OrgAdminEmail, subject);// Blazor.Web.UTIL.BlazorConstants.VIDEO_FLAG_REPORT_SUBJECT);
+                        message.CC.Add(toAdminAddress);
+                    }
+                    smtp.Send(message);
+                }
+
+
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
         public Task SendResetEmailNotificationAsync(string recipientEmail, string ResetURI, string coreUri)
         {
             SmtpClient client = new SmtpClient();

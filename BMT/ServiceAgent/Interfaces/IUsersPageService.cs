@@ -18,6 +18,8 @@ namespace Blazor.Web.UI.Interfaces
         Task<UserViewModel> GetUserByEmailSync(int roleId, string email);
         Task<UserViewModel> CreateUser(UserViewModel UsersViewModel);
         Task UpdateUser(UserViewModel UsersViewModel);
+        Task<UserViewModel> GetUserByEmailOrLoginNameAsynch(string emailOrLogin, string securityCode);
+
         Task DeleteUser(UserViewModel UsersViewModel);
     }
 }
