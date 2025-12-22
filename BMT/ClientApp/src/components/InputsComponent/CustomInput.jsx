@@ -80,7 +80,7 @@ const CustomInput = ({
 
           {isRequired && <span className="invalid-tooltip">{message}</span>}
 
-          {type === 'file' && (
+          {type === 'file' && helperText && (
             <div className="form-control row me-0">
               <div className="col-8 text-truncate ps-0">{helperText}</div>
             </div>
