@@ -32,6 +32,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
+import useApi from 'src/hooks/useApi';
 
 const campaignadd = () => {
   // let state;
@@ -55,6 +56,7 @@ const campaignadd = () => {
   const [interestSearch, setInterestSearch] = useState('');
   const [networksList, setNetworksList] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
+  const [campaignDetails, setCampaignDetails] = useState(null);
 
   const [paymentRef, setPaymentRef] = useState('');
   const [makeOrder, setMakeOrder] = useState(false);
@@ -69,6 +71,12 @@ const campaignadd = () => {
   const [orgsList, setOrgsList] = useState([]);
 
   const { data: pricingRes, fetchPricing, loading: pricingLoading } = useFetchPricing();
+
+  const {
+    data: templatesRes,
+    loading: templatesLoading,
+    postData: fetchTemplates,
+  } = useApi('Template/campaigntemplatesallnetworks', 'POST');
 
   const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
   const recipients = useMemo(() => data?.data || [], [data]);
@@ -97,22 +105,31 @@ const campaignadd = () => {
   // Normalize attachments and categorize
   const categorizeAttachments = (attachmentsArray = []) => {
     if (!Array.isArray(attachmentsArray))
-      return { videoAttachment: [], imageAttachment: [], pdfAttachment: [] };
+      return { videoAttachment: null, imageAttachment: null, pdfAttachment: null };
 
-    const videoAttachment = [];
-    const imageAttachment = [];
-    const pdfAttachment = [];
+    let videoAttachment = null;
+    let imageAttachment = null;
+    let pdfAttachment = null;
 
     attachmentsArray.forEach((att) => {
-      const cleanPath = att.image.replace(/\\/g, '/'); // normalize path
+      if (!att?.image) return;
+
+      // Normalize path: replace backslashes with forward slashes
+      let cleanPath = att.image.replace(/\\/g, '/');
+
+      // Ensure single leading slash for relative paths
+      if (!cleanPath.startsWith('http')) {
+        cleanPath = cleanPath.replace(/^\/+/, '/');
+      }
+
       const ext = cleanPath.split('.').pop().toLowerCase();
 
-      if (['mp4', '3gp'].includes(ext)) {
-        videoAttachment.push({ id: att.id, image: cleanPath });
-      } else if (['png', 'jpg', 'jpeg', 'gif'].includes(ext)) {
-        imageAttachment.push({ id: att.id, image: cleanPath });
-      } else if (ext === 'pdf') {
-        pdfAttachment.push({ id: att.id, image: cleanPath });
+      if (!videoAttachment && ['mp4', '3gp'].includes(ext)) {
+        videoAttachment = { id: att.id, name: cleanPath };
+      } else if (!imageAttachment && ['png', 'jpg', 'jpeg', 'gif'].includes(ext)) {
+        imageAttachment = { id: att.id, name: cleanPath };
+      } else if (!pdfAttachment && ext === 'pdf') {
+        pdfAttachment = { id: att.id, name: cleanPath };
       }
     });
 
@@ -120,13 +137,17 @@ const campaignadd = () => {
   };
 
   useEffect(() => {
-    getNetworksList();
+    const campaign = state?.campaign;
+    getTemplates();
+    getNetworksList(!!campaign);
     fetchOrgs();
     fetchPricing();
     fetchRecipientList();
-    if (state) {
-      console.log({ state });
-      const campaign = state.campaign;
+  }, [state]);
+
+  useEffect(() => {
+    if (state && templatesRes?.data?.length > 0) {
+      const campaign = state?.campaign;
 
       const targetAudience = safeParse(campaign?.targetaudiance, []);
       const campaignSchedules = safeParse(campaign?.compaignschedules, []);
@@ -137,11 +158,37 @@ const campaignadd = () => {
         categorizeAttachments(attachments);
 
       console.log({
-        videoAttachment: videoAttachment?.[0]?.image || '',
-        imageAttachment: imageAttachment?.[0]?.image || '',
-        pdfAttachment: pdfAttachment?.[0]?.image || '',
+        campaignSchedules,
+        campaignDetails,
+        campaign,
       });
+      const selectedNetworks = campaignDetails?.map((cd) => cd?.networkName);
+      const selectedTemplates = campaignDetails?.reduce((acc, cd, index) => {
+        const parsedTemplate = safeParse(cd?.template, '');
+
+        const matchedTemplate = templatesRes?.data?.find(
+          (t) =>
+            t?.subject?.toLowerCase()?.trim() === parsedTemplate?.subject?.toLowerCase()?.trim(),
+        );
+
+        acc[cd?.networkName] = matchedTemplate ?? '';
+
+        return acc;
+      }, {});
+
+      const scheduleData = campaignSchedules?.map((s) => ({
+        ...s,
+        Budget: s.budget,
+        StartTime: dayjs(s?.StartTime).format('YYYY-MM-DDTHH:mm:ss'),
+        FinishTime: dayjs(s?.FinishTime).format('YYYY-MM-DDTHH:mm:ss'),
+        createdAt: dayjs(s?.createdAt).format('YYYY-MM-DDTHH:mm:ss'),
+      }));
+      setCampaignDetails(campaignDetails);
+      setScheduleData(scheduleData);
+      setSelectedNetworks(selectedNetworks);
+      setSelectedTemplates(selectedTemplates);
       setCampaignRegData({
+        id: campaign?.id,
         name: campaign?.title,
         hashTags: campaign?.hashTags ? campaign.hashTags.split(',').map((tag) => tag.trim()) : [],
         startTime: campaign?.startTime,
@@ -152,13 +199,15 @@ const campaignadd = () => {
         maxAge: targetAudience?.maxAge || 65,
         locations: targetAudience?.locations || [],
         interests: targetAudience?.interests || [],
-        // videoAttachment: videoAttachment?.[0]?.image || '',
-        // imageAttachment: imageAttachment?.[0]?.image || '',
-        // pdfAttachment: pdfAttachment?.[0]?.image || '',
+        videoAttachment: videoAttachment || '',
+        imageAttachment: imageAttachment || '',
+        pdfAttachment: pdfAttachment || '',
       });
+    } else {
+      setCampaignDetails(null);
     }
-  }, [state]);
-
+  }, [state, templatesRes?.data]);
+  // console.log({ scheduleData, campaignRegData: campaignRegData?.campaignSchedules });
   useEffect(() => {
     if (user && orgsList?.length > 0) {
       // console.log({ user, orgsList });
@@ -168,6 +217,18 @@ const campaignadd = () => {
       }
     }
   }, [orgsList, user]);
+
+  const getTemplates = async () => {
+    try {
+      await fetchTemplates({
+        keyword: '',
+        status: 1,
+        networkId: 0,
+      });
+    } catch (error) {
+      console.error('Error fetching templates:', error);
+    }
+  };
 
   const fetchRecipientList = async () => {
     const body = {
@@ -195,7 +256,7 @@ const campaignadd = () => {
     dateto: new Date().toISOString(), // same as C#: DateTime.Now
   };
 
-  const getNetworksList = async () => {
+  const getNetworksList = async (isSetNetworks) => {
     await GetNetworks(
       '/Admin/custombundlingdetails',
       {
@@ -212,7 +273,7 @@ const campaignadd = () => {
           // const filtered = res.data || [];
 
           setNetworksList(filtered);
-          setSelectedNetworks(filtered.map((n) => n.name));
+          if (!isSetNetworks) setSelectedNetworks(filtered.map((n) => n.name));
         } else {
           dispatch(
             updateToast({
@@ -399,10 +460,10 @@ const campaignadd = () => {
       }
       return {
         id: index + 1,
-        interval: item?.Intervalval ?? '',
+        interval: item?.Interval ?? '',
         budget: item.Budget ?? '',
         NetworkId: item.NetworkId ?? '',
-        days: parsedDays.length > 0 ? parsedDays.map((d) => dayNames[d]).join(', ') : '',
+        days: parsedDays.length > 0 ? parsedDays.map((d) => dayNames[d - 1]).join(', ') : '',
         startTime: dayjs(item.StartTime).isValid()
           ? dayjs(item.StartTime).format('YYYY-MM-DD HH:mm:ss')
           : '',
@@ -624,7 +685,7 @@ const campaignadd = () => {
 
   // console.log({ campaignRegData });
 
-  if (pricingLoading) {
+  if (pricingLoading || templatesLoading) {
     return <Loading />;
   }
 
@@ -883,6 +944,7 @@ const campaignadd = () => {
         pricingData={pricingData}
         recipients={recipients}
         fetchRecipientList={fetchRecipientList}
+        campaignDetails={campaignDetails}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

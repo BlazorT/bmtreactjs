@@ -20,7 +20,12 @@ const Inputs = ({
       header: 'Confirmation!',
       body: `Are you sure you want to ${isDiscard ? 'discard' : 'cancel'}?`,
       isOpen: true,
-      onYes: () => yesFn(),
+      onYes: () => {
+        showConfirmation({
+          isOpen: false,
+        });
+        yesFn();
+      },
       onNo: () =>
         showConfirmation({
           isOpen: false,

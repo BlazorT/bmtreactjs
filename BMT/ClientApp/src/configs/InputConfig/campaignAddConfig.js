@@ -42,6 +42,7 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'videoAttachment',
     name: 'videoAttachment',
+    src: campaignRegData?.videoAttachment?.name,
     helperText: campaignRegData?.videoAttachment?.name,
     className: 'form-control item',
     isRequired: false,
@@ -56,9 +57,11 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'imageAttachment',
     name: 'imageAttachment',
-    src: campaignRegData?.imageAttachment
-      ? URL.createObjectURL(campaignRegData.imageAttachment)
-      : null,
+    src: campaignRegData?.imageAttachment?.id
+      ? campaignRegData?.imageAttachment?.name
+      : campaignRegData?.imageAttachment
+        ? URL.createObjectURL(campaignRegData?.imageAttachment)
+        : '',
     helperText: campaignRegData?.imageAttachment?.name,
     className: 'form-control item',
     isRequired: false,
@@ -73,6 +76,7 @@ export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, Ter
     type: 'file',
     id: 'pdfAttachment',
     name: 'pdfAttachment',
+    src: campaignRegData?.pdfAttachment?.name,
     // src: 'pdf',
     helperText: campaignRegData?.pdfAttachment?.name,
     className: 'form-control item',
