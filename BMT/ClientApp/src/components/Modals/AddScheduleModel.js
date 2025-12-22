@@ -42,6 +42,7 @@ const AddScheduleModel = (prop) => {
     recipients,
     campaignRegData: submitData,
     fetchRecipientList,
+    campaignDetails,
   } = prop;
 
   const [budgetData, setBudgetData] = useState({
@@ -51,7 +52,7 @@ const AddScheduleModel = (prop) => {
     TotalSchNetworkBudget: [],
   });
 
-  const [selectedNetworkJson, setSelectedNetworkJson] = useState(); // Initial load
+  const [selectedNetworkJson, setSelectedNetworkJson] = useState([]); // Initial load
 
   const user = useSelector((state) => state.user);
 
@@ -165,11 +166,44 @@ const AddScheduleModel = (prop) => {
   }, [makeOrder, isOpen, paymentRef]);
 
   useEffect(() => {
-    if (initialVisibleNetworks.length === 0 && selectedNetworks.length > 0) {
+    if (selectedNetworks.length > 0) {
       setInitialVisibleNetworks([...selectedNetworks]);
     }
   }, [selectedNetworks]);
 
+  useEffect(() => {
+    if (!campaignDetails) return;
+
+    const selectedNetworkObjects = campaignDetails.map((n) => {
+      const networkName = n.networkName.toUpperCase(); // to match keys like WHATSAPP, INSTAGRAM
+      const postTypeIds = selectedPostTypes[networkName];
+      const templateJson = selectedTemplates[networkName]
+        ? JSON.stringify({
+            template: selectedTemplates[networkName]?.template || '',
+            subject: selectedTemplates[networkName]?.subject || '',
+            title: selectedTemplates[networkName]?.title || '',
+          })
+        : '';
+      // console.log('postTypeIds', postTypeIds);
+      return {
+        id: n.id,
+        CompaignId: submitData.id,
+        NetworkId: n.networkId,
+        posttypejson: JSON.stringify(postTypeIds),
+        RowVer: 1,
+        Status: 1,
+        Template: templateJson,
+        LastUpdatedBy: user.userId,
+        LastUpdatedAt: new Date(),
+        CreatedAt: new Date(),
+        CreatedBy: user.userId,
+      };
+    });
+
+    // console.log('Selected network objects:', JSON.stringify(selectedNetworkObjects));
+
+    setSelectedNetworkJson((prev) => [...prev, ...selectedNetworkObjects]);
+  }, [campaignDetails]);
   useEffect(() => {
     if (campaignRegData.intervalTypeId === 2) {
       // Select all days
@@ -337,7 +371,7 @@ const AddScheduleModel = (prop) => {
         // console.log('postTypeIds', postTypeIds);
         return {
           id: 0,
-          CompaignId: 0,
+          CompaignId: submitData?.id || 0,
           NetworkId: n.id,
           posttypejson: JSON.stringify(postTypeIds),
           RowVer: 1,
@@ -352,7 +386,7 @@ const AddScheduleModel = (prop) => {
 
     // console.log('Selected network objects:', JSON.stringify(selectedNetworkObjects));
 
-    setSelectedNetworkJson(selectedNetworkObjects);
+    setSelectedNetworkJson((prev) => [...prev, ...selectedNetworkObjects]);
 
     // Log the campaign start/end date and time
     const startDate = campaignRegData.startDate; // dayjs object
@@ -437,6 +471,7 @@ const AddScheduleModel = (prop) => {
       locations,
       minAge,
       maxAge,
+      id,
     } = submitData;
 
     if (!name || name.trim() === '') {
@@ -461,7 +496,7 @@ const AddScheduleModel = (prop) => {
       : dayjs(finishTime); // fallback to original
 
     const campaignBody = {
-      Id: 0,
+      Id: id || 0,
       orgId: user.orgId,
       Name: name,
       description: name,

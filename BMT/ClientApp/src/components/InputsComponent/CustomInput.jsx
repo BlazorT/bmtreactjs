@@ -2,7 +2,7 @@
 import React from 'react';
 import CIcon from '@coreui/icons-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf, faFileWord } from '@fortawesome/free-solid-svg-icons';
 const CustomInput = ({
   icon,
   type,
@@ -80,17 +80,55 @@ const CustomInput = ({
 
           {isRequired && <span className="invalid-tooltip">{message}</span>}
 
-          {type === 'file' && helperText ? (
-            <div className="form-control row me-0 ">
-              <div className="col-8 text-truncate ps-0 ">{helperText}</div>
+          {type === 'file' && (
+            <div className="form-control row me-0">
+              <div className="col-8 text-truncate ps-0">{helperText}</div>
             </div>
-          ) : null}
-          {type === 'file' && src && src !== '' && src !== 'pdf' ? (
-            <img src={`${src}`} className="input-file-image-preview" />
-          ) : null}
-          {type === 'file' && src && src !== '' && src == 'pdf' ? (
-            <FontAwesomeIcon icon={faFilePdf} size="lg" className="input-file-image-preview" />
-          ) : null}
+          )}
+
+          {type === 'file' &&
+            (() => {
+              const ext = src?.split('.').pop()?.toLowerCase();
+
+              if (!ext) return null;
+
+              if (ext === 'pdf') {
+                return (
+                  <FontAwesomeIcon
+                    icon={faFilePdf}
+                    size="lg"
+                    className="input-file-image-preview"
+                  />
+                );
+              }
+
+              if (ext === 'doc' || ext === 'docx') {
+                return (
+                  <FontAwesomeIcon
+                    icon={faFileWord}
+                    size="lg"
+                    className="input-file-image-preview"
+                  />
+                );
+              }
+
+              // Videos
+              if (['mp4', 'webm', 'ogg'].includes(ext)) {
+                return (
+                  <video
+                    className="input-file-image-preview"
+                    controls
+                    src={src}
+                    width="150"
+                    height="100"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                );
+              }
+              // Otherwise treat as an image
+              return <img src={src} className="input-file-image-preview" alt="preview" />;
+            })()}
         </div>
       </div>
     </div>
