@@ -1,14 +1,15 @@
-﻿using System.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using com.blazor.bmt.viewmodels;
-using com.blazor.bmt.util;
+﻿using Blazor.Web.UI.Interfaces;
+using com.blazor.bmt.application.model;
 using com.blazor.bmt.infrastructure;
 using com.blazor.bmt.ui.interfaces;
-using com.blazor.bmt.application.model;
+using com.blazor.bmt.util;
+using com.blazor.bmt.viewmodels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MySql.Data.MySqlClient;
-using Blazor.Web.UI.Interfaces;
+using System.Data;
 
 namespace com.blazor.bmt.controllers
 {
@@ -419,7 +420,7 @@ namespace com.blazor.bmt.controllers
         }
         [HttpPost]
         [Route("deletaccount")]
-        public async Task<BlazorResponseViewModel> submitUnsubscribeRequest([FromBody] UserViewModel user)
+        public async Task<BlazorResponseViewModel> DeleteUserAccountRequest([FromBody] UserViewModel user)
         {
             string emailOrloginName = string.IsNullOrWhiteSpace(user.Email) ? user.UserName : user.Email;
             BlazorResponseViewModel BlazorResponseViewModel = new BlazorResponseViewModel();
@@ -446,14 +447,42 @@ namespace com.blazor.bmt.controllers
                             // ✅ Security token present → delete user
                             if (uvm.SecurityToken == user.SecurityToken)
                             {
-                                await _userPageService.DeleteUser(uvm); // Actually delete
-                                BlazorResponseViewModel.message = string.Format(
-                                    util.BlazorConstant.ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY,
-                                    emailOrloginName,
-                                    System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
-                                );
-                                BlazorResponseViewModel.status = true;
-                                BlazorResponseViewModel.data = null;
+                                try
+                                {
+                                    await _userPageService.DeleteUser(uvm); // Actually delete
+                                    BlazorResponseViewModel.message = string.Format(
+                                        util.BlazorConstant.ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY,
+                                        emailOrloginName,
+                                        System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+                                    );
+                                    BlazorResponseViewModel.status = true;
+                                    BlazorResponseViewModel.data = null;
+                                }
+                                catch (DbUpdateException uexcep) {
+                                    uvm.Status = (int)util.STATUS_USERS.DELETED;
+                                    await _userPageService.UpdateUser(uvm);
+                                    BlazorResponseViewModel.status = true;
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (ex.InnerException != null && ex.InnerException.InnerException.Message.Contains("fk_compaigns_CreatedBy") )
+                                    {
+
+                                        uvm.Status = (int)util.STATUS_USERS.DELETED;
+                                        await _userPageService.UpdateUser(uvm);
+                                        BlazorResponseViewModel.status = true;
+                                        BlazorResponseViewModel.message = string.Format("Account {0} has been deleted successfully", uvm.UserName);
+                                    }
+                                    else
+                                    {
+                                        BlazorResponseViewModel.message = string.Format(
+                        util.BlazorConstant.UNSUBSCRIBE_EMAIL_FAILED,
+                        emailOrloginName,
+                        ex.InnerException?.Message ?? ex.Message
+                    );
+                                        BlazorResponseViewModel.status = false;
+                                    }// Else
+                                }
                                 return BlazorResponseViewModel;
                             }
                             else
