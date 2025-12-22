@@ -24,7 +24,7 @@ const campaignslisting = () => {
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
     (item) => item.name === 'Campaigns Listing',
   );
-
+  // console.log({ user });
   const navigate = useNavigate();
 
   const {
@@ -55,12 +55,16 @@ const campaignslisting = () => {
 
   useEffect(() => {
     getOrganizationLst();
-    fetchUsers(0, {
-      UserName: '',
-      status: '',
-      lastUpdatedAt: dayjs().utc().startOf('day').format(),
-      createdAt: dayjs().subtract(100, 'years').startOf('month').format(),
-    });
+    fetchUsers(
+      0,
+      {
+        UserName: '',
+        status: '',
+        lastUpdatedAt: dayjs().utc().startOf('day').format(),
+        createdAt: dayjs().subtract(100, 'years').startOf('month').format(),
+      },
+      0,
+    );
   }, []);
 
   useEffect(() => {
@@ -97,17 +101,19 @@ const campaignslisting = () => {
         startTime: formatDateTime(data.startTime),
         finishTime: formatDateTime(data.finishTime),
         status: data?.status,
+        createdMonth: dayjs(data.createdAt).format('MMMM YYYY'), // month-year for grouping
       };
     });
 
-    // ✅ Group ONLY by name
-    const groupedData = _.groupBy(mappedArray, (item) => item.name);
+    // ✅ Group by month-year
+    const groupedData = _.groupBy(mappedArray, (item) => item.createdMonth);
 
-    const groupedRows = Object.entries(groupedData).flatMap(([name, groupItems], index) => {
+    const groupedRows = Object.entries(groupedData).flatMap(([month, groupItems], index) => {
       // Group header row
       const groupRow = {
         id: `group-${index}`,
-        name,
+        month: month, // show month as group header
+        name: '',
         startTime: '',
         finishTime: '',
         orgName: '',
@@ -118,10 +124,10 @@ const campaignslisting = () => {
       const childRows = groupItems.map((item, i) => ({
         id: `${item.id}-${i}`,
         campaignId: item.id,
-        name: '', // hide name in children
+        name: item.name, // show campaign name in children
         totalBudget: item?.totalBudget || '--',
         createdBy: item.createdBy,
-        createdAt: formatDateTime(item.createdAt),
+        createdAt: item.createdAt,
         status: item?.status,
         startTime: item.startTime,
         finishTime: item.finishTime,
@@ -218,11 +224,15 @@ const campaignslisting = () => {
     orgsRes?.data || [],
     user?.roleId,
   );
+
+  const currencyName = orgsRes?.data?.find((o) => filters?.orgId == o.id)?.currencyName || '--';
+
   const campaignslistingCols = getcampaignslistingCols(
     getCampaignsList,
     campaignData,
     pageRoles,
     filters,
+    currencyName,
   );
 
   return (
@@ -271,20 +281,16 @@ const campaignslisting = () => {
                 summary={[
                   {
                     field: 'totalBudget',
-                    aggregates: [{ aggregate: 'sum', caption: 'Total Budget' }],
+                    aggregates: [{ aggregate: 'sum', caption: `Total Budget (${currencyName})` }],
                   },
                   {
                     field: 'startTime',
-                    aggregates: [{ aggregate: 'max', caption: 'Max Start Time' }],
+                    aggregates: [{ aggregate: 'max', caption: 'Last Start Time' }],
                   },
                   {
                     field: 'startTime',
-                    aggregates: [{ aggregate: 'min', caption: 'Min Start Time' }],
+                    aggregates: [{ aggregate: 'min', caption: 'First Start Time' }],
                   },
-                  // {
-                  //   field: 'delivered',
-                  //   aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
-                  // },
                 ]}
               />
             )}

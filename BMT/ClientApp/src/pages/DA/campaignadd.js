@@ -1,5 +1,5 @@
 import { cilChevronBottom, cilTrash } from '@coreui/icons';
-import { CCol, CForm, CFormCheck, CFormLabel, CRow } from '@coreui/react';
+import { CCol, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 
 import CIcon from '@coreui/icons-react';
 import dayjs from 'dayjs';
@@ -21,21 +21,23 @@ import {
   getCampaignAddConfig,
   getInitialCampaignData,
 } from 'src/configs/InputConfig/campaignAddConfig';
+import { availableInterests, icons } from 'src/constants/constants';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
+import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import useFetch from 'src/hooks/useFetch';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { updateToast } from 'src/redux/toast/toastSlice';
+import globalutil from 'src/util/globalutil';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import { availableInterests, icons } from 'src/constants/constants';
-import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
-import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
-import globalutil from 'src/util/globalutil';
 
 const campaignadd = () => {
   // let state;
   const user = useSelector((state) => state.user);
+  const [searchParams] = useSearchParams();
+  const { pathname, state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -79,19 +81,83 @@ const campaignadd = () => {
 
   const showToast = useShowToast();
 
-  const {
-    response: GetNetworkRes,
-    loading: NetworkLoading,
-    error: createNetworkError,
-    fetchData: GetNetworks,
-  } = useFetch();
+  const { fetchData: GetNetworks } = useFetch();
+
+  const safeParse = (value, defaultValue = null) => {
+    if (!value) return defaultValue;
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      console.warn('JSON parse error:', e);
+      return defaultValue;
+    }
+  };
+
+  // Normalize attachments
+  // Normalize attachments and categorize
+  const categorizeAttachments = (attachmentsArray = []) => {
+    if (!Array.isArray(attachmentsArray))
+      return { videoAttachment: [], imageAttachment: [], pdfAttachment: [] };
+
+    const videoAttachment = [];
+    const imageAttachment = [];
+    const pdfAttachment = [];
+
+    attachmentsArray.forEach((att) => {
+      const cleanPath = att.image.replace(/\\/g, '/'); // normalize path
+      const ext = cleanPath.split('.').pop().toLowerCase();
+
+      if (['mp4', '3gp'].includes(ext)) {
+        videoAttachment.push({ id: att.id, image: cleanPath });
+      } else if (['png', 'jpg', 'jpeg', 'gif'].includes(ext)) {
+        imageAttachment.push({ id: att.id, image: cleanPath });
+      } else if (ext === 'pdf') {
+        pdfAttachment.push({ id: att.id, image: cleanPath });
+      }
+    });
+
+    return { videoAttachment, imageAttachment, pdfAttachment };
+  };
 
   useEffect(() => {
     getNetworksList();
     fetchOrgs();
     fetchPricing();
     fetchRecipientList();
-  }, []);
+    if (state) {
+      console.log({ state });
+      const campaign = state.campaign;
+
+      const targetAudience = safeParse(campaign?.targetaudiance, []);
+      const campaignSchedules = safeParse(campaign?.compaignschedules, []);
+      const campaignDetails = safeParse(campaign?.compaignsdetails, []);
+      // Parse and categorize attachments
+      const attachments = safeParse(campaign?.attachments, []);
+      const { videoAttachment, imageAttachment, pdfAttachment } =
+        categorizeAttachments(attachments);
+
+      console.log({
+        videoAttachment: videoAttachment?.[0]?.image || '',
+        imageAttachment: imageAttachment?.[0]?.image || '',
+        pdfAttachment: pdfAttachment?.[0]?.image || '',
+      });
+      setCampaignRegData({
+        name: campaign?.title,
+        hashTags: campaign?.hashTags ? campaign.hashTags.split(',').map((tag) => tag.trim()) : [],
+        startTime: campaign?.startTime,
+        finishTime: campaign?.finishTime,
+        status: campaign?.status,
+        genderId: targetAudience?.genderId || 1,
+        minAge: targetAudience?.minAge || 18,
+        maxAge: targetAudience?.maxAge || 65,
+        locations: targetAudience?.locations || [],
+        interests: targetAudience?.interests || [],
+        // videoAttachment: videoAttachment?.[0]?.image || '',
+        // imageAttachment: imageAttachment?.[0]?.image || '',
+        // pdfAttachment: pdfAttachment?.[0]?.image || '',
+      });
+    }
+  }, [state]);
 
   useEffect(() => {
     if (user && orgsList?.length > 0) {
@@ -128,6 +194,7 @@ const campaignadd = () => {
     roleId: String(user.roleId), // ✅ convert to string    datefrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // same as C#: DateTime.Now.AddDays(-1)
     dateto: new Date().toISOString(), // same as C#: DateTime.Now
   };
+
   const getNetworksList = async () => {
     await GetNetworks(
       '/Admin/custombundlingdetails',
@@ -281,6 +348,7 @@ const campaignadd = () => {
   const toggleStock = () => {
     setshowForm((prev) => !prev);
   };
+
   const toggleTargetAud = () => {
     setTargetAudience((prev) => !prev);
   };
@@ -288,15 +356,19 @@ const campaignadd = () => {
   const toggleAddScheduleMdl = () => {
     setAddScheduleModel((prev) => !prev);
   };
+
   const AddScheduleClick = () => {
     toggleAddScheduleMdl(true);
   };
+
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
+
   const confirmationModal = () => {
     setConfirmationModalOpen(!confirmationModalOpen);
   };
+
   const goToAnotherPage = () => {
     setConfirmationModalOpen(false); // close the modal
     navigate('/campaignslisting');
@@ -438,8 +510,6 @@ const campaignadd = () => {
   const filteredInterests = availableInterests.filter((interest) =>
     interest.toLowerCase().includes(interestSearch.toLowerCase()),
   );
-  const [searchParams] = useSearchParams();
-  const { pathname } = useLocation();
 
   useEffect(() => {
     const amount = searchParams.get('amount');

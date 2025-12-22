@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/prop-types */
 import React from 'react';
@@ -41,11 +42,14 @@ const CustomSummary = ({ rows, columns, summary }) => {
             break;
 
           case 'sum':
-            // eslint-disable-next-line no-case-declarations
             const numericValues = columnValues.filter((val) => !isNaN(Number(val)));
-            summaryResult.sum = `${caption} : ${numericValues
-              .reduce((acc, value) => acc + Number(value), 0)
-              .toLocaleString()}`;
+            let numericValuesSum = numericValues.reduce((acc, value) => acc + Number(value), 0);
+            if (field === 'totalBudget') {
+              numericValuesSum = numericValuesSum?.toFixed(2)?.toLocaleString();
+            } else {
+              numericValuesSum = numericValuesSum?.toLocaleString();
+            }
+            summaryResult.sum = `${caption} : ${numericValuesSum}`;
             break;
 
           case 'min':

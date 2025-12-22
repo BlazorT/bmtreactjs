@@ -11,12 +11,12 @@ export const useFetchUsers = () => {
   const showToast = useShowToast();
   const { data, error, loading, postData } = useApi('/BlazorApi/users');
 
-  const fetchUsers = async (role, filters) => {
+  const fetchUsers = async (role, filters, orgId) => {
     const userBody = {
       // userCode: user.userId.toString(),
       id: 0,
       roleId: role,
-      orgId: user.roleId === 1 ? 0 : user.orgId,
+      orgId: orgId == 0 ? orgId : user.roleId === 1 ? 0 : user.orgId,
       email: '',
       userCode: '',
       //userName: '',

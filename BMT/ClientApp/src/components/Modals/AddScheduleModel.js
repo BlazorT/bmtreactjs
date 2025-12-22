@@ -124,7 +124,6 @@ const AddScheduleModel = (prop) => {
     }, 0);
 
     // ✅ calculate total schedule budget using the summed prices
-    console.log({ totalNetworkPrice });
     const totalScheduleBudget = totalNetworkPrice * validDays;
     // ✅ optionally calculate total messages (example multiplier)
 
@@ -436,6 +435,8 @@ const AddScheduleModel = (prop) => {
       interests,
       genderId,
       locations,
+      minAge,
+      maxAge,
     } = submitData;
 
     if (!name || name.trim() === '') {
@@ -470,6 +471,8 @@ const AddScheduleModel = (prop) => {
         interests: interests || [],
         genderId: genderId || null,
         locations: locations || [],
+        minAge: minAge || 0,
+        maxAge: maxAge || 0,
       }),
       AutoGenerateLeads: autoGenerateLeads ? 1 : 0,
       StartTime: dayjs(startTime).toISOString(),

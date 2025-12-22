@@ -136,9 +136,13 @@ export const getInitialCampaignData = (user) => {
     logoPath: '',
     name: '',
     hashTags: [], // ✅ Store as array
-    genderId: user?.genderId ?? 2, // ✅ if undefined, default to Men
+    genderId: 1, // ✅ if undefined, default to Men
     status: 1,
     rowVer: 1,
+    minAge: 18,
+    maxAge: 65,
+    locations: [],
+    interests: [],
     compaignDetailId: 0,
     isTermsAccepted: false,
     createdBy: user.userId,

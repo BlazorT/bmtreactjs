@@ -1,7 +1,21 @@
 /* eslint-disable react/react-in-jsx-scope */
 import CampaignActionCell from 'src/components/DataGridCustomCells/CampaignActionCell';
 
-export const getcampaignslistingCols = (getCampaignsList, daRes, pageRoles, filters) => [
+export const getcampaignslistingCols = (
+  getCampaignsList,
+  daRes,
+  pageRoles,
+  filters,
+  currencyName,
+) => [
+  {
+    key: 'month',
+    name: 'Month',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+    headerCellClass: 'custom-header-data-grid',
+  },
   {
     key: 'name',
     name: 'Campaign Name',
@@ -12,7 +26,7 @@ export const getcampaignslistingCols = (getCampaignsList, daRes, pageRoles, filt
   },
   {
     key: 'totalBudget',
-    name: 'Budget',
+    name: `Budget (${currencyName})`,
     editable: false,
     filterable: true,
     disableColumnMenu: true,
