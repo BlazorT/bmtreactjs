@@ -22,7 +22,7 @@ dayjs.extend(utc);
 const campaignslisting = () => {
   const user = useSelector((state) => state.user);
   const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Campaigns Listing',
+    (item) => item.name === 'Campaigns',
   );
   // console.log({ user });
   const navigate = useNavigate();
