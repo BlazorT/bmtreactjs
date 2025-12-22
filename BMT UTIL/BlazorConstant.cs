@@ -45,8 +45,8 @@ namespace com.blazor.bmt.util
         public static string RESET_EMAIL_SENT_SUCCESSFULLY = "Password reset request recieved and confirmation code has been sent at email address <b>{0}</b> successfully, at {1}. ";
         public static string ACCOUNT_DELETE_TOKEN_SENT_SUCCESSFULLY = "Account delete request recieved and confirmation code has been sent at email address <b>{0}</b> successfully, at {1}. ";
         public static string ACCOUNT_DELETE_EMAIL_SENT_SUCCESSFULLY = "Your Account <b>{0}</b> is closed successfully, at {1}. ";
-        public static string RESET_EMAIL_FAILED = "Unsubscribe reset request failed for email address <b>{0}</b>, Error Details- {1}, ";
-        public static string UNSUBSCRIBE_EMAIL_FAILED = "Password reset request request failed for email address <b>{0}</b>, Error Details- {1}, ";
+        public static string UNSUBSCRIBE_EMAIL_FAILED  = "Unsubscribe reset request failed for email address <b>{0}</b>, Error Details- {1}, ";
+        public static string RESET_EMAIL_FAILED = "Password reset request  failed for email address <b>{0}</b>, Error Details- {1}, ";
         public static string RESET_EMAIL_ALREADY_RECIEVED = "Password Reset request already sent at email address <b>{0}</b> please wait 30 minutes for another reset request,  {1}!";
         public static string LOGGED_OUT_MSG = "4DSPS Logged-Out";
         public static string LOGGED_IN_MSG = "4DSPS Logged-In";
