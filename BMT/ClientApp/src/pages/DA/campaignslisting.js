@@ -16,14 +16,14 @@ import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
 import useApi from 'src/hooks/useApi';
 import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 dayjs.extend(utc);
 
 const campaignslisting = () => {
   const user = useSelector((state) => state.user);
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Campaigns',
-  );
+
+  const pageRoles = usePageRoles('Campaigns Listing');
   // console.log({ user });
   const navigate = useNavigate();
 

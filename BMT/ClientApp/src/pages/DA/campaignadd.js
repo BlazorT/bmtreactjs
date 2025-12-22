@@ -1,4 +1,4 @@
-import { cilChevronBottom, cilTrash } from '@coreui/icons';
+import { cilChevronBottom, cilPencil, cilTrash } from '@coreui/icons';
 import { CCol, CFormCheck, CFormLabel, CRow } from '@coreui/react';
 
 import CIcon from '@coreui/icons-react';
@@ -17,6 +17,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import Form from 'src/components/UI/Form';
 import Loading from 'src/components/UI/Loading';
 import Range from 'src/components/UI/Range';
+import Button from 'src/components/UI/Button';
 import {
   getCampaignAddConfig,
   getInitialCampaignData,
@@ -33,42 +34,63 @@ import globalutil from 'src/util/globalutil';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import useApi from 'src/hooks/useApi';
+import { useCampaignForm } from 'src/hooks/useCampaignForm';
+import { useScheduleManagement } from 'src/hooks/useScheduleManagement';
+import { useNetworkSelection } from 'src/hooks/useNetworkSelection';
 
 const campaignadd = () => {
-  // let state;
   const user = useSelector((state) => state.user);
   const [searchParams] = useSearchParams();
   const { pathname, state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [campaignRegData, setCampaignRegData] = useState(getInitialCampaignData(user));
+  // Custom hooks for state management
+  const {
+    campaignData: campaignRegData,
+    setCampaignData: setCampaignRegData,
+    updateCampaignData,
+  } = useCampaignForm(user);
+  const {
+    schedules: scheduleData,
+    scheduleRows: schedulerows,
+    setSchedules: setScheduleData,
+    updateSchedule,
+    deleteSchedule,
+    getScheduleById,
+  } = useScheduleManagement([]);
+  const {
+    selectedNetworks,
+    selectedPostTypes,
+    selectedTemplates,
+    setSelectedNetworks,
+    setSelectedPostTypes,
+    setSelectedTemplates,
+    toggleNetwork: handleCheckboxChange,
+    togglePostType: handlePostTypeToggle,
+    toggleTemplate: handleTemplateToggle,
+  } = useNetworkSelection();
+
+  // UI State
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const showConfirmation = useShowConfirmation();
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-
-  const { getOrgs } = useFetchOrgs();
-  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
-
   const [interestSearch, setInterestSearch] = useState('');
   const [networksList, setNetworksList] = useState([]);
-  const [scheduleData, setScheduleData] = useState([]);
   const [campaignDetails, setCampaignDetails] = useState(null);
-
   const [paymentRef, setPaymentRef] = useState('');
   const [makeOrder, setMakeOrder] = useState(false);
   const [addScheduleModel, setAddScheduleModel] = useState(false);
-
-  const [schedulerows, setScheduleRows] = useState([]);
+  const [editingSchedule, setEditingSchedule] = useState(null);
   const [currencyName, setCurrencyName] = useState('');
-
-  const [selectedNetworks, setSelectedNetworks] = useState([]);
-  const [selectedPostTypes, setSelectedPostTypes] = useState({}); // { networkName: [postTypeId, ...] }
-  const [selectedTemplates, setSelectedTemplates] = useState({}); // { networkName: [postTypeId, ...] }
   const [orgsList, setOrgsList] = useState([]);
+  const [submitFromGrid, setSubmitFromGrid] = useState(false);
+
+  const { getOrgs } = useFetchOrgs();
+  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
 
   const { data: pricingRes, fetchPricing, loading: pricingLoading } = useFetchPricing();
 
@@ -414,14 +436,6 @@ const campaignadd = () => {
     setTargetAudience((prev) => !prev);
   };
 
-  const toggleAddScheduleMdl = () => {
-    setAddScheduleModel((prev) => !prev);
-  };
-
-  const AddScheduleClick = () => {
-    toggleAddScheduleMdl(true);
-  };
-
   const TermsModal = () => {
     setTermsmodalOpen(!termsmodalOpen);
   };
@@ -441,51 +455,37 @@ const campaignadd = () => {
     TermsModal,
   );
 
-  // console.log({campaignRegData});
-  useEffect(() => {
-    const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
-
-    const formatted = scheduleData.map((item, index) => {
-      let parsedDays = [];
-
-      if (Array.isArray(item.days)) {
-        parsedDays = item.days;
-      } else if (typeof item.days === 'string') {
-        try {
-          const parsed = JSON.parse(item.days);
-          parsedDays = Array.isArray(parsed) ? parsed : [];
-        } catch (e) {
-          console.error('❌ Failed to parse days:', item.days);
-        }
-      }
-      return {
-        id: index + 1,
-        interval: item?.Interval ?? '',
-        budget: item.Budget ?? '',
-        NetworkId: item.NetworkId ?? '',
-        days: parsedDays.length > 0 ? parsedDays.map((d) => dayNames[d - 1]).join(', ') : '',
-        startTime: dayjs(item.StartTime).isValid()
-          ? dayjs(item.StartTime).format('YYYY-MM-DD HH:mm:ss')
-          : '',
-        finishTime: dayjs(item.FinishTime).isValid()
-          ? dayjs(item.FinishTime).format('YYYY-MM-DD HH:mm:ss')
-          : '',
-      };
-    });
-
-    setScheduleRows(formatted);
-    // console.log('✅ Formatted scheduleData:', formatted);
-  }, [scheduleData]); // <--- Depend on scheduleData only
-
   const handleDeleteRow = (idToDelete) => {
-    const updatedRows = schedulerows.filter((row) => row.id !== idToDelete);
-    const findRow = schedulerows?.find((r) => r?.id === idToDelete);
-    const updatedData = scheduleData.filter(
-      (row) => row.NetworkId !== findRow?.NetworkId || row.Budget !== findRow?.budget,
-    );
+    deleteSchedule(idToDelete);
+  };
 
-    setScheduleRows(updatedRows);
-    setScheduleData(updatedData);
+  const handleEditSchedule = (scheduleId) => {
+    const scheduleRow = schedulerows.find((row) => row.id === scheduleId);
+    if (scheduleRow) {
+      setEditingSchedule(scheduleRow);
+      setAddScheduleModel(true);
+    }
+  };
+
+  const handleScheduleUpdate = (scheduleId, updatedSchedule) => {
+    updateSchedule(scheduleId, updatedSchedule);
+    setEditingSchedule(null);
+    setAddScheduleModel(false);
+  };
+
+  const handleAddScheduleClick = () => {
+    setEditingSchedule(null);
+    setAddScheduleModel(true);
+  };
+
+  const handleSubmitCampaign = () => {
+    if (scheduleData.length === 0) {
+      showToast('Please add at least one schedule before submitting.', 'warning');
+      return;
+    }
+    // Open modal in submit mode
+    setSubmitFromGrid(true);
+    setAddScheduleModel(true);
   };
   const schedulecolumns = [
     { key: 'interval', flex: 1, name: 'Interval', width: 100 },
@@ -505,67 +505,42 @@ const campaignadd = () => {
     {
       key: 'action',
       name: 'Action',
-      minWidth: 100,
+      minWidth: 150,
       renderCell: (params) => (
-        <CIcon icon={cilTrash} onClick={() => handleDeleteRow(params.row.id)} />
+        <div className="d-flex gap-2 align-items-center">
+          <CIcon
+            icon={cilPencil}
+            onClick={() => handleEditSchedule(params.row.id)}
+            style={{ cursor: 'pointer', color: '#0d6efd' }}
+            size="lg"
+          />
+          <CIcon
+            icon={cilTrash}
+            onClick={() => handleDeleteRow(params.row.id)}
+            style={{ cursor: 'pointer', color: '#dc3545' }}
+            size="lg"
+          />
+        </div>
       ),
     },
   ];
 
-  const handleCheckboxChange = (networkName) => {
-    setSelectedNetworks((prevSelected) => {
-      const isSelected = prevSelected.includes(networkName);
-      const updatedNetworks = isSelected
-        ? prevSelected.filter((n) => n !== networkName)
-        : [...prevSelected, networkName];
-
-      // If network is unchecked, also remove its postTypes
-      if (isSelected) {
-        setSelectedPostTypes((prevPostTypes) => {
-          const updatedPostTypes = { ...prevPostTypes };
-          delete updatedPostTypes[networkName];
-          return updatedPostTypes;
-        });
-      }
-
-      return updatedNetworks;
-    });
-  };
-  // console.log({ selectedNetworks });
-  const handlePostTypeToggle = (networkName, postTypeId) => {
+  // Network selection handlers are now provided by useNetworkSelection hook
+  // But we need to add validation for postType and template toggles
+  const handlePostTypeToggleWithValidation = (networkName, postTypeId) => {
     if (!selectedNetworks.includes(networkName)) {
       showToast(`Please select the ${networkName} network first.`, 'warning');
       return;
     }
-
-    setSelectedPostTypes((prev) => {
-      const prevPostTypes = prev[networkName] || [];
-
-      const updated = prevPostTypes.includes(postTypeId)
-        ? prevPostTypes.filter((id) => id !== postTypeId)
-        : [...prevPostTypes, postTypeId];
-
-      return {
-        ...prev,
-        [networkName]: updated,
-      };
-    });
+    handlePostTypeToggle(networkName, postTypeId);
   };
 
-  const handleTemplateToggle = (networkName, template) => {
+  const handleTemplateToggleWithValidation = (networkName, template) => {
     if (!selectedNetworks.includes(networkName)) {
       showToast(`Please select the ${networkName} network first.`, 'warning');
       return;
     }
-
-    setSelectedTemplates((prev) => {
-      const currentTemplate = prev[networkName];
-
-      return {
-        ...prev,
-        [networkName]: currentTemplate?.id === template.id ? null : template, // toggle off if same
-      };
-    });
+    handleTemplateToggle(networkName, template);
   };
 
   const filteredInterests = availableInterests.filter((interest) =>
@@ -878,15 +853,15 @@ const campaignadd = () => {
       {tabs[activeTab] && tabs[activeTab].name === 'Networks' && (
         <CampignNetworkSettings
           handleCheckboxChange={handleCheckboxChange}
-          handlePostTypeToggle={handlePostTypeToggle}
+          handlePostTypeToggle={handlePostTypeToggleWithValidation}
           icons={icons}
           networksList={networksList}
           selectedNetworks={selectedNetworks}
           selectedPostTypes={selectedPostTypes}
           setActiveTab={setActiveTab}
-          toggleAddScheduleMdl={toggleAddScheduleMdl}
+          toggleAddScheduleMdl={handleAddScheduleClick}
           selectedTemplates={selectedTemplates}
-          handleTemplateToggle={handleTemplateToggle}
+          handleTemplateToggle={handleTemplateToggleWithValidation}
           setSelectedTemplates={setSelectedTemplates}
         />
       )}
@@ -895,7 +870,7 @@ const campaignadd = () => {
           <AppContainer>
             <DataGridHeader
               addButton="Schedule"
-              addBtnClick={AddScheduleClick}
+              addBtnClick={handleAddScheduleClick}
               title="Schedules"
               filterDisable
             />
@@ -914,6 +889,17 @@ const campaignadd = () => {
                       },
                     ]}
                   />
+                  {schedulerows.length > 0 && (
+                    <div className="mt-3 d-flex justify-content-end">
+                      <Button
+                        onClick={handleSubmitCampaign}
+                        className="w-auto px-4"
+                        title="Submit Campaign"
+                      >
+                        Submit Campaign
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -929,15 +915,18 @@ const campaignadd = () => {
       />
       <AddScheduleModel
         isOpen={addScheduleModel}
-        toggle={toggleAddScheduleMdl}
+        toggle={() => {
+          setAddScheduleModel(false);
+          setEditingSchedule(null);
+          setSubmitFromGrid(false);
+        }}
         selectedNetworks={selectedNetworks}
         selectedPostTypes={selectedPostTypes}
         selectedTemplates={selectedTemplates}
-        setSelected={setSelectedNetworks}
         campaignRegData={campaignRegData}
         setData={setScheduleData}
         data={scheduleData}
-        header="Add Schedule "
+        header="Add Schedule"
         currencyName={currencyName}
         makeOrder={makeOrder}
         paymentRef={paymentRef}
@@ -945,6 +934,9 @@ const campaignadd = () => {
         recipients={recipients}
         fetchRecipientList={fetchRecipientList}
         campaignDetails={campaignDetails}
+        editSchedule={editingSchedule}
+        onScheduleUpdate={handleScheduleUpdate}
+        submitFromGrid={submitFromGrid}
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>
