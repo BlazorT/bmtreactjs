@@ -23,7 +23,7 @@ dayjs.extend(utc);
 const campaignslisting = () => {
   const user = useSelector((state) => state.user);
 
-  const pageRoles = usePageRoles('Campaigns Listing');
+  const pageRoles = usePageRoles('Campaigns');
   // console.log({ user });
   const navigate = useNavigate();
 
