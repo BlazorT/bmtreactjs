@@ -4341,3 +4341,10 @@ select {
 .fit-content-width {
   width: fit-content;
 }
+.crawl-modal-body {
+  max-height: 80dvh;
+  overflow: scroll;
+}
+.input-bg {
+  background-color: rgb(3 28 52);
+}

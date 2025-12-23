@@ -1,117 +1,14 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable prettier/prettier */
-import React from 'react';
 import CIcon from '@coreui/icons-react';
 
-import {
-  cilBell,
-  cilTruck,
-  cilAddressBook,
-  cilTask,
-  cilLibraryAdd,
-  cilNoteAdd,
-  cilPeople,
-  cilUser,
-  cilCalculator,
-  cilClipboard,
-  cilChartPie,
-  cilCursor,
-  cilDescription,
-  cilDrop,
-  cilNotes,
-  cilChart,
-  cilPencil,
-  cilPuzzle,
-  cilSpeedometer,
-  cilBadge,
-  cilUserPlus,
-  cilStar,
-  cilSettings,
-  cilExcerpt,
-  cilLibrary,
-  cilCarAlt,
-  cilFactory,
-  cilListRich,
-  cilSitemap,
-  cilFile,
-  cilList,
-  cilFork,
-  cilListLowPriority,
-  cilRuble,
-} from '@coreui/icons';
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
-import { href, useNavigate } from 'react-router-dom';
+import * as CoreUIIcons from '@coreui/icons';
+
+import { CNavGroup, CNavItem } from '@coreui/react';
+import { useNavigate } from 'react-router-dom';
 
 const getIcon = (iconName) => {
-  switch (iconName) {
-    case 'cilBell':
-      return cilBell;
-    case 'cilAddressBook':
-      return cilAddressBook;
-    case 'cilTruck':
-      return cilTruck;
-    case 'cilUserPlus':
-      return cilUserPlus;
-    case 'cilLibraryAdd':
-      return cilLibraryAdd;
-    case 'cilBadge':
-      return cilBadge;
-    case 'cilNoteAdd':
-      return cilNoteAdd;
-    case 'cilPeople':
-      return cilPeople;
-    case 'cilTask':
-      return cilTask;
-    case 'cilChart':
-      return cilChart;
-    case 'cilUser':
-      return cilUser;
-    case 'cilCalculator':
-      return cilCalculator;
-    case 'cilChartPie':
-      return cilChartPie;
-    case 'cilCursor':
-      return cilCursor;
-    case 'cilDescription':
-      return cilDescription;
-    case 'cilDrop':
-      return cilDrop;
-    case 'cilNotes':
-      return cilNotes;
-    case 'cilPencil':
-      return cilPencil;
-    case 'cilPuzzle':
-      return cilPuzzle;
-    case 'cilSpeedometer':
-      return cilSpeedometer;
-    case 'cilClipboard':
-      return cilClipboard;
-    case 'cilExcerpt':
-      return cilExcerpt;
-    case 'cilSettings':
-      return cilSettings;
-    case 'cilLibrary':
-      return cilLibrary;
-    case 'cilCarAlt':
-      return cilCarAlt;
-    case 'cilFactory':
-      return cilFactory;
-    case 'cilListRich':
-      return cilListRich;
-    case 'cilFile':
-      return cilFile;
-    case 'cilSitemap':
-      return cilSitemap;
-    case 'cilList':
-      return cilList;
-    case 'cilFork':
-      return cilFork;
-    case 'cilListLowPriority':
-      return cilListLowPriority;
-    case 'cilRuble':
-      return cilRuble;
-    default:
-      return null;
-  }
+  return CoreUIIcons?.[iconName] || CoreUIIcons.cilCircle;
 };
 
 export const mapNavItem = (data) => {

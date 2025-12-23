@@ -18,6 +18,7 @@ import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
 import _ from 'lodash';
 import AddAlbumModel from 'src/components/Modals/AddAlbumModel';
+import CrawlDomainsModal from 'src/components/Modals/CrawlDomainsModal';
 
 const recipientslisting = () => {
   dayjs.extend(utc);
@@ -40,6 +41,7 @@ const recipientslisting = () => {
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
   const [isShowAlbumMdl, setIsShowAlbumMdl] = useState(false);
+  const [isShowCrawlerMdl, setIsShowCrawlerMdl] = useState(false);
   const [isShowImportOptions, setIsShowImportOptions] = useState(false);
   const [rows, setRows] = useState([]);
   const [fullRecipientsData, setFullRecipientsData] = useState([]);
@@ -62,6 +64,7 @@ const recipientslisting = () => {
   }, []);
 
   const toggleAlbumMdl = () => setIsShowAlbumMdl((prev) => !prev);
+  const toggleCrawlerMdl = () => setIsShowCrawlerMdl((prev) => !prev);
 
   const fetchFullRecipients = async () => {
     const body = {
@@ -336,6 +339,12 @@ const recipientslisting = () => {
         toggle={toggleAlbumMdl}
         refreshRecipients={() => getRecipientsList(filters)}
       />
+      <CrawlDomainsModal
+        isOpen={isShowCrawlerMdl}
+        toggle={toggleCrawlerMdl}
+        recipientsList={fullRecipientsData}
+        getRecipientList={getBothLists}
+      />
       <React.Fragment>
         <AppContainer>
           <DataGridHeader
@@ -367,6 +376,10 @@ const recipientslisting = () => {
               {
                 title: 'Add Album (+)',
                 onClick: toggleAlbumMdl,
+              },
+              {
+                title: 'Crawl Contacts (+)',
+                onClick: toggleCrawlerMdl,
               },
             ]}
             otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}

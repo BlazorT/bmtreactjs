@@ -89,7 +89,7 @@ const MailOptionsModal = ({ isOpen, toggle: toggleMdl, recipientsList, getRecipi
       isOpen={isOpen}
       toggle={toggle}
       centered
-      className={!isProviderSelected ? 'w-50' : 'w-50'}
+      size={isProviderSelected && data?.length > 0 && !loading ? 'xl' : 'lg'}
       contentClassName="border-0 shadow-lg rounded-3 overflow-hidden"
     >
       <ModalHeader className="border-0 pb-2 pt-2 px-2 bg-gradient text-dark" toggle={toggle}>
