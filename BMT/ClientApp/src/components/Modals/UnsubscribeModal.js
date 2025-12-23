@@ -44,12 +44,17 @@ const UnsubscribeModal = (prop) => {
 
   // Album management
   const [networkAlbums, setNetworkAlbums] = useState({}); // { networkId: albumId }
+  const networks = globalutil.networks() || [];
+  const allNetworkNames = networks.map((n) => n.name);
+
+  const [selectedNetworks, setSelectedNetworks] = useState(() => allNetworkNames);
+
   // Existing states
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const allNetworkNames = globalutil.networks().map((n) => n.name);
-  const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
+  //const allNetworkNames = globalutil.networks().map((n) => n.name);
+  //const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
   const [groupedContacts, setGroupedContacts] = useState([]);
   const [recipientInput, setRecipientInput] = useState({});
   const [recipientsList, setRecipientsList] = useState({});
@@ -269,6 +274,8 @@ const UnsubscribeModal = (prop) => {
       setIsLoading(false);
     }
   };
+  //const networks = globalutil.networks() || [];
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} size="lg" centered>
@@ -279,7 +286,7 @@ const UnsubscribeModal = (prop) => {
             <DataGridHeader title="Networks" filterDisable />
           </AppContainer>
 
-          {globalutil.networks().map((network, index) => {
+          {networks.map((network, index) => {
             const networkKey = network.name;
             const networkId = network.id;
             const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
@@ -365,20 +372,7 @@ const UnsubscribeModal = (prop) => {
             );
           })}
 
-          {/*<CFormCheck*/}
-          {/*  checked={isTermsAccepted}*/}
-          {/*  className="d-flex flex-row justify-content-center"*/}
-          {/*  onChange={(e) => setIsTermsAccepted(e.target.checked)}*/}
-          {/*  label={*/}
-          {/*    <span>*/}
-          {/*      I agree to{' '}*/}
-          {/*      <strong className="lblTerms" onClick={TermsModal}>*/}
-          {/*        Terms & Conditions (EULA)*/}
-          {/*      </strong>*/}
-          {/*    </span>*/}
-          {/*  }*/}
-          {/*/>*/}
-
+    
           <div className="d-flex justify-content-center gap-3 mt-3">
             <button className="btn btn-secondary" onClick={toggle}>
               Cancel
