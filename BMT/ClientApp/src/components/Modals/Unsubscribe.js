@@ -36,7 +36,7 @@ const Unsubscribe = (prop) => {
       showToast('Email is required', 'warning');
       return;
     }
-
+  
     setLoading(true);
 
     const body = {
@@ -127,6 +127,11 @@ const Unsubscribe = (prop) => {
       toggle(); // close modal on success
     }
   };
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   return (
     <>
@@ -161,7 +166,8 @@ const Unsubscribe = (prop) => {
                 onClick={handleGetCode}
                 disabled={loading || timer > 0}
               >
-                {timer > 0 ? `Resend in ${timer}s` : 'Get Code'}
+                {timer > 0 ? `Resend in ${formatTime(timer)}` : 'Get Code'}
+
               </button>
             </CCol>
           </CRow>
@@ -197,9 +203,13 @@ const Unsubscribe = (prop) => {
             <button className="btn btn-secondary" onClick={toggle}>
               Cancel
             </button>
-            <button className="btn btn-secondary" onClick={handleSubmit} disabled={loading}>
+            <button className="btn btn-secondary"onClick={handleSubmit} disabled={loading || !verificationCode.trim()}>
               Submit
             </button>
+
+            {/*<button className="btn btn-secondary" onClick={handleSubmit} disabled={loading}>*/}
+            {/*  Submit*/}
+            {/*</button>*/}
           </div>
         </ModalBody>
       </Modal>
