@@ -48,7 +48,7 @@ export const getRecipientsFilterConfig = (filters, changeFilter, orgs, Role, alb
     optionsList: (ol) =>
       `${ol?.name} (${globalutil.networks()?.find((n) => n?.id === ol?.networkid)?.name || ''})`,
     disableOption: 'Select Networks',
-    options: albums,
+    options: filters.networkId ? albums?.filter((a) => a?.networkid == filters.networkId) : albums,
     className: 'form-control item form-select',
     title: 'Album',
   },

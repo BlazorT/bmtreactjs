@@ -143,6 +143,7 @@ const Users: React.FC = () => {
             sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
             canExport={pageRoles.canExport}
             canPrint={pageRoles.canPrint}
+            groupBy={['']}
           />
         )}
       </AppContainer>

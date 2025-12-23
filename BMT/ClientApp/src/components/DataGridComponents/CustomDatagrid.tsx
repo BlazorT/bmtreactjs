@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useMemo } from 'react';
-import { DataGrid } from 'react-data-grid';
+import React, { useState, useMemo, Key } from 'react';
 import {
+  DataGrid,
+  TreeDataGrid,
   Column,
   SortColumn,
   SelectColumn,
-  Row,
   RowsChangeData,
-  SortDirection,
 } from 'react-data-grid';
 
 import CustomSummary from './DataGridSummary';
 import DataGridHeader from './DataGridHeader';
 import DatagridSkeleton from './DatagridSkeleton';
+
 import CIcon from '@coreui/icons-react';
 import {
   cilChevronDoubleLeft,
@@ -62,6 +62,10 @@ interface CustomDatagridProps {
   onRowClick?: (rowIdx: number, row: any, column: Column<any>) => void;
   selectedRows?: Set<React.Key>;
   onSelectedRowsChange?: (selectedRows: Set<React.Key>) => void;
+
+  /** ✅ NEW – GROUPING */
+  enableGrouping?: boolean;
+  groupBy: string[];
 }
 
 const CustomDatagrid: React.FC<CustomDatagridProps> = ({
@@ -75,8 +79,6 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   onRowsChange,
   pageSize = 10,
   sorting = [],
-  canExport = false,
-  canPrint = false,
   noRowsMessage = 'No data available',
   enableSearch = false,
   footer,
@@ -88,63 +90,92 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   selectedRows = new Set(),
   onSelectedRowsChange,
   maxHeight = 500,
+
+  /** GROUPING */
+  enableGrouping = false,
+  groupBy = [],
 }) => {
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
+  const [expandedGroupIds, setExpandedGroupIds] = useState<Set<React.Key>>(new Set());
 
-  // Filter rows based on search term
+  /* ----------------------------------
+     FILTER
+  ---------------------------------- */
   const filteredRows = useMemo(() => {
     if (!searchTerm) return rows;
-
     return rows.filter((row) =>
-      Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
+      Object.values(row).some((v) => String(v).toLowerCase().includes(searchTerm.toLowerCase())),
     );
   }, [rows, searchTerm]);
 
-  // Sort rows
+  /* ----------------------------------
+     SORT (disabled for grouping)
+  ---------------------------------- */
   const sortedRows = useMemo(() => {
-    if (sortColumns.length === 0) return filteredRows;
+    if (enableGrouping || sortColumns.length === 0) return filteredRows;
 
     return [...filteredRows].sort((a, b) => {
-      for (const sort of sortColumns) {
-        const { columnKey, direction } = sort;
-        const aValue = a[columnKey];
-        const bValue = b[columnKey];
-
-        if (aValue < bValue) {
-          return direction === 'ASC' ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return direction === 'ASC' ? 1 : -1;
-        }
+      for (const { columnKey, direction } of sortColumns) {
+        if (a[columnKey] < b[columnKey]) return direction === 'ASC' ? -1 : 1;
+        if (a[columnKey] > b[columnKey]) return direction === 'ASC' ? 1 : -1;
       }
       return 0;
     });
-  }, [filteredRows, sortColumns]);
+  }, [filteredRows, sortColumns, enableGrouping]);
 
-  // Paginate rows
+  /* ----------------------------------
+     PAGINATION (disabled for grouping)
+  ---------------------------------- */
   const paginatedRows = useMemo(() => {
-    if (!pagination) return sortedRows;
+    if (!pagination || enableGrouping) return sortedRows;
+    const start = currentPage * pageSize;
+    return sortedRows.slice(start, start + pageSize);
+  }, [sortedRows, pagination, currentPage, pageSize, enableGrouping]);
 
-    const start = currentPage * currentPageSize;
-    const end = start + currentPageSize;
-    return sortedRows.slice(start, end);
-  }, [sortedRows, pagination, currentPage, currentPageSize]);
-
-  // Add row selection column if needed
+  /* ----------------------------------
+     COLUMNS
+  ---------------------------------- */
   const finalColumns = useMemo(() => {
     const cols = [...columns];
-    if (rowSelection) {
-      cols.unshift(SelectColumn);
-    }
+    if (rowSelection) cols.unshift(SelectColumn);
     return cols;
   }, [columns, rowSelection]);
 
-  // Row class name function
+  /* ----------------------------------
+     GROUPER
+  ---------------------------------- */
+  const rowGrouper = (rows: readonly any[], columnKey: string): Record<string, readonly any[]> => {
+    return rows.reduce<Record<string, any[]>>((acc, row) => {
+      const key = String(row[columnKey] ?? '—');
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(row);
+      return acc;
+    }, {});
+  };
+
+  /* ----------------------------------
+     STYLES
+  ---------------------------------- */
+  // TypeScript doesn't support custom CSS vars directly in React.CSSProperties.
+  // Cast as any to suppress type error for custom CSS properties.
+
+  /* ----------------------------------
+     EMPTY
+  ---------------------------------- */
+  const NoRowsOverlay = () => (
+    <div
+      className="d-flex flex-column justify-content-center align-items-center w-100"
+      style={{ height: 250 }}
+    >
+      <CIcon icon={cilInbox} size="xl" />
+      <h6 className="mt-2">{noRowsMessage}</h6>
+    </div>
+  );
+
   const getRowClassName = (row: any, idx: number): string => {
     const isRowSelected = selectedRows.has(row.content);
 
@@ -206,7 +237,6 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     }),
   } as React.CSSProperties;
 
-  // Handle sort change
   const handleSortColumnsChange = (sortColumns: SortColumn[]) => {
     setSortColumns(sortColumns);
   };
@@ -218,175 +248,69 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     }
   };
 
-  // Handle cell click
-  const handleCellClick = (args: any) => {
-    if (onRowClick) {
-      onRowClick(args.rowIdx, args.row, args.column);
-    }
-  };
+  if (loading) return <DatagridSkeleton />;
 
-  // Pagination component
-  const PaginationComponent = () => {
-    if (!pagination) return null;
+  return (
+    <div className="custom-datagrid-container">
+      {isHeader && headerProps && <DataGridHeader {...headerProps} />}
 
-    const totalPages = Math.ceil(sortedRows.length / pageSize);
-    const startItem = currentPage * pageSize + 1;
-    const endItem = Math.min((currentPage + 1) * pageSize, sortedRows.length);
-
-    return (
-      <div className="d-flex justify-content-between align-items-center p-2 bg-dark-color text-white">
-        <div>
-          Showing {startItem} - {endItem} of {sortedRows.length}
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <CTooltip content="First">
-            <span
-              style={{
-                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentPage === 0 ? 0.5 : 1,
-              }}
-              onClick={() => currentPage > 0 && setCurrentPage(0)}
-            >
-              <CIcon icon={cilChevronDoubleLeft} />
-            </span>
-          </CTooltip>
-
-          <CTooltip content="Previous">
-            <span
-              style={{
-                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentPage === 0 ? 0.5 : 1,
-              }}
-              onClick={() => currentPage > 0 && setCurrentPage(currentPage - 1)}
-            >
-              <CIcon icon={cilChevronLeft} />
-            </span>
-          </CTooltip>
-
-          <span className="mx-2">
-            Page {currentPage + 1} of {totalPages}
-          </span>
-
-          <CTooltip content="Next">
-            <span
-              style={{
-                cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
-                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
-              }}
-              onClick={() => currentPage < totalPages - 1 && setCurrentPage(currentPage + 1)}
-            >
-              <CIcon icon={cilChevronRight} />
-            </span>
-          </CTooltip>
-
-          <CTooltip content="Last">
-            <span
-              style={{
-                cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
-                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
-              }}
-              onClick={() => currentPage < totalPages - 1 && setCurrentPage(totalPages - 1)}
-            >
-              <CIcon icon={cilChevronDoubleRight} />
-            </span>
-          </CTooltip>
-        </div>
-      </div>
-    );
-  };
-
-  // Search component
-  const SearchComponent = () => {
-    if (!enableSearch) return null;
-
-    return (
-      <div className="mb-3">
+      {enableSearch && (
         <input
-          type="text"
-          className="form-control bg-secondary-color text-white"
+          className="form-control mb-2"
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
-    );
-  };
-
-  // No rows overlay
-  const NoRowsOverlay = () => (
-    <div
-      className="d-flex flex-column justify-content-center align-items-center w-100"
-      style={{
-        height: '250px',
-        backgroundColor: 'rgba(255,255,255,0.02)',
-        border: '1px dashed rgba(255,255,255,0.2)',
-        borderRadius: '8px',
-      }}
-    >
-      <CIcon icon={cilInbox} size="xl" className="mb-3 text-secondary" />
-      <h6 className="mb-1">{noRowsMessage}</h6>
-      <small className="text-secondary">Try adjusting your filters or search.</small>
-    </div>
-  );
-
-  if (loading) {
-    return <DatagridSkeleton />;
-  }
-  return (
-    <div className="custom-datagrid-container">
-      {/* Header */}
-      {isHeader && headerProps && (
-        <DataGridHeader
-          title={headerProps.title || ''}
-          addButton={headerProps.addButton}
-          addBtnClick={headerProps.addBtnClick}
-          otherControls={headerProps.otherControls}
-          addSecButton={headerProps.addSecButton}
-          addSecBtnClick={headerProps.addSecBtnClick}
-          filterDisable={headerProps.filterDisable}
-          exportFn={headerProps.exportFn}
-          addBtnContent={headerProps.addBtnContent}
-          popOverId={headerProps.popOverId}
-          actionCell={headerProps.actionCell}
-          actions={headerProps.actions}
-          onClick={headerProps.onClick}
-        />
       )}
 
-      {/* Search */}
-      <SearchComponent />
       {rows.length === 0 ? (
         <NoRowsOverlay />
       ) : (
         <>
-          {/* Data Grid - now with fixed height when pagination is off */}
-          <div style={gridStyles}>
-            <DataGrid
-              columns={finalColumns}
-              rows={pagination ? paginatedRows : sortedRows}
-              sortColumns={sortColumns}
-              onSortColumnsChange={handleSortColumnsChange}
-              onRowsChange={handleRowsChange}
-              selectedRows={selectedRows}
-              onSelectedRowsChange={onSelectedRowsChange}
-              rowClass={getRowClassName}
-              rowKeyGetter={(row) => row?.content}
-              className="rdg-dark fill-grid"
-              rowHeight={rowHeight}
-              isRowSelectionDisabled={(row) => row?.disabled === true}
-              renderers={{
-                noRowsFallback: <NoRowsOverlay />,
-              }}
-              style={gridHeight ? { height: gridHeight } : undefined}
-            />
+          <div style={gridStyles as React.CSSProperties}>
+            {enableGrouping ? (
+              <TreeDataGrid
+                columns={finalColumns}
+                rows={sortedRows} // Grouping usually doesn't use simple pagination
+                rowHeight={rowHeight}
+                groupBy={groupBy}
+                rowGrouper={rowGrouper}
+                expandedGroupIds={expandedGroupIds}
+                onExpandedGroupIdsChange={(ids: Set<unknown>) =>
+                  setExpandedGroupIds(ids as Set<Key>)
+                }
+                onSortColumnsChange={setSortColumns}
+                onRowsChange={onRowsChange}
+                selectedRows={selectedRows}
+                onSelectedRowsChange={onSelectedRowsChange}
+                rowKeyGetter={(row) => row?.content}
+                className="rdg-dark fill-grid"
+                onCellClick={onRowClick as any}
+              />
+            ) : (
+              <DataGrid
+                columns={finalColumns}
+                rows={pagination ? paginatedRows : sortedRows}
+                sortColumns={sortColumns}
+                onSortColumnsChange={handleSortColumnsChange}
+                onRowsChange={handleRowsChange}
+                selectedRows={selectedRows}
+                onSelectedRowsChange={onSelectedRowsChange}
+                rowClass={getRowClassName}
+                rowKeyGetter={(row) => row?.content}
+                className="rdg-dark fill-grid"
+                rowHeight={rowHeight}
+                isRowSelectionDisabled={(row) => row?.disabled === true}
+                renderers={{
+                  noRowsFallback: <NoRowsOverlay />,
+                }}
+                style={gridHeight ? { height: gridHeight } : undefined}
+              />
+            )}
           </div>
 
-          {/* Footer */}
-          <div>
-            {footer}
-            {summary && <CustomSummary rows={sortedRows} columns={columns} summary={summary} />}
-            <PaginationComponent />
-          </div>
+          {footer}
+          {summary && <CustomSummary rows={sortedRows} columns={columns} summary={summary} />}
         </>
       )}
     </div>

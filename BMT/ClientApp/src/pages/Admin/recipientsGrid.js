@@ -93,8 +93,13 @@ const recipientslisting = () => {
 
     const networks = globalutil.networks();
     const groupedData = getGroupedRecipients(recipientsList, albumsList || [], networks);
-
-    setRows(groupedData);
+    setRows(
+      recipientsList?.map((r) => ({
+        ...r,
+        networkId: globalutil.networks()?.find((n) => n.id === r?.networkId)?.name || '--',
+        albumid: albumsList?.find((n) => n.id === r?.albumid)?.name || '--',
+      })),
+    );
     // const mappedArray = recipientsList.map((data) => {
     //   const network = networks.find((n) => n.id === data.networkId);
 
@@ -323,7 +328,7 @@ const recipientslisting = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
-  const recipientslistingCols = getrecipietslistingCols();
+  const recipientslistingCols = getrecipietslistingCols(albums);
 
   // console.log({ fullRecipientsData });
   return (
@@ -399,6 +404,8 @@ const recipientslisting = () => {
                   lastUpdatedAt: false,
                 },
               }}
+              enableGrouping
+              groupBy={['networkId', 'albumid']}
               //  canExport={pageRoles.canExport}
               // canPrint={pageRoles.canPrint}
             />
