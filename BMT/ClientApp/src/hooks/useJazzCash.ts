@@ -2,6 +2,7 @@
 import { SetStateAction, Dispatch, useState } from 'react';
 import useApi from './useApi';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { PAYMENT_GATEWAY } from 'src/components/utils/types';
 import { keepOnlyAlphanumeric } from 'src/helpers/calculateColorStatus';
 import { useSelector } from 'react-redux';
@@ -9,6 +10,7 @@ import axios from 'axios';
 import { useShowToast } from './useShowToast';
 
 export const SOCKET_URL = 'http://72.61.77.197:5000';
+dayjs.extend(utc);
 
 export function useJazzCash(
   isPopUp: boolean = false,

@@ -3947,6 +3947,12 @@ fieldset.legend {
   font-family: arial;
   font-size: 25px;
 }
+.network-checkbox {
+  justify-content: center;
+  align-items: center;
+  font-family: arial;
+  font-size: 25px;
+}
 .network-checkbox-animate label {
   float: left;
   position: relative;

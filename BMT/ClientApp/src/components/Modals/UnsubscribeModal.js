@@ -36,7 +36,7 @@ const UnsubscribeModal = (prop) => {
   const timerRef = useRef(null);
 
   const { fetchData } = useFetch();
-  const TermsModal = () => setTermsmodalOpen(prev => !prev);
+  const TermsModal = () => setTermsmodalOpen((prev) => !prev);
 
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -63,7 +63,6 @@ const UnsubscribeModal = (prop) => {
     return () => clearTimeout(timerRef.current);
   }, [timer]);
 
- 
   // Handle network checkbox change
   const handleCheckboxChange = (network) => {
     const allNetworks = globalutil.networks();
@@ -81,7 +80,6 @@ const UnsubscribeModal = (prop) => {
       }
     } else {
       setSelectedNetworks([...selectedNetworks, network]);
-
     }
   };
   const handleInputChange = (network, value) => {
@@ -239,7 +237,7 @@ const UnsubscribeModal = (prop) => {
   const handleSubmitCampaignContacts = async () => {
     try {
       const payload = buildCampaignPayload();
-      console.log("payload", payload);
+      console.log('payload', payload);
       if (payload.length === 0) {
         showToast('No contacts to send.', 'error');
         return;
@@ -273,10 +271,10 @@ const UnsubscribeModal = (prop) => {
   };
   return (
     <>
-      <Modal isOpen={isOpen} toggle={toggle} className="Modal_Term_Condition" centered>
+      <Modal isOpen={isOpen} toggle={toggle} size="lg" centered>
         <ModalHeader toggle={toggle}>Unsubscribe Request</ModalHeader>
 
-        <ModalBody className="paddingAllSide">
+        <ModalBody className="">
           <AppContainer>
             <DataGridHeader title="Networks" filterDisable />
           </AppContainer>
@@ -284,19 +282,18 @@ const UnsubscribeModal = (prop) => {
           {globalutil.networks().map((network, index) => {
             const networkKey = network.name;
             const networkId = network.id;
-            const IconName =
-              networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
+            const IconName = networkKey.charAt(0).toUpperCase() + networkKey.slice(1).toLowerCase();
             const isChecked = selectedNetworks.includes(networkKey);
             const recipientCount = (recipientsList[networkKey] || []).length;
-         
-            return (
-              <CCol md={12} key={index}>
-                <ul className="inlinedisplay">
-                  <li className="divCircle">
-                    <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                  </li>
 
-                  <li className="network-checkbox-animate networksListWidth">
+            return (
+              <CRow md={12} key={index}>
+                <div className="d-flex align-items-center gap-4 mt-2">
+                  <CCol className="divCircle" md={3}>
+                    <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
+                  </CCol>
+
+                  <CCol md={3} className="network-checkbox">
                     <CFormCheck
                       id={IconName}
                       name={IconName}
@@ -304,9 +301,9 @@ const UnsubscribeModal = (prop) => {
                       checked={!isChecked}
                       onChange={() => handleCheckboxChange(networkKey)}
                     />
-                  </li>
+                  </CCol>
 
-                  <li style={{ position: 'relative' }}>
+                  <CCol style={{ position: 'relative' }} md={6}>
                     <CTooltip
                       content={
                         networkKey.toLowerCase() === 'email'
@@ -325,17 +322,17 @@ const UnsubscribeModal = (prop) => {
                       }
                       placement="top"
                     >
-                      <div>
-                        <CustomInput
-                          disabled={isChecked}
-                          type="text"
-                          value={recipientInput[networkKey] || ''}
-                          placeholder="Enter recipient and press Enter, Comma, or Paste"
-                          onChange={(e) => handleInputChange(networkKey, e.target.value)}
-                          onKeyDown={(e) => handleKeyDown(e, networkKey)}
-                          onPaste={(e) => handlePaste(e, networkKey)}
-                        />
-                      </div>
+                      <CustomInput
+                        disabled={isChecked}
+                        type="text"
+                        value={recipientInput[networkKey] || ''}
+                        placeholder="Enter recipient and press Enter, Comma, or Paste"
+                        onChange={(e) => handleInputChange(networkKey, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, networkKey)}
+                        onPaste={(e) => handlePaste(e, networkKey)}
+                        width={'w-100'}
+                        className={'d-flex'}
+                      />
                     </CTooltip>
 
                     {recipientCount > 0 && (
@@ -362,16 +359,9 @@ const UnsubscribeModal = (prop) => {
                         <span className="recipient-count">{recipientCount}</span>
                       </CPopover>
                     )}
-                  </li>
-
-                 
-
-                  <li>
-                  
-                  </li>
-                
-                </ul>
-              </CCol>
+                  </CCol>
+                </div>
+              </CRow>
             );
           })}
 
@@ -393,7 +383,11 @@ const UnsubscribeModal = (prop) => {
             <button className="btn btn-secondary" onClick={toggle}>
               Cancel
             </button>
-            <button className="btn btn-secondary" onClick={handleSubmitCampaignContacts} disabled={loading}>
+            <button
+              className="btn btn-secondary"
+              onClick={handleSubmitCampaignContacts}
+              disabled={loading}
+            >
               Submit
             </button>
           </div>

@@ -7,6 +7,18 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilPlus, cilPencil } from '@coreui/icons';
 
+const NETWORK_COLOR_MAP = {
+  1: '#0d6efd', // SMS - blue
+  2: '#25D366', // WhatsApp - green
+  3: '#0dcaf0', // Email - cyan
+  4: '#000000', // Twitter - black
+  5: '#1877F2', // Facebook - blue
+  6: '#E1306C', // Instagram - pink
+  7: '#0A66C2', // LinkedIn - blue
+  8: '#6c757d', // TikTok - dark gray
+  9: '#FFFC00', // Snapchat - yellow
+};
+
 const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedNetworks }) => {
   const showToast = useShowToast();
   const getNetworkName = (networkId) => {
@@ -14,14 +26,14 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedN
     return networks?.find((n) => n.id === networkId)?.name || 'Unknown';
   };
 
-  const getNetworkColorClass = (networkId) => {
-    const colorMap = {
-      1: 'primary',
-      2: 'success',
-      3: 'warning',
-      4: 'danger',
+  const getNetworkColorStyle = (networkId) => {
+    const color = NETWORK_COLOR_MAP[networkId] || '#6c757d';
+
+    return {
+      color,
+      background: `${color}1A`, // ~10% opacity
+      borderColor: `${color}40`, // ~25% opacity
     };
-    return colorMap[networkId] || 'secondary';
   };
 
   const onSelectClick = () => {
@@ -52,19 +64,39 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedN
               ) : (
                 <div className="d-flex flex-wrap gap-2">
                   {selectedAlbumList?.map((album) => {
-                    const colorClass = getNetworkColorClass(album.networkid);
+                    const styles = getNetworkColorStyle(album.networkid);
+
                     return (
                       <div
                         key={album.id}
-                        className={`d-inline-flex align-items-center px-3 py-2 rounded-pill bg-${colorClass} bg-opacity-10 border border-${colorClass} border-opacity-25`}
+                        className="d-inline-flex align-items-center px-3 py-2 rounded-pill"
+                        style={{
+                          background: styles.background,
+                          border: `1px solid ${styles.borderColor}`,
+                        }}
                       >
                         <span
-                          className={`bg-${colorClass} rounded-circle me-2`}
-                          style={{ width: '8px', height: '8px', flexShrink: 0 }}
-                        ></span>
-                        <span className={`text-${colorClass} fw-medium me-2`}>{album.name}</span>
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            backgroundColor: styles.color,
+                            marginRight: 8,
+                            flexShrink: 0,
+                          }}
+                        />
+
+                        <span className="fw-medium me-2" style={{ color: styles.color }}>
+                          {album.name}
+                        </span>
+
                         <span
-                          className={`badge bg-${colorClass} bg-opacity-20 text-white rounded-pill small`}
+                          className="badge rounded-pill small"
+                          style={{
+                            backgroundColor: styles.color,
+                            color: '#fff',
+                            opacity: 0.85,
+                          }}
                         >
                           {getNetworkName(album.networkid)}
                         </span>

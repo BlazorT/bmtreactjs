@@ -100,8 +100,23 @@ const campaignadd = () => {
     postData: fetchTemplates,
   } = useApi('Template/campaigntemplatesallnetworks', 'POST');
 
+  const networkSettingBody = useMemo(
+    () => ({
+      id: '1',
+      orgId: user?.orgId?.toString(),
+    }),
+    [user],
+  );
+
+  const { data: networkSettingsRes, loading: networkSettingsLoading } = useApi(
+    '/Organization/orgpackagedetails',
+    'POST',
+    networkSettingBody,
+  );
   const pricingData = useMemo(() => pricingRes?.data || [], [pricingRes]);
+  const templatesData = useMemo(() => templatesRes?.data || [], [templatesRes]);
   const recipients = useMemo(() => data?.data || [], [data]);
+  const networkSettingsData = useMemo(() => networkSettingsRes?.data || [], [networkSettingsRes]);
 
   const tabs = [
     { id: 0, name: 'Campaign' },
@@ -122,6 +137,21 @@ const campaignadd = () => {
       return defaultValue;
     }
   };
+
+  const selectedSMSTemplate = useMemo(
+    () => selectedTemplates?.['SMS']?.template || null,
+    [selectedTemplates],
+  );
+
+  const networkSettingsTemplate = useMemo(
+    () => safeParse(networkSettingsData?.[0]?.custom1, null)?.template || null,
+    [networkSettingsData],
+  );
+
+  const globalSMSTemplate = useMemo(
+    () => templatesData?.find((t) => t?.networkId === 1)?.template || null,
+    [templatesData],
+  );
 
   // Normalize attachments
   // Normalize attachments and categorize
@@ -664,10 +694,6 @@ const campaignadd = () => {
     return <Loading />;
   }
 
-  // ✅ Helper to get hashtags as string (for backend submission)
-  const getHashTagsString = () => {
-    return campaignRegData.hashTags.map((tag) => `#${tag}`).join(' ');
-  };
   // console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
@@ -937,6 +963,9 @@ const campaignadd = () => {
         editSchedule={editingSchedule}
         onScheduleUpdate={handleScheduleUpdate}
         submitFromGrid={submitFromGrid}
+        templateForPricing={
+          selectedSMSTemplate || networkSettingsTemplate || globalSMSTemplate || null
+        }
       />
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
     </Form>

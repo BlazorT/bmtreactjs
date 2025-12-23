@@ -203,7 +203,6 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
-         <CDropdownDivider /> 
         <CDropdownItem
           className="text-center labelName border-bottom-1px d-flex justify-content-center align-items-center pb-2 pt-2"
           role="button"

@@ -23,6 +23,7 @@ import { AlbumListModel } from './AlbumListModel';
 import PaymentModel from './PaymentModel';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 
+const SMS_SEGMENT_LENGTH = 160;
 dayjs.extend(utc);
 
 const AddScheduleModel = (prop) => {
@@ -46,6 +47,7 @@ const AddScheduleModel = (prop) => {
     editSchedule = null, // Schedule data when editing
     onScheduleUpdate = null, // Callback for updating schedule
     submitFromGrid = false, // Flag to indicate submit from grid
+    templateForPricing = '',
   } = prop;
 
   const isEditMode = !!editSchedule;
@@ -286,15 +288,16 @@ const AddScheduleModel = (prop) => {
 
   const toggleIsShowAlbumList = () => setIsShowAlbumList((prev) => !prev);
 
+  const getSmsSegments = (text = '') => Math.ceil(text.length / SMS_SEGMENT_LENGTH);
+
   const calculateBudget = (
     networks,
     selectedDays,
     startDate,
     endDate,
-    startTime,
-    finishTime,
     intervalTypeId,
     interval,
+    templateForPricing,
   ) => {
     const validDays = calculateValidDays({
       startTime: startDate,
@@ -303,27 +306,38 @@ const AddScheduleModel = (prop) => {
       intervalTypeId,
       interval,
     });
-
     // ✅ sum total of selected networks' prices from pricingData
     const totalScheduleMessages = networks?.reduce((sum, network) => {
       const networkId = globalutil
         .networks()
         .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
-      return sum + validDays * getNetworkRecipients(networkId);
+
+      const recipients = getNetworkRecipients(networkId);
+
+      const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+      return sum + validDays * recipients * segments;
     }, 0);
 
     const totalNetworkPrice = networks?.reduce((sum, network) => {
       const networkId = globalutil
         .networks()
         .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
+
       const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
-      const freeAllowed = matchedPricing?.freeAllowed;
-      if (totalScheduleMessages <= freeAllowed) return 0;
-      return sum + matchedPricing?.unitPrice * getNetworkRecipients(networkId);
+      if (!matchedPricing) return sum;
+
+      const recipients = getNetworkRecipients(networkId);
+      const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+
+      const totalMessages = validDays * recipients * segments;
+
+      if (totalMessages <= matchedPricing.freeAllowed) return sum;
+
+      return sum + matchedPricing.unitPrice * recipients * segments * validDays;
     }, 0);
 
     // ✅ calculate total schedule budget using the summed prices
-    const totalScheduleBudget = totalNetworkPrice * validDays;
+    const totalScheduleBudget = totalNetworkPrice;
     // ✅ optionally calculate total messages (example multiplier)
 
     // ✅ if you have multiple schedule budgets to sum
@@ -338,16 +352,17 @@ const AddScheduleModel = (prop) => {
           .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
         const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
         const freeAllowed = matchedPricing?.freeAllowed;
+        const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+        const recipients = getNetworkRecipients(networkId);
+        const totalMessages = validDays * recipients * segments;
         const totalNetworkPrice =
-          totalScheduleMessages <= freeAllowed
+          totalMessages <= freeAllowed
             ? 0
-            : (matchedPricing?.unitPrice || 0) *
-              (getNetworkRecipients(networkId) || 0) *
-              (validDays || 1);
+            : matchedPricing.unitPrice * recipients * segments * validDays;
         return {
           networkId,
           totalNetworkPrice: parseFloat((totalNetworkPrice || 0)?.toFixed(2)),
-          totalNetworkMessageCount: validDays * getNetworkRecipients(networkId),
+          totalNetworkMessageCount: totalMessages,
         };
       }),
     });
@@ -685,6 +700,7 @@ const AddScheduleModel = (prop) => {
     } else {
       // Add new schedule
       const updatedSchedule = [...scheduleJson, ...schedulePayload];
+      console.log({ updatedSchedule, budgetData });
       setScheduleJson(updatedSchedule);
       setData(updatedSchedule);
       showToast('Schedule saved successfully!', 'success');
@@ -851,10 +867,9 @@ const AddScheduleModel = (prop) => {
       campaignRegData.selectedDays,
       campaignRegData.startDate,
       campaignRegData.endDate,
-      campaignRegData.startTime,
-      campaignRegData.startTime,
       campaignRegData.intervalTypeId,
       campaignRegData.Intervalval,
+      templateForPricing,
     );
   }, [
     isEditMode ? editModeNetworks.join('|') : selectedNetworks.join('|'), // ✅ detect network changes
@@ -862,11 +877,10 @@ const AddScheduleModel = (prop) => {
     (campaignRegData.selectedDays || []).join('|'), // ✅ detect days changes
     campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0, // ✅ convert to timestamp
     campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
-    campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0,
-    campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0,
     campaignRegData.intervalTypeId ? campaignRegData.intervalTypeId : 0,
     campaignRegData.Intervalval ? campaignRegData.Intervalval : 0,
     scheduleJson,
+    templateForPricing,
   ]);
   return (
     <>

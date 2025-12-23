@@ -309,7 +309,8 @@ export const AlbumListModel = ({
           createdAt: dayjs().subtract(5, 'year').startOf('year').format(),
           lastUpdatedAt: dayjs().utc().endOf('day').format(),
         };
-        fetchRecipients(body);
+        const rec = await fetchRecipients(body);
+        handleSubmit(false, rec);
       } else {
         showToast(result.message || 'Failed to add contacts.', 'error');
       }
@@ -321,7 +322,7 @@ export const AlbumListModel = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (isToogle = true, rec = null) => {
     const selectedIds = Object.values(selectedAlbums).filter((id) => id !== null);
 
     const selectedAlbumsList = Array.isArray(albums)
@@ -329,8 +330,8 @@ export const AlbumListModel = ({
       : [];
 
     const contactCounts = selectedAlbumsList.map((al) => {
-      const findContacts = Array.isArray(recipients?.data)
-        ? recipients.data.filter((r) => r?.albumid === al.id)
+      const findContacts = Array.isArray(rec || recipients?.data)
+        ? (rec || recipients.data).filter((r) => r?.albumid === al.id)
         : [];
 
       return {
@@ -352,7 +353,7 @@ export const AlbumListModel = ({
 
     // ✅ Proceed
     setSelectedAlbumList(selectedAlbumsList);
-    toggle();
+    if (isToogle) toggle();
   };
 
   const toAddAlbum = () => {
