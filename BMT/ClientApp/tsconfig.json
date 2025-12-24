@@ -16,7 +16,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": 0

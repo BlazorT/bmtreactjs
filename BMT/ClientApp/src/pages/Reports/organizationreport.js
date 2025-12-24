@@ -17,6 +17,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import { formatDate } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 const columns = [
   {
@@ -72,9 +73,7 @@ const columns = [
 dayjs.extend(utc);
 
 const organizationreport = () => {
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Organizations',
-  );
+  const pageRoles = usePageRoles('Organization Report');
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { loading, postData: fetchOrgReport } = useApi('/Report/organizationsreportdata');
@@ -254,102 +253,98 @@ const organizationreport = () => {
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
         />
-        {showFilters == true ? (
-          <div className="show-stock">
-            <div className="mb-0 dashboard-table padLeftRight">
-              <div className="row">
-                <div className="col-md-6">
-                  <CustomInput
-                    label="Keyword"
-                    value={filters.name}
-                    onChange={changeFilter}
-                    icon={cilUser}
-                    type="text"
-                    id="name"
-                    name="name"
-                    title=" using by name, contact, email"
-                    placeholder=" name, contact, email"
-                    className="form-control item"
-                    isRequired={false}
-                    // message="Enter Buisness Name"
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <CustomSelectInput
-                    label="Status"
-                    icon={cilFlagAlt}
-                    id="status"
-                    options={globalutil.statuses()}
-                    className="form-control item form-select"
-                    value={filters.status}
-                    disableOption="Select Status"
-                    title=" Status "
-                    name="status"
-                    onChange={(e) => changeFilter(e)}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date From "
-                    id="createdAt"
-                    name="createdAt"
-                    title="Registration start date (Greater Than)"
-                    value={filters.createdAt}
-                    onChange={(e) => changeFilter(e, 'createdAt')}
-                  />
-                </div>
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date To"
-                    id="lastUpdatedAt"
-                    name="lastUpdatedAt"
-                    value={filters.lastUpdatedAt}
-                    title=" Registration end date (Less Than)"
-                    onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
-                  />
-                </div>
+        {showFilters && (
+          <div>
+            <div className="row">
+              <div className="col-md-6">
+                <CustomInput
+                  label="Keyword"
+                  value={filters.name}
+                  onChange={changeFilter}
+                  icon={cilUser}
+                  type="text"
+                  id="name"
+                  name="name"
+                  title=" using by name, contact, email"
+                  placeholder=" name, contact, email"
+                  className="form-control item"
+                  isRequired={false}
+                  // message="Enter Buisness Name"
+                />
               </div>
 
-              <div className="row">
-                <div className="col-md-6"> </div>
-                <div className="col-md-6">
-                  <div className="mt-2">
-                    <button
-                      title="Click for searching Org report data"
-                      type="button"
-                      onClick={() => applyFilters()}
-                      className="btn_Default m-2 sales-btn-style alignLeft"
-                    >
-                      Search
-                    </button>
-                  </div>
+              <div className="col-md-6">
+                <CustomSelectInput
+                  label="Status"
+                  icon={cilFlagAlt}
+                  id="status"
+                  options={globalutil.statuses()}
+                  className="form-control item form-select"
+                  value={filters.status}
+                  disableOption="Select Status"
+                  title=" Status "
+                  name="status"
+                  onChange={(e) => changeFilter(e)}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date From "
+                  id="createdAt"
+                  name="createdAt"
+                  title="Registration start date (Greater Than)"
+                  value={filters.createdAt}
+                  onChange={(e) => changeFilter(e, 'createdAt')}
+                />
+              </div>
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date To"
+                  id="lastUpdatedAt"
+                  name="lastUpdatedAt"
+                  value={filters.lastUpdatedAt}
+                  title=" Registration end date (Less Than)"
+                  onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                />
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6"> </div>
+              <div className="col-md-6">
+                <div className="mt-2">
+                  <button
+                    title="Click for searching Org report data"
+                    type="button"
+                    onClick={() => applyFilters()}
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                  >
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </AppContainer>
       <AppContainer>
-        <DataGridHeader exportFn={() => generatePdf()} title="Organization Report" filterDisable />
-        <div className="show-stock">
-          <div className="row ">
-            <div className="col-md-12 col-xl-12">
-              <CustomDatagrid
-                rows={rows}
-                columns={columns}
-                pagination={true}
-                canExport={pageRoles.canExport}
-                canPrint={pageRoles.canPrint}
-                loading={loading}
-              />
-            </div>
-          </div>
-        </div>
+        <CustomDatagrid
+          rows={rows}
+          columns={columns}
+          pagination={true}
+          loading={loading}
+          headerProps={{
+            title: 'Organization Report',
+            filterDisable: true,
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'Organization Report',
+          }}
+        />
       </AppContainer>
     </>
   );

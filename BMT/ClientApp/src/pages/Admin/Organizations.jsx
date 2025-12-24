@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
-import useFetch from 'src/hooks/useFetch';
+import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { cilChevronBottom } from '@coreui/icons';
-import globalutil from 'src/util/globalutil';
-import Loading from 'src/components/UI/Loading';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import CustomFilters from 'src/components/Filters/CustomFilters';
+import AppContainer from 'src/components/UI/AppContainer';
+import Loading from 'src/components/UI/Loading';
 import { getOrgListCols } from 'src/configs/ColumnsConfig/daDspsListCols';
 import { getDaDspsFiltersFields } from 'src/configs/FiltersConfig/daDspsFilterConfig';
-import CustomFilters from 'src/components/Filters/CustomFilters';
+import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
-import AppContainer from 'src/components/UI/AppContainer';
-import { useDispatch } from 'react-redux';
+import useFetch from 'src/hooks/useFetch';
+import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
+import globalutil from 'src/util/globalutil';
 
+dayjs.extend(utc);
 const OrgList = () => {
-  dayjs.extend(utc);
-  useEffect(() => {
-    fetchOrgList();
-  }, []);
+  const pageRoles = usePageRoles('Organizations');
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
+
+  const { getOrgs } = useFetchOrgs();
+
+  const { response: GetCityRes, fetchData: GetCity } = useFetch();
+
   useEffect(() => {
     getCityList();
+    fetchOrgList();
   }, []);
+
   const getCityList = async () => {
     await GetCity(
       '/Common/cities',
@@ -58,12 +58,7 @@ const OrgList = () => {
       },
     );
   };
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Organizations',
-  );
-  dayjs.extend(utc);
-  const navigate = useNavigate();
-  const { getOrgs } = useFetchOrgs();
+
   const [filters, setFilters] = useState({
     keyword: '',
     cityId: '',
@@ -84,14 +79,12 @@ const OrgList = () => {
       cityId: filters.cityId === '' ? null : filters.cityId,
       createdAt: filters.createdAt === '' ? null : filters.createdAt,
     };
-    console.log(JSON.stringify(filterBody), 'filterBody');
     fetchOrgList(filterBody);
   };
 
   const fetchOrgList = async (filter) => {
     const orgData = await getOrgs(filter);
     setOrgsList(orgData);
-    console.log(orgData, 'orgData');
     const cityList = GetCityRes?.current?.data || [];
 
     const mappedArray = orgData.map((data) => {
@@ -112,7 +105,6 @@ const OrgList = () => {
       };
     });
 
-    console.log(mappedArray, 'mappedArray');
     setRows(mappedArray);
     setIsLoading(false);
   };
@@ -151,7 +143,6 @@ const OrgList = () => {
     changeFilter,
     GetCityRes?.current?.data ? GetCityRes.current.data : [],
   );
-
   return (
     <React.Fragment>
       {isLoading ? (
@@ -177,18 +168,16 @@ const OrgList = () => {
             )}
           </AppContainer>
           <AppContainer>
-            {/* <DataGridHeader
-              title="Organization List"
-              addButton={pageRoles.canAdd === 1 ? 'New Organization' : ''}
-              addBtnClick={() => navigate('/organizationadd')}
-            /> */}
             <CustomDatagrid
               isHeader
               headerProps={{
                 title: 'Organization List',
-                addButton: pageRoles.canAdd === 1 ? 'New Organization' : '',
+                addButton: pageRoles?.canAdd === 1 ? 'New Organization' : '',
                 addBtnClick: () => navigate('/organizationadd'),
                 filterDisable: true,
+                canPrint: pageRoles?.canPrint === 1,
+                canExport: pageRoles?.canExport === 1,
+                fileName: 'Organizations',
               }}
               rows={rows}
               columns={orgsListCols}
@@ -201,8 +190,8 @@ const OrgList = () => {
                   createdAt: false,
                 },
               }}
-              canPrint={pageRoles.canPrint}
-              canExport={pageRoles.canExport}
+              canPrint={pageRoles?.canPrint}
+              canExport={pageRoles?.canExport}
               rowSelection={false}
               sorting={[{ columnKey: 'createdAt', direction: 'DESC' }]}
             />

@@ -8,6 +8,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import { getProductsCols } from 'src/configs/ColumnsConfig/productsCols';
 //import { countries } from 'src/constants/countries';
 import { useFetchProducts } from 'src/hooks/api/useFetchProducts';
+import usePageRoles from 'src/hooks/usePageRoles';
 //import globalutil from 'src/util/globalutil';
 
 const Packages = () => {
@@ -15,9 +16,7 @@ const Packages = () => {
     getPackages();
   }, []);
 
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Packages',
-  );
+  const pageRoles = usePageRoles('Packages');
 
   const [showAddPackageModal, setShowAddPackageModal] = useState(false);
 
@@ -60,6 +59,9 @@ const Packages = () => {
           title: 'Packages List',
           addBtnClick: toggleAddPackageModal,
           filterDisable: true,
+          canPrint: pageRoles?.canPrint === 1,
+          canExport: pageRoles?.canExport === 1,
+          fileName: 'Packages',
         }}
         rows={packageRows}
         columns={packagesCols}
@@ -71,8 +73,6 @@ const Packages = () => {
             lastUpdatedAt: false,
           },
         }}
-        canExport={pageRoles.canExport}
-        canPrint={pageRoles.canPrint}
         sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
       />
     </AppContainer>

@@ -1,7 +1,7 @@
 import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
@@ -19,11 +19,13 @@ import globalutil from 'src/util/globalutil';
 import _ from 'lodash';
 import AddAlbumModel from 'src/components/Modals/AddAlbumModel';
 import CrawlDomainsModal from 'src/components/Modals/CrawlDomainsModal';
+import usePageRoles from 'src/hooks/usePageRoles';
+dayjs.extend(utc);
 
 const recipientslisting = () => {
-  dayjs.extend(utc);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+
   const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const {
@@ -32,9 +34,7 @@ const recipientslisting = () => {
     data: orgsData,
   } = useApi('/BlazorApi/orgsfulldata');
 
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Recipients',
-  );
+  const pageRoles = usePageRoles('Recipients');
   const orgId = user.orgId;
   const Role = user.roleId;
 
@@ -96,6 +96,7 @@ const recipientslisting = () => {
     setRows(
       recipientsList?.map((r) => ({
         ...r,
+        nId: r?.networkId,
         networkId: globalutil.networks()?.find((n) => n.id === r?.networkId)?.name || '--',
         albumid: albumsList?.find((n) => n.id === r?.albumid)?.name || '--',
       })),
@@ -330,7 +331,6 @@ const recipientslisting = () => {
   };
   const recipientslistingCols = getrecipietslistingCols(albums);
 
-  // console.log({ fullRecipientsData });
   return (
     <React.Fragment>
       <MailOptionsModal
@@ -385,6 +385,12 @@ const recipientslisting = () => {
                 lastUpdatedAt: false,
               },
             }}
+            summary={[
+              {
+                field: 'contentId',
+                aggregates: [{ aggregate: 'network_recipients', caption: 'Total Sent' }],
+              },
+            ]}
             headerProps={{
               title: 'Recipients List',
               onClick: toggleGrid,
@@ -409,6 +415,9 @@ const recipientslisting = () => {
                 },
               ],
               filterDisable: true,
+              canPrint: pageRoles?.canPrint === 1,
+              canExport: pageRoles?.canExport === 1,
+              fileName: 'RECIPIENTS',
             }}
           />
         </AppContainer>

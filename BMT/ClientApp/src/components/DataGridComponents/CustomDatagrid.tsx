@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useMemo, Key, ReactNode, useEffect } from 'react';
+import React, { useState, useMemo, Key, ReactNode, useEffect, useRef } from 'react';
 import {
   DataGrid,
   TreeDataGrid,
@@ -7,9 +7,10 @@ import {
   SortColumn,
   SelectColumn,
   RowsChangeData,
+  DataGridHandle,
 } from 'react-data-grid';
 import CustomSummary from './DataGridSummary';
-import DataGridHeader from './DataGridHeader';
+import DataGridHeader, { DataGridHeaderProps } from './DataGridHeader';
 import DatagridSkeleton from './DatagridSkeleton';
 import CIcon from '@coreui/icons-react';
 import {
@@ -20,16 +21,6 @@ import {
   cilInbox,
 } from '@coreui/icons';
 import { CTooltip } from '@coreui/react';
-
-interface OtherControl {
-  icon: any; // Replace with the actual type of your icon
-  fn: () => void;
-}
-
-interface Action {
-  title: string;
-  onClick: () => void;
-}
 
 interface CustomDatagridProps {
   rows: any[];
@@ -51,22 +42,7 @@ interface CustomDatagridProps {
   cellBorder?: boolean;
   isZeroMargin?: boolean;
   pageSizeOptions?: number[];
-  headerProps?: {
-    title?: string;
-    addButton?: string;
-    addBtnClick?: () => void;
-    otherControls?: OtherControl[];
-    addSecButton?: string;
-    addSecBtnClick?: () => void;
-    filterDisable?: boolean;
-    exportFn?: () => void;
-    onClick?: () => void;
-    addBtnContent?: ReactNode;
-    popOverId?: string;
-    actionCell?: ReactNode;
-    actions?: Action[];
-    className?: string;
-  };
+  headerProps?: DataGridHeaderProps;
   isHeader?: boolean;
   showGrid?: boolean;
   onRowClick?: (rowIdx: number, row: any, column: Column<any, any>) => void;
@@ -74,6 +50,7 @@ interface CustomDatagridProps {
   onSelectedRowsChange?: (selectedRows: Set<Key>) => void;
   enableGrouping?: boolean;
   groupBy: string[];
+  summaryRows?: any[];
   defaultExpandedGroups?: boolean; // new prop
 }
 
@@ -104,6 +81,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   pageSizeOptions,
   showGrid = true,
   defaultExpandedGroups,
+  summaryRows,
 }) => {
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
@@ -111,6 +89,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   const [currentPageSize, setCurrentPageSize] = useState(pageSize);
   const [expandedGroupIds, setExpandedGroupIds] = useState<Set<unknown>>(new Set());
 
+  const gridRef = useRef<DataGridHandle>(null);
   // inside your component
   useEffect(() => {
     if (enableGrouping && defaultExpandedGroups && groupBy.length > 0) {
@@ -258,7 +237,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
   return (
     <>
-      {isHeader && headerProps && <DataGridHeader {...headerProps} />}
+      {isHeader && headerProps && <DataGridHeader {...headerProps} gridRef={gridRef} />}
       {showGrid && (
         <>
           {enableSearch && (
@@ -286,6 +265,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
               >
                 {enableGrouping ? (
                   <TreeDataGrid
+                    ref={gridRef}
                     columns={finalColumns}
                     rows={paginatedRows}
                     rowKeyGetter={(row) => row?.content}
@@ -300,6 +280,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     selectedRows={selectedRows}
                     onSelectedRowsChange={onSelectedRowsChange}
                     onCellClick={onRowClick as any}
+                    bottomSummaryRows={summaryRows}
+                    summaryRowHeight={50}
+                    topSummaryRows={summaryRows}
                     style={{
                       height: '100%',
                       maxHeight: `${gridContainerHeight}px`,
@@ -308,6 +291,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                   />
                 ) : (
                   <DataGrid
+                    ref={gridRef}
                     columns={finalColumns}
                     rows={paginatedRows}
                     sortColumns={sortColumns}
@@ -333,7 +317,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
               </div>
 
               {footer}
-              {summary && <CustomSummary {...summary} />}
+              {summary && <CustomSummary rows={rows} columns={columns} summary={summary} />}
 
               {pagination && !enableGrouping && sortedRows.length > 0 && (
                 <div

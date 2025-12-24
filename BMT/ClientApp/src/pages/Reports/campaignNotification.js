@@ -14,6 +14,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
+import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
 
@@ -139,8 +140,10 @@ const columns = [
 ];
 
 dayjs.extend(utc);
+
 const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => {
   const { loading, postData: fetchNotifications } = useApi('/Report/notificationsreportdata');
+  const pageRoles = usePageRoles('Campaign Stats');
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -331,92 +334,90 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
         />
-        {showFilters == true ? (
-          <div className="show-stock">
-            <div className="mb-0 dashboard-table padLeftRight">
-              <div className="row">
-                <div className="col-md-6">
-                  <CustomInput
-                    label="Recipient"
-                    value={filters.recipient}
-                    onChange={changeFilter}
-                    icon={cilUser}
-                    type="text"
-                    id="recipient"
-                    name="recipient"
-                    placeholder="recipient"
-                    className="form-control item"
-                    isRequired={false}
-                    title="recipient "
-                    // message="Enter Buisness Name"
-                  />
-                </div>
+        {showFilters && (
+          <div>
+            <div className="row">
+              <div className="col-md-6">
+                <CustomInput
+                  label="Recipient"
+                  value={filters.recipient}
+                  onChange={changeFilter}
+                  icon={cilUser}
+                  type="text"
+                  id="recipient"
+                  name="recipient"
+                  placeholder="recipient"
+                  className="form-control item"
+                  isRequired={false}
+                  title="recipient "
+                  // message="Enter Buisness Name"
+                />
+              </div>
 
-                <div className="col-md-6">
-                  <CustomSelectInput
-                    label="Delivery Status"
-                    icon={cilFlagAlt}
-                    disableOption="Select Delivery Status"
-                    id="deliveryStatus"
-                    options={globalutil.deliverstatus()}
-                    className="form-control item form-select"
-                    value={filters.deliveryStatus}
-                    name="deliveryStatus"
-                    title="delivery Status"
-                    onChange={(e) => changeFilter(e)}
-                  />
-                </div>
+              <div className="col-md-6">
+                <CustomSelectInput
+                  label="Delivery Status"
+                  icon={cilFlagAlt}
+                  disableOption="Select Delivery Status"
+                  id="deliveryStatus"
+                  options={globalutil.deliverstatus()}
+                  className="form-control item form-select"
+                  value={filters.deliveryStatus}
+                  name="deliveryStatus"
+                  title="delivery Status"
+                  onChange={(e) => changeFilter(e)}
+                />
               </div>
-              <div className="row">
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date From"
-                    id="createdAt"
-                    name="createdAt"
-                    value={filters.createdAt}
-                    title="Campaign start date"
-                    onChange={(e) => changeFilter(e, 'createdAt')}
-                  />
-                </div>
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date To"
-                    id="lastUpdatedAt"
-                    name="lastUpdatedAt"
-                    value={filters.lastUpdatedAt}
-                    title=" Campaign end date  "
-                    onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
-                  />
-                </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date From"
+                  id="createdAt"
+                  name="createdAt"
+                  value={filters.createdAt}
+                  title="Campaign start date"
+                  onChange={(e) => changeFilter(e, 'createdAt')}
+                />
               </div>
-              <div className="row">
-                <div className="col-md-6"> </div>
-                <div className="col-md-6">
-                  <div className="mt-2">
-                    <button
-                      type="submit"
-                      title="Click for searching user report data"
-                      onClick={applyFilters}
-                      className="btn_Default m-2 sales-btn-style alignLeft"
-                    >
-                      Search
-                    </button>
-                    <button
-                      type="button"
-                      title="Click For Reset Data"
-                      className="btn_Default m-2 sales-btn-style alignLeft"
-                      onClick={handleReset}
-                    >
-                      Reset
-                    </button>
-                  </div>
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date To"
+                  id="lastUpdatedAt"
+                  name="lastUpdatedAt"
+                  value={filters.lastUpdatedAt}
+                  title=" Campaign end date  "
+                  onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6"> </div>
+              <div className="col-md-6">
+                <div className="mt-2">
+                  <button
+                    type="submit"
+                    title="Click for searching user report data"
+                    onClick={applyFilters}
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                  >
+                    Search
+                  </button>
+                  <button
+                    type="button"
+                    title="Click For Reset Data"
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </AppContainer>
 
       <AppContainer>
@@ -439,6 +440,13 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
               aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
             },
           ]}
+          headerProps={{
+            title: 'Campaign Stats',
+            filterDisable: true,
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'CAMPAIGN_STATS',
+          }}
         />
       </AppContainer>
     </>

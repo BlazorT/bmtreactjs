@@ -102,43 +102,44 @@ const campaignslisting = () => {
         finishTime: formatDateTime(data.finishTime),
         status: data?.status,
         createdMonth: dayjs(data.createdAt).format('MMMM YYYY'), // month-year for grouping
+        month: dayjs(data.createdAt).format('MMMM YYYY'), // month-year for grouping
       };
     });
 
     // ✅ Group by month-year
-    const groupedData = _.groupBy(mappedArray, (item) => item.createdMonth);
+    // const groupedData = _.groupBy(mappedArray, (item) => item.createdMonth);
 
-    const groupedRows = Object.entries(groupedData).flatMap(([month, groupItems], index) => {
-      // Group header row
-      const groupRow = {
-        id: `group-${index}`,
-        month: month, // show month as group header
-        name: '',
-        startTime: '',
-        finishTime: '',
-        orgName: '',
-        isGroupRow: true, // flag for rendering
-      };
+    // const groupedRows = Object.entries(groupedData).flatMap(([month, groupItems], index) => {
+    //   // Group header row
+    //   const groupRow = {
+    //     id: `group-${index}`,
+    //     month: month, // show month as group header
+    //     name: '',
+    //     startTime: '',
+    //     finishTime: '',
+    //     orgName: '',
+    //     isGroupRow: true, // flag for rendering
+    //   };
 
-      // Child rows
-      const childRows = groupItems.map((item, i) => ({
-        id: `${item.id}-${i}`,
-        campaignId: item.id,
-        name: item.name, // show campaign name in children
-        totalBudget: item?.totalBudget || '--',
-        createdBy: item.createdBy,
-        createdAt: item.createdAt,
-        status: item?.status,
-        startTime: item.startTime,
-        finishTime: item.finishTime,
-        orgName: item.orgName,
-        isGroupRow: false,
-      }));
+    //   // Child rows
+    //   const childRows = groupItems.map((item, i) => ({
+    //     id: `${item.id}-${i}`,
+    //     campaignId: item.id,
+    //     name: item.name, // show campaign name in children
+    //     totalBudget: item?.totalBudget || '--',
+    //     createdBy: item.createdBy,
+    //     createdAt: item.createdAt,
+    //     status: item?.status,
+    //     startTime: item.startTime,
+    //     finishTime: item.finishTime,
+    //     orgName: item.orgName,
+    //     isGroupRow: false,
+    //   }));
 
-      return [groupRow, ...childRows];
-    });
+    //   return [groupRow, ...childRows];
+    // });
 
-    setRows(groupedRows);
+    setRows(mappedArray);
   };
 
   const changeFilter = (event, fieldName, label) => {
@@ -259,41 +260,42 @@ const campaignslisting = () => {
           </AppContainer>
 
           <AppContainer>
-            <DataGridHeader
-              title="Campaigns"
-              onClick={toggleGrid}
-              addButton={pageRoles.canAdd === 1 ? 'Campaign' : ''}
-              addBtnClick={() => navigate('/campaignadd')}
-              otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
-              filterDisable
+            <CustomDatagrid
+              rows={rows}
+              columns={campaignslistingCols}
+              rowHeight={50}
+              loading={orgLoading || loading || usersLoading}
+              sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+              enableGrouping
+              defaultExpandedGroups
+              groupBy={['month']}
+              showGrid={showDaGrid}
+              summary={[
+                {
+                  field: 'totalBudget',
+                  aggregates: [{ aggregate: 'sum', caption: `Total Budget (${currencyName})` }],
+                },
+                {
+                  field: 'startTime',
+                  aggregates: [{ aggregate: 'max', caption: 'Last Start Time' }],
+                },
+                {
+                  field: 'startTime',
+                  aggregates: [{ aggregate: 'min', caption: 'First Start Time' }],
+                },
+              ]}
+              headerProps={{
+                title: 'Campaigns',
+                onClick: toggleGrid,
+                addButton: pageRoles.canAdd === 1 ? 'Campaign' : '',
+                addBtnClick: () => navigate('/campaignadd'),
+                otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
+                filterDisable: true,
+                canPrint: pageRoles?.canPrint === 1,
+                canExport: pageRoles?.canExport === 1,
+                fileName: 'CAMPAIGNS_USERS',
+              }}
             />
-            {showDaGrid && (
-              <CustomDatagrid
-                rows={rows}
-                columns={campaignslistingCols}
-                rowHeight={50}
-                pagination={true}
-                loading={orgLoading || loading || usersLoading}
-                // loading={rows.length < 1 ? true : false}
-                sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
-                canExport={pageRoles.canExport}
-                canPrint={pageRoles.canPrint}
-                summary={[
-                  {
-                    field: 'totalBudget',
-                    aggregates: [{ aggregate: 'sum', caption: `Total Budget (${currencyName})` }],
-                  },
-                  {
-                    field: 'startTime',
-                    aggregates: [{ aggregate: 'max', caption: 'Last Start Time' }],
-                  },
-                  {
-                    field: 'startTime',
-                    aggregates: [{ aggregate: 'min', caption: 'First Start Time' }],
-                  },
-                ]}
-              />
-            )}
           </AppContainer>
         </React.Fragment>
       )}

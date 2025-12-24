@@ -1,20 +1,19 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { cilCalendar, cilChevronBottom, cilUser } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import useFetch from 'src/hooks/useFetch';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { formatDateTime } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
-import AppContainer from 'src/components/UI/AppContainer';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 const columns = [
   {
@@ -49,6 +48,7 @@ const Logs = () => {
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const pageRoles = usePageRoles('Logs');
 
   const initialFilter = {
     OrgId: user.orgId,
@@ -94,7 +94,6 @@ const Logs = () => {
 
       ...filters,
     };
-    console.log(JSON.stringify(fetchBody));
 
     const res = await fetchLogs(fetchBody);
     if (res?.status === true) {
@@ -147,95 +146,92 @@ const Logs = () => {
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
         />
-        {showFilters == true ? (
-          <div className="show-stock">
-            <div className="mb-0 dashboard-table padLeftRight">
-              <div className="row">
-                <div className="col-md-12">
-                  <CustomInput
-                    label="Keyword"
-                    value={filters.LogDesc}
-                    onChange={changeFilter}
-                    icon={cilUser}
-                    type="text"
-                    id="LogDesc"
-                    name="LogDesc"
-                    placeholder=" log name"
-                    className="form-control item"
-                    isRequired={false}
-                    title=" using by entity name, log name "
-                  />
-                </div>
+        {showFilters && (
+          <div>
+            <div className="row">
+              <div className="col-md-12">
+                <CustomInput
+                  label="Keyword"
+                  value={filters.LogDesc}
+                  onChange={changeFilter}
+                  icon={cilUser}
+                  type="text"
+                  id="LogDesc"
+                  name="LogDesc"
+                  placeholder=" log name"
+                  className="form-control item"
+                  isRequired={false}
+                  title=" using by entity name, log name "
+                />
               </div>
-              <div className="row">
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date From "
-                    id="logTimeFrom"
-                    name="logTimeFrom"
-                    value={filters.logTimeFrom}
-                    title=" Log login time date from"
-                    onChange={(e) => changeFilter(e, 'logTimeFrom')}
-                  />
-                </div>
-                <div className="col-md-6 mt-2">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Date To"
-                    id="logTimeTo"
-                    name="logTimeTo"
-                    value={filters.logTimeTo}
-                    title=" Log login time date to"
-                    onChange={(e) => changeFilter(e, 'logTimeTo')}
-                  />
-                </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date From "
+                  id="logTimeFrom"
+                  name="logTimeFrom"
+                  value={filters.logTimeFrom}
+                  title=" Log login time date from"
+                  onChange={(e) => changeFilter(e, 'logTimeFrom')}
+                />
               </div>
+              <div className="col-md-6 mt-2">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Date To"
+                  id="logTimeTo"
+                  name="logTimeTo"
+                  value={filters.logTimeTo}
+                  title=" Log login time date to"
+                  onChange={(e) => changeFilter(e, 'logTimeTo')}
+                />
+              </div>
+            </div>
 
-              <div className="row">
-                <div className="col-md-6"> </div>
-                <div className="col-md-6">
-                  <div className="mt-2">
-                    <button
-                      title="Click for searching logs data"
-                      type="button"
-                      onClick={() => applyFilters()}
-                      className="btn_Default m-2 sales-btn-style alignLeft"
-                    >
-                      Search
-                    </button>
-                  </div>
+            <div className="row">
+              <div className="col-md-6"> </div>
+              <div className="col-md-6">
+                <div className="mt-2">
+                  <button
+                    title="Click for searching logs data"
+                    type="button"
+                    onClick={() => applyFilters()}
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                  >
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </AppContainer>
 
       <AppContainer>
-        <DataGridHeader exportFn={() => ''} title="Log Viewer" filterDisable />
-        <div className="show-stock">
-          <div className="row ">
-            <div className="col-md-12 col-xl-12">
-              <CustomDatagrid
-                rows={rows}
-                columns={columns}
-                loading={loading}
-                // rowHeight={'normal'}
-                pagination={true}
-                summary={[
-                  {
-                    field: 'logTimeFrom',
-                    aggregates: [
-                      { aggregate: 'count', caption: 'Count' },
-                      { aggregate: 'max', caption: 'Last log Time' },
-                    ],
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        </div>
+        <CustomDatagrid
+          rows={rows}
+          columns={columns}
+          loading={loading}
+          pagination={true}
+          summary={[
+            {
+              field: 'logTimeFrom',
+              aggregates: [
+                { aggregate: 'count', caption: 'Count' },
+                { aggregate: 'max', caption: 'Last log Time' },
+              ],
+            },
+          ]}
+          headerProps={{
+            title: '',
+            filterDisable: true,
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'LOGS',
+          }}
+        />
       </AppContainer>
     </>
   );

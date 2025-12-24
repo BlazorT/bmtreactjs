@@ -14,6 +14,7 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import AppContainer from 'src/components/UI/AppContainer';
 import { formatDateTime } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 const columns = [
   {
@@ -62,6 +63,7 @@ const AuditLogs = () => {
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const pageRoles = usePageRoles('AuditLogs');
 
   const initialFilter = {
     orgId: user.orgId,
@@ -164,59 +166,56 @@ const AuditLogs = () => {
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
         />
-        {showFilters == true ? (
-          <div className="show-stock">
-            <div className="mb-0 dashboard-table padLeftRight">
-              <div className="row">
-                <div className="col-md-6">
-                  <CustomInput
-                    label="Keyword"
-                    value={filters.KeyValue}
-                    onChange={changeFilter}
-                    icon={cilUser}
-                    type="text"
-                    id="KeyValue"
-                    name="KeyValue"
-                    placeholder="Attribute name, Previous value, New value"
-                    className="form-control item"
-                    isRequired={false}
-                    title=" Using By Attribute name,Previous value, New value"
-                    // message="Enter Buisness Name"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <CustomDatePicker
-                    icon={cilCalendar}
-                    label="Update Date (>=)"
-                    id="createdAt"
-                    name="createdAt"
-                    title=" Audit Logs Created At "
-                    value={filters.createdAt}
-                    onChange={(e) => changeFilter(e, 'createdAt')}
-                  />
-                </div>
+        {showFilters && (
+          <div>
+            <div className="row">
+              <div className="col-md-6">
+                <CustomInput
+                  label="Keyword"
+                  value={filters.KeyValue}
+                  onChange={changeFilter}
+                  icon={cilUser}
+                  type="text"
+                  id="KeyValue"
+                  name="KeyValue"
+                  placeholder="Attribute name, Previous value, New value"
+                  className="form-control item"
+                  isRequired={false}
+                  title=" Using By Attribute name,Previous value, New value"
+                  // message="Enter Buisness Name"
+                />
               </div>
+              <div className="col-md-6">
+                <CustomDatePicker
+                  icon={cilCalendar}
+                  label="Update Date (>=)"
+                  id="createdAt"
+                  name="createdAt"
+                  title=" Audit Logs Created At "
+                  value={filters.createdAt}
+                  onChange={(e) => changeFilter(e, 'createdAt')}
+                />
+              </div>
+            </div>
 
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="mt-2">
-                    <button
-                      title="Click for searching Audit logs data"
-                      type="button"
-                      onClick={() => applyFilters()}
-                      className="btn_Default m-2 sales-btn-style alignLeft"
-                    >
-                      Search
-                    </button>
-                  </div>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="mt-2">
+                  <button
+                    title="Click for searching Audit logs data"
+                    type="button"
+                    onClick={() => applyFilters()}
+                    className="btn_Default m-2 sales-btn-style alignLeft"
+                  >
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </AppContainer>
       <AppContainer>
-        <DataGridHeader title="Log Viewer" filterDisable />
         <CustomDatagrid
           rows={rows}
           columns={columns}
@@ -232,6 +231,13 @@ const AuditLogs = () => {
               ],
             },
           ]}
+          headerProps={{
+            title: '',
+            filterDisable: true,
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'Audit Logs',
+          }}
         />
       </AppContainer>
     </>

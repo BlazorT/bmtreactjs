@@ -13,6 +13,18 @@ const CustomSummary = ({ rows, columns, summary }) => {
     return rows.filter((row) => row.daStatus === status).length;
   };
 
+  const calculateNetworkRecipientsCount = (networkId) => {
+    // 1. Filter the rows that match the networkId
+    const filteredRows = rows.filter((row) => {
+      return row.nId == networkId || row.networkId === networkId;
+    });
+
+    // 2. The count is simply the number of items in the filtered array
+    const totalCount = filteredRows.length;
+
+    return totalCount;
+  };
+
   const calculatedSummary = summary
     .map((summaryItem) => {
       const { field, aggregates } = summaryItem;
@@ -36,6 +48,8 @@ const CustomSummary = ({ rows, columns, summary }) => {
       };
 
       aggregates.forEach(({ aggregate, caption }) => {
+        const wrap = (value) => <span className={summaryItem?.countClassName}>{value}</span>;
+
         switch (aggregate.toLowerCase()) {
           case 'count':
             summaryResult.count = `${caption} : ${columnValues.length}`;
@@ -137,6 +151,34 @@ const CustomSummary = ({ rows, columns, summary }) => {
             break;
           }
 
+          case 'network_recipients': {
+            // Define all possible statuses/substatuses to check
+            const statusChecks = [
+              { label: 'SMS', networkId: 1 },
+              { label: 'WHATSAPP', networkId: 2 },
+              { label: 'EMAIL', networkId: 3 },
+              { label: 'TWITTER', networkId: 4 },
+              { label: 'FACEBOOK', networkId: 5 },
+              { label: 'INSTAGRAM', networkId: 6 },
+              { label: 'LINKEDIN', networkId: 7 },
+              { label: 'TIKTOCK', networkId: 8 },
+              { label: 'SNAPCHAT', networkId: 9 },
+            ];
+
+            // Calculate counts and filter out zeros
+            const network_recipients = {};
+            statusChecks.forEach(({ label, networkId }) => {
+              const count = calculateNetworkRecipientsCount(networkId);
+
+              if (count > 0) {
+                network_recipients[label] = wrap(count);
+              }
+            });
+
+            summaryResult.network_recipients = network_recipients;
+            break;
+          }
+
           case 'average':
           case 'avg': {
             const numericValues = columnValues.filter((val) => !isNaN(Number(val))).map(Number);
@@ -163,7 +205,6 @@ const CustomSummary = ({ rows, columns, summary }) => {
   if (calculatedSummary.length === 0) {
     return null;
   }
-
   return (
     <div className="summary-container mt-0 p-1 bg-dark-color text-white ">
       <div className="grid-footer-summary">
@@ -176,12 +217,13 @@ const CustomSummary = ({ rows, columns, summary }) => {
                 {entries.map(([aggregate, value], sIndex) => (
                   <li className="p-1 d-inline-block" key={aggregate}>
                     {value !== undefined
-                      ? aggregate === 'statusCount'
+                      ? aggregate === 'statusCount' || aggregate === 'network_recipients'
                         ? Object.entries(value).map(([status, count], index, array) => (
                             <span key={status}>
-                              <span>{`${status} : ${count.toLocaleString()}`}</span>
+                              {status} :{' '}
+                              <span className={summaryItem?.countClassName}>{count}</span>
                               {index < array.length - 1 && (
-                                <span className="me-1 ms-1 border-end"></span>
+                                <span className="me-2 ms-2 border-end"></span>
                               )}
                             </span>
                           ))

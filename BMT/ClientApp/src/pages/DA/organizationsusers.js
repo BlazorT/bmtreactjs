@@ -23,6 +23,7 @@ import { formatDateTime } from 'src/helpers/formatDate';
 
 import { useFetchOrgUser } from 'src/hooks/api/useFetchOrgUser';
 import AppContainer from 'src/components/UI/AppContainer';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 const organizationsusers = () => {
   dayjs.extend(utc);
@@ -31,9 +32,8 @@ const organizationsusers = () => {
     getOrgsList();
   }, []);
 
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Organizations Users',
-  );
+  const pageRoles = usePageRoles('Organizations Users');
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -233,41 +233,25 @@ const organizationsusers = () => {
           </AppContainer>
 
           <AppContainer>
-            <DataGridHeader
-              title="Organization Users"
-              addButton={pageRoles.canAdd === 1 ? 'Organization User' : ''}
-              addBtnClick={() => navigate('/UserRegister')}
-              onClick={toggleGrid}
-              otherControls={[
-                /*  { icon: cilCalendarCheck, fn: NoticeModal },*/
-                { icon: cilChevronBottom, fn: toggleGrid },
-              ]}
-              filterDisable
+            <CustomDatagrid
+              rows={rows}
+              columns={orgUsersCols}
+              rowHeight={50}
+              pagination={true}
+              sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
+              showGrid={showDaGrid}
+              headerProps={{
+                title: 'Organization Users',
+                addButton: pageRoles?.canAdd === 1 ? 'Organization User' : '',
+                addBtnClick: () => navigate('/UserRegister'),
+                onClick: toggleGrid,
+                otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
+                filterDisable: true,
+                canPrint: pageRoles?.canPrint === 1,
+                canExport: pageRoles?.canExport === 1,
+                fileName: 'ORGANIZATION_USERS',
+              }}
             />
-            {showDaGrid && (
-              <CustomDatagrid
-                rows={rows}
-                columns={orgUsersCols}
-                rowHeight={50}
-                pagination={true}
-                // loading={rows.length < 1 ? true : false}
-                sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
-                //summary={[
-                //  {
-                //    field: 'status',
-                //    aggregates: [{ aggregate: 'statusCount', caption: 'OnBoard' }],
-                //  },
-                //]}
-                //hiddenCols={{
-                //  columnVisibilityModel: {
-                //    status: false,
-                //    lastUpdated: false,
-                //  },
-                //}}
-                canExport={pageRoles.canExport}
-                canPrint={pageRoles.canPrint}
-              />
-            )}
 
             <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />
           </AppContainer>

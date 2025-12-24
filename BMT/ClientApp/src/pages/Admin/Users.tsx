@@ -1,26 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { cilChevronBottom } from '@coreui/icons';
-import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import { useSelector } from 'react-redux';
-import { formatDate } from 'src/helpers/formatDate';
-import { getRoleById } from 'src/constants/roles';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import {
-  getUsersListCols,
-  getUsersListColsFlexible,
-} from 'src/configs/ColumnsConfig/usersListCols';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import { getUsersFiltersFields } from 'src/configs/FiltersConfig/userFilterConfig';
-import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
 import AppContainer from 'src/components/UI/AppContainer';
-import { RootState } from 'src/store';
+import { getUsersListColsFlexible } from 'src/configs/ColumnsConfig/usersListCols';
+import { getUsersFiltersFields } from 'src/configs/FiltersConfig/userFilterConfig';
+import { getRoleById } from 'src/constants/roles';
+import { formatDate } from 'src/helpers/formatDate';
+import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import usePageRoles from 'src/hooks/usePageRoles';
+
+dayjs.extend(utc);
 
 const Users: React.FC = () => {
-  dayjs.extend(utc);
   useEffect(() => {
     fetching();
   }, []);
@@ -28,9 +25,7 @@ const Users: React.FC = () => {
   const { data, loading, error, fetchUsers } = useFetchUsers();
   const navigate = useNavigate();
 
-  const pageRoles = useSelector((state: RootState): any => state.navItems.pageRoles).find(
-    (item: { name: string }) => item.name === 'Users',
-  );
+  const pageRoles = usePageRoles('Users');
 
   const [filters, setFilters] = useState({
     UserName: '',
@@ -38,7 +33,6 @@ const Users: React.FC = () => {
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
     createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
   });
-  console.log('filters', filters);
 
   const [showFilters, setshowFilters] = useState(false);
   const [showUserGrid, setshowUserGrid] = useState(true);
@@ -62,7 +56,6 @@ const Users: React.FC = () => {
 
   const fetching = async (filter?: any) => {
     const usersList = await fetchUsers(0, filter);
-    console.log(usersList);
     setUsersData(usersList);
     formatApiDataAsRows(usersList);
   };
@@ -123,29 +116,28 @@ const Users: React.FC = () => {
         )}
       </AppContainer>
       <AppContainer>
-        <DataGridHeader
-          title="BMT Users"
-          onClick={toggleLicence}
-          filterDisable={true}
-          addButton={pageRoles.canAdd === 1 ? 'User' : ''}
-          addBtnClick={pageRoles.canAdd === 1 ? () => navigate('/UserRegister') : undefined}
-          otherControls={[{ icon: cilChevronBottom, fn: toggleLicence }]}
+        <CustomDatagrid
+          rows={rows}
+          columns={usersListCols}
+          pagination={true}
+          rowSelection={false}
+          loading={loading || !data}
+          noRowsMessage={error ? 'Error Fetching data' : ''}
+          sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+          showGrid={showUserGrid}
+          headerProps={{
+            title: 'BMT Users',
+            filterDisable: true,
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'Users',
+            onClick: toggleLicence,
+            addButton: pageRoles?.canAdd === 1 ? 'User' : '',
+            addBtnClick: pageRoles?.canAdd === 1 ? () => navigate('/UserRegister') : undefined,
+            otherControls: [{ icon: cilChevronBottom, fn: toggleLicence }],
+          }}
+          groupBy={['']}
         />
-        {showUserGrid && (
-          <CustomDatagrid
-            rows={rows}
-            columns={usersListCols}
-            // rowHeight={50}
-            pagination={true}
-            rowSelection={false}
-            loading={loading || !data}
-            noRowsMessage={error ? 'Error Fetching data' : ''}
-            sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
-            canExport={pageRoles.canExport}
-            canPrint={pageRoles.canPrint}
-            groupBy={['']}
-          />
-        )}
       </AppContainer>
     </React.Fragment>
   );

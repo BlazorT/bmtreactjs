@@ -81,9 +81,7 @@
 .saleGrid {
   height: 29em;
 }
-.rdg-summary-row {
-  background-color: #f9f9f9 !important;
-}
+
 .sales-text-style {
   text-align: end;
 }
@@ -745,19 +743,23 @@ html:not([dir='rtl']) .odd-inspection-part {
   /* padding-left: 0.3rem; */
 }
 
+.rdg-summary-row {
+  background-color: #102c48 !important;
+}
+
 /* Default group row */
 .rdg-group-row {
-  background-color: #0d3054;
+  background-color: #0e3c69ad;
 }
 
 /* 🔹 Level 1 group */
 .rdg-group-row[aria-level='1'] {
-  background-color: #0d3054dc !important;
+  background-color: #0e3c69ad !important;
 }
 
 /* 🔹 Level 2 group */
 .rdg-group-row[aria-level='2'] {
-  background-color: #0d3054 !important;
+  background-color: #0e3c69ce !important;
 }
 
 /* Grid scroll container */
@@ -850,4 +852,11 @@ body {
 button:disabled {
   color: #dbdac2 !important;
   cursor: not-allowed;
+}
+.dropdown-menu {
+  background-color: rgb(3 28 52) !important;
+}
+.dropdown-item {
+  color: white !important;
+  cursor: pointer;
 }

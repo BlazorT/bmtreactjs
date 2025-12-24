@@ -29,6 +29,7 @@ import { getUserReportPdf } from 'src/helpers/getUserReportPdf';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import AppContainer from 'src/components/UI/AppContainer';
 import useApi from 'src/hooks/useApi';
+import usePageRoles from 'src/hooks/usePageRoles';
 dayjs.extend(utc);
 
 const columns = [
@@ -87,6 +88,8 @@ const tabs = [
 const UserReport = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const pageRoles = usePageRoles('User Report');
+
   const { loading, postData: fetchUserReport } = useApi('/BlazorApi/users');
 
   const [activeTab, setActiveTab] = useState(1);
@@ -266,89 +269,98 @@ const UserReport = () => {
               otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
               filterDisable={true}
             />
-            {showFilters == true ? (
-              <div className="show-stock">
-                <div className="mb-0 dashboard-table padLeftRight">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <CustomInput
-                        label="Keyword"
-                        value={filters.UserName}
-                        onChange={changeFilter}
-                        icon={cilUser}
-                        type="text"
-                        id="UserName"
-                        name="UserName"
-                        placeholder="Name,Contact"
-                        className="form-control item"
-                        isRequired={false}
-                        title="using by user code,user name,contact "
-                        // message="Enter Buisness Name"
-                      />
-                    </div>
+            {showFilters && (
+              <div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <CustomInput
+                      label="Keyword"
+                      value={filters.UserName}
+                      onChange={changeFilter}
+                      icon={cilUser}
+                      type="text"
+                      id="UserName"
+                      name="UserName"
+                      placeholder="Name,Contact"
+                      className="form-control item"
+                      isRequired={false}
+                      title="using by user code,user name,contact "
+                      // message="Enter Buisness Name"
+                    />
+                  </div>
 
-                    <div className="col-md-6">
-                      <CustomSelectInput
-                        label="Status"
-                        icon={cilFlagAlt}
-                        disableOption="Select Status"
-                        id="status"
-                        options={globalutil.statuses()}
-                        className="form-control item form-select"
-                        value={filters.status}
-                        name="status"
-                        title=" user status "
-                        onChange={(e) => changeFilter(e)}
-                      />
-                    </div>
+                  <div className="col-md-6">
+                    <CustomSelectInput
+                      label="Status"
+                      icon={cilFlagAlt}
+                      disableOption="Select Status"
+                      id="status"
+                      options={globalutil.statuses()}
+                      className="form-control item form-select"
+                      value={filters.status}
+                      name="status"
+                      title=" user status "
+                      onChange={(e) => changeFilter(e)}
+                    />
                   </div>
-                  <div className="row">
-                    <div className="col-md-6 mt-2">
-                      <CustomDatePicker
-                        icon={cilCalendar}
-                        label="Date From "
-                        id="createdAt"
-                        name="createdAt"
-                        value={filters.createdAt}
-                        title=" user registration date  "
-                        onChange={(e) => changeFilter(e, 'createdAt')}
-                      />
-                    </div>
-                    <div className="col-md-6 mt-2">
-                      <CustomDatePicker
-                        icon={cilCalendar}
-                        label="Date To"
-                        id="lastUpdatedAt"
-                        name="lastUpdatedAt"
-                        value={filters.lastUpdatedAt}
-                        title=" user registration date  "
-                        onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
-                      />
-                    </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 mt-2">
+                    <CustomDatePicker
+                      icon={cilCalendar}
+                      label="Date From "
+                      id="createdAt"
+                      name="createdAt"
+                      value={filters.createdAt}
+                      title=" user registration date  "
+                      onChange={(e) => changeFilter(e, 'createdAt')}
+                    />
                   </div>
-                  <div className="row">
-                    <div className="col-md-6"> </div>
-                    <div className="col-md-6">
-                      <div className="mt-2">
-                        <button
-                          type="button"
-                          title="Click for searching user report data"
-                          onClick={() => applyFilters()}
-                          className="btn_Default m-2 sales-btn-style alignLeft"
-                        >
-                          Search
-                        </button>
-                      </div>
+                  <div className="col-md-6 mt-2">
+                    <CustomDatePicker
+                      icon={cilCalendar}
+                      label="Date To"
+                      id="lastUpdatedAt"
+                      name="lastUpdatedAt"
+                      value={filters.lastUpdatedAt}
+                      title=" user registration date  "
+                      onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6"> </div>
+                  <div className="col-md-6">
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        title="Click for searching user report data"
+                        onClick={() => applyFilters()}
+                        className="btn_Default m-2 sales-btn-style alignLeft"
+                      >
+                        Search
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
           </AppContainer>
 
           <AppContainer>
-            <DataGridHeader exportFn={() => generatePdf()} title="Users" filterDisable />
-            <CustomDatagrid rows={rows} columns={columns} pagination={true} loading={loading} />
+            <CustomDatagrid
+              rows={rows}
+              columns={columns}
+              pagination={true}
+              loading={loading}
+              headerProps={{
+                title: 'Users Report',
+                filterDisable: true,
+                canPrint: pageRoles?.canPrint === 1,
+                canExport: pageRoles?.canExport === 1,
+                fileName: 'Users Report',
+              }}
+            />
           </AppContainer>
         </>
       )}

@@ -9,12 +9,11 @@ import AppContainer from 'src/components/UI/AppContainer';
 import { getTemplateCols } from 'src/configs/ColumnsConfig/templateGridCols';
 import { getTemplateFilters } from 'src/configs/FiltersConfig/templateFilterConfig';
 import useApi from 'src/hooks/useApi';
+import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
 
 const GlobalTemplates = () => {
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name === 'Global Template',
-  );
+  const pageRoles = usePageRoles('Global Template');
 
   const [isShowFilters, setIsShowFilters] = React.useState(false);
   const [isShowGrid, setIsShowGrid] = React.useState(true);
@@ -85,27 +84,28 @@ const GlobalTemplates = () => {
         )}
       </AppContainer>
       <AppContainer>
-        <DataGridHeader
-          title="BMT Templates"
-          onClick={toggleShowGrid}
-          filterDisable={true}
-          addButton={pageRoles.canAdd === 1 ? 'Template' : ''}
-          addBtnClick={pageRoles.canAdd === 1 ? () => toggleShowTemplateModal() : undefined}
-          otherControls={[{ icon: cilChevronBottom, fn: toggleShowGrid }]}
+        <CustomDatagrid
+          rows={data?.data || []}
+          columns={tamplateListCols}
+          pagination={true}
+          rowSelection={false}
+          rowHeight={50}
+          loading={loading || !data}
+          noRowsMessage={error ? 'Error Fetching data' : ''}
+          sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+          showGrid={isShowGrid}
+          headerProps={{
+            title: 'BMT Templates',
+            onClick: toggleShowGrid,
+            filterDisable: true,
+            addButton: pageRoles.canAdd === 1 ? 'Template' : '',
+            addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowTemplateModal() : undefined,
+            otherControls: [{ icon: cilChevronBottom, fn: toggleShowGrid }],
+            canPrint: pageRoles?.canPrint === 1,
+            canExport: pageRoles?.canExport === 1,
+            fileName: 'Templates',
+          }}
         />
-        {isShowGrid && (
-          <CustomDatagrid
-            rows={data?.data || []}
-            columns={tamplateListCols}
-            pagination={true}
-            rowSelection={false}
-            loading={loading || !data}
-            noRowsMessage={error ? 'Error Fetching data' : ''}
-            sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
-            canExport={pageRoles.canExport}
-            canPrint={pageRoles.canPrint}
-          />
-        )}
         <AddTemplateModal
           isOpen={isTemplateModelOpen}
           toggle={toggleShowTemplateModal}

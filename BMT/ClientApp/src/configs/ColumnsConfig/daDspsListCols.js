@@ -57,7 +57,7 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
   },
 
   {
-    key: 'imageUrl',
+    key: 'action',
     width: 150,
     headerCellClass: 'custom-header-data-grid',
     editable: false,

@@ -9,6 +9,7 @@ import AppContainer from 'src/components/UI/AppContainer';
 import { getPricingCols } from 'src/configs/ColumnsConfig/pricingCols';
 import { formatDate } from 'src/helpers/formatDate';
 import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
+import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
 
 const Products = () => {
@@ -21,6 +22,7 @@ const Products = () => {
     return findNetwork?.name || '';
   };
 
+  const pageRoles = usePageRoles('pricing');
   const user = useSelector((state) => state.user);
 
   const [pricingRows, setPricingRows] = useState([]);
@@ -60,6 +62,9 @@ const Products = () => {
         headerProps={{
           title: 'Network Prices',
           filterDisable: true,
+          canPrint: pageRoles?.canPrint === 1,
+          canExport: pageRoles?.canExport === 1,
+          fileName: 'Network_Pricing',
         }}
       />
     </AppContainer>
