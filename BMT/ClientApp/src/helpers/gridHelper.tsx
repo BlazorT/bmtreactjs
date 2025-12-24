@@ -28,7 +28,9 @@ export async function exportToPdf(
   const orgName = orgInfo.name || 'Company Name';
   const orgAddress = orgInfo.address || '';
   const orgContact = orgInfo.contact || '';
-  const orgLogo = 'bmtlogo.png'; // make sure this path works or use full url/base64
+  const orgLogo = 'BDMT_TRANSPARENT.png'; // make sure this path works or use full url/base64
+  const namePart = fileName?.split('_');
+  const reportName = namePart?.[0] || '';
 
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -37,10 +39,10 @@ export async function exportToPdf(
   });
 
   const margin = {
-    top: 2,
-    right: 10,
+    top: 12,
+    right: 6,
     bottom: 12,
-    left: 10,
+    left: 6,
   };
 
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -53,7 +55,7 @@ export async function exportToPdf(
   const totalPagesPlaceholder = '{total_pages_count_string}';
 
   // ── FIRST PAGE ONLY: Organization info + logo + filename ──
-  let startY = 2;
+  let startY = 0;
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
@@ -61,10 +63,10 @@ export async function exportToPdf(
 
   // Logo on the very left (adjust size & position as needed)
   try {
-    const logoWidth = 50;
+    const logoWidth = 60;
     const logoHeight = 30; // keep your aspect ratio
     doc.addImage(orgLogo, 'PNG', pageWidth - margin.right - 50, startY, logoWidth, logoHeight);
-    startY += logoHeight + 2; // space after logo
+    startY += 6; // space after logo
   } catch (e) {
     console.warn('Could not load logo:', e);
   }
@@ -80,9 +82,14 @@ export async function exportToPdf(
   // File name
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text(fileName.replace(/\.pdf$/i, ''), margin.left, startY + 6);
+  doc.text(reportName.replace(/\.pdf$/i, ''), margin.left, startY + 6);
 
-  startY += 12; // space before table
+  startY += 10;
+
+  doc.setLineWidth(0.5); // thinner looks better for separators
+  doc.line(margin.left, startY, pageWidth - margin.right, startY);
+
+  startY += 6; // space before table
 
   // ── Now the table ──
   autoTable(doc, {
@@ -142,8 +149,7 @@ export async function exportToPdf(
 
       // Right: Page X of Y
       const pageText = `Page ${doc.getCurrentPageInfo().pageNumber} of ${totalPagesPlaceholder}`;
-      const textWidth = doc.getTextWidth(pageText);
-      doc.text(pageText, pageWidth - margin.right - textWidth, pageHeight - 8);
+      doc.text(pageText, pageWidth - 25, pageHeight - 8);
     },
   });
 
