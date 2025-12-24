@@ -3,6 +3,7 @@ import React from 'react';
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 const OrganizationAdd = React.lazy(() => import('./pages/DA/organizationadd'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
+const pricingDetails = React.lazy(() => import('./pages/Admin/pricingDetails'));
 const GlobalTemplates = React.lazy(() => import('./pages/Admin/GlobalTemplates'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
@@ -33,6 +34,7 @@ export const rolesRoutes = [
   { path: '/Logs', name: 'ApplyForm', element: Logs },
   { path: '/Notification', name: 'Notification', element: Notification },
   { path: '/Packages', name: 'Packages', element: Packages },
+  { path: '/pricingDetails', name: 'pricingDetails', element: pricingDetails },
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
@@ -56,6 +58,7 @@ export const routes = [
   { path: '/bmtRoles', name: 'bmtRoles', element: BmtRoles },
   { path: '/recipientsGrid', name: 'recipientsGrid', element: RecipientsGrid },
   { path: '/Packages', name: 'Packages', element: Packages },
+  { path: '/pricingDetails', name: 'pricingDetails', element: pricingDetails },
   { path: '/Users', name: 'Users', element: Users },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
   { path: '/networksetting', name: 'networksetting', element: networksetting },

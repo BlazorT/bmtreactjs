@@ -69,7 +69,10 @@ const OrgUserActionCell = (prop) => {
   if (loading) {
     return <Spinner />;
   }
-
+  console.log('ROW DATA:', value?.row);
+  console.log('STATUS:', value?.row?.status);
+  console.log('canUpdate:', canUpdate);
+  console.log('canDelete:', canDelete);
   return (
     <React.Fragment>
       {value.row.status === 4 ? (
