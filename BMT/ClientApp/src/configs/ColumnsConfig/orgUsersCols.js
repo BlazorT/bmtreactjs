@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import OrgUserActionCell from 'src/components/DataGridCustomCells/OrgUserActionCell';
+import globalutil from 'src/util/globalutil';
 
 export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
   {
@@ -53,6 +54,11 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     filterable: true,
     disableColumnMenu: true,
     headerCellClass: 'custom-header-data-grid',
+    renderCell: (params) => 
+      globalutil.statuses().find((item) => item.id === params.row.status)
+        ? globalutil.statuses().find((item) => item.id === params.row.status).name
+        : ''
+    
   },
 
   {

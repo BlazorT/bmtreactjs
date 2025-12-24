@@ -92,6 +92,15 @@ function AppFooter() {
             Account Closed ?
           </a>
         </div>
+        <div className="col-md-4 order1">
+        
+        </div>
+        <div className="col-md-4 order2">
+          <a className="labelName pointer" href="/pricingDetails" target="_blank" >
+            Pricing Details
+          </a>
+       
+        </div>
       </div>
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />
       <ContactUs isOpen={contactUsmodalOpen} toggle={ContactModal} />

@@ -131,6 +131,10 @@ function SignIn() {
       );
     }*/
   };
+  useEffect(() => {
+    // This runs once on component mount
+    getUtils();
+  }, []); // empty array ensures it runs only once
   const getMenus = async () => {
     const menuBody = {
       roleId: loginRes && loginRes.current?.data.roleId.toString(),

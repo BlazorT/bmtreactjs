@@ -71,9 +71,7 @@ const organizationsusers = () => {
       orgName: data.orgName,
       contact: data.contact,
       createdAt: formatDate(data.createdAt),
-      status: globalutil.statuses().find((item) => item.id === data.status)
-        ? globalutil.statuses().find((item) => item.id === data.status).name
-        : '',
+      status: data.status,
       //status: data.status,
     }));
     console.log(mappedArray, 'orgUsersList');

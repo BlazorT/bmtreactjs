@@ -13,6 +13,7 @@ import ToastNotification from './layout/ToastNotification';
 import OrganizationAdd from './pages/DA/organizationadd';
 import ConfirmationModal from './components/Modals/ConfirmationModal';
 import PaymentConfirmation from './pages/Admin/EPToken';
+import PricingDetails from './pages/Admin/pricingDetails';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsOfUse from './pages/PrivacyPolicy/TermsOfUse';
 
@@ -60,6 +61,7 @@ const App = () => {
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route exact path="/add-org" name="addorganization" element={<OrganizationAdd />} />
             <Route exact path="/PrivacyPolicy" name="PrivacyPolicy" element={<PrivacyPolicy />} />
+            <Route exact path="/pricingDetails" name="pricingDetails" element={<PricingDetails />} />
             <Route exact path="/TermsOfUse" name="TermsOfUse" element={<TermsOfUse />} />
             <Route
               exact

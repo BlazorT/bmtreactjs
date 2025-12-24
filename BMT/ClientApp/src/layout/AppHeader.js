@@ -24,7 +24,7 @@ import Loading from 'src/components/UI/Loading';
 import { setNavItems } from 'src/redux/navItems/navItemsSlice';
 import { CBadge } from '@coreui/react';
 
-export const keysToKeep = ['dastatuses', 'states', 'countries', 'statuses', 'currencies'];
+export const keysToKeep = ['dastatuses', 'states', 'countries', 'statuses', 'currencies','networks'];
 
 const AppHeader = (phoneNumber) => {
   const dispatch = useDispatch();

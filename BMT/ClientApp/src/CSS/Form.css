@@ -149,9 +149,12 @@
 
 label {
   display: block;
+  color:white;
   /* margin-top: 10px; */
 }
-
+.col-auto {
+ color:white;
+}
 input {
   width: 100%;
   padding: 10px;
@@ -852,6 +855,52 @@ body {
 button:disabled {
   color: #dbdac2 !important;
   cursor: not-allowed;
+}
+.card {
+  --cui-card-spacer-y: 1rem;
+  --cui-card-spacer-x: 1rem;
+  --cui-card-title-spacer-y: 0.5rem;
+  /* --cui-card-title-color: ; */
+  /* --cui-card-subtitle-color: ; */
+  /* --cui-card-border-width: var(--cui-border-width); */
+  --cui-card-border-color: none;
+  /* --cui-card-border-radius: var(--cui-border-radius); */
+  /* --cui-card-box-shadow: ; */
+  /* --cui-card-inner-border-radius: calc(var(--cui-border-radius) - (var(--cui-border-width))); */
+  --cui-card-cap-padding-y: 0.5rem;
+  --cui-card-cap-padding-x: 1rem;
+  --cui-card-cap-bg: rgba(var(--cui-body-color-rgb), 0.03);
+  --cui-card-cap-color:;
+  --cui-card-height:;
+  --cui-card-color:;
+  --cui-card-bg: #ffffff00;
+  --cui-card-img-overlay-padding: 1rem;
+  --cui-card-group-margin: 0.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: var(--cui-card-height);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5)!important; /* aqua color with some transparency */
+
+  word-wrap: break-word;
+  background-color: var(--cui-card-bg);
+  background-clip: border-box;
+  border: var(--cui-card-border-width) solid var(--cui-card-border-color);
+  border-radius: var(--cui-card-border-radius);
+}
+.p-4 {
+  padding: 0.8rem !important;
+}
+.border {
+  border: var(--cui-border-width) var(--cui-border-style) #dbdfe600 !important;
+}
+.gridBgColor {
+  background-color: #031c34;
+}
+.btn-link {
+    text-decoration:none!important;
 }
 .dropdown-menu {
   background-color: rgb(3 28 52) !important;
