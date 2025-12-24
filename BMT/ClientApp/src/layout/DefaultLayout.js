@@ -25,7 +25,7 @@ const DefaultLayout = () => {
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        <div className="body bg-body-color px-3">
+        <div className="body bg-body-color">
           <div className="job-application-form">
             <AppContent />
           </div>

@@ -13,6 +13,8 @@ interface ApiPostState<T> {
   postData: (data: ApiPostDataType<T>) => Promise<T>;
 }
 
+const CRAWLER_API_KEY = process.env.REACT_APP_BMT_SERVIVE_API_KEY;
+
 const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPostState<T> => {
   const [data, setData] = useState<T | null>(initialData || null);
   const [error, setError] = useState<Error | null>(null);
@@ -31,9 +33,14 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
         ...initialOptions,
         method,
         body,
-        headers: isFormData
-          ? undefined // Let the browser set the Content-Type for FormData
-          : initialOptions.headers,
+        headers: url?.includes(process.env.REACT_APP_BMT_SERVIVE || '')
+          ? {
+              'Content-Type': 'application/json',
+              'x-api-key': String(CRAWLER_API_KEY),
+            }
+          : isFormData
+            ? undefined // Let the browser set the Content-Type for FormData
+            : initialOptions.headers,
       });
       if (!response.ok) {
         showToast(`API error: ${response.statusText}`);

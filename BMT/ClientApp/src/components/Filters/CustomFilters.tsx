@@ -40,7 +40,7 @@ const CustomFilters: React.FC<CustomFiltersProps> = ({
 }) => {
   return (
     <div className="show-stock">
-      <div className="mb-0 dashboard-table padLeftRight">
+      <div className="mb-0 dashboard-table">
         <CRow>
           {filterFields.map((field, index) => {
             const FieldComponent = field.component;

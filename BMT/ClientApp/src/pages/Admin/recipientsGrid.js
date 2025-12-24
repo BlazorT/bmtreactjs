@@ -91,8 +91,8 @@ const recipientslisting = () => {
       setFullRecipientsData(recipientsList); // <-- store full list once
     }
 
-    const networks = globalutil.networks();
-    const groupedData = getGroupedRecipients(recipientsList, albumsList || [], networks);
+    // const networks = globalutil.networks();
+    // const groupedData = getGroupedRecipients(recipientsList, albumsList || [], networks);
     setRows(
       recipientsList?.map((r) => ({
         ...r,
@@ -370,46 +370,47 @@ const recipientslisting = () => {
           )}
         </AppContainer>
         <AppContainer>
-          <DataGridHeader
-            title="Recipients List"
-            onClick={toggleGrid}
-            addSecButton={'Recipients'}
-            addSecBtnClick={() => navigate('/campaignContacts')}
-            addButton="Import From Gmail | Outlook"
-            addBtnClick={toggleIsShowImportOptions}
-            actions={[
-              {
-                title: 'Add Album (+)',
-                onClick: toggleAlbumMdl,
+          <CustomDatagrid
+            enableGrouping
+            defaultExpandedGroups
+            rowHeight={50}
+            rows={rows}
+            showGrid={showDaGrid}
+            columns={recipientslistingCols}
+            groupBy={['networkId', 'albumid']}
+            loading={loading || orgsLoading || albumsLoading}
+            sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+            hiddenCols={{
+              columnVisibilityModel: {
+                lastUpdatedAt: false,
               },
-              {
-                title: 'Crawl Contacts (+)',
-                onClick: toggleCrawlerMdl,
-              },
-            ]}
-            otherControls={[{ icon: cilChevronBottom, fn: toggleGrid }]}
-            filterDisable={true}
-          />
-          {showDaGrid && (
-            <CustomDatagrid
-              rows={rows}
-              columns={recipientslistingCols}
-              rowHeight={50}
-              pagination={true}
-              loading={loading || orgsLoading || albumsLoading}
-              // loading={rows.length < 1 ? true : false}
-              sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
-              hiddenCols={{
-                columnVisibilityModel: {
-                  lastUpdatedAt: false,
+            }}
+            headerProps={{
+              title: 'Recipients List',
+              onClick: toggleGrid,
+              addSecButton: 'Recipients',
+              addSecBtnClick: () => navigate('/campaignContacts'),
+              addButton: 'Import From Gmail | Outlook',
+              addBtnClick: toggleIsShowImportOptions,
+              actions: [
+                {
+                  title: 'Add Album (+)',
+                  onClick: toggleAlbumMdl,
                 },
-              }}
-              enableGrouping
-              groupBy={['networkId', 'albumid']}
-              //  canExport={pageRoles.canExport}
-              // canPrint={pageRoles.canPrint}
-            />
-          )}
+                {
+                  title: 'Crawl Contacts (+)',
+                  onClick: toggleCrawlerMdl,
+                },
+              ],
+              otherControls: [
+                {
+                  icon: cilChevronBottom,
+                  fn: toggleGrid,
+                },
+              ],
+              filterDisable: true,
+            }}
+          />
         </AppContainer>
       </React.Fragment>
     </React.Fragment>

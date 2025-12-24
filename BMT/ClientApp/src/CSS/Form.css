@@ -744,6 +744,34 @@ html:not([dir='rtl']) .odd-inspection-part {
   border-bottom: 1px solid #80808087 !important;
   /* padding-left: 0.3rem; */
 }
+
+/* Default group row */
+.rdg-group-row {
+  background-color: #0d3054;
+}
+
+/* 🔹 Level 1 group */
+.rdg-group-row[aria-level='1'] {
+  background-color: #0d3054dc !important;
+}
+
+/* 🔹 Level 2 group */
+.rdg-group-row[aria-level='2'] {
+  background-color: #0d3054 !important;
+}
+
+/* Grid scroll container */
+.rdg-scroll-container {
+  /* max-height: 500px;
+   */
+  overflow: auto;
+}
+
+/* Let RDG fill the container */
+.fill-grid {
+  block-size: 100%;
+}
+
 .row-roles-group {
   background-color: #0c2842 !important;
 }

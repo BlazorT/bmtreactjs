@@ -6,7 +6,7 @@ import { Column } from 'react-data-grid';
 import calculateTime from 'src/helpers/calculateTime';
 
 const CustomSummary = ({ rows, columns, summary }) => {
-  if (rows.length === 0) {
+  if (!rows || rows?.length === 0) {
     return null;
   }
   const calculateStatusCount = (status) => {

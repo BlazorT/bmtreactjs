@@ -29,48 +29,38 @@ const Products = () => {
 
   const getProducts = async () => {
     const pricingList = await fetchPricing();
-    const gByNetwork = _.groupBy(pricingList, (item) => item.networkId);
-    const groupedData = Object.entries(gByNetwork);
-    const networkGroup = groupedData?.flatMap(([networkKey, networkItems], networkIndex) => {
-      const networkGroup = {
-        id: `hour-group-${networkKey}-${networkIndex}`,
-        name: getNetworkName(networkKey),
-        unitName: '',
-        unitPrice: '',
-        discount: '',
-        freeAllowed: '',
-        startTime: '',
-        lastUpdatedAt: '',
-      };
-      const childRows = networkItems.map((data, i) => ({
-        ...data,
-        id: `${data.id}-${i}`,
-        name: '',
-        networkName: getNetworkName(data?.networkId),
-        unitName: globalutil.campaignunits()?.find((c) => c.id === data?.unitId)?.name || '',
-        unitPrice: data?.unitPrice?.toFixed(2),
-        discount: data?.discount?.toFixed(2),
-        freeAllowed: data.freeAllowed,
-        startTime: formatDate(data.startTime),
-        lastUpdatedAt: data.lastUpdatedAt,
-      }));
-      return [networkGroup, ...childRows];
-    });
+    // const gByNetwork = _.groupBy(pricingList, (item) => item.networkId);
+    // const groupedData = Object.entries(gByNetwork);
+    const networkGroup = pricingList?.map((data) => ({
+      ...data,
+      name: getNetworkName(data?.networkId),
+      unitName: globalutil.campaignunits()?.find((c) => c.id === data?.unitId)?.name || '',
+      unitPrice: data?.unitPrice?.toFixed(2),
+      discount: data?.discount?.toFixed(2),
+      freeAllowed: data.freeAllowed,
+      startTime: formatDate(data.startTime),
+      lastUpdatedAt: data.lastUpdatedAt,
+    }));
+
     setPricingRows(networkGroup);
   };
   // console.log({ user });
   const pricingCols = getPricingCols(user, getProducts);
   return (
     <AppContainer>
-      <DataGridHeader title="Network Prices" filterDisable />
       <CustomDatagrid
         rows={pricingRows}
         columns={pricingCols}
-        pagination={true}
         loading={loading || !data}
         rowHeight={50}
         isHeader={true}
-        // sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
+        groupBy={['name']}
+        enableGrouping
+        defaultExpandedGroups
+        headerProps={{
+          title: 'Network Prices',
+          filterDisable: true,
+        }}
       />
     </AppContainer>
   );

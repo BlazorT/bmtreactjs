@@ -25,7 +25,7 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
       },
       {
         key: 'type',
-        name: 'Type',
+        name: 'Network',
         editable: false,
         filterable: true,
         disableColumnMenu: true,

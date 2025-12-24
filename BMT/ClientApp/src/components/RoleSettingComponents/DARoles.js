@@ -208,7 +208,7 @@ const DARoles = (prop) => {
     <CustomDatagrid
       rows={rolesRow}
       columns={roles_grid_cols}
-      pagination={true}
+      pagination={false}
       rowHeight={50}
       rowSelection={false}
     />

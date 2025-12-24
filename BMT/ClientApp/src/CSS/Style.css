@@ -623,7 +623,9 @@ button[type='button']:hover {
 }
 .bg_Div {
   background-color: #09283c54 !important;
-  padding: 0.5%;
+  padding: 0.8%;
+  column-gap: 5px;
+  row-gap: 5px;
 }
 .sidebar {
   color: #a7b1c2 !important;
@@ -4347,4 +4349,17 @@ select {
 }
 .input-bg {
   background-color: rgb(3 28 52);
+}
+/* Remove all borders from group rows */
+.rdg-group-row,
+.rdg-group-row .rdg-cell {
+  border: none !important;
+}
+/* Fix react-data-grid box sizing */
+.rdg,
+.rdg *,
+.rdg *::before,
+.rdg *::after {
+  box-sizing: content-box;
+  outline: none !important;
 }
