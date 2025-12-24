@@ -99,6 +99,7 @@ const recipientslisting = () => {
         nId: r?.networkId,
         networkId: globalutil.networks()?.find((n) => n.id === r?.networkId)?.name || '--',
         albumid: albumsList?.find((n) => n.id === r?.albumid)?.name || '--',
+        createdAt: formatDateTime(r?.createdAt),
       })),
     );
     // const mappedArray = recipientsList.map((data) => {

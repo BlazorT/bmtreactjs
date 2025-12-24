@@ -781,31 +781,33 @@ const BlazorNetworkInputs = (prop) => {
               </CRow>
             )}
           </AppContainer>
-          <AppContainer>
-            <DataGridHeader
-              title="Integration Setting"
-              onClick={showIntegrationfn}
-              otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
-              filterDisable={true}
-            />
-            {showIntegration && (
-              <>
-                <Inputs
-                  inputFields={networkInputFields?.filter(
-                    (f) =>
-                      f?.label !== 'Unit' &&
-                      f?.label !== 'Quota' &&
-                      f?.label !== 'Date From' &&
-                      f?.label !== 'Price' &&
-                      f?.label !== 'Discount' &&
-                      f?.label !== 'Package' &&
-                      f?.label !== 'Date To',
-                  )}
-                  isBtn={false}
-                ></Inputs>
-              </>
-            )}
-          </AppContainer>
+          {user?.roleId === 1 && (
+            <AppContainer>
+              <DataGridHeader
+                title="Integration Setting"
+                onClick={showIntegrationfn}
+                otherControls={[{ icon: cilChevronBottom, fn: showIntegrationfn }]}
+                filterDisable={true}
+              />
+              {showIntegration && (
+                <>
+                  <Inputs
+                    inputFields={networkInputFields?.filter(
+                      (f) =>
+                        f?.label !== 'Unit' &&
+                        f?.label !== 'Quota' &&
+                        f?.label !== 'Date From' &&
+                        f?.label !== 'Price' &&
+                        f?.label !== 'Discount' &&
+                        f?.label !== 'Package' &&
+                        f?.label !== 'Date To',
+                    )}
+                    isBtn={false}
+                  ></Inputs>
+                </>
+              )}
+            </AppContainer>
+          )}
 
           <AppContainer>
             <DataGridHeader

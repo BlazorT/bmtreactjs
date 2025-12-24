@@ -90,14 +90,48 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   const [expandedGroupIds, setExpandedGroupIds] = useState<Set<unknown>>(new Set());
 
   const gridRef = useRef<DataGridHandle>(null);
-  // inside your component
-  useEffect(() => {
-    if (enableGrouping && defaultExpandedGroups && groupBy.length > 0) {
-      const firstLevelGroupKeys = Array.from(new Set(rows.map((r) => r[groupBy[0]] ?? '—')));
-      setExpandedGroupIds(new Set(firstLevelGroupKeys));
-    }
-  }, [rows, enableGrouping, defaultExpandedGroups, groupBy]);
 
+  useEffect(() => {
+    if (!enableGrouping || !defaultExpandedGroups || groupBy.length === 0 || rows.length === 0) {
+      return;
+    }
+
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      const expanded = new Set<unknown>();
+      const level1Key = groupBy[0];
+      const level2Key = groupBy[1];
+
+      // Build grouped data structure to get actual group keys
+      const firstLevelGroups = rowGrouper(rows, level1Key);
+      const firstLevelKeys = Object.keys(firstLevelGroups);
+
+      // Expand all first-level groups
+      firstLevelKeys.forEach((key) => expanded.add(key));
+
+      // Expand second-level groups ONLY under the FIRST first-level group
+      if (level2Key && firstLevelKeys.length > 0) {
+        const firstGroupKey = firstLevelKeys[0];
+        const firstGroupRows = firstLevelGroups[firstGroupKey];
+
+        // Get second-level groups under the first parent
+        const secondLevelGroups = rowGrouper(firstGroupRows, level2Key);
+        const secondLevelKeys = Object.keys(secondLevelGroups);
+
+        // Add composite keys for nested groups
+        secondLevelKeys.forEach((secondKey) => {
+          // TreeDataGrid needs BOTH formats:
+          // 1. Array format
+          expanded.add([firstGroupKey, secondKey]);
+          // 2. String format with double underscore separator
+          expanded.add(`${firstGroupKey}__${secondKey}`);
+        });
+      }
+
+      console.log('Expanded groups:', Array.from(expanded));
+      setExpandedGroupIds(expanded);
+    });
+  }, [rows, enableGrouping, defaultExpandedGroups, groupBy]);
   /* ---------------------------------- FILTER ---------------------------------- */
   const filteredRows = useMemo(() => {
     if (!searchTerm) return rows;
@@ -274,12 +308,15 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     groupBy={groupBy}
                     rowGrouper={rowGrouper}
                     expandedGroupIds={expandedGroupIds}
-                    onExpandedGroupIdsChange={(ids) => setExpandedGroupIds(ids as Set<unknown>)}
                     onSortColumnsChange={setSortColumns}
                     onRowsChange={onRowsChange}
                     selectedRows={selectedRows}
                     onSelectedRowsChange={onSelectedRowsChange}
                     onCellClick={onRowClick as any}
+                    onExpandedGroupIdsChange={(ids) => {
+                      console.log('Expanded IDs:', Array.from(ids));
+                      setExpandedGroupIds(ids as Set<unknown>);
+                    }}
                     bottomSummaryRows={summaryRows}
                     summaryRowHeight={50}
                     topSummaryRows={summaryRows}

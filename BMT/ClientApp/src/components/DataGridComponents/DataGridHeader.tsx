@@ -22,6 +22,7 @@ import FilterIconMenu from './FilterIconMenu';
 import dayjs from 'dayjs';
 import { DataGridHandle } from 'react-data-grid';
 import { exportToCsv, exportToPdf } from 'src/helpers/gridHelper';
+import { useSelector } from 'react-redux';
 
 const CDropdownAny = CDropdown as any;
 const CDropdownMenuAny = CDropdownMenu as any;
@@ -81,6 +82,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
 }) => {
   const showExportDropdown = (canExport || canPrint) && gridRef;
   const timestamp = dayjs().format('YYYYMMDDHHmmss');
+  const user = useSelector((state: any) => state.user);
 
   function handleExportToCsv() {
     if (!gridRef || typeof gridRef === 'function' || !gridRef.current?.element) {
@@ -101,6 +103,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
     await exportToPdf(
       gridRef.current.element,
       fileName ? `${fileName}_${timestamp}.pdf` : `${timestamp}.pdf`,
+      user,
     );
   }
 

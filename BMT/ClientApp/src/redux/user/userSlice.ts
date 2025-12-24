@@ -5,6 +5,7 @@ type UserState = {
   orgId: string;
   roleId: string;
   userInfo: Record<string, unknown>;
+  orgInfo: Record<string, unknown>;
   isAuthenticated: boolean;
 };
 
@@ -13,6 +14,7 @@ const initialState: UserState = {
   orgId: '',
   roleId: '',
   userInfo: {},
+  orgInfo: {},
   isAuthenticated: false,
 };
 
@@ -21,7 +23,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<UserState>) => {
-      const { userId, orgId, roleId, userInfo, isAuthenticated } = action.payload;
+      const { userId, orgId, roleId, userInfo, orgInfo, isAuthenticated } = action.payload;
 
       // Update only the provided fields, keeping the rest unchanged
       if (userId !== undefined) {
@@ -35,6 +37,9 @@ export const userSlice = createSlice({
       }
       if (userInfo !== undefined) {
         state.userInfo = userInfo;
+      }
+      if (orgInfo !== undefined) {
+        state.orgInfo = orgInfo;
       }
       if (isAuthenticated !== undefined) {
         state.isAuthenticated = isAuthenticated;

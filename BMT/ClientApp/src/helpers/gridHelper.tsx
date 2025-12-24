@@ -16,8 +16,19 @@ export function exportToCsv(gridEl: HTMLDivElement, fileName: string) {
   downloadFile(fileName, new Blob([content], { type: 'text/csv;charset=utf-8;' }));
 }
 
-export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Promise<void> {
+export async function exportToPdf(
+  gridEl: HTMLDivElement,
+  fileName: string,
+  user: any,
+): Promise<void> {
   const { head, body, foot } = getGridContent(gridEl);
+
+  const orgInfo = user?.orgInfo || {};
+
+  const orgName = orgInfo.name || 'Company Name';
+  const orgAddress = orgInfo.address || '';
+  const orgContact = orgInfo.contact || '';
+  const orgLogo = 'bmtlogo.png'; // make sure this path works or use full url/base64
 
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -27,11 +38,12 @@ export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Pro
 
   const margin = {
     top: 2,
-    right: 2,
-    bottom: 2,
-    left: 2,
+    right: 10,
+    bottom: 12,
+    left: 10,
   };
 
+  const pageWidth = doc.internal.pageSize.getWidth();
   const printDate = new Date().toLocaleDateString('en-GB', {
     day: '2-digit',
     month: 'short',
@@ -40,11 +52,44 @@ export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Pro
 
   const totalPagesPlaceholder = '{total_pages_count_string}';
 
+  // ── FIRST PAGE ONLY: Organization info + logo + filename ──
+  let startY = 2;
+
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text(orgName, margin.left, startY + 6);
+
+  // Logo on the very left (adjust size & position as needed)
+  try {
+    const logoWidth = 50;
+    const logoHeight = 30; // keep your aspect ratio
+    doc.addImage(orgLogo, 'PNG', pageWidth - margin.right - 50, startY, logoWidth, logoHeight);
+    startY += logoHeight + 2; // space after logo
+  } catch (e) {
+    console.warn('Could not load logo:', e);
+  }
+
+  // Organization details (below logo or beside if you prefer)
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text(orgAddress, margin.left, startY + 5);
+  doc.text(orgContact, margin.left, startY + 10);
+
+  startY += 18; // extra space after org info
+
+  // File name
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text(fileName.replace(/\.pdf$/i, ''), margin.left, startY + 6);
+
+  startY += 12; // space before table
+
+  // ── Now the table ──
   autoTable(doc, {
     head,
     body,
     foot,
-    startY: margin.top,
+    startY: startY, // ← important: start after our custom header
     margin,
     horizontalPageBreak: true,
     horizontalPageBreakRepeat: 0,
@@ -58,7 +103,6 @@ export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Pro
       lineWidth: 0.1,
       lineColor: [120, 120, 120],
     },
-
     headStyles: {
       fillColor: [245, 245, 245],
       textColor: [40, 40, 40],
@@ -70,8 +114,7 @@ export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Pro
       halign: 'center',
       valign: 'middle',
     },
-
-    // Add extra top padding only for the very first data row
+    // Optional: extra top padding only for first data row
     didParseCell: (data) => {
       if (data.section !== 'body' || data.row.index !== 0) return;
 
@@ -81,32 +124,30 @@ export async function exportToPdf(gridEl: HTMLDivElement, fileName: string): Pro
           ? data.cell.styles.cellPadding
           : basePadding;
 
-      // Override only top padding
       data.cell.styles.cellPadding = {
-        top: 2.5, // ← the extra gap you wanted
+        top: 2.5,
         right: padding,
         bottom: padding,
         left: padding,
       };
     },
-
     didDrawPage: (data) => {
-      const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
 
       doc.setFontSize(8);
       doc.setTextColor(100);
 
       // Left: Print date
-      doc.text(`Printed: ${printDate}`, margin.left, pageHeight - 10);
+      doc.text(`Printed: ${printDate}`, margin.left, pageHeight - 8);
 
-      // Right: Page X of Y (placeholder will be replaced later)
+      // Right: Page X of Y
       const pageText = `Page ${doc.getCurrentPageInfo().pageNumber} of ${totalPagesPlaceholder}`;
-      doc.text(pageText, pageWidth + 25, pageHeight - 10, { align: 'right' });
+      const textWidth = doc.getTextWidth(pageText);
+      doc.text(pageText, pageWidth - margin.right - textWidth, pageHeight - 8);
     },
   });
 
-  // Important: must be called after autoTable has finished
+  // Replace total pages placeholder
   if ('putTotalPages' in doc && typeof doc.putTotalPages === 'function') {
     doc.putTotalPages(totalPagesPlaceholder);
   }

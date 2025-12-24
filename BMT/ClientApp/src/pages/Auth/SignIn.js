@@ -19,6 +19,9 @@ import { setUserData } from 'src/redux/user/userSlice';
 //import { getCountryById } from 'src/constants/countries_and_states';
 import { transformData } from 'src/navItem';
 import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
+import useApi from 'src/hooks/useApi';
+import dayjs from 'dayjs';
 
 function SignIn() {
   // const { response, error, loading, fetchData } = useFetch('/storeusers');
@@ -53,6 +56,12 @@ function SignIn() {
     loading: loginLoading,
     fetchData: userLogin,
   } = useFetch();
+
+  const {
+    postData: getOrgs,
+    loading: orgLoading,
+    data: orgRes,
+  } = useApi('/BlazorApi/orgsfulldata');
 
   const [showPassword, setShowPassword] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -164,10 +173,23 @@ function SignIn() {
         // console.log((loginRes.current),'login');
         getUtils();
         getMenus();
-        // console.log(getMenus(),'menuss');
-        // console.log(getUtils(),'utilss');
+        const data = await getOrgs({
+          id: loginRes?.current?.data?.orgId,
+          roleId: 0,
+          orgId: 0,
+          email: '',
+          name: '',
+          contact: '',
+          rowVer: 0,
+          cityId: 0,
+          status: 0,
+          createdAt: dayjs().utc().subtract(100, 'year').format('YYYY-MM-DD'),
+          lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
+          createdBy: 0,
+          lastUpdatedBy: 0,
+        });
         setModalOpen(true);
-        ClickProceed();
+        ClickProceed(data?.data?.[0] || {});
         navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {
         dispatch(
@@ -185,13 +207,14 @@ function SignIn() {
       }
     }
   };
-  const ClickProceed = () => {
+  const ClickProceed = (orgInfo) => {
     dispatch(
       setUserData({
         userId: loginRes.current.data.id,
         roleId: loginRes.current.data.roleId,
         orgId: loginRes.current.data.orgId,
         userInfo: loginRes.current.data,
+        orgInfo,
         isAuthenticated: true,
       }),
     );
@@ -209,11 +232,12 @@ function SignIn() {
 
   return (
     <>
-      {isLoading && (
-        <div className="loading-overlay">
-          <Loading />
-        </div>
-      )}
+      {isLoading ||
+        (orgLoading && (
+          <div className="loading-overlay">
+            <Loading />
+          </div>
+        ))}
       <section>
         <video controls={false} autoPlay={true} muted={true} className="landingPicView">
           <source src="BackgroundVideo.mp4" type="video/mp4" />

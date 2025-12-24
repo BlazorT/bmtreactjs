@@ -91,7 +91,7 @@ export const getcampaignslistingCols = (
         <CampaignActionCell
           value={params}
           fetching={() => getCampaignsList(filters)}
-          campaign={daRes.filter((item) => item.id === params.row?.campaignId)}
+          campaign={daRes.filter((item) => item.id === params.row?.id)}
           canUpdate={pageRoles.canUpdate}
           canDelete={pageRoles.canDelete}
         />
