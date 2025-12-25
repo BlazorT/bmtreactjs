@@ -149,11 +149,11 @@
 
 label {
   display: block;
-  color:white;
+  color: white;
   /* margin-top: 10px; */
 }
 .col-auto {
- color:white;
+  color: white;
 }
 input {
   width: 100%;
@@ -882,7 +882,7 @@ button:disabled {
   min-width: 0;
   height: var(--cui-card-height);
   color: white;
-  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5)!important; /* aqua color with some transparency */
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5) !important; /* aqua color with some transparency */
 
   word-wrap: break-word;
   background-color: var(--cui-card-bg);
@@ -893,14 +893,14 @@ button:disabled {
 .p-4 {
   padding: 0.8rem !important;
 }
-.border {
+/* .border {
   border: var(--cui-border-width) var(--cui-border-style) #dbdfe600 !important;
-}
+} */
 .gridBgColor {
   background-color: #031c34;
 }
 .btn-link {
-    text-decoration:none!important;
+  text-decoration: none !important;
 }
 .dropdown-menu {
   background-color: rgb(3 28 52) !important;

@@ -14,6 +14,7 @@ import useApi from 'src/hooks/useApi';
 import dayjs, { utc } from 'dayjs';
 import { useSelector } from 'react-redux';
 import SendTestEmailModel from './SendTestEmailModel';
+import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
 
 const defaultTemplateData = {
   id: 0,
@@ -86,7 +87,7 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
         createdBy: template ? template?.createdBy : user?.userId,
         lastUpdatedBy: user?.userId,
       });
-      showToast(`${template?.name} has been edited successfully`, 'success');
+      showToast(`${templateData?.name} has been edited successfully`, 'success');
 
       return;
     }
@@ -151,8 +152,20 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
           {/* Render the template prop if provided, otherwise show a default message */}
 
           <Inputs inputFields={templateInputFields} isBtn={false}>
-            {templateData?.networkId != '3' ? (
+            {templateData?.networkId == 2 ? (
+              <WhatsAppTemplateEditor
+                value={templateData.templateJson ? JSON.parse(templateData.templateJson) : null}
+                onChange={(updatedFullObject) => {
+                  // The Editor gives us the full updated object, we just stringify and save
+                  setTemplateData((prev) => ({
+                    ...prev,
+                    templateJson: JSON.stringify(updatedFullObject),
+                  }));
+                }}
+              />
+            ) : templateData?.networkId != '3' ? (
               <SocialMediaTextEditor
+                networkId={parseInt(templateData?.networkId)}
                 value={templateData.template} // Ensure value is a string
                 onChange={(e) => {
                   setTemplateData((prev) => ({

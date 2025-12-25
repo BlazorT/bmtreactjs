@@ -128,7 +128,6 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
         });
       }
 
-      console.log('Expanded groups:', Array.from(expanded));
       setExpandedGroupIds(expanded);
     });
   }, [rows, enableGrouping, defaultExpandedGroups, groupBy]);

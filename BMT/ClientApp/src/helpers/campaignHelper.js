@@ -94,9 +94,47 @@ const calculateYearly = (startDate, endDate, scheduleDays) => {
 };
 
 // Calculate valid days for custom interval
-const calculateCustomInterval = (startDate, endDate, scheduleDays, intervalMinutes) => {
-  const validDays = countMatchingDays(startDate, endDate, scheduleDays);
-  return validDays * calculateFractionOfDay(intervalMinutes);
+const calculateCustomInterval = (startDate, endDate, scheduleDays, intervalSeconds) => {
+  if (!intervalSeconds || intervalSeconds <= 0) return 0;
+
+  const intervalMs = Number(intervalSeconds) * 1000;
+  let totalExecutions = 0;
+
+  // Extract DAILY time window
+  const startHour = startDate.getHours();
+  const startMin = startDate.getMinutes();
+  const endHour = endDate.getHours();
+  const endMin = endDate.getMinutes();
+
+  // Date-only cursor
+  const cursor = new Date(startDate);
+  cursor.setHours(0, 0, 0, 0);
+
+  while (cursor <= endDate) {
+    const dayName = getDayName(cursor);
+
+    if (scheduleDays.includes(dayName)) {
+      // Build daily window
+      const windowStart = new Date(cursor);
+      windowStart.setHours(startHour, startMin, 0, 0);
+
+      const windowEnd = new Date(cursor);
+      windowEnd.setHours(endHour, endMin, 0, 0);
+
+      // Skip invalid windows
+      if (windowEnd <= windowStart) {
+        cursor.setDate(cursor.getDate() + 1);
+        continue;
+      }
+
+      const durationMs = windowEnd - windowStart;
+      totalExecutions += Math.floor(durationMs / intervalMs);
+    }
+
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return totalExecutions;
 };
 
 // Main function to calculate valid days
@@ -116,9 +154,54 @@ export const calculateValidDays = (scheduleList) => {
     3: () => calculateWeekly(numberOfDays, daysOfWeek, scheduleDays),
     4: () => calculateMonthly(startDate, endDate, scheduleDays),
     5: () => calculateYearly(startDate, endDate, scheduleDays),
-    6: () => calculateCustomInterval(startDate, endDate, scheduleDays, scheduleList.interval),
+    6: () =>
+      calculateCustomInterval(
+        startDate,
+        endDate,
+        scheduleDays,
+        scheduleList.interval ? scheduleList.interval : 60, //default interval
+      ),
   };
 
   const calculator = intervalCalculators[interval];
   return calculator ? calculator() : 0;
+};
+
+// Utility to generate initial parameters from raw template components
+export const generateInitialParameters = (components) => {
+  const newParams = { header: [], body: [], footer: [] };
+
+  if (!components) return newParams;
+
+  components.forEach((component) => {
+    const type = component.type.toLowerCase();
+
+    // Handle Header
+    if (type === 'header') {
+      if (component.format === 'TEXT' && component.example?.header_text?.[0]) {
+        newParams.header = component.example.header_text[0].map((text) => ({
+          type: 'text',
+          text: text || '',
+        }));
+      } else if (component.format && component.format !== 'TEXT') {
+        // Media headers (Image, Video, Document)
+        newParams.header = [
+          {
+            type: component.format.toLowerCase(),
+            [component.format.toLowerCase()]: { link: '' },
+          },
+        ];
+      }
+    }
+
+    // Handle Body
+    if (type === 'body' && component.example?.body_text?.[0]) {
+      newParams.body = component.example.body_text[0].map((text) => ({
+        type: 'text',
+        text: text || '',
+      }));
+    }
+  });
+
+  return newParams;
 };

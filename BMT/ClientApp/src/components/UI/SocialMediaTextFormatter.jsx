@@ -8,7 +8,7 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 // Reusable Social Media Text Editor Component
-const SocialMediaTextEditor = ({ value, onChange, placeholder }) => {
+const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
   const [copiedStyle, setCopiedStyle] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -173,12 +173,34 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder }) => {
     </CTooltip>
   );
 
+  const charCount = value?.length || 0;
+  const isOverLimit = charCount > 160;
+
   return (
     <div className="w-full">
       <div className="p-2 fs-6 text-white">
         Please select the text that you want to edit and press on the corresponding font style
         button.
       </div>
+      {networkId === 1 && (
+        <div className="p-2 mb-2 bg-info bg-opacity-10 border border-info rounded">
+          <div className="d-flex align-items-start gap-2">
+            <span className="fs-5">💡</span>
+            <div className="flex-grow-1">
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <p className="mb-0 fw-semibold text-info">SMS Tip - Keep it Short & Save!</p>
+                <span className={`badge ${isOverLimit ? 'bg-warning' : 'bg-info'}`}>
+                  {charCount} / 160 chars
+                </span>
+              </div>
+              <p className="mb-0 small text-muted">
+                Messages under <strong>160 characters</strong> cost less. Longer messages get split
+                up and you&apos;ll be charged multiple times. The shorter, the cheaper! 💰
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="border-b bg-light rounded p-2 position-relative">
         <div className="d-flex flex-row flex-wrap items-center gap-1">
           <ToolbarButton onClick={() => applyStyle('bold')} title="Bold">
