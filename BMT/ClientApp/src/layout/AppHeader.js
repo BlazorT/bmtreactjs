@@ -1,53 +1,44 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable prettier/prettier */
-import React, { useEffect } from 'react';
-import { CListGroup, CListGroupItem } from '@coreui/react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
-import { CContainer, CHeader, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
+import { cilAccountLogout, cilBell, cilMenu, cilPeople } from '@coreui/icons';
 import {
-  cilBell,
-  cilEnvelopeOpen,
-  cilAccountLogout,
-  cilList,
-  cilMenu,
-  cilPeople,
-} from '@coreui/icons';
-import { CPopover } from '@coreui/react';
+  CContainer,
+  CHeader,
+  CHeaderNav,
+  CHeaderToggler,
+  CListGroup,
+  CListGroupItem,
+  CNavItem,
+  CNavLink,
+  CPopover,
+} from '@coreui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 //import Blazorhub from '../Blazorhub';
 import CIcon from '@coreui/icons-react';
+import { CBadge } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import { setNavItems } from 'src/redux/navItems/navItemsSlice';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import { setUserData } from 'src/redux/user/userSlice';
-import Loading from 'src/components/UI/Loading';
-import { setNavItems } from 'src/redux/navItems/navItemsSlice';
-import { CBadge } from '@coreui/react';
 
-export const keysToKeep = ['dastatuses', 'states', 'countries', 'statuses', 'currencies','networks'];
+export const keysToKeep = [
+  'dastatuses',
+  'states',
+  'countries',
+  'statuses',
+  'currencies',
+  'networks',
+];
 
 const AppHeader = (phoneNumber) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  const {
-    response: logoutRes,
-    error: logoutmenuErr,
-    loading: logoutLoading,
-    fetchData: userLogout,
-  } = useFetch();
-
-  //// ✅ ResizeObserver inside useEffect
-  //const divElem = document.querySelector('body > div');
-  ///*  *********** Handel Resize observer ************ */
-  //const resizeObserver = new ResizeObserver((entries) => {
-  //  for (let entry of entries) {
-  //    if (entry.target.handleResize) entry.target.handleResize(entry);
-  //  }
-  //});
-
-  //resizeObserver.observe(divElem);
+  const { response: logoutRes, fetchData: userLogout } = useFetch();
 
   const Logout = () => {
     dispatch(

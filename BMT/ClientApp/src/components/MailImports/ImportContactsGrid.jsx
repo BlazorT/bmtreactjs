@@ -9,8 +9,9 @@ import Button from '../UI/Button';
 import { CCol, CRow } from '@coreui/react';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
-import { cilChatBubble, cilEnvelopeClosed, cilFlagAlt } from '@coreui/icons';
+import { cilChatBubble, cilEnvelopeClosed } from '@coreui/icons';
 import AddAlbumModel from '../Modals/AddAlbumModel';
+import CityBadge from '../UI/CityBadge';
 
 const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCountry = false }) => {
   const COLS = useMemo(() => {
@@ -44,6 +45,38 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           filterable: true,
           disableColumnMenu: true,
           headerCellClass: 'custom-header-data-grid',
+          renderCell: (params) => {
+            const country = params.row?.country;
+            const confidence = params.row?.countryConfidence;
+
+            if (!country || country === '--') return <span className="text-muted">--</span>;
+
+            return (
+              <div className="d-flex align-items-center gap-1">
+                <span>{country}</span>
+                {confidence === 'high' && (
+                  <span className="badge badge-high-confidence small">High</span>
+                )}
+              </div>
+            );
+          },
+        },
+        {
+          key: 'city',
+          name: 'City',
+          editable: false,
+          filterable: true,
+          disableColumnMenu: true,
+          headerCellClass: 'custom-header-data-grid',
+          renderCell: (params) => {
+            const city = params.row?.city;
+            const cityMatches = params.row?.cityMatches;
+            const countryCode = params.row?.countryCode;
+
+            return (
+              <CityBadge primaryCity={city} cityMatches={cityMatches} countryCode={countryCode} />
+            );
+          },
         },
         {
           key: 'source',
@@ -55,7 +88,10 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           renderCell: (params) => {
             const url = params.row?.source;
 
-            if (!url) return '-';
+            if (!url || url === '--') return <span className="text-muted">--</span>;
+
+            // Truncate long URLs
+            const displayUrl = url.length > 40 ? url.substring(0, 37) + '...' : url;
 
             return (
               <a
@@ -63,9 +99,10 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-decoration-underline text-primary"
-                onClick={(e) => e.stopPropagation()} // prevents row selection on click
+                onClick={(e) => e.stopPropagation()}
+                title={url}
               >
-                {url}
+                {displayUrl}
               </a>
             );
           },
@@ -112,7 +149,7 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
     const existingIds = new Set(recipientsList.map((r) => r.contentId));
     return data.map((row) => ({
       ...row,
-      disabled: existingIds.has(row.content), // disable if already in recipients
+      disabled: existingIds.has(row.content),
     }));
   }, [data, recipientsList]);
 
@@ -134,13 +171,29 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
     [selectedContacts],
   );
 
-  // Calculate counts
+  // Calculate counts and city statistics
   const counts = useMemo(() => {
     const existingCount = rowsWithDisabled.filter((row) => row.disabled).length;
     const importedCount = rowsWithDisabled.length;
     const selectedCount = selectedRows.size;
 
-    return { existingCount, importedCount, selectedCount };
+    // City detection stats
+    const withCity = rowsWithDisabled.filter((row) => row.city && row.city !== '--').length;
+    const withHighConfidence = rowsWithDisabled.filter((row) =>
+      row.cityMatches?.some((m) => m.confidence === 'high'),
+    ).length;
+    const withAlternatives = rowsWithDisabled.filter(
+      (row) => row.cityMatches && row.cityMatches.length > 1,
+    ).length;
+
+    return {
+      existingCount,
+      importedCount,
+      selectedCount,
+      withCity,
+      withHighConfidence,
+      withAlternatives,
+    };
   }, [rowsWithDisabled, selectedRows]);
 
   const submitRecipients = async () => {
@@ -283,7 +336,7 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           </>
         )}
         {(dataHasContacts || dataHasEmail) && (
-          <CCol md={3} className={`mt-2 pt-4  d-flex flex-colunm justify-content-center`}>
+          <CCol md={3} className={`mt-2 pt-4 d-flex flex-colunm justify-content-center`}>
             <Button title="Add Album" onClick={toggleAlbumMdl} className="w-100" />
           </CCol>
         )}
@@ -297,39 +350,71 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
         onSelectedRowsChange={(newSelectedRows) => {
           setSelectedRows(newSelectedRows);
         }}
+        rowHeight={55}
         rowSelectable={(row) => !row.disabled}
         pageSize={10}
         pageSizeOptions={[10, 25, 50, 100]}
         pagination={false}
-        maxHeight={rowsWithDisabled?.length > 10 ? 250 : 'auto'}
+        maxHeight={rowsWithDisabled?.length > 10 ? 350 : 'auto'}
         footer={
-          <div className="bg-dark-color text-white p-2 d-flex flex-row justify-content-between align-items-center">
-            <div className="d-flex flex-row align-items-center gap-3">
-              <div className="d-flex flex-row align-items-center gap-2">
-                <span>Existing :</span>
-                <span className="disabled-row-red rounded-1 px-2 py-1 fw-bold">
-                  {counts.existingCount}
-                </span>
+          <div className="bg-dark-color text-white p-2 flex-row d-flex align-items-center justify-content-between flex-wrap">
+            <div className="d-flex flex-row justify-content-between align-items-center">
+              <div className="d-flex flex-row align-items-center gap-3">
+                <div className="d-flex flex-row align-items-center gap-2">
+                  <span>Existing:</span>
+                  <span className="disabled-row-red rounded-1 px-1 py-0 fw-bold">
+                    {counts.existingCount}
+                  </span>
+                </div>
+                <div className="d-flex flex-row align-items-center gap-2">
+                  <span>Imported:</span>
+                  <span className="rdg-row-even rounded-1 px-1 py-0 fw-bold">
+                    {counts.importedCount}
+                  </span>
+                </div>
+                <div className="d-flex flex-row align-items-center gap-2">
+                  <span>Selected:</span>
+                  <span className="selected-row rounded-1 px-1 py-0 fw-bold">
+                    {counts.selectedCount}
+                  </span>
+                </div>
               </div>
-              <div className="d-flex flex-row align-items-center gap-2">
-                <span>Imported :</span>
-                <span className="rdg-row-even rounded-1 px-2 py-1 fw-bold">
-                  {counts.importedCount}
-                </span>
+            </div>
+
+            {/* City detection stats */}
+            {isShowCountry && counts.withCity > 0 && (
+              <div className="d-flex flex-row align-items-center gap-3">
+                <div className="d-flex flex-row align-items-center gap-2">
+                  <span className="small">With City:</span>
+                  <span className="badge badge-high-confidence">
+                    {counts.withCity} / {counts.importedCount}
+                  </span>
+                </div>
+                <div className="d-flex flex-row align-items-center gap-2">
+                  <span className="small">High Confidence:</span>
+                  <span className="badge badge-high-confidence">{counts.withHighConfidence}</span>
+                </div>
+                {counts.withAlternatives > 0 && (
+                  <div className="d-flex flex-row align-items-center gap-2">
+                    <span className="small">With Alternatives:</span>
+                    <span className="badge badge-alternative-matches">
+                      {counts.withAlternatives}
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="d-flex flex-row align-items-center gap-2">
-                <span>Selected :</span>
-                <span className="selected-row rounded-1 px-2 py-1 fw-bold">
-                  {counts.selectedCount}
-                </span>
-              </div>
+            )}
+            <div className="align-items-center justify-content-end flex-row d-flex">
+              <Button
+                title="Submit"
+                onClick={submitRecipients}
+                disabled={loading}
+                className="px-3 py-1 w-auto h-auto"
+              />
             </div>
           </div>
         }
       />
-      <div className="mt-2 align-items-center justify-content-end flex-row d-flex">
-        <Button title="Submit" onClick={submitRecipients} disabled={loading} />
-      </div>
     </div>
   );
 };

@@ -1,9 +1,8 @@
-
 import 'react-data-grid/lib/styles.css';
 import './scss/style.scss';
 import '../src/CSS/Style.css';
 import '../src/CSS/Form.css';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -33,14 +32,27 @@ const App = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const confirMdl = useSelector((state) => state.confirMdl);
 
-  // index.tsx or index.js
-  const ignoreResizeObserverError = (e) => {
-    if (e.message === 'ResizeObserver loop completed with undelivered notifications') {
-      e.stopImmediatePropagation();
+  useEffect(() => {
+    function hideError(e) {
+      if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+        const resizeObserverErrDiv = document.getElementById(
+          'webpack-dev-server-client-overlay-div',
+        );
+        const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay');
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute('style', 'display: none');
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute('style', 'display: none');
+        }
+      }
     }
-  };
 
-  window.addEventListener('error', ignoreResizeObserverError);
+    window.addEventListener('error', hideError);
+    return () => {
+      window.addEventListener('error', hideError);
+    };
+  }, []);
 
   return (
     <React.Fragment>
@@ -61,7 +73,12 @@ const App = () => {
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route exact path="/add-org" name="addorganization" element={<OrganizationAdd />} />
             <Route exact path="/PrivacyPolicy" name="PrivacyPolicy" element={<PrivacyPolicy />} />
-            <Route exact path="/pricingDetails" name="pricingDetails" element={<PricingDetails />} />
+            <Route
+              exact
+              path="/pricingDetails"
+              name="pricingDetails"
+              element={<PricingDetails />}
+            />
             <Route exact path="/TermsOfUse" name="TermsOfUse" element={<TermsOfUse />} />
             <Route
               exact

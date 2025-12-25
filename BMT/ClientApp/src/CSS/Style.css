@@ -20,7 +20,6 @@
 .summary-container {
   border-bottom: 1px solid #05223f;
 }
-/* Fix ResizeObserver loop limit exceeded */
 
 .sidebar-nav {
   --cui-sidebar-nav-link-color: #ffffff; /* your custom color */
@@ -4362,4 +4361,250 @@ select {
 .rdg *::after {
   box-sizing: content-box;
   outline: none !important;
+}
+/* City Badge Confidence Styles - Add to your global CSS file */
+
+/* High Confidence Badge (Green) */
+.badge-high-confidence {
+  background-color: rgba(25, 135, 84, 0.15) !important;
+  color: #198754 !important;
+  border: 1px solid rgba(25, 135, 84, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Medium Confidence Badge (Yellow/Warning) */
+.badge-medium-confidence {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+  color: #ffc107 !important;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Low Confidence Badge (Gray) */
+.badge-low-confidence {
+  background-color: rgba(108, 117, 125, 0.15) !important;
+  color: #6c757d !important;
+  border: 1px solid rgba(108, 117, 125, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Alternative Matches Badge (Blue) */
+.badge-alternative-matches {
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  color: #0d6efd !important;
+  border: 1px solid rgba(13, 110, 253, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Hover Effects */
+.badge-high-confidence:hover {
+  background-color: rgba(25, 135, 84, 0.25) !important;
+  border-color: rgba(25, 135, 84, 0.5);
+}
+
+.badge-medium-confidence:hover {
+  background-color: rgba(255, 193, 7, 0.25) !important;
+  border-color: rgba(255, 193, 7, 0.5);
+}
+
+.badge-low-confidence:hover {
+  background-color: rgba(108, 117, 125, 0.25) !important;
+  border-color: rgba(108, 117, 125, 0.5);
+}
+
+.badge-alternative-matches:hover {
+  background-color: rgba(13, 110, 253, 0.25) !important;
+  border-color: rgba(13, 110, 253, 0.5);
+}
+
+/* Cursor pointer for interactive elements */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Tooltip styling for city badge */
+.city-badge-tooltip {
+  max-width: 300px !important;
+  text-align: left;
+}
+
+.city-badge-tooltip .tooltip-inner {
+  background-color: #1a2332;
+  border: 1px solid #495d73;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Animation for badge appearance */
+@keyframes fadeInBadge {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.badge-high-confidence,
+.badge-medium-confidence,
+.badge-low-confidence,
+.badge-alternative-matches {
+  animation: fadeInBadge 0.2s ease-in-out;
+}
+
+/* Dark theme specific adjustments */
+.rdg-dark .badge-high-confidence {
+  background-color: rgba(25, 135, 84, 0.2) !important;
+}
+
+.rdg-dark .badge-medium-confidence {
+  background-color: rgba(255, 193, 7, 0.2) !important;
+}
+
+.rdg-dark .badge-low-confidence {
+  background-color: rgba(108, 117, 125, 0.2) !important;
+}
+
+.rdg-dark .badge-alternative-matches {
+  background-color: rgba(13, 110, 253, 0.2) !important;
+}
+
+/* City name styling */
+.city-name-primary {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Confidence indicator dot */
+.confidence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.confidence-dot.high {
+  background-color: #198754;
+  box-shadow: 0 0 4px rgba(25, 135, 84, 0.5);
+}
+
+.confidence-dot.medium {
+  background-color: #ffc107;
+  box-shadow: 0 0 4px rgba(255, 193, 7, 0.5);
+}
+
+.confidence-dot.low {
+  background-color: #6c757d;
+  box-shadow: 0 0 4px rgba(108, 117, 125, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .badge-high-confidence,
+  .badge-medium-confidence,
+  .badge-low-confidence,
+  .badge-alternative-matches {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+  }
+}
+
+/* Footer city stats styling */
+.city-stats-footer {
+  background-color: #0a1a2c;
+  border-top: 1px solid #495d73;
+  padding: 8px 12px;
+}
+
+.city-stats-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+/* Enhance readability in data grid */
+.rdg-cell .badge-high-confidence,
+.rdg-cell .badge-medium-confidence,
+.rdg-cell .badge-low-confidence {
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* Loading state for city detection */
+.city-loading {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.city-loading::after {
+  content: '...';
+  animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '.';
+  }
+  33% {
+    content: '..';
+  }
+  66% {
+    content: '...';
+  }
+}
+
+/* Error state for city detection */
+.city-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+}
+
+/* Success state with checkmark */
+.city-detected-success {
+  color: #198754;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Compact view for mobile */
+@media (max-width: 576px) {
+  .badge-alternative-matches {
+    display: none; /* Hide alternative count on very small screens */
+  }
+
+  .city-stats-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+.badge-icon {
+  width: 0.8rem !important;
+  height: 0.8rem !important;
 }

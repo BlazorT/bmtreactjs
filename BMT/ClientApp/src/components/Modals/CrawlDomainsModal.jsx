@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import { cilChevronBottom, cilClock, cilFilter, cilGlobeAlt } from '@coreui/icons';
-import { CCol, CRow } from '@coreui/react';
+import { cilChevronBottom, cilClock, cilFilter, cilGlobeAlt, cilInfo } from '@coreui/icons';
+import { CCol, CRow, CTooltip } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { formValidator } from 'src/helpers/formValidator';
@@ -15,6 +15,7 @@ import Form from '../UI/Form';
 import ImportContactsGrid from '../MailImports/ImportContactsGrid';
 import DataGridHeader from '../DataGridComponents/DataGridHeader';
 import AppContainer from '../UI/AppContainer';
+import CIcon from '@coreui/icons-react';
 
 const CrawlDomainsModal = ({
   isOpen,
@@ -69,7 +70,6 @@ const CrawlDomainsModal = ({
       return;
     }
 
-    // Convert URLs string to array
     const urlsArray = crawlData.urls
       .split('\n')
       .map((url) => url.trim())
@@ -94,6 +94,7 @@ const CrawlDomainsModal = ({
       filterCountry: crawlData.filterCountry || undefined,
       filterCity: crawlData.filterCity || undefined,
     };
+
     setCrawlResults(null);
     console.log({ payload });
     const res = await postData(payload);
@@ -138,6 +139,7 @@ const CrawlDomainsModal = ({
 
   const results = crawlResults?.results ?? [];
 
+  // Transform API response to grid format with city data
   const rows = results.flatMap((r) => {
     const emailRows = (r.emails ?? [])
       .filter((e) => e?.value)
@@ -146,6 +148,10 @@ const CrawlDomainsModal = ({
         content: e.value,
         name: '--',
         country: e?.location?.country?.name || '--',
+        countryCode: e?.location?.country?.code || '',
+        countryConfidence: e?.location?.country?.confidence || '',
+        city: e?.location?.city || '--',
+        cityMatches: e?.location?.cityMatches || [],
         source: e?.sourceUrls?.[0] || '--',
       }));
 
@@ -156,11 +162,28 @@ const CrawlDomainsModal = ({
         content: c.value,
         name: '--',
         country: c?.location?.country?.name || '--',
+        countryCode: c?.location?.country?.code || '',
+        countryConfidence: c?.location?.country?.confidence || '',
+        city: c?.location?.city || '--',
+        cityMatches: c?.location?.cityMatches || [],
         source: c?.sourceUrls?.[0] || '--',
       }));
 
     return [...emailRows, ...contactRows];
   });
+
+  // Calculate city detection statistics
+  const cityStats = {
+    totalContacts: rows.length,
+    withCity: rows.filter((r) => r.city && r.city !== '--').length,
+    highConfidence: rows.filter((r) => r.cityMatches?.some((m) => m.confidence === 'high')).length,
+    mediumConfidence: rows.filter(
+      (r) =>
+        r.cityMatches?.some((m) => m.confidence === 'medium') &&
+        !r.cityMatches?.some((m) => m.confidence === 'high'),
+    ).length,
+    withAlternatives: rows.filter((r) => r.cityMatches?.length > 1).length,
+  };
 
   return (
     <Modal isOpen={isOpen} size="xl" centered>
@@ -317,7 +340,8 @@ const CrawlDomainsModal = ({
                       <h5 className="mb-0 fw-bold">Crawl Results</h5>
                     </div>
                     <div className="card-body rounded-0 input-bg">
-                      <div className="row">
+                      {/* Summary Row */}
+                      <div className="row mb-3">
                         <div className="col-md-3">
                           <strong>Domains Processed:</strong>
                           <p className="mb-0">{crawlResults.summary.domainsProcessed}</p>
@@ -338,8 +362,55 @@ const CrawlDomainsModal = ({
                         </div>
                       </div>
 
+                      {/* City Detection Statistics */}
+                      {cityStats.withCity > 0 && (
+                        <div className="row mb-3 border-top pt-3">
+                          <div className="col-12 mb-2">
+                            <strong className="d-flex align-items-center gap-2">
+                              City Detection Statistics
+                              <CTooltip content="Shows how many contacts have cities detected and their confidence levels">
+                                <CIcon icon={cilInfo} size="sm" className="text-muted" />
+                              </CTooltip>
+                            </strong>
+                          </div>
+                          <div className="col-md-3">
+                            <div className="d-flex align-items-center gap-2">
+                              <span>With City:</span>
+                              <span className="badge badge-high-confidence">
+                                {cityStats.withCity} / {cityStats.totalContacts}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="col-md-3">
+                            <div className="d-flex align-items-center gap-2">
+                              <span>High Confidence:</span>
+                              <span className="badge badge-high-confidence">
+                                {cityStats.highConfidence}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="col-md-3">
+                            <div className="d-flex align-items-center gap-2">
+                              <span>Medium Confidence:</span>
+                              <span className="badge badge-medium-confidence">
+                                {cityStats.mediumConfidence}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="col-md-3">
+                            <div className="d-flex align-items-center gap-2">
+                              <span>With Alternatives:</span>
+                              <span className="badge badge-alternative-matches">
+                                {cityStats.withAlternatives}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Applied Filters */}
                       {crawlResults.appliedFilters && (
-                        <div className="mt-3">
+                        <div className="mt-3 border-top pt-3">
                           <strong>Applied Filters:</strong>
                           <p className="mb-0">
                             {crawlResults.appliedFilters.country &&
@@ -351,24 +422,46 @@ const CrawlDomainsModal = ({
                       )}
 
                       {/* Detailed Results by Domain */}
-                      <div className="mt-3">
+                      <div className="mt-3 border-top pt-3">
                         <strong>Details by Domain:</strong>
-                        {crawlResults.results.map((result, index) => (
-                          <div key={index} className="border-top pt-2 mt-2">
-                            <p className="mb-1">
-                              <strong>{result.domain}</strong> - {result.pagesCrawled} pages
-                            </p>
-                            <p className="mb-0 text-muted small">
-                              Emails: {result.emails.length} | Phones: {result.phones.length} |
-                              WhatsApp: {result.whatsapp.length}
-                            </p>
-                          </div>
-                        ))}
+                        {crawlResults.results.map((result, index) => {
+                          const domainCityCount = [
+                            ...result.emails,
+                            ...result.phones,
+                            ...result.whatsapp,
+                          ].filter((c) => c?.location?.city).length;
+
+                          return (
+                            <div key={index} className="border-top pt-2 mt-2">
+                              <p className="mb-1">
+                                <strong>{result.domain}</strong> - {result.pagesCrawled} pages
+                                {result.country && (
+                                  <span className="ms-2 text-muted">({result.country.name})</span>
+                                )}
+                              </p>
+                              <div className="d-flex gap-3">
+                                <p className="mb-0 text-muted small">
+                                  Emails: {result.emails.length} | Phones: {result.phones.length} |
+                                  WhatsApp: {result.whatsapp.length}
+                                </p>
+                                {domainCityCount > 0 && (
+                                  <p className="mb-0 small">
+                                    <span className="badge badge-high-confidence">
+                                      {domainCityCount} with city
+                                    </span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                 </CCol>
               </CRow>
+
+              {/* Contact Grid */}
               {rows?.length > 0 && (
                 <CCol md="12">
                   <ImportContactsGrid

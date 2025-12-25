@@ -1,25 +1,7 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
+/* eslint-disable react/react-in-jsx-scope */
+import { AppContent, AppHeader, AppSidebar } from '../components/index';
 
 const DefaultLayout = () => {
-  //useEffect(() => {
-  //  const divElem = document.querySelector('body > div');
-  //  if (!divElem) return;
-
-  //  const resizeObserver = new ResizeObserver((entries) => {
-  //    for (let entry of entries) {
-  //      // If you want to do something when body > div resizes:
-  //      console.log('Resized:', entry.contentRect);
-  //    }
-  //  });
-
-  //  resizeObserver.observe(divElem);
-
-  //  return () => {
-  //    resizeObserver.disconnect();
-  //  };
-  //}, []);
   return (
     <div>
       <AppSidebar />
