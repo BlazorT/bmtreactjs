@@ -4363,7 +4363,9 @@ select {
   outline: none !important;
 }
 /* City Badge Confidence Styles - Add to your global CSS file */
-
+.badge {
+  width: max-content !important;
+}
 /* High Confidence Badge (Green) */
 .badge-high-confidence {
   background-color: rgba(25, 135, 84, 0.15) !important;

@@ -295,13 +295,32 @@ const AddScheduleModel = (prop) => {
     selectedDays,
     startDate,
     endDate,
+    startTime,
+    finishTime,
     intervalTypeId,
     interval,
     templateForPricing,
   ) => {
+    const sDate = startDate;
+    const eDate = endDate;
+    const sTime = dayjs(startTime).local();
+    const eTime = dayjs(finishTime).local();
+
+    const combinedStart = dayjs(sDate)
+      .hour(sTime.hour())
+      .minute(sTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    const combinedEnd = dayjs(eDate)
+      .hour(eTime.hour())
+      .minute(eTime.minute())
+      .second(0)
+      .millisecond(0);
+
     const validDays = calculateValidDays({
-      startTime: startDate,
-      finishTime: endDate,
+      startTime: combinedStart,
+      finishTime: combinedEnd,
       days: selectedDays,
       intervalTypeId,
       interval,
@@ -610,7 +629,10 @@ const AddScheduleModel = (prop) => {
         const postTypeIds = selectedPostTypes[networkName] || [];
         const templateJson = selectedTemplates[networkName]
           ? JSON.stringify({
-              template: selectedTemplates[networkName]?.template || '',
+              template:
+                n?.id == 2
+                  ? selectedTemplates[networkName]?.templateJson || ''
+                  : selectedTemplates[networkName]?.template || '',
               subject: selectedTemplates[networkName]?.subject || '',
               title: selectedTemplates[networkName]?.title || '',
             })
@@ -867,6 +889,8 @@ const AddScheduleModel = (prop) => {
       campaignRegData.selectedDays,
       campaignRegData.startDate,
       campaignRegData.endDate,
+      campaignRegData.startTime,
+      campaignRegData.finishTime,
       campaignRegData.intervalTypeId,
       campaignRegData.Intervalval,
       templateForPricing,
@@ -876,6 +900,8 @@ const AddScheduleModel = (prop) => {
     selectedAlbumList,
     (campaignRegData.selectedDays || []).join('|'), // ✅ detect days changes
     campaignRegData.startDate ? +new Date(campaignRegData.startDate) : 0, // ✅ convert to timestamp
+    campaignRegData.startTime ? +new Date(campaignRegData.startTime) : 0, // ✅ convert to timestamp
+    campaignRegData.finishTime ? +new Date(campaignRegData.finishTime) : 0, // ✅ convert to timestamp
     campaignRegData.endDate ? +new Date(campaignRegData.endDate) : 0,
     campaignRegData.intervalTypeId ? campaignRegData.intervalTypeId : 0,
     campaignRegData.Intervalval ? campaignRegData.Intervalval : 0,

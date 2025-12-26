@@ -33,7 +33,7 @@ export async function exportToPdf(
   const reportName = namePart?.[0] || '';
 
   const doc = new jsPDF({
-    orientation: 'portrait',
+    orientation: 'landscape',
     unit: 'mm',
     format: 'a4',
   });

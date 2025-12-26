@@ -110,7 +110,7 @@ const Inputs = ({
       {children}
 
       {isBtn !== false && (
-        <CRow className="CenterAlign gap-3">
+        <CRow className="CenterAlign gap-3 mt-2">
           <Button title="Cancel" onClick={() => confirmationModal()} disabled={submitting} />
           <Button
             title={submitting ? 'Submitting...' : submitBtnTitle} // ✅ show submitting text

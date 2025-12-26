@@ -102,7 +102,7 @@ const campaignadd = () => {
 
   const networkSettingBody = useMemo(
     () => ({
-      id: '1',
+      id: '0',
       orgId: user?.orgId?.toString(),
     }),
     [user],
@@ -143,16 +143,20 @@ const campaignadd = () => {
     [selectedTemplates],
   );
 
-  const networkSettingsTemplate = useMemo(
-    () => safeParse(networkSettingsData?.[0]?.custom1, null)?.template || null,
-    [networkSettingsData],
-  );
+  const networkSettingsTemplate = useMemo(() => {
+    const findSmsSetting = networkSettingsData?.find((n) => n?.networkId === 1);
+    return safeParse(findSmsSetting?.custom1, null)?.template || null;
+  }, [networkSettingsData]);
+
+  const whatsAppNetworkSettings = useMemo(() => {
+    const findWhatsappSetting = networkSettingsData?.find((n) => n?.networkId === 2);
+    return findWhatsappSetting || null;
+  }, [networkSettingsData]);
 
   const globalSMSTemplate = useMemo(
     () => templatesData?.find((t) => t?.networkId === 1)?.template || null,
     [templatesData],
   );
-
   // Normalize attachments
   // Normalize attachments and categorize
   const categorizeAttachments = (attachmentsArray = []) => {
@@ -889,6 +893,7 @@ const campaignadd = () => {
           selectedTemplates={selectedTemplates}
           handleTemplateToggle={handleTemplateToggleWithValidation}
           setSelectedTemplates={setSelectedTemplates}
+          whatsAppNetworkSettings={whatsAppNetworkSettings}
         />
       )}
       {tabs[activeTab] && tabs[activeTab].name === 'Schedule' && (

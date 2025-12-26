@@ -4,22 +4,22 @@ import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
-import AddTemplateModal from 'src/components/Modals/AddTemplateModel';
+import AddVariableModal from 'src/components/Modals/AddVariableModal';
 import AppContainer from 'src/components/UI/AppContainer';
-import { getTemplateCols } from 'src/configs/ColumnsConfig/templateGridCols';
-import { getTemplateFilters } from 'src/configs/FiltersConfig/templateFilterConfig';
+import { getVariableCols } from 'src/configs/ColumnsConfig/variableGridCols';
+import { getVariableFilters } from 'src/configs/FiltersConfig/variableFilterConfig';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
+import { useNavigate } from 'react-router-dom';
 
-const GlobalTemplates = () => {
+const VariablesGridView = () => {
   const pageRoles = usePageRoles('Global Template');
-
-  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const [isShowFilters, setIsShowFilters] = React.useState(false);
   const [isShowGrid, setIsShowGrid] = React.useState(true);
-  const [isTemplateModelOpen, setIsTemplateModalOpen] = React.useState(false);
+  const [isVariableModelOpen, setIsVariableModalOpen] = React.useState(false);
   const [filters, setFilters] = useState({
     keyword: '',
     status: '',
@@ -35,14 +35,6 @@ const GlobalTemplates = () => {
     [filters],
   );
 
-  const networkSettingBody = useMemo(
-    () => ({
-      id: '2',
-      orgId: user?.orgId?.toString(),
-    }),
-    [user],
-  );
-
   const {
     data,
     loading,
@@ -50,14 +42,8 @@ const GlobalTemplates = () => {
     postData: refectch,
   } = useApi('Template/campaigntemplatesallnetworks', 'POST', requestData);
 
-  const { data: networkSettingsData, loading: networkSettingsLoading } = useApi(
-    '/Organization/orgpackagedetails',
-    'POST',
-    networkSettingBody,
-  );
-
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
-  const toggleShowTemplateModal = () => setIsTemplateModalOpen((prev) => !prev);
+  const toggleShowVariableModal = () => setIsVariableModalOpen((prev) => !prev);
   const toggleShowGrid = () => setIsShowGrid((prev) => !prev);
 
   const changeFilter = (e) => {
@@ -79,9 +65,9 @@ const GlobalTemplates = () => {
     });
     fetching();
   };
-  const whatsappNetworkSettings = networkSettingsData?.data?.[0] || null;
-  const templateFilterFields = getTemplateFilters(filters, changeFilter);
-  const tamplateListCols = getTemplateCols(pageRoles?.canDelete, fetching, whatsappNetworkSettings);
+
+  const variableFilterFields = getVariableFilters(filters, changeFilter);
+  const variableListCols = getVariableCols(pageRoles?.canDelete, fetching);
   return (
     <React.Fragment>
       <AppContainer>
@@ -95,42 +81,42 @@ const GlobalTemplates = () => {
           <CustomFilters
             filters={filters}
             handleReset={handleReset}
-            filterFields={templateFilterFields}
+            filterFields={variableFilterFields}
           />
         )}
       </AppContainer>
       <AppContainer>
         <CustomDatagrid
           rows={data?.data || []}
-          columns={tamplateListCols}
+          columns={variableListCols}
           pagination={true}
           rowSelection={false}
           rowHeight={50}
-          loading={loading || networkSettingsLoading}
+          loading={loading || !data}
           noRowsMessage={error ? 'Error Fetching data' : ''}
           sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
           showGrid={isShowGrid}
           headerProps={{
-            title: 'BMT Templates',
+            title: 'BMT Variables',
             onClick: toggleShowGrid,
             filterDisable: true,
-            addButton: pageRoles.canAdd === 1 ? 'Template' : '',
-            addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowTemplateModal() : undefined,
+            addButton: pageRoles.canAdd === 1 ? 'Variable' : '',
+            addBtnClick: () => navigate('/AddVariable'),
+            //addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowVariableModal() : undefined,
             otherControls: [{ icon: cilChevronBottom, fn: toggleShowGrid }],
             canPrint: pageRoles?.canPrint === 1,
             canExport: pageRoles?.canExport === 1,
-            fileName: 'Templates',
+            fileName: 'Variables',
           }}
         />
-        <AddTemplateModal
-          isOpen={isTemplateModelOpen}
-          toggle={toggleShowTemplateModal}
+        <AddVariableModal
+          isOpen={isVariableModelOpen}
+          toggle={toggleShowVariableModal}
           fetchTemplates={fetching}
-          whatsappNetworkSettings={whatsappNetworkSettings}
         />
       </AppContainer>
     </React.Fragment>
   );
 };
 
-export default GlobalTemplates;
+export default VariablesGridView;

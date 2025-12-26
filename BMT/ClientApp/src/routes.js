@@ -5,7 +5,9 @@ const OrganizationAdd = React.lazy(() => import('./pages/DA/organizationadd'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
 const pricingDetails = React.lazy(() => import('./pages/Admin/pricingDetails'));
 const GlobalTemplates = React.lazy(() => import('./pages/Admin/GlobalTemplates'));
+const VariablesGridView = React.lazy(() => import('./pages/Admin/VariablesGridView'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
+const AddVariable = React.lazy(() => import('./pages/Admin/AddVariable'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
@@ -30,12 +32,14 @@ export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
   { path: 'globaltemplate', name: 'GlobalTemplates', element: GlobalTemplates },
+  { path: 'VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
   { path: '/Notification', name: 'Notification', element: Notification },
   { path: '/Packages', name: 'Packages', element: Packages },
   { path: '/pricingDetails', name: 'pricingDetails', element: pricingDetails },
   { path: '/pricing', name: 'pricing', element: pricing },
+  { path: '/AddVariable', name: 'AddVariable', element: AddVariable },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
@@ -51,10 +55,12 @@ export const routes = [
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
+  { path: '/VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
   //{ path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
   { path: '/pricing', name: 'pricing', element: pricing },
+  { path: '/AddVariable', name: 'AddVariable', element: AddVariable },
   { path: '/bmtRoles', name: 'bmtRoles', element: BmtRoles },
   { path: '/recipientsGrid', name: 'recipientsGrid', element: RecipientsGrid },
   { path: '/Packages', name: 'Packages', element: Packages },

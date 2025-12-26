@@ -1,28 +1,14 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import {
-  CListGroup,
-  CListGroupItem,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CBadge,
-} from '@coreui/react';
+import { CBadge, CCard, CListGroup, CListGroupItem } from '@coreui/react';
 import { useEffect } from 'react';
+import { getStatusColor } from 'src/helpers/campaignHelper';
 import useApi from 'src/hooks/useApi';
 import Spinner from '../UI/Spinner';
-import { getStatusColor } from 'src/helpers/campaignHelper';
 import { useShowToast } from 'src/hooks/useShowToast';
 
-const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT }) => {
+const WhatsappTemplate = ({ onSelect, WABA, WAT }) => {
   const showToast = useShowToast();
-
-  const {
-    data,
-    loading,
-    postData: fetchTemplates,
-  } = useApi('Template/campaigntemplatesallnetworks');
-
   const {
     data: whatsappTemplateData,
     loading: whatsappTemplatesLoading,
@@ -32,24 +18,16 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
   });
 
   useEffect(() => {
-    if (isOpen && networkId) {
-      if (Number(networkId) === 2 && WAT && WABA) {
-        fetchWhatsappTemplates();
-      } else {
-        fetchTemplates({
-          keyword: '',
-          status: 1,
-          networkId,
-        });
-      }
+    if (WAT && WABA) {
+      fetchWhatsappTemplates();
     }
-  }, [isOpen, networkId, WAT, WABA]);
+  }, [WAT, WABA]);
 
   useEffect(() => {
-    if (isOpen && whatsappTemplateData?.error?.message) {
+    if (whatsappTemplateData?.error?.message) {
       showToast(whatsappTemplateData?.error?.message, 'error');
     }
-  }, [isOpen, whatsappTemplateData]);
+  }, [whatsappTemplateData]);
 
   const truncateText = (text, maxLength = 100) => {
     if (!text) return '';
@@ -77,7 +55,6 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
             networkId: 2,
             whatsappTemplate: template, // full template data
           });
-          toggle();
         }}
       >
         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -160,73 +137,20 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
     );
   };
 
-  const renderRegularTemplate = (template, templateIndex) => (
-    <CListGroupItem
-      key={template.id || templateIndex}
-      className="px-2 py-2 border-start-0 rounded border-end-0"
-      style={{ cursor: 'pointer' }}
-      onClick={() => {
-        onSelect(template);
-        toggle();
-      }}
-    >
-      <div className="d-flex justify-content-between align-items-start">
-        <div className="flex-grow-1">
-          <div className="fw-semibold text-primary small mb-1">Name : {template.name}</div>
-          {template.title && (
-            <div className="text-primary small mb-1">
-              <strong>Title :</strong> {template.title}
-            </div>
-          )}
-          {template.subject && (
-            <div className="text-primary small mb-1">
-              <strong>Subject :</strong> {truncateText(template.subject, 50)}
-            </div>
-          )}
-          {template.template && (
-            <div className="text-primary small">
-              <strong>Content:</strong> {truncateText(template.template, 80)}
-            </div>
-          )}
-        </div>
-      </div>
-    </CListGroupItem>
-  );
-
-  const isWhatsApp = Number(networkId) === 2;
-  const templates = isWhatsApp ? whatsappTemplateData?.data || [] : data?.data || [];
-  const isLoading = isWhatsApp ? whatsappTemplatesLoading : loading;
+  const templates = whatsappTemplateData?.data || [];
+  const isLoading = whatsappTemplatesLoading;
 
   return (
-    <CModal
-      visible={isOpen}
-      // onClose={toggle}
-      alignment="center"
-      size={isWhatsApp ? 'lg' : 'sm'}
-      className="template-list-model"
-      aria-labelledby="template-modal"
-      aria-describedby="template-in-full-view"
-    >
-      <CModalHeader closeButton={true}>
-        <CModalTitle>
-          {isWhatsApp ? 'WhatsApp Templates' : 'Templates'}
-          {templates.length > 0 && (
-            <CBadge color="primary" className="ms-2">
-              {templates.length}
-            </CBadge>
-          )}
-        </CModalTitle>
-      </CModalHeader>
-
+    <CCard className="mt-2">
       {isLoading ? (
         <Spinner />
       ) : templates.length === 0 ? (
         <div className="p-4 text-center text-muted">
           <div className="mb-2">📭</div>
           <div>
-            {isWhatsApp
-              ? 'No WhatsApp templates found. Please create templates in Meta Business Suite first.'
-              : 'No templates available. Create one to get started.'}
+            {!WAT || !WAT
+              ? 'Provide whatsapp buisness account id and access token to see templates'
+              : 'No WhatsApp templates found. Please create templates in Meta Business Suite first.'}
           </div>
         </div>
       ) : (
@@ -234,13 +158,11 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
           className="list-group-flush"
           style={{ maxHeight: '600px', overflowY: 'auto', rowGap: 6, padding: 20 }}
         >
-          {isWhatsApp
-            ? templates.map(renderWhatsAppTemplate)
-            : templates.map((template, idx) => renderRegularTemplate(template, idx))}
+          {templates.map(renderWhatsAppTemplate)}
         </CListGroup>
       )}
-    </CModal>
+    </CCard>
   );
 };
 
-export default TemplateListModel;
+export default WhatsappTemplate;

@@ -1,9 +1,9 @@
-import TemplateActionCell from 'src/components/DataGridCustomCells/TemplateActionCell';
+import VariableActionCell from 'src/components/DataGridCustomCells/VariableActionCell';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import globalutil from 'src/util/globalutil';
 
 /* eslint-disable react/react-in-jsx-scope */
-export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) => [
+export const getVariableCols = (canDelete, fetching) => [
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
@@ -42,17 +42,7 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     key: 'template',
     editable: false,
     renderCell: (params) => {
-      const networkTemplate =
-        params.row.networkId == 2
-          ? params.row?.templateJson
-            ? JSON.parse(params.row?.templateJson)
-            : ''
-          : params.row?.template;
-      const template =
-        typeof networkTemplate === 'string'
-          ? networkTemplate
-          : networkTemplate?.components?.find((c) => c.type === 'BODY')?.text || '--';
-      return <div title={params.row?.template}>{template?.slice(0, 20)}...</div>;
+      return <div title={params.row?.template}>{params.row?.template?.slice(0, 20)}...</div>;
     },
   },
   {
@@ -74,14 +64,7 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     key: 'action',
     editable: false,
     renderCell: (params) => {
-      return (
-        <TemplateActionCell
-          canDelete={canDelete}
-          template={params.row}
-          fetching={fetching}
-          whatsappNetworkSettings={whatsappNetworkSettings}
-        />
-      );
+      return <VariableActionCell canDelete={canDelete} template={params.row} fetching={fetching} />;
     },
   },
 ];

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'; // Import Record for type definition
 
 import { initialOptions } from 'src/constants/initialOptionsApi';
@@ -15,7 +16,12 @@ interface ApiPostState<T> {
 
 const CRAWLER_API_KEY = process.env.REACT_APP_BMT_SERVIVE_API_KEY;
 
-const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPostState<T> => {
+const useApi = <T>(
+  url: string,
+  method: string = 'POST',
+  initialData?: T,
+  headers?: any,
+): ApiPostState<T> => {
   const [data, setData] = useState<T | null>(initialData || null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,17 +39,19 @@ const useApi = <T>(url: string, method: string = 'POST', initialData?: T): ApiPo
         ...initialOptions,
         method,
         body,
-        headers: url?.includes(process.env.REACT_APP_BMT_SERVIVE || '')
-          ? {
-              'Content-Type': 'application/json',
-              'x-api-key': String(CRAWLER_API_KEY),
-            }
-          : isFormData
-            ? undefined // Let the browser set the Content-Type for FormData
-            : initialOptions.headers,
+        headers: headers
+          ? headers
+          : url?.includes(process.env.REACT_APP_BMT_SERVIVE || '')
+            ? {
+                'Content-Type': 'application/json',
+                'x-api-key': String(CRAWLER_API_KEY),
+              }
+            : isFormData
+              ? undefined // Let the browser set the Content-Type for FormData
+              : initialOptions.headers,
       });
       if (!response.ok) {
-        showToast(`API error: ${response.statusText}`);
+        showToast(`API error: ${response.status}`, 'error');
       }
 
       const responseData = await response.json();

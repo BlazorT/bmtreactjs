@@ -143,21 +143,21 @@ const PricingDetails = () => {
   // GRID COLUMNS
   // =======================
   const individualColumns = [
-    { key: 'network', name: 'Network',},
-    { key: 'messages', name: 'Messages',  },
-    { key: 'duration', name: 'Duration',  },
-    { key: 'pricePerMsg', name: 'Price / Msg', },
-    { key: 'totalPrice', name: 'Total Price',  },
-    { key: 'type', name: 'Type',  },
+    { key: 'network', name: 'Network' },
+    { key: 'messages', name: 'Messages' },
+    { key: 'duration', name: 'Duration' },
+    { key: 'pricePerMsg', name: 'Price / Msg' },
+    { key: 'totalPrice', name: 'Total Price' },
+    { key: 'type', name: 'Type' },
   ];
 
   const comboColumns = [
-    { key: 'bundle', name: 'Bundle',  },
-    { key: 'waConversations', name: 'WA Conversations', },
-    { key: 'included', name: 'Included Features', },
-    { key: 'duration', name: 'Duration',},
-    { key: 'totalPrice', name: 'Total Price',  },
-    { key: 'type', name: 'Type',  },
+    { key: 'bundle', name: 'Bundle' },
+    { key: 'waConversations', name: 'WA Conversations' },
+    { key: 'included', name: 'Included Features' },
+    { key: 'duration', name: 'Duration' },
+    { key: 'totalPrice', name: 'Total Price' },
+    { key: 'type', name: 'Type' },
   ];
 
   const columns = pricingMode === 'individual' ? individualColumns : comboColumns;
@@ -167,7 +167,6 @@ const PricingDetails = () => {
   // =======================
   return (
     <AppContainer>
-
       <CRow className="justify-content-center mb-4">
         <CCol xs="auto">
           <h2>Pricing Details</h2>
@@ -188,16 +187,18 @@ const PricingDetails = () => {
           <CCardBody>
             <CRow className="g-4">
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Free</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$0</span>
                       <span className="text-muted"> / One Time</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Start Free</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Start Free
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
-                      <CListGroupItem>✓  10 emails/One Time</CListGroupItem>
+                      <CListGroupItem>✓ 10 emails/One Time</CListGroupItem>
                       <CListGroupItem>✓ Basic templates</CListGroupItem>
                       <CListGroupItem>✓ Analytics</CListGroupItem>
                     </CListGroup>
@@ -205,8 +206,11 @@ const PricingDetails = () => {
                 </CCard>
               </CCol>
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 10%
                   </CBadge>
                   <h5 className="mt-5">Starter</h5>
@@ -214,7 +218,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$10</span>
                     <span className="text-muted"> / 1 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 5,000 emails/ 1 month</CListGroupItem>
                     <CListGroupItem>✓ Custom templates</CListGroupItem>
@@ -223,8 +229,11 @@ const PricingDetails = () => {
                 </CCard>
               </CCol>
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 15%
                   </CBadge>
                   <h5 className="mt-5">Premium</h5>
@@ -232,7 +241,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$15</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 10,000 emails/ 6 month</CListGroupItem>
                     <CListGroupItem>✓ Custom templates</CListGroupItem>
@@ -242,8 +253,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 20%
                   </CBadge>
                   <h5 className="mt-5">Business</h5>
@@ -251,7 +265,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$49</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 50,000 emails/Yearly</CListGroupItem>
                     <CListGroupItem>✓ Automation workflows</CListGroupItem>
@@ -259,8 +275,6 @@ const PricingDetails = () => {
                   </CListGroup>
                 </CCard>
               </CCol>
-
-
             </CRow>
           </CCardBody>
         </CCollapse>
@@ -281,14 +295,16 @@ const PricingDetails = () => {
             <CRow className="g-4">
               {/* Pay-as-you-go */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Pay As You Go</h5>
                     <div className="">
                       <span className="fs-1 fw-bold">$0.02</span>
                       <span className="text-muted"> / SMS</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Get Started</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Get Started
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ No monthly commitment</CListGroupItem>
                       <CListGroupItem>✓ Instant delivery</CListGroupItem>
@@ -300,9 +316,12 @@ const PricingDetails = () => {
 
               {/* 5,000 SMS */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
-                    <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                    <CBadge
+                      color="warning"
+                      className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                    >
                       SAVE 10%
                     </CBadge>
                     <h5 className="mt-5">Bulk 5K</h5>
@@ -311,7 +330,9 @@ const PricingDetails = () => {
                       <span className="fs-1 fw-bold">$75</span>
                       <span className="text-muted"> / Monthly</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Buy Now</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Buy Now
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ 5,000 SMS credits</CListGroupItem>
                       <CListGroupItem>✓ Valid for 12 months</CListGroupItem>
@@ -323,8 +344,11 @@ const PricingDetails = () => {
 
               {/* 10,000 SMS */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 15%
                   </CBadge>
                   <h5 className="mt-5">Bulk 10K</h5>
@@ -333,7 +357,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$140</span>
                     <span className="text-muted"> / 6 Month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 10,000 SMS credits</CListGroupItem>
                     <CListGroupItem>✓ Valid for 6 months</CListGroupItem>
@@ -344,8 +370,11 @@ const PricingDetails = () => {
 
               {/* Monthly Plan */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 20%
                   </CBadge>
                   <h5 className="mt-5">Yearly</h5>
@@ -353,7 +382,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$50</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Subscribe</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Subscribe
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 3,000 SMS / Yearly</CListGroupItem>
                     <CListGroupItem>✓ Auto-renew</CListGroupItem>
@@ -366,7 +397,6 @@ const PricingDetails = () => {
         </CCollapse>
       </CCard>
 
-   
       {/* 2. FaceBook Marketing Pricing */}
       <CCard className="mb-4 shadow-sm border-0">
         <CButton
@@ -383,14 +413,16 @@ const PricingDetails = () => {
             <CRow className="g-4">
               {/* Free Plan */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Free</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$5</span>
                       <span className="text-muted"> / 1 Month</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Start Free</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Start Free
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ Organic posts & reels</CListGroupItem>
                       <CListGroupItem>✓ Page management</CListGroupItem>
@@ -403,8 +435,11 @@ const PricingDetails = () => {
 
               {/* Starter Plan */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 10%
                   </CBadge>
                   <h5 className="mt-5">Starter</h5>
@@ -412,7 +447,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$29</span>
                     <span className="text-muted"> / 3 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 20 boosted posts/month</CListGroupItem>
                     <CListGroupItem>✓ 5 reel promotions</CListGroupItem>
@@ -425,8 +462,11 @@ const PricingDetails = () => {
 
               {/* Premium Plan */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 20%
                   </CBadge>
                   <h5 className="mt-5">Premium</h5>
@@ -434,7 +474,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$79</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited boosted posts & reels</CListGroupItem>
                     <CListGroupItem>✓ 10 full ad campaigns/month</CListGroupItem>
@@ -448,8 +490,11 @@ const PricingDetails = () => {
 
               {/* Business Plan */}
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     BEST VALUE
                   </CBadge>
                   <h5 className="mt-5">Business</h5>
@@ -458,7 +503,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$149</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Everything in Premium</CListGroupItem>
                     <CListGroupItem>✓ Unlimited ad campaigns</CListGroupItem>
@@ -488,14 +535,16 @@ const PricingDetails = () => {
           <CCardBody>
             <CRow className="g-4">
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Basic</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$7</span>
                       <span className="text-muted"> / month</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Buy Now</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Buy Now
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ Organic posts & stories</CListGroupItem>
                       <CListGroupItem>✓ Profile management</CListGroupItem>
@@ -506,8 +555,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 15%
                   </CBadge>
                   <h5 className="mt-5">Growth</h5>
@@ -515,7 +567,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$49</span>
                     <span className="text-muted"> / 3 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 30 boosted posts/ 3 month</CListGroupItem>
                     <CListGroupItem>✓ Reel promotions</CListGroupItem>
@@ -526,8 +580,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     POPULAR
                   </CBadge>
                   <h5 className="mt-5">Premium</h5>
@@ -536,7 +593,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$119</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited boosts & ads</CListGroupItem>
                     <CListGroupItem>✓ Stories & carousel ads</CListGroupItem>
@@ -547,8 +606,11 @@ const PricingDetails = () => {
                 </CCard>
               </CCol>
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     POPULAR
                   </CBadge>
                   <h5 className="mt-5">Pro</h5>
@@ -557,7 +619,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$150</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited boosts & ads</CListGroupItem>
                     <CListGroupItem>✓ Stories & carousel ads</CListGroupItem>
@@ -567,8 +631,6 @@ const PricingDetails = () => {
                   </CListGroup>
                 </CCard>
               </CCol>
-
-             
             </CRow>
           </CCardBody>
         </CCollapse>
@@ -589,14 +651,16 @@ const PricingDetails = () => {
           <CCardBody>
             <CRow className="g-4">
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Starter</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$7</span>
                       <span className="text-muted"> / 1 month</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Buy Now</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Buy Now
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ Organic video posting</CListGroupItem>
                       <CListGroupItem>✓ Trend access</CListGroupItem>
@@ -607,8 +671,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 20%
                   </CBadge>
                   <h5 className="mt-5">Creator</h5>
@@ -616,7 +683,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$69</span>
                     <span className="text-muted"> / 3 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 20 promoted videos/month</CListGroupItem>
                     <CListGroupItem>✓ Spark Ads</CListGroupItem>
@@ -627,8 +696,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     BEST VALUE
                   </CBadge>
                   <h5 className="mt-5">Viral Pro</h5>
@@ -637,7 +709,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$159</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited promotions</CListGroupItem>
                     <CListGroupItem>✓ In-feed & TopView ads</CListGroupItem>
@@ -648,8 +722,11 @@ const PricingDetails = () => {
                 </CCard>
               </CCol>
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     BEST VALUE
                   </CBadge>
                   <h5 className="mt-5">Viral Premium</h5>
@@ -658,7 +735,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$159</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited promotions</CListGroupItem>
                     <CListGroupItem>✓ In-feed & TopView ads</CListGroupItem>
@@ -668,8 +747,6 @@ const PricingDetails = () => {
                   </CListGroup>
                 </CCard>
               </CCol>
-
-       
             </CRow>
           </CCardBody>
         </CCollapse>
@@ -690,14 +767,16 @@ const PricingDetails = () => {
           <CCardBody>
             <CRow className="g-4">
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Free</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$6</span>
                       <span className="text-muted"> / 1 month</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Buy Now</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Buy Now
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ Company page posts</CListGroupItem>
                       <CListGroupItem>✓ Organic reach</CListGroupItem>
@@ -708,8 +787,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 10%
                   </CBadge>
                   <h5 className="mt-5">Professional</h5>
@@ -717,7 +799,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$99</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 15 sponsored posts/ 6 month</CListGroupItem>
                     <CListGroupItem>✓ Lead gen forms</CListGroupItem>
@@ -728,8 +812,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 25%
                   </CBadge>
                   <h5 className="mt-5">Business</h5>
@@ -738,7 +825,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$224</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Unlimited sponsored content</CListGroupItem>
                     <CListGroupItem>✓ Carousel & video ads</CListGroupItem>
@@ -750,12 +839,14 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <h5 className="mt-3">Enterprise</h5>
                   <div className="my-4">
                     <span className="fs-1 fw-bold">Custom</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Contact Sales</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Contact Sales
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Full campaign management</CListGroupItem>
                     <CListGroupItem>✓ Account-based marketing</CListGroupItem>
@@ -783,14 +874,16 @@ const PricingDetails = () => {
           <CCardBody>
             <CRow className="g-4">
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <CCardBody className="d-flex flex-column">
                     <h5 className="mt-3">Per Conversation</h5>
                     <div className="my-4">
                       <span className="fs-1 fw-bold">$0.05</span>
                       <span className="text-muted"> / conversation</span>
                     </div>
-                    <CButton color="dark" className="mb-4">Get Started</CButton>
+                    <CButton color="dark" className="mb-4">
+                      Get Started
+                    </CButton>
                     <CListGroup flush className="text-start mt-auto">
                       <CListGroupItem>✓ Pay only for initiated chats</CListGroupItem>
                       <CListGroupItem>✓ Official WhatsApp API</CListGroupItem>
@@ -800,8 +893,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm position-relative">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm position-relative">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 10%
                   </CBadge>
                   <h5 className="mt-5">Bundle 1K</h5>
@@ -809,7 +905,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$45</span>
                     <span className="text-muted"> / month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Subscribe</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Subscribe
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 1,000 conversations</CListGroupItem>
                     <CListGroupItem>✓ Template messages</CListGroupItem>
@@ -818,8 +916,11 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
-                  <CBadge color="warning" className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2">
+                <CCard className="h-100 text-center border-none shadow-sm">
+                  <CBadge
+                    color="warning"
+                    className="position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2"
+                  >
                     SAVE 15%
                   </CBadge>
                   <h5 className="mt-5">Bundle 5K</h5>
@@ -828,7 +929,9 @@ const PricingDetails = () => {
                     <span className="fs-1 fw-bold">$200</span>
                     <span className="text-muted"> / 6 month</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Subscribe</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Subscribe
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ 5,000 conversations</CListGroupItem>
                     <CListGroupItem>✓ Higher limits</CListGroupItem>
@@ -837,13 +940,15 @@ const PricingDetails = () => {
               </CCol>
 
               <CCol md={6} lg={3}>
-                <CCard className="h-100 text-center border shadow-sm">
+                <CCard className="h-100 text-center border-none shadow-sm">
                   <h5 className="mt-3">Automation</h5>
                   <div className="my-4">
                     <span className="fs-1 fw-bold">$99</span>
                     <span className="text-muted"> / Yearly</span>
                   </div>
-                  <CButton color="dark" className="mb-4">Buy Now</CButton>
+                  <CButton color="dark" className="mb-4">
+                    Buy Now
+                  </CButton>
                   <CListGroup flush className="text-start mt-auto">
                     <CListGroupItem>✓ Chatbot included</CListGroupItem>
                     <CListGroupItem>✓ 2,000 conversations</CListGroupItem>
