@@ -1,7 +1,5 @@
 ﻿using com.blazor.bmt.core;
 using com.blazor.bmt.core.repositries;
-using com.blazor.bmt.infrastructure;
-using com.blazor.bmt.infrastructure.repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
