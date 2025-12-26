@@ -17,11 +17,16 @@ import AppContainer from 'src/components/UI/AppContainer';
 ================================ */
 const defaultTemplateData = {
   id: 0,
+  orgid: 0,
   name: '',
+  expression: '',
   isMandatory: 1,
-  dataType: '',
+  length: 0,
+  dataTypeId: 1,
+  fieldTypeId: 1,
   networkId: 1,
   status: 1,
+  CreatedAt: dayjs().utc().format(),
   rowVer: 1,
 };
 
@@ -35,7 +40,7 @@ const AddVariable = ({ fetchTemplates }) => {
   const user = useSelector((state) => state.user);
   const showToast = useShowToast();
   const navigate = useNavigate();
-  const { postData, loading } = useApi('Template/submitcampaigntemplate');
+  const { postData, loading } = useApi('Template/submitvariable');
 
   const [templateData, setTemplateData] = useState(
     template || defaultTemplateData,
@@ -62,6 +67,7 @@ const AddVariable = ({ fetchTemplates }) => {
       createdAt: template?.createdAt || dayjs().utc().format(),
       lastUpdatedAt: dayjs().utc().format(),
       createdBy: template?.createdBy || user?.userId,
+      orgId: user?.orgid,
       lastUpdatedBy: user?.userId,
     };
 

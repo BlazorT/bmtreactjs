@@ -12,6 +12,7 @@ import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const VariablesGridView = () => {
   const pageRoles = usePageRoles('Global Template');
@@ -24,6 +25,16 @@ const VariablesGridView = () => {
     keyword: '',
     status: '',
     networkId: '',
+    id: 0,
+    orgid: 0,
+    name: '',
+    expression: '',
+    isMandatory: 1,
+    length: 0,
+    dataTypeId: 1,
+    fieldTypeId: 1,
+    CreatedAt: dayjs().utc().format(),
+    rowVer: 1,
   });
 
   const requestData = useMemo(
@@ -40,7 +51,7 @@ const VariablesGridView = () => {
     loading,
     error,
     postData: refectch,
-  } = useApi('Template/campaigntemplatesallnetworks', 'POST', requestData);
+  } = useApi('Template/getallvariablesdata', 'POST', requestData);
 
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
   const toggleShowVariableModal = () => setIsVariableModalOpen((prev) => !prev);
