@@ -77,7 +77,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
       {
         id: 1,
         organizationId: 1,
-        publicKey: 'pk_test_123456',
+        publicKey: '123456',
         apiKey: 'abcdefghijklmnopqrstuvwxyz123456',
         networkId: 1,
         expiryDate: dayjs().add(1, 'year').format('MM/DD/YYYY'),
@@ -86,8 +86,8 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
       {
         id: 2,
         organizationId: 1,
-        publicKey: 'pk_test_789012',
-        apiKey: 'zyxwvutsrqponmlkjihgfedcba789012',
+        publicKey: '789012',
+        apiKey: 'abc165a1dada6sd46asd',
         networkId: 2,
         expiryDate: dayjs().add(6, 'months').format('MM/DD/YYYY'),
         status: 1,
@@ -95,7 +95,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
       {
         id: 3,
         organizationId: 1,
-        publicKey: 'pk_live_345678',
+        publicKey: '345678',
         apiKey: 'qwertyuiopasdfghjklzxcvbnm345678',
         networkId: 1,
         expiryDate: null,
