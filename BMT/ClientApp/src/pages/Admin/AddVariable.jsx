@@ -18,9 +18,12 @@ import AppContainer from 'src/components/UI/AppContainer';
 const defaultTemplateData = {
   id: 0,
   name: '',
+  expression: '',
   isMandatory: 1,
-  dataType: '',
-  networkId: 1,
+  length: 0,
+  dataTypeId: 1,
+  fieldTypeId: 1,
+  Networkid: 1,
   status: 1,
   rowVer: 1,
 };
@@ -35,7 +38,7 @@ const AddVariable = ({ fetchTemplates }) => {
   const user = useSelector((state) => state.user);
   const showToast = useShowToast();
   const navigate = useNavigate();
-  const { postData, loading } = useApi('Template/submitcampaigntemplate');
+  const { postData, loading } = useApi('Template/submitvariable');
 
   const [templateData, setTemplateData] = useState(
     template || defaultTemplateData,
@@ -50,19 +53,20 @@ const AddVariable = ({ fetchTemplates }) => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
-
+  console.log("user?.orgid", user?.orgId);
   const onSubmit = async () => {
     formValidator();
 
     const form = document.querySelector('.apply-da-form');
     if (!form || !form.checkValidity()) return;
-
+    
     const payload = {
       ...templateData,
       createdAt: template?.createdAt || dayjs().utc().format(),
       lastUpdatedAt: dayjs().utc().format(),
       createdBy: template?.createdBy || user?.userId,
-      lastUpdatedBy: user?.userId,
+      orgId: user?.orgId,
+      DefaultValue:""
     };
 
     const res = await postData(payload);

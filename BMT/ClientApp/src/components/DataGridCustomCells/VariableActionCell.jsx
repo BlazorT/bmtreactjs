@@ -15,7 +15,7 @@ const TemplateActionCell = ({ template, canDelete, fetching }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const { postData, loading } = useApi('Template/submitcampaigntemplate');
+  const { postData, loading } = useApi('Template/submitvariable');
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
 

@@ -19,6 +19,12 @@ export const Required = [
   { id: 1, name: 'Mandatory', value: 'mandatory' },
   { id: 2, name: 'Optional', value: 'optional' },
 ];
+export const FIELD_TYPES = [
+  { id: 1, name: 'TextBox', value: 'textbox' },
+  { id: 2, name: 'DropDown', value: 'dropdown' },
+  { id: 3, name: 'RadioButton', value: 'radiobutton' },
+  { id: 4, name: 'CheckBox', value: 'checkbox' },
+];
 
 /* ===============================
    FORM CONFIG
@@ -34,11 +40,11 @@ export const getVariableFormConfig = (
       component: CustomSelectInput,
       label: 'Network',
       icon: cilFlagAlt,
-      id: 'networkId',
+    id: 'networkid',
       options: globalutil?.networks(),
       className: 'form-control item form-select',
-      value: templateData.networkId,
-      name: 'networkId',
+       value: templateData.networkid,
+    name: 'networkid',
       onChange: (e) => handleTemplateData(e),
       isRequired: true,
       disableOption: 'Select Network',
@@ -64,17 +70,69 @@ export const getVariableFormConfig = (
       message: 'Enter Variable Name',
       disabled: loading,
     },
+    /* -------- Length -------- */
+    {
+      component: CustomInput,
+      label: 'Length',
+      value: templateData.length,
+      onChange: handleTemplateData,
+      icon: cilUser,
+      type: 'int',
+      id: 'length',
+      name: 'length',
+      placeholder: 'length',
+      className: 'form-control item',
+      isRequired: true,
+      maxLength: 50,
+      autoFocus: true,
+      message: 'Enter length',
+      disabled: loading,
+    },
+    /* -------- Expression -------- */
+    {
+      component: CustomInput,
+      label: 'Expression',
+      value: templateData.expression,
+      onChange: handleTemplateData,
+      icon: cilUser,
+      type: 'text',
+      id: 'expression',
+      name: 'expression',
+      placeholder: 'expression',
+      className: 'form-control item',
+      isRequired: true,
+      maxLength: 50,
+      autoFocus: true,
+      message: 'Enter expression',
+      disabled: loading,
+    },
 
     /* -------- Data Type -------- */
     {
       component: CustomSelectInput,
       label: 'Data Type',
       icon: cilFlagAlt,
-      id: 'dataType',
+      id: 'dataTypeId',
       options: DATA_TYPES,
       className: 'form-control item form-select',
-      value: templateData.dataType, // stores id (1,2,3,4)
-      name: 'dataType',
+      value: templateData.dataTypeId, // stores id (1,2,3,4)
+      name: 'dataTypeId',
+      onChange: (e) => handleTemplateData(e),
+      isRequired: true,
+      disableOption: 'Select Data Type',
+      message: 'Select Data Type',
+      //disabled: onEdit || loading || templateData?.id !== 0,
+    },
+    /* -------- Field Type -------- */
+    {
+      component: CustomSelectInput,
+      label: 'Field Type',
+      icon: cilFlagAlt,
+      id: 'fieldTypeId',
+      options: FIELD_TYPES,
+      className: 'form-control item form-select',
+      value: templateData.fieldTypeId, // stores id (1,2,3,4)
+      name: 'fieldTypeId',
       onChange: (e) => handleTemplateData(e),
       isRequired: true,
       disableOption: 'Select Data Type',

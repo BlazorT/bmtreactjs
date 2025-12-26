@@ -62,6 +62,7 @@ services.AddScoped<ICampaignRecipientsRepository, CampaignRecipientsRepository>(
 services.AddScoped<IOrgPackageDetailRepository, OrgPackageDetailRepository>();
 services.AddScoped<IContactsAlbumRepository, ContactAlbumsRepository>();
 services.AddScoped<IUnsubscriberRepository, UnsubscriberRepository>();
+services.AddScoped<ITemplatevariablerRepository, TemplateVariableRepository>();
 
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
@@ -87,6 +88,7 @@ services.AddScoped<IPackageService, PackagesService>();
 services.AddScoped<ICampaignRecipientService, CampaignRecipientService>();
 services.AddScoped<IContactAlbumService, ContactAlbumsService>();
 services.AddScoped<IUnsubscriberService, UnsubscriberService>();
+services.AddScoped<ITemplatevariableService, TemplateVariablenService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();

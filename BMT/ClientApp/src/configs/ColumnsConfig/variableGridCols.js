@@ -25,35 +25,18 @@ export const getVariableCols = (canDelete, fetching) => [
     key: 'name',
     editable: false,
   },
-  {
-    headerCellClass: 'custom-header-data-grid',
-    filterable: true,
-    disableColumnMenu: false,
-    name: 'Title',
-    key: 'title',
-    editable: false,
-  },
+  
 
-  {
-    headerCellClass: 'custom-header-data-grid',
-    filterable: true,
-    disableColumnMenu: false,
-    name: 'Template',
-    key: 'template',
-    editable: false,
-    renderCell: (params) => {
-      return <div title={params.row?.template}>{params.row?.template?.slice(0, 20)}...</div>;
-    },
-  },
+  
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Last Update Time',
-    key: 'lastUpdatedAt',
+    key: 'createdAt',
     editable: false,
     renderCell: (params) => {
-      return <div>{formatDateTime(params.row?.lastUpdatedAt)}</div>;
+      return <div>{formatDateTime(params.row?.createdAt)}</div>;
     },
   },
   {

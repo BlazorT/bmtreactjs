@@ -37,8 +37,8 @@ public partial class _bmtContext : DbContext
     public virtual DbSet<Compaignrecipient> Compaignrecipients { get; set; }
     public virtual DbSet<Bundlingpackagedetail> Bundlingpackagedetails { get; set; }
 
-   // public virtual DbSet<Category> Categories { get; set; }
-
+    // public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Templatevariable> Templatevariables { get; set; }
     public virtual DbSet<City> Cities { get; set; }
 
     public virtual DbSet<Compaign> Compaigns { get; set; }
@@ -200,7 +200,20 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.TraceTime).HasColumnType("datetime");
             entity.Property(e => e.UniqueId).HasMaxLength(20);
         });
+        modelBuilder.Entity<Templatevariable>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
+            entity.ToTable("templatevariables");
+
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime(3)");
+            entity.Property(e => e.DefaultValue).HasMaxLength(1000);
+            entity.Property(e => e.Expression).HasMaxLength(500);
+            entity.Property(e => e.CreatedBy).HasColumnName("CreatedBy");
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Networkid).HasColumnName("networkid");
+            entity.Property(e => e.Orgid).HasColumnName("orgid");
+        });
         modelBuilder.Entity<Auditentity>(entity =>
         {
             entity.HasKey(e => e.AuditEntityId).HasName("PRIMARY");
