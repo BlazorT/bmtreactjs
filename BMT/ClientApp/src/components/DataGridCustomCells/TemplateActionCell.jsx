@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import AddTemplateModal from '../Modals/AddTemplateModel';
 
-const TemplateActionCell = ({ template, canDelete, fetching }) => {
+const TemplateActionCell = ({ template, canDelete, fetching, whatsappNetworkSettings }) => {
   const user = useSelector((state) => state.user);
 
   const { postData, loading } = useApi('Template/submitcampaigntemplate');
@@ -107,6 +107,7 @@ const TemplateActionCell = ({ template, canDelete, fetching }) => {
         toggle={toggleShowTemplateModal}
         fetchTemplates={fetching}
         template={template}
+        whatsappNetworkSettings={whatsappNetworkSettings}
       />
     </>
   );

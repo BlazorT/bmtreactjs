@@ -15,6 +15,8 @@ import globalutil from 'src/util/globalutil';
 const GlobalTemplates = () => {
   const pageRoles = usePageRoles('Global Template');
 
+  const user = useSelector((state) => state.user);
+
   const [isShowFilters, setIsShowFilters] = React.useState(false);
   const [isShowGrid, setIsShowGrid] = React.useState(true);
   const [isTemplateModelOpen, setIsTemplateModalOpen] = React.useState(false);
@@ -33,12 +35,26 @@ const GlobalTemplates = () => {
     [filters],
   );
 
+  const networkSettingBody = useMemo(
+    () => ({
+      id: '2',
+      orgId: user?.orgId?.toString(),
+    }),
+    [user],
+  );
+
   const {
     data,
     loading,
     error,
     postData: refectch,
   } = useApi('Template/campaigntemplatesallnetworks', 'POST', requestData);
+
+  const { data: networkSettingsData, loading: networkSettingsLoading } = useApi(
+    '/Organization/orgpackagedetails',
+    'POST',
+    networkSettingBody,
+  );
 
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
   const toggleShowTemplateModal = () => setIsTemplateModalOpen((prev) => !prev);
@@ -63,9 +79,9 @@ const GlobalTemplates = () => {
     });
     fetching();
   };
-
+  const whatsappNetworkSettings = networkSettingsData?.data?.[0] || null;
   const templateFilterFields = getTemplateFilters(filters, changeFilter);
-  const tamplateListCols = getTemplateCols(pageRoles?.canDelete, fetching);
+  const tamplateListCols = getTemplateCols(pageRoles?.canDelete, fetching, whatsappNetworkSettings);
   return (
     <React.Fragment>
       <AppContainer>
@@ -90,7 +106,7 @@ const GlobalTemplates = () => {
           pagination={true}
           rowSelection={false}
           rowHeight={50}
-          loading={loading || !data}
+          loading={loading || networkSettingsLoading}
           noRowsMessage={error ? 'Error Fetching data' : ''}
           sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
           showGrid={isShowGrid}
@@ -110,6 +126,7 @@ const GlobalTemplates = () => {
           isOpen={isTemplateModelOpen}
           toggle={toggleShowTemplateModal}
           fetchTemplates={fetching}
+          whatsappNetworkSettings={whatsappNetworkSettings}
         />
       </AppContainer>
     </React.Fragment>

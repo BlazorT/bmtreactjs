@@ -1,3 +1,5 @@
+/* eslint-disable no-control-regex */
+/* eslint-disable no-useless-escape */
 /* eslint-disable react/prop-types */
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import CIcon from '@coreui/icons-react';
@@ -173,8 +175,36 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
     </CTooltip>
   );
 
-  const charCount = value?.length || 0;
-  const isOverLimit = charCount > 160;
+  function isGsm7(text) {
+    const gsm7Regex =
+      /^[\x00-\x7F€£¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~]*$/;
+    return gsm7Regex.test(text);
+  }
+
+  function calculateSmsParts(text = '') {
+    const length = [...text].length;
+    const gsm = isGsm7(text);
+
+    if (gsm) {
+      if (length <= 160) return { parts: 1, perPart: 160, encoding: 'GSM-7' };
+      return {
+        parts: Math.ceil(length / 153),
+        perPart: 153,
+        encoding: 'GSM-7',
+      };
+    }
+
+    // UCS-2 (emoji, styled text, unicode)
+    if (length <= 70) return { parts: 1, perPart: 70, encoding: 'UCS-2' };
+    return {
+      parts: Math.ceil(length / 67),
+      perPart: 67,
+      encoding: 'UCS-2',
+    };
+  }
+
+  const { parts, perPart, encoding } = calculateSmsParts(value || '');
+  const charCount = [...(value || '')].length;
 
   return (
     <div className="w-full">
@@ -189,13 +219,13 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between align-items-center mb-1">
                 <p className="mb-0 fw-semibold text-info">SMS Tip - Keep it Short & Save!</p>
-                <span className={`badge ${isOverLimit ? 'bg-warning' : 'bg-info'}`}>
-                  {charCount} / 160 chars
+                <span className="badge bg-info">
+                  {charCount} chars · {parts} SMS · {encoding}
                 </span>
               </div>
               <p className="mb-0 small text-muted">
-                Messages under <strong>160 characters</strong> cost less. Longer messages get split
-                up and you&apos;ll be charged multiple times. The shorter, the cheaper! 💰
+                This message will be sent as <strong>{parts} SMS</strong> using{' '}
+                <strong>{encoding}</strong> encoding.
               </p>
             </div>
           </div>

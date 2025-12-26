@@ -25,7 +25,7 @@ const SendTestEmailModel = ({
 }) => {
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
-  const { postData, loading } = useApi('http://72.61.77.197:5001/email/send');
+  const { postData, loading } = useApi(`${process.env.REACT_APP_BMT_SERVIVE}/email/send`);
   const [email, setEmail] = useState('');
   const onSubmit = async () => {
     if (!validateEmail(email)) {

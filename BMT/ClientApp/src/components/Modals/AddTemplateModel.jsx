@@ -15,6 +15,8 @@ import dayjs, { utc } from 'dayjs';
 import { useSelector } from 'react-redux';
 import SendTestEmailModel from './SendTestEmailModel';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
+import WhatsappTemplate from '../UI/WhatsappTemplate';
+import { generateInitialParameters } from 'src/helpers/campaignHelper';
 
 const defaultTemplateData = {
   id: 0,
@@ -31,7 +33,15 @@ const defaultTemplateData = {
 dayjs.extend(utc);
 
 // Define the component with props
-const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) => {
+const AddTemplateModal = ({
+  isOpen,
+  toggle,
+  template,
+  fetchTemplates,
+  onEdit,
+  whatsappNetworkSettings,
+  networkId,
+}) => {
   const user = useSelector((state) => state.user);
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
@@ -52,10 +62,18 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
       title: template?.title,
       status: template?.status || 1,
       templateJson:
-        template?.networkId === 3 && template?.templateJson ? template?.templateJson : null,
+        (template?.networkId === 3 || template?.networkId === 2) && template?.templateJson
+          ? template?.templateJson
+          : null,
       rowVer: 1,
     });
   }, [template, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !networkId || template) return;
+
+    setTemplateData((prev) => ({ ...prev, networkId: networkId }));
+  }, [template, isOpen, networkId]);
 
   const toggleEmailEditor = () => setShowEmailEditor((prev) => !prev);
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
@@ -74,8 +92,13 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
     if (!form.checkValidity()) {
       return;
     }
-    if (templateData?.template === '') {
-      showToast('Save template first.');
+    if (templateData?.templateJson === '' && templateData?.networkId == 2) {
+      showToast('Select template first.', 'warning');
+      return;
+    }
+
+    if (templateData?.template === '' && templateData?.networkId != 2) {
+      showToast('Save template first.', 'warning');
       return;
     }
 
@@ -129,11 +152,39 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
     });
   };
 
+  const onSelectWhatsapp = (t) => {
+    // WhatsApp Logic
+
+    // 1. Get raw template data
+    const rawTemplate = t.whatsappTemplate;
+    // 2. Generate the defaults immediately
+    const initialParams = generateInitialParameters(rawTemplate.components);
+    // 3. Create the ONE TRUTH object
+    const fullWhatsAppState = {
+      templateName: rawTemplate.name,
+      templateLanguage: rawTemplate.language,
+      category: rawTemplate.category,
+      templateId: rawTemplate.id,
+      // Save the structure so the Editor can render the preview without needing 'selectedTemplate'
+      components: rawTemplate.components,
+      // Save the editable parameters
+      parameters: initialParams,
+    };
+
+    setTemplateData((prev) => ({
+      ...prev,
+      templateJson: JSON.stringify(fullWhatsAppState), // Save EVERYTHING here
+      name: rawTemplate.name,
+      title: rawTemplate.language,
+    }));
+  };
+
   const templateInputFields = getTemplateInputFields(
     templateData,
     handleTemplateData,
     loading,
     onEdit,
+    networkId,
   );
   return (
     <CModal
@@ -153,16 +204,32 @@ const AddTemplateModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
 
           <Inputs inputFields={templateInputFields} isBtn={false}>
             {templateData?.networkId == 2 ? (
-              <WhatsAppTemplateEditor
-                value={templateData.templateJson ? JSON.parse(templateData.templateJson) : null}
-                onChange={(updatedFullObject) => {
-                  // The Editor gives us the full updated object, we just stringify and save
-                  setTemplateData((prev) => ({
-                    ...prev,
-                    templateJson: JSON.stringify(updatedFullObject),
-                  }));
-                }}
-              />
+              <>
+                {!templateData?.templateJson ? (
+                  <WhatsappTemplate
+                    WABA={whatsappNetworkSettings?.businessId || ''}
+                    WAT={whatsappNetworkSettings?.apikeySecret || ''}
+                    onSelect={onSelectWhatsapp}
+                  />
+                ) : (
+                  <WhatsAppTemplateEditor
+                    value={templateData.templateJson ? JSON.parse(templateData.templateJson) : null}
+                    onChange={(updatedFullObject) => {
+                      // The Editor gives us the full updated object, we just stringify and save
+                      setTemplateData((prev) => ({
+                        ...prev,
+                        templateJson: JSON.stringify(updatedFullObject),
+                      }));
+                    }}
+                    onClear={() =>
+                      setTemplateData((prev) => ({
+                        ...prev,
+                        templateJson: '',
+                      }))
+                    }
+                  />
+                )}
+              </>
             ) : templateData?.networkId != '3' ? (
               <SocialMediaTextEditor
                 networkId={parseInt(templateData?.networkId)}
@@ -233,6 +300,8 @@ AddTemplateModal.propTypes = {
   template: PropTypes.node, // Accepts any renderable content (JSX, string, etc.)
   fetchTemplates: PropTypes.func,
   onEdit: PropTypes.func,
+  whatsappNetworkSettings: PropTypes.object,
+  networkId: PropTypes.number,
 };
 
 // Default props

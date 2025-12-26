@@ -1,25 +1,20 @@
 /* eslint-disable react/prop-types */
-import React from 'react'; // Removed useState, useEffect as we rely on props now
-import { CCol, CRow, CAlert } from '@coreui/react';
+import React from 'react';
+import { CCol, CRow, CAlert, CBadge } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import { cilText, cilImage, cilVideo, cilFile } from '@coreui/icons';
+import { getStatusColor } from 'src/helpers/campaignHelper';
+import Button from '../InputsComponent/Button';
 
-const WhatsAppTemplateEditor = ({ value, onChange }) => {
-  // If no template is loaded in Custom2, show message
+const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
   if (!value || !value.components) {
     return <CAlert color="info">Please select a WhatsApp template from the template list.</CAlert>;
   }
-  console.log({ value });
-  // Extract data directly from the single source of truth (Custom2 value)
+
   const { components, parameters } = value;
-
-  // --- Handlers ---
-
   const handleParameterChange = (section, index, newValue) => {
-    // Deep copy the current state
     const updatedParams = { ...parameters };
 
-    // Update the specific value
     if (updatedParams[section][index]) {
       if (updatedParams[section][index].type === 'text') {
         updatedParams[section][index].text = newValue;
@@ -29,21 +24,23 @@ const WhatsAppTemplateEditor = ({ value, onChange }) => {
       }
     }
 
-    // Return the WHOLE updated object to parent
-    onChange({
-      ...value,
-      parameters: updatedParams,
-    });
+    onChange({ ...value, parameters: updatedParams });
   };
 
-  const getComponentText = (component) => {
+  // Replace {{1}}, {{2}} etc. in text with parameter values
+  const fillTextWithParams = (component, section) => {
     if (!component.text) return '';
     let text = component.text;
-    let paramIndex = 1;
-    return text.replace(/\{\{(\d+)\}\}/g, () => `{{${paramIndex++}}}`);
-  };
+    let paramIndex = 0;
 
-  // --- Renderers ---
+    return text.replace(/\{\{(\d+)\}\}/g, () => {
+      const param = parameters[section]?.[paramIndex];
+      paramIndex++;
+      if (!param) return '';
+      // Wrap the parameter value in {{ }}
+      return param.type === 'text' ? `{{${param.text}}}` : `{{[${param.type.toUpperCase()}]}}`;
+    });
+  };
 
   const renderParameterInput = (section, index, param) => {
     const label = `${section.charAt(0).toUpperCase() + section.slice(1)} Parameter ${index + 1}`;
@@ -63,7 +60,6 @@ const WhatsAppTemplateEditor = ({ value, onChange }) => {
       );
     }
 
-    // Handle Media Inputs
     const mediaTypes = {
       image: { icon: cilImage, label: 'Header Image URL' },
       video: { icon: cilVideo, label: 'Header Video URL' },
@@ -88,36 +84,69 @@ const WhatsAppTemplateEditor = ({ value, onChange }) => {
     return null;
   };
 
-  // Find components for preview
   const headerComponent = components.find((c) => c.type === 'HEADER');
   const bodyComponent = components.find((c) => c.type === 'BODY');
   const footerComponent = components.find((c) => c.type === 'FOOTER');
   const buttonsComponent = components.find((c) => c.type === 'BUTTONS');
 
   return (
-    <div className="whatsapp-template-editor">
-      {/* Template Preview - Read directly from saved components */}
-      <div className="border rounded p-3 mb-3 bg-light">
-        <div className="fw-bold mb-2">Template Preview:</div>
+    <div className="whatsapp-template-editor mt-2">
+      {/* Template Preview */}
+      <div className="border rounded p-2 mb-2 bg-light">
+        <div className="d-flex flex-row align-items-center justify-content-between">
+          <div className="d-flex flex-row align-items-center gap-3 mb-2">
+            <div className="fw-bold">Template Preview:</div>
+            <CBadge color="secondary">{value.category}</CBadge>
+          </div>
+          {onClear && (
+            <Button title="Clear" onClick={onClear} className="h-auto w-auto px-3 py-2" />
+          )}
+        </div>
 
+        {/* HEADER */}
         {headerComponent && (
-          <div className="mb-2">
+          <div className="mb-2 d-flex flex-column">
             <div className="badge bg-info mb-1">HEADER</div>
             {headerComponent.format !== 'TEXT' ? (
-              <div className="fst-italic text-muted small">[{headerComponent.format}]</div>
+              <div>
+                {parameters.header?.[0] && parameters.header[0][parameters.header[0].type]?.link ? (
+                  parameters.header[0].type === 'image' ? (
+                    <img
+                      src={parameters.header[0].image.link}
+                      alt="Header Image"
+                      style={{ maxWidth: '100%', maxHeight: 100 }}
+                    />
+                  ) : parameters.header[0].type === 'video' ? (
+                    <video controls style={{ maxWidth: '100%', maxHeight: 150 }}>
+                      <source src={parameters.header[0].video.link} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="btn btn-outline-secondary btn-sm">
+                        <cilFile /> Document
+                      </span>
+                      <span>{parameters.header[0].document.link}</span>
+                    </div>
+                  )
+                ) : (
+                  <div className="fst-italic text-muted small">[{headerComponent.format}]</div>
+                )}
+              </div>
             ) : (
-              <div className="small">{getComponentText(headerComponent)}</div>
+              <div className="small">{fillTextWithParams(headerComponent, 'header')}</div>
             )}
           </div>
         )}
 
+        {/* BODY */}
         {bodyComponent && (
           <div className="mb-2">
-            <div className="badge bg-primary mb-1">BODY</div>
-            <div className="small">{getComponentText(bodyComponent)}</div>
+            <div className="badge bg-warning mb-1">BODY</div>
+            <div className="small">{fillTextWithParams(bodyComponent, 'body')}</div>
           </div>
         )}
 
+        {/* FOOTER */}
         {footerComponent && (
           <div className="mb-2">
             <div className="badge bg-secondary mb-1">FOOTER</div>
@@ -125,11 +154,12 @@ const WhatsAppTemplateEditor = ({ value, onChange }) => {
           </div>
         )}
 
-        {buttonsComponent && buttonsComponent.buttons && (
-          <div className="mt-2">
+        {/* BUTTONS */}
+        {buttonsComponent?.buttons?.length > 0 && (
+          <div className="mt-2 d-flex flex-column">
             <div className="badge bg-success mb-1">BUTTONS</div>
             {buttonsComponent.buttons.map((btn, idx) => (
-              <div key={idx} className="btn btn-sm btn-outline-primary me-2 mt-1">
+              <div key={idx} className="btn btn-sm btn-outline-primary me-2 mt-1 fit-content-width">
                 {btn.text}
               </div>
             ))}
@@ -137,27 +167,25 @@ const WhatsAppTemplateEditor = ({ value, onChange }) => {
         )}
       </div>
 
-      {/* Parameter Inputs - Read directly from saved parameters */}
-      <div className="border rounded p-3">
-        <div className="fw-bold mb-3">Fill Template Parameters:</div>
-
+      {/* Parameter Inputs */}
+      <div className="border rounded p-2">
+        <div className="fw-bold mb-1">Fill Template Parameters:</div>
         <CRow>
-          {parameters.header && parameters.header.length > 0 && (
-            <CCol md={12} className="mb-3">
-              <div className="fw-semibold text-info mb-2">Header Parameters:</div>
+          {parameters.header?.length > 0 && (
+            <CCol md={12} className="mb-2">
+              <div className="fw-semibold text-info mb-1">Header Parameters:</div>
               {parameters.header.map((param, index) => (
-                <div key={`header-${index}`} className="mb-2">
+                <div key={`header-${index}`} className="mb-1">
                   {renderParameterInput('header', index, param)}
                 </div>
               ))}
             </CCol>
           )}
-
-          {parameters.body && parameters.body.length > 0 && (
-            <CCol md={12} className="mb-3">
-              <div className="fw-semibold text-primary mb-2">Body Parameters:</div>
+          {parameters.body?.length > 0 && (
+            <CCol md={12} className="mb-2">
+              <div className="fw-semibold text-primary mb-1">Body Parameters:</div>
               {parameters.body.map((param, index) => (
-                <div key={`body-${index}`} className="mb-2">
+                <div key={`body-${index}`} className="mb-1">
                   {renderParameterInput('body', index, param)}
                 </div>
               ))}

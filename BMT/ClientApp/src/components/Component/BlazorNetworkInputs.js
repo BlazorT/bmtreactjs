@@ -48,7 +48,6 @@ const BlazorNetworkInputs = (prop) => {
   const [showTemplateList, setShowTemplateList] = useState(false);
   const [showTestEmailModel, setShowTestEmailModel] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [selectedWhatsAppTemplate, setSelectedWhatsAppTemplate] = useState(null);
 
   const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
@@ -562,14 +561,14 @@ const BlazorNetworkInputs = (prop) => {
 
       // 1. Get raw template data
       const rawTemplate = t.whatsappTemplate;
-
+      console.log({ rawTemplate });
       // 2. Generate the defaults immediately
       const initialParams = generateInitialParameters(rawTemplate.components);
-
       // 3. Create the ONE TRUTH object
       const fullWhatsAppState = {
         templateName: rawTemplate.name,
         templateLanguage: rawTemplate.language,
+        category: rawTemplate.category,
         templateId: rawTemplate.id,
         // Save the structure so the Editor can render the preview without needing 'selectedTemplate'
         components: rawTemplate.components,
@@ -851,7 +850,7 @@ const BlazorNetworkInputs = (prop) => {
               </CRow>
             )}
           </AppContainer>
-          {user?.roleId === 1 && ( //!!nneed to make it 1
+          {user?.roleId === 2 && ( //!!nneed to make it 1
             <AppContainer>
               <DataGridHeader
                 title="Integration Setting"
@@ -916,22 +915,22 @@ const BlazorNetworkInputs = (prop) => {
             <Button
               title="Submit"
               onClick={() => {
-                // onSubmit();
-                if (parseInt(networkState?.purchasedQouta || '0') > 0) {
-                  if (networkList.length === 0) {
-                    dispatch(
-                      updateToast({
-                        isToastOpen: true,
-                        toastMessage: 'Save atleast one netrwork settings to submit.',
-                        toastVariant: 'error',
-                      }),
-                    );
-                    return;
-                  }
-                  togglePaymentMdl();
-                } else {
-                  onSubmit();
-                }
+                onSubmit();
+                // if (parseInt(networkState?.purchasedQouta || '0') > 0) {
+                //   if (networkList.length === 0) {
+                //     dispatch(
+                //       updateToast({
+                //         isToastOpen: true,
+                //         toastMessage: 'Save atleast one netrwork settings to submit.',
+                //         toastVariant: 'error',
+                //       }),
+                //     );
+                //     return;
+                //   }
+                //   togglePaymentMdl();
+                // } else {
+                //   onSubmit();
+                // }
               }}
               loading={loading}
               loadingTitle="Submitting..."

@@ -169,39 +169,79 @@ export const calculateValidDays = (scheduleList) => {
 
 // Utility to generate initial parameters from raw template components
 export const generateInitialParameters = (components) => {
-  const newParams = { header: [], body: [], footer: [] };
+  const newParams = {
+    header: [],
+    body: [],
+    footer: [],
+  };
 
-  if (!components) return newParams;
+  if (!Array.isArray(components)) return newParams;
 
   components.forEach((component) => {
-    const type = component.type.toLowerCase();
+    const type = component.type;
 
-    // Handle Header
-    if (type === 'header') {
-      if (component.format === 'TEXT' && component.example?.header_text?.[0]) {
-        newParams.header = component.example.header_text[0].map((text) => ({
+    /* =======================
+       HEADER
+    ======================= */
+    if (type === 'HEADER') {
+      // TEXT header
+      if (component.format === 'TEXT') {
+        const headerExamples = component.example?.header_text || [];
+
+        newParams.header = headerExamples.map((text) => ({
           type: 'text',
           text: text || '',
         }));
-      } else if (component.format && component.format !== 'TEXT') {
-        // Media headers (Image, Video, Document)
+      }
+
+      // MEDIA header (IMAGE | VIDEO | DOCUMENT)
+      if (component.format && component.format !== 'TEXT') {
+        const mediaType = component.format.toLowerCase();
+
         newParams.header = [
           {
-            type: component.format.toLowerCase(),
-            [component.format.toLowerCase()]: { link: '' },
+            type: mediaType,
+            [mediaType]: {
+              // Meta may return header_handle or nothing at all
+              link: component.example?.header_handle?.[0] || '',
+            },
           },
         ];
       }
     }
 
-    // Handle Body
-    if (type === 'body' && component.example?.body_text?.[0]) {
-      newParams.body = component.example.body_text[0].map((text) => ({
+    /* =======================
+       BODY
+    ======================= */
+    if (type === 'BODY') {
+      const bodyExamples = component.example?.body_text?.[0] || [];
+
+      newParams.body = bodyExamples.map((text) => ({
         type: 'text',
         text: text || '',
       }));
     }
+
+    /* =======================
+       FOOTER (no parameters officially,
+       but kept for safety / future)
+    ======================= */
+    if (type === 'FOOTER') {
+      newParams.footer = [];
+    }
   });
 
   return newParams;
+};
+export const getStatusColor = (status) => {
+  switch (status?.toUpperCase()) {
+    case 'APPROVED':
+      return 'success';
+    case 'PENDING':
+      return 'warning';
+    case 'REJECTED':
+      return 'danger';
+    default:
+      return 'secondary';
+  }
 };

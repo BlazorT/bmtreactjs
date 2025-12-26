@@ -51,7 +51,7 @@ const useApi = <T>(
               : initialOptions.headers,
       });
       if (!response.ok) {
-        showToast(`API error: ${response.statusText}`);
+        showToast(`API error: ${response.status}`, 'error');
       }
 
       const responseData = await response.json();

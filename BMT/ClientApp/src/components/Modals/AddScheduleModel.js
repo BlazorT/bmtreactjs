@@ -629,7 +629,10 @@ const AddScheduleModel = (prop) => {
         const postTypeIds = selectedPostTypes[networkName] || [];
         const templateJson = selectedTemplates[networkName]
           ? JSON.stringify({
-              template: selectedTemplates[networkName]?.template || '',
+              template:
+                n?.id == 2
+                  ? selectedTemplates[networkName]?.templateJson || ''
+                  : selectedTemplates[networkName]?.template || '',
               subject: selectedTemplates[networkName]?.subject || '',
               title: selectedTemplates[networkName]?.title || '',
             })

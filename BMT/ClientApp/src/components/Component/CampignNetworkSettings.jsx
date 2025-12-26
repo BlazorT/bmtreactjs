@@ -32,12 +32,14 @@ const CampignNetworkSettings = ({
   handleTemplateToggle,
   selectedTemplates,
   setSelectedTemplates,
+  whatsAppNetworkSettings,
 }) => {
   const [loadingNetworkId, setLoadingNetworkId] = useState(null);
   const [networkTemplates, setNetworkTemplates] = useState({});
   const [isTemplateModelOpen, setIsTemplateModalOpen] = React.useState(false);
   const [editTemplate, setEditTemplate] = useState(null);
   const [showTemplateList, setShowTemplateList] = useState(null);
+  const [networkId, setNetworkId] = useState(null);
 
   const toggleShowTemplateModal = () => setIsTemplateModalOpen((prev) => !prev);
 
@@ -125,7 +127,6 @@ const CampignNetworkSettings = ({
     toggleShowTemplateModal();
     setEditTemplate(null);
   };
-
   return (
     <React.Fragment>
       <AppContainer>
@@ -255,12 +256,24 @@ const CampignNetworkSettings = ({
                                 {truncateText(selectedTemplates?.[network.name]?.template, 80)}
                               </div>
                             )}
+                            {selectedTemplates?.[network.name]?.templateJson && (
+                              <div className="text-primary small">
+                                <strong>Content:</strong>{' '}
+                                {truncateText(
+                                  JSON.parse(
+                                    selectedTemplates?.[network.name]?.templateJson,
+                                  )?.components?.find((c) => c?.type == 'BODY')?.text || '--',
+                                  80,
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <CBadge className="d-flex gap-2 justify-content-center align-items-center">
                           <CTooltip content="Edit or Preview">
                             <CIcon
                               onClick={() => {
+                                setNetworkId(selectedTemplates?.[network.name]?.id);
                                 setEditTemplate(selectedTemplates?.[network.name]);
                                 toggleShowTemplateModal();
                               }}
@@ -301,6 +314,7 @@ const CampignNetworkSettings = ({
                             <div
                               className="pointer"
                               onClick={() => {
+                                setNetworkId(network?.id);
                                 setEditTemplate(null);
                                 toggleShowTemplateModal();
                               }}
@@ -314,68 +328,81 @@ const CampignNetworkSettings = ({
                           className="list-group-flush"
                           style={{ maxHeight: '200px', overflowY: 'auto', rowGap: 6 }}
                         >
-                          {templates.map((template, templateIndex) => (
-                            <CListGroupItem
-                              key={template.id || templateIndex}
-                              className="px-2 py-2 border-start-0 rounded border-end-0"
-                              //   onClick={() => handleTemplateToggle(network.name, template)}
-                            >
-                              <div className="d-flex justify-content-between align-items-start">
-                                <div className="flex-grow-1">
-                                  <div className="fw-semibold text-primary small mb-1">
-                                    Name : {template.name}
+                          {templates.map((template, templateIndex) => {
+                            const isWhatsApp = template?.networkId == 2;
+                            const templateJson =
+                              isWhatsApp && template?.templateJson
+                                ? JSON.parse(template?.templateJson)
+                                : null;
+                            return (
+                              <CListGroupItem
+                                key={template.id || templateIndex}
+                                className="px-2 py-2 border-start-0 rounded border-end-0"
+                                //   onClick={() => handleTemplateToggle(network.name, template)}
+                              >
+                                <div className="d-flex justify-content-between align-items-start">
+                                  <div className="flex-grow-1">
+                                    <div className="fw-semibold text-primary small mb-1">
+                                      Name : {template.name}
+                                    </div>
+                                    {template.title && (
+                                      <div className="text-primary small mb-1">
+                                        <strong>Language :</strong> {template.title}
+                                      </div>
+                                    )}
+                                    {template.subject && !isWhatsApp && (
+                                      <div className="text-primary small mb-1">
+                                        <strong>Subject :</strong>{' '}
+                                        {truncateText(template.subject, 50)}
+                                      </div>
+                                    )}
+                                    {(template.template || (isWhatsApp && templateJson)) && (
+                                      <div className="text-primary small">
+                                        <strong>Content:</strong>{' '}
+                                        {truncateText(
+                                          templateJson?.components?.find((c) => c.type === 'BODY')
+                                            ?.text || template.template,
+                                          80,
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
-                                  {template.title && (
-                                    <div className="text-primary small mb-1">
-                                      <strong>Title :</strong> {template.title}
-                                    </div>
-                                  )}
-                                  {template.subject && (
-                                    <div className="text-primary small mb-1">
-                                      <strong>Subject :</strong>{' '}
-                                      {truncateText(template.subject, 50)}
-                                    </div>
-                                  )}
-                                  {template.template && (
-                                    <div className="text-primary small">
-                                      <strong>Content:</strong>{' '}
-                                      {truncateText(template.template, 80)}
-                                    </div>
-                                  )}
-                                </div>
-                                <CBadge className="d-flex gap-2 justify-content-center align-items-center">
-                                  <CTooltip content="Edit or Preview">
-                                    <CIcon
-                                      onClick={() => {
-                                        setEditTemplate(template);
-                                        toggleShowTemplateModal();
-                                      }}
-                                      className="stock-toggle-icon"
-                                      icon={cilPencil}
-                                      style={{ cursor: 'pointer' }}
-                                    />
-                                  </CTooltip>
-                                  <CFormCheck
-                                    id={`${IconName}-${template.id}`}
-                                    name={`${IconName}-${template.id}`}
-                                    checked={selectedTemplates?.[network.name]?.id === template.id}
-                                    onChange={(e) => {
-                                      if (e?.target.checked) {
-                                        const isLoadingThisNetwork =
-                                          loadingNetworkId === network?.id;
-                                        setShowTemplateList((prev) => ({
-                                          ...prev,
-                                          [network?.name]: false,
-                                        }));
+                                  <CBadge className="d-flex gap-2 justify-content-center align-items-center">
+                                    <CTooltip content="Edit or Preview">
+                                      <CIcon
+                                        onClick={() => {
+                                          setEditTemplate(template);
+                                          toggleShowTemplateModal();
+                                        }}
+                                        className="stock-toggle-icon"
+                                        icon={cilPencil}
+                                        style={{ cursor: 'pointer' }}
+                                      />
+                                    </CTooltip>
+                                    <CFormCheck
+                                      id={`${IconName}-${template.id}`}
+                                      name={`${IconName}-${template.id}`}
+                                      checked={
+                                        selectedTemplates?.[network.name]?.id === template.id
                                       }
-                                      handleTemplateToggle(network.name, template);
-                                    }}
-                                    className="mb-0"
-                                  />
-                                </CBadge>
-                              </div>
-                            </CListGroupItem>
-                          ))}
+                                      onChange={(e) => {
+                                        if (e?.target.checked) {
+                                          const isLoadingThisNetwork =
+                                            loadingNetworkId === network?.id;
+                                          setShowTemplateList((prev) => ({
+                                            ...prev,
+                                            [network?.name]: false,
+                                          }));
+                                        }
+                                        handleTemplateToggle(network.name, template);
+                                      }}
+                                      className="mb-0"
+                                    />
+                                  </CBadge>
+                                </div>
+                              </CListGroupItem>
+                            );
+                          })}
                         </CListGroup>
                       </div>
                     )}
@@ -388,6 +415,7 @@ const CampignNetworkSettings = ({
                           <div
                             className="pointer"
                             onClick={() => {
+                              setNetworkId(network?.id);
                               setEditTemplate(null);
                               toggleShowTemplateModal();
                             }}
@@ -409,6 +437,8 @@ const CampignNetworkSettings = ({
         toggle={toggleShowTemplateModal}
         template={editTemplate}
         onEdit={onTemplateEdit}
+        whatsappNetworkSettings={whatsAppNetworkSettings}
+        networkId={networkId}
       />
 
       <React.Fragment>

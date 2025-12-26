@@ -6,7 +6,13 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import globalutil from 'src/util/globalutil';
 
-export const getTemplateInputFields = (templateData, handleTemplateData, loading, onEdit) => [
+export const getTemplateInputFields = (
+  templateData,
+  handleTemplateData,
+  loading,
+  onEdit,
+  networkId,
+) => [
   {
     component: CustomSelectInput,
     label: 'Network',
@@ -20,11 +26,11 @@ export const getTemplateInputFields = (templateData, handleTemplateData, loading
     isRequired: true,
     disableOption: 'Select Network',
     message: 'Select Network',
-    disabled: onEdit || loading || templateData?.id !== 0,
+    disabled: onEdit || loading || templateData?.id !== 0 || networkId,
   },
   {
     component: CustomInput,
-    label: 'Name',
+    label: templateData?.networkId == 2 ? 'Template Name' : 'Name',
     value: templateData.name,
     onChange: handleTemplateData,
     icon: cilUser,
@@ -41,7 +47,7 @@ export const getTemplateInputFields = (templateData, handleTemplateData, loading
   },
   {
     component: CustomInput,
-    label: 'Title',
+    label: templateData?.networkId == 2 ? 'Template Language' : 'Title',
     value: templateData.title,
     onChange: handleTemplateData,
     icon: cilUser,
