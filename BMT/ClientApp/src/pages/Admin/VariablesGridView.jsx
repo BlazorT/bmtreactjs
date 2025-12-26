@@ -6,14 +6,16 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import AddVariableModal from 'src/components/Modals/AddVariableModal';
 import AppContainer from 'src/components/UI/AppContainer';
-import { getTemplateCols } from 'src/configs/ColumnsConfig/templateGridCols';
-import { getTemplateFilters } from 'src/configs/FiltersConfig/templateFilterConfig';
+import { getVariableCols } from 'src/configs/ColumnsConfig/variableGridCols';
+import { getVariableFilters } from 'src/configs/FiltersConfig/variableFilterConfig';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
+import { useNavigate } from 'react-router-dom';
 
 const VariablesGridView = () => {
   const pageRoles = usePageRoles('Global Template');
+  const navigate = useNavigate();
 
   const [isShowFilters, setIsShowFilters] = React.useState(false);
   const [isShowGrid, setIsShowGrid] = React.useState(true);
@@ -64,8 +66,8 @@ const VariablesGridView = () => {
     fetching();
   };
 
-  const templateFilterFields = getTemplateFilters(filters, changeFilter);
-  const tamplateListCols = getTemplateCols(pageRoles?.canDelete, fetching);
+  const variableFilterFields = getVariableFilters(filters, changeFilter);
+  const variableListCols = getVariableCols(pageRoles?.canDelete, fetching);
   return (
     <React.Fragment>
       <AppContainer>
@@ -79,14 +81,14 @@ const VariablesGridView = () => {
           <CustomFilters
             filters={filters}
             handleReset={handleReset}
-            filterFields={templateFilterFields}
+            filterFields={variableFilterFields}
           />
         )}
       </AppContainer>
       <AppContainer>
         <CustomDatagrid
           rows={data?.data || []}
-          columns={tamplateListCols}
+          columns={variableListCols}
           pagination={true}
           rowSelection={false}
           rowHeight={50}
@@ -95,15 +97,16 @@ const VariablesGridView = () => {
           sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
           showGrid={isShowGrid}
           headerProps={{
-            title: 'BMT Templates',
+            title: 'BMT Variables',
             onClick: toggleShowGrid,
             filterDisable: true,
-            addButton: pageRoles.canAdd === 1 ? 'Template' : '',
-            addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowVariableModal() : undefined,
+            addButton: pageRoles.canAdd === 1 ? 'Variable' : '',
+            addBtnClick: () => navigate('/AddVariable'),
+            //addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowVariableModal() : undefined,
             otherControls: [{ icon: cilChevronBottom, fn: toggleShowGrid }],
             canPrint: pageRoles?.canPrint === 1,
             canExport: pageRoles?.canExport === 1,
-            fileName: 'Templates',
+            fileName: 'Variables',
           }}
         />
         <AddVariableModal

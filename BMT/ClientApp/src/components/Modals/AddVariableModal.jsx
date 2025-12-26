@@ -144,42 +144,14 @@ const AddVariableModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
       backdrop="static" // ⬅️ prevents closing on backdrop press
     >
       <CModalHeader closeButton={false}>
-        <CModalTitle>{template ? 'Update ' + template?.name : 'Add'} Template</CModalTitle>
+        <CModalTitle>{template ? 'Update ' + template?.name : 'Add'} Variable</CModalTitle>
       </CModalHeader>
       <Form name="template-form">
         <CModalBody>
           {/* Render the template prop if provided, otherwise show a default message */}
 
           <Inputs inputFields={variableInputFields} isBtn={false}>
-            {templateData?.networkId != '3' ? (
-              <SocialMediaTextEditor
-                value={templateData.template} // Ensure value is a string
-                onChange={(e) => {
-                  setTemplateData((prev) => ({
-                    ...prev,
-                    template: e,
-                  }));
-                }}
-                placeholder="Message Template..."
-              />
-            ) : (
-              <>
-                <EmailTextEditor
-                  isModal={false}
-                  value={templateData?.templateJson ? JSON.parse(templateData?.templateJson) : null}
-                  open={showEmailEditor}
-                  toggle={toggleEmailEditor}
-                  onSave={(html, design) => {
-                    setTemplateData((prev) => ({
-                      ...prev,
-                      template: html,
-                      templateJson: JSON.stringify(design),
-                    }));
-                    showToast('Email template saved', 'success');
-                  }}
-                />
-              </>
-            )}
+           
           </Inputs>
         </CModalBody>
         <CModalFooter>
