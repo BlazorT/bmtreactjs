@@ -17,16 +17,14 @@ import AppContainer from 'src/components/UI/AppContainer';
 ================================ */
 const defaultTemplateData = {
   id: 0,
-  orgid: 0,
   name: '',
   expression: '',
   isMandatory: 1,
   length: 0,
   dataTypeId: 1,
   fieldTypeId: 1,
-  networkId: 1,
+  Networkid: 1,
   status: 1,
-  CreatedAt: dayjs().utc().format(),
   rowVer: 1,
 };
 
@@ -55,20 +53,20 @@ const AddVariable = ({ fetchTemplates }) => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
-
+  console.log("user?.orgid", user?.orgId);
   const onSubmit = async () => {
     formValidator();
 
     const form = document.querySelector('.apply-da-form');
     if (!form || !form.checkValidity()) return;
-
+    
     const payload = {
       ...templateData,
       createdAt: template?.createdAt || dayjs().utc().format(),
       lastUpdatedAt: dayjs().utc().format(),
       createdBy: template?.createdBy || user?.userId,
-      orgId: user?.orgid,
-      lastUpdatedBy: user?.userId,
+      orgId: user?.orgId,
+      DefaultValue:""
     };
 
     const res = await postData(payload);
