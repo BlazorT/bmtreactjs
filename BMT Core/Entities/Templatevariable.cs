@@ -13,7 +13,8 @@ public partial class Templatevariable: EntityTransaction
     public byte DataTypeId { get; set; }
 
     public int FieldTypeId { get; set; }
-
+    public int? isMandatory { get; set; }
+    
     public string? Name { get; set; }
 
     public string? Expression { get; set; }
