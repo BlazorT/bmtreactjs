@@ -21,7 +21,7 @@ export const getVariableCols = (canDelete, fetching) => [
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
-    name: 'Name',
+    name: 'Variable Name',
     key: 'name',
     editable: false,
   },
@@ -42,7 +42,7 @@ export const getVariableCols = (canDelete, fetching) => [
     key: 'defaultValue',
     editable: false,
     renderCell: (params) => (
-      params?.value ? params.value : '---'
+      params?.row?.defaultValue ? params.row.defaultValue : '---'
     ),
   },
 

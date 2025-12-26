@@ -74,7 +74,6 @@ const AddVariable = ({ fetchTemplates }) => {
       lastUpdatedAt: dayjs().utc().format(),
       createdBy: template?.createdBy || user?.userId,
       orgId: user?.orgId,
-      DefaultValue:""
     };
 
     const res = await postData(payload);
