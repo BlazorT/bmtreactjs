@@ -52,7 +52,7 @@ const VariablesGridView = () => {
     error,
     postData: refectch,
   } = useApi('Template/getallvariablesdata', 'POST', requestData);
-
+  console.log("data", data);
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
   const toggleShowVariableModal = () => setIsVariableModalOpen((prev) => !prev);
   const toggleShowGrid = () => setIsShowGrid((prev) => !prev);
@@ -67,6 +67,7 @@ const VariablesGridView = () => {
 
   const fetching = () => {
     refectch(requestData);
+   
   };
   const handleReset = () => {
     setFilters({

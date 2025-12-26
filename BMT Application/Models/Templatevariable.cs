@@ -8,7 +8,7 @@ public partial class TemplatevariableModel
     public long Id { get; set; }
 
     public int? Networkid { get; set; }
-
+    public int? isMandatory { get; set; }
     public int? Orgid { get; set; }
 
     public byte DataTypeId { get; set; }

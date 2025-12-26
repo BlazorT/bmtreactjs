@@ -9,11 +9,11 @@ export const getVariableCols = (canDelete, fetching) => [
     filterable: true,
     disableColumnMenu: false,
     name: 'Network',
-    key: 'networkId',
+    key: 'networkid',
     editable: false,
     renderCell: (params) => {
       return (
-        <div>{globalutil?.networks()?.find((n) => n.id === params.row.networkId)?.name || ''}</div>
+        <div>{globalutil?.networks()?.find((n) => n.id === params.row.networkid)?.name || ''}</div>
       );
     },
   },
@@ -25,9 +25,27 @@ export const getVariableCols = (canDelete, fetching) => [
     key: 'name',
     editable: false,
   },
+  {
+    headerCellClass: 'custom-header-data-grid',
+    filterable: true,
+    disableColumnMenu: false,
+    name: 'Expression',
+    key: 'expression',
+    editable: false,
+  },
   
+  {
+    headerCellClass: 'custom-header-data-grid',
+    filterable: true,
+    disableColumnMenu: false,
+    name: 'Default Value',
+    key: 'defaultValue',
+    editable: false,
+    renderCell: (params) => (
+      params?.value ? params.value : '---'
+    ),
+  },
 
-  
   {
     headerCellClass: 'custom-header-data-grid',
     filterable: true,
