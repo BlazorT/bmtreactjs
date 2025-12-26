@@ -24,7 +24,6 @@ const OrgList = () => {
   const pageRoles = usePageRoles('Organizations');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log({ pageRoles });
   const { getOrgs } = useFetchOrgs();
 
   const { response: GetCityRes, fetchData: GetCity } = useFetch();

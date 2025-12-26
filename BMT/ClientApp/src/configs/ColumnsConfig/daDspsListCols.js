@@ -71,7 +71,7 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
       <OrgActionCell
         value={params}
         fetching={orgsList}
-        user={orgsList.filter((item) => item.id === params.row.id)}
+        org={orgsList.filter((item) => item.id === params.row.id)}
         canUpdate={pageRoles.canUpdate}
         canDelete={pageRoles.canDelete}
       />
