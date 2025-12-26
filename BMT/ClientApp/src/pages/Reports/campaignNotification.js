@@ -64,9 +64,6 @@ const columns = [
     editable: false,
     filterable: true,
     flex: 1,
-    renderCell: (params) => {
-      return params.row?.isGroupRow ? null : params.row.sent;
-    },
   },
   {
     key: 'failed', // ✅ match with mapped row key
@@ -76,9 +73,6 @@ const columns = [
     editable: false,
     filterable: true,
     flex: 1,
-    renderCell: (params) => {
-      return params.row?.isGroupRow ? null : params.row.failed;
-    },
   },
   {
     key: 'delivered', // ✅ match with mapped row key
@@ -88,9 +82,6 @@ const columns = [
     editable: false,
     filterable: true,
     flex: 1,
-    renderCell: (params) => {
-      return params.row?.isGroupRow ? null : params.row.delivered;
-    },
   },
   {
     key: 'readCount',
@@ -223,106 +214,89 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     };
 
     const res = await fetchNotifications(fetchBody);
-    if (res && res?.status) {
-      // 🔑 First group by DATE, then by HOUR
-      const groupedByDate = _.groupBy(
-        res.data,
-        (item) => dayjs(item.createdAt).utc().local().format('YYYY-MM-DD'), // Group by date only
-      );
 
-      // ✅ Sort dates descending (latest first)
-      const sortedDates = Object.entries(groupedByDate).sort(
-        ([a], [b]) => dayjs(b).valueOf() - dayjs(a).valueOf(),
-      );
-
-      const mappedArray = sortedDates.flatMap(([dateKey, dateItems], dateIndex) => {
-        // DATE GROUP ROW (Level 1)
-        const dateGroupRow = {
-          id: `date-group-${dateIndex}`,
-          name: '',
-          campaignDate: formatDate(dateKey), // e.g., "Thursday, October 02, 2025"
-          createdAt: '',
-          sent: '',
-          failed: '',
-          delivered: '',
-          networkName: '',
-          isDateGroupRow: true, // New flag for date-level grouping
-        };
-
-        // Now group items within this date by HOUR
-        const groupedByHour = _.groupBy(
-          dateItems,
-          (item) => dayjs(item.createdAt).utc().startOf('hour').local().format('hh:00 A'), // Just the hour part
-        );
-
-        // Sort hours descending within the date
-        const sortedHours = Object.entries(groupedByHour).sort(
-          ([a], [b]) => dayjs(b, 'hh:00 A').valueOf() - dayjs(a, 'hh:00 A').valueOf(),
-        );
-
-        const hourGroups = sortedHours.flatMap(([hourKey, hourItems], hourIndex) => {
-          // Calculate status counts ONCE per hour group
-          const statusCounts = {};
-          globalutil.deliverstatus().forEach((statusObj) => {
-            const statusId = statusObj.id.toString();
-            statusCounts[statusObj.name.toLowerCase()] = hourItems.filter(
-              (d) => d.deliveryStatus === statusId,
-            ).length;
-          });
-
-          // HOUR GROUP ROW (Level 2)
-          const hourGroupRow = {
-            id: `hour-group-${dateIndex}-${hourIndex}`,
-            name: '',
-            campaignDate: '',
-            createdAt: hourKey, // e.g., "02:00 PM"
-            sent: '',
-            failed: '',
-            delivered: '',
-            networkName: '',
-            isGroupRow: true, // Hour-level grouping
-          };
-
-          // CHILD ROWS (Level 3 - actual data)
-          const childRows = hourItems.map((data, i) => ({
-            id: `${data.id}-${i}`,
-            name: data?.name,
-            campaignDate: '',
-            // createdAt: dayjs(data.createdAt).utc().local().format('hh:mm:ss A'), // Exact time
-            createdAt: '', // Exact time
-            networkName: data?.networkName,
-            readCount: data.readCount || 0,
-            commentsCount: data.commentsCount || 0,
-            clicksCount: data.clicksCount || 0,
-            sharesCount: data.sharesCount || 0,
-            likesCount: data.likesCount || 0,
-            sent: statusCounts['sent'] || 0,
-            delivered: statusCounts['delivered'] || 0,
-            failed: statusCounts['failed'] || 0,
-            deleted: statusCounts['deleted'] || 0,
-            read: statusCounts['read'] || 0,
-            seen: statusCounts['seen'] || 0,
-            undelivered: statusCounts['undelivered'] || 0,
-            pending: statusCounts['pending'] || 0,
-          }));
-
-          return [hourGroupRow, ...childRows];
-        });
-
-        return [dateGroupRow, ...hourGroups];
-      });
-
-      setRows(mappedArray);
-    } else {
+    if (!res || !res.status) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: res.message,
+          toastMessage: res?.message,
           toastVariant: 'error',
         }),
       );
       setRows([]);
+      return;
     }
+
+    /* 1️⃣ Group by Date + Hour */
+    const grouped = _.groupBy(res.data, (item) => {
+      const t = dayjs(item.createdAt).utc().local();
+      return `${t.format('YYYY-MM-DD')}|${t.startOf('hour').format('hh:00 A')}`;
+    });
+
+    const rows = Object.entries(grouped).flatMap(([groupKey, items]) => {
+      const [groupDate, groupHour] = groupKey.split('|');
+
+      /* 2️⃣ Compute status counts ONCE per hour (same as before) */
+      const statusCounts = {};
+      globalutil.deliverstatus().forEach((statusObj) => {
+        const statusId = statusObj.id.toString();
+        statusCounts[statusObj.name.toLowerCase()] = items.filter(
+          (d) => d.deliveryStatus === statusId,
+        ).length;
+      });
+
+      /* 3️⃣ Map rows and attach hour-level counts */
+      return items.map((item) => {
+        const localTime = dayjs(item.createdAt).utc().local();
+
+        return {
+          id: item.id,
+
+          /* 🔑 GROUPING KEYS */
+          groupDate,
+          groupHour,
+
+          /* SORT */
+          sortTime: localTime.valueOf(),
+
+          /* DISPLAY */
+          campaignDate: formatDate(localTime),
+          createdAt: groupHour, // same as your old hour row
+
+          name: item.name,
+          networkName: item.networkName,
+
+          readCount: item.readCount || 0,
+          commentsCount: item.commentsCount || 0,
+          clicksCount: item.clicksCount || 0,
+          sharesCount: item.sharesCount || 0,
+          likesCount: item.likesCount || 0,
+
+          /* ✅ HOUR-LEVEL STATUS COUNTS (EXACT MATCH) */
+          sent: statusCounts.sent || 0,
+          delivered: statusCounts.delivered || 0,
+          failed: statusCounts.failed || 0,
+          deleted: statusCounts.deleted || 0,
+          read: statusCounts.read || 0,
+          seen: statusCounts.seen || 0,
+          undelivered: statusCounts.undelivered || 0,
+          pending: statusCounts.pending || 0,
+        };
+      });
+    });
+
+    /* 4️⃣ Sorting (Date → Hour → Time) */
+    rows.sort((a, b) => {
+      if (a.groupDate !== b.groupDate) {
+        return dayjs(b.groupDate).valueOf() - dayjs(a.groupDate).valueOf();
+      }
+      if (a.groupHour !== b.groupHour) {
+        return dayjs(b.groupHour, 'hh:00 A').valueOf() - dayjs(a.groupHour, 'hh:00 A').valueOf();
+      }
+      return b.sortTime - a.sortTime;
+    });
+
+    setRows(rows);
   };
 
   return (
@@ -424,8 +398,10 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
         <CustomDatagrid
           rows={rows}
           columns={columns}
-          pagination={true}
           loading={loading}
+          enableGrouping
+          defaultExpandedGroups
+          groupBy={['campaignDate', 'createdAt']}
           summary={[
             {
               field: 'sent',
