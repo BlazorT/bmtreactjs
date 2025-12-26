@@ -78,7 +78,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
         id: 1,
         organizationId: 1,
         publicKey: '123456',
-        apiKey: 'abcdefghijklmnopqrstuvwxyz123456',
+        apiKey: 'mock_key_example_1234567890', // Changed
         networkId: 1,
         expiryDate: dayjs().add(1, 'year').format('MM/DD/YYYY'),
         status: 1,
@@ -87,7 +87,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
         id: 2,
         organizationId: 1,
         publicKey: '789012',
-        apiKey: 'abc165a1dada6sd46asd',
+        apiKey: 'mock_key_example_abcdefgh', // Changed
         networkId: 2,
         expiryDate: dayjs().add(6, 'months').format('MM/DD/YYYY'),
         status: 1,
@@ -96,7 +96,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
         id: 3,
         organizationId: 1,
         publicKey: '345678',
-        apiKey: 'qwertyuiopasdfghjklzxcvbnm345678',
+        apiKey: 'mock_key_example_xyz123', // Changed
         networkId: 1,
         expiryDate: null,
         status: 2,
@@ -152,7 +152,7 @@ const OrgAccessKeyModal = ({ isOpen, toggle }) => {
       id: Date.now(),
       organizationId: 1,
       publicKey: formData.publicKey,
-      apiKey: `sk_live_${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+      apiKey: `mock_${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
       password: formData.password,
       expiryDate: formData.expiryDate ? dayjs(formData.expiryDate).format('MM/DD/YYYY') : null,
       networkId: formData.applyToAll ? 'all' : formData.selectedNetwork,
