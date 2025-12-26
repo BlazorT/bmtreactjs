@@ -4340,7 +4340,7 @@ select {
   font-size: 1.1rem !important;
 }
 .fit-content-width {
-  width: fit-content;
+  width: fit-content !important;
 }
 .crawl-modal-body {
   max-height: 80dvh;
