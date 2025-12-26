@@ -5,6 +5,7 @@ const OrganizationAdd = React.lazy(() => import('./pages/DA/organizationadd'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
 const pricingDetails = React.lazy(() => import('./pages/Admin/pricingDetails'));
 const GlobalTemplates = React.lazy(() => import('./pages/Admin/GlobalTemplates'));
+const VariablesGridView = React.lazy(() => import('./pages/Admin/VariablesGridView'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
@@ -30,6 +31,7 @@ export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/Users', name: 'Users', element: Users },
   { path: 'globaltemplate', name: 'GlobalTemplates', element: GlobalTemplates },
+  { path: 'VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
   { path: '/Logs', name: 'ApplyForm', element: Logs },
   { path: '/Notification', name: 'Notification', element: Notification },
