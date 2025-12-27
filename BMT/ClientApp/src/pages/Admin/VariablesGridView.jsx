@@ -41,7 +41,7 @@ const VariablesGridView = () => {
     () => ({
       status: filters?.status ? parseInt(filters?.status) : 0,
       networkId: filters?.networkId ? parseInt(filters?.networkId) : 0,
-      title: filters?.keyword,
+      name: filters?.keyword,
     }),
     [filters],
   );
@@ -52,7 +52,7 @@ const VariablesGridView = () => {
     error,
     postData: refectch,
   } = useApi('Template/getallvariablesdata', 'POST', requestData);
-
+  console.log("data", data);
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
   const toggleShowVariableModal = () => setIsVariableModalOpen((prev) => !prev);
   const toggleShowGrid = () => setIsShowGrid((prev) => !prev);
@@ -67,6 +67,7 @@ const VariablesGridView = () => {
 
   const fetching = () => {
     refectch(requestData);
+   
   };
   const handleReset = () => {
     setFilters({
@@ -115,8 +116,8 @@ const VariablesGridView = () => {
             addBtnClick: () => navigate('/AddVariable'),
             //addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowVariableModal() : undefined,
             otherControls: [{ icon: cilChevronBottom, fn: toggleShowGrid }],
-            canPrint: pageRoles?.canPrint === 1,
-            canExport: pageRoles?.canExport === 1,
+           // canPrint: pageRoles?.canPrint === 1,
+           // canExport: pageRoles?.canExport === 1,
             fileName: 'Variables',
           }}
         />

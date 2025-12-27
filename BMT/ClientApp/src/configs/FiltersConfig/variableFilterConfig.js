@@ -15,10 +15,10 @@ export const getVariableFilters = (filters, changeFilter) => [
     type: 'text',
     id: 'keyword',
     name: 'keyword',
-    placeholder: 'Variable name, title',
+    placeholder: 'Variable name',
     className: 'form-control item',
     isRequired: false,
-    title: 'using by Name',
+    title: 'using by Variable Name',
   },
   {
     component: CustomSelectInput,

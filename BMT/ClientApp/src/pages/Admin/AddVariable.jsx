@@ -19,7 +19,7 @@ const defaultTemplateData = {
   id: 0,
   name: '',
   expression: '',
-  isMandatory: 1,
+  isMandatory: 2,
   length: 0,
   dataTypeId: 1,
   fieldTypeId: 1,
@@ -48,11 +48,19 @@ const AddVariable = ({ fetchTemplates }) => {
 
   const handleTemplateData = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // 🚫 Block space for Variable Name
+    if (name === 'name' && value.includes(' ')) {
+      showToast('Space not allowed', 'error');
+      return; // stop update
+    }
+
     setTemplateData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
+
   console.log("user?.orgid", user?.orgId);
   const onSubmit = async () => {
     formValidator();
@@ -66,7 +74,6 @@ const AddVariable = ({ fetchTemplates }) => {
       lastUpdatedAt: dayjs().utc().format(),
       createdBy: template?.createdBy || user?.userId,
       orgId: user?.orgId,
-      DefaultValue:""
     };
 
     const res = await postData(payload);

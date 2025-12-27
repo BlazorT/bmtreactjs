@@ -12,7 +12,6 @@ import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useToggleOrgStatus } from 'src/hooks/api/useToggleOrgStatus';
 import Spinner from '../UI/Spinner';
 import { useSelector } from 'react-redux';
-import OrgAccessKeyModal from '../Modals/OrgAccessKeyModal';
 
 const OrgActionCell = (prop) => {
   const { value, org, fetching, canUpdate, canDelete } = prop;
@@ -24,9 +23,7 @@ const OrgActionCell = (prop) => {
   const showConfirmation = useShowConfirmation();
   const { loading, updateStatus } = useToggleOrgStatus();
 
-  const [isShowApiKeysMdl, setIsShowApiKeysMdl] = useState(false);
-
-  const toggleIsShowApysMdl = () => setIsShowApiKeysMdl((prev) => !prev);
+  const toOrgAccessKeys = () => navigate('/OrgApiAccesskeys');
 
   const toggleStatus = (status) => {
     showConfirmation({
@@ -67,7 +64,6 @@ const OrgActionCell = (prop) => {
 
   return (
     <React.Fragment>
-      <OrgAccessKeyModal isOpen={isShowApiKeysMdl} toggle={toggleIsShowApysMdl} />
       {value.row.status === 4 ? (
         <CRow>
           <CCol className="d-flex justify-content-center">
@@ -90,7 +86,7 @@ const OrgActionCell = (prop) => {
               {user?.roleId === 2 && (
                 <CTooltip content="Api Access keys">
                   <CIcon
-                    onClick={toggleIsShowApysMdl}
+                    onClick={toOrgAccessKeys}
                     className="stock-toggle-icon"
                     icon={cilLockLocked}
                     style={{ cursor: 'pointer' }}

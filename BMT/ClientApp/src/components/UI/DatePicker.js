@@ -134,7 +134,10 @@ export default function CustomDatePicker(prop) {
       <div className="input-group ">
         {icon && (
           <span className="input-group-addon">
-            <CIcon icon={icon} />
+            <CIcon
+              className={isRequired ? 'mandatory-control' : 'stock-toggle-icon '}
+              icon={icon}
+            />
           </span>
         )}
         <DatePicker
