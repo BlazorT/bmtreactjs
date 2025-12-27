@@ -12,10 +12,20 @@ import {
   CModalTitle,
   CRow,
 } from '@coreui/react';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEye,
+  faEyeSlash,
+  faKey,
+  faShieldAlt,
+  faExclamationTriangle,
+  faCheckCircle,
+  faAngleUp,
+  faAngleDown,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import rt from 'dayjs/plugin/relativeTime';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
@@ -27,9 +37,12 @@ import CustomInput from '../../components/InputsComponent/CustomInput';
 import CustomSelectInput from '../../components/InputsComponent/CustomSelectInput';
 import Button from '../../components/UI/Button';
 import CustomDatePicker from '../../components/UI/DatePicker';
-import Form from '../../components/UI/Form';
+import Form from 'src/components/UI/Form';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { formatDateTime, formatDate } from 'src/helpers/formatDate';
 
 dayjs.extend(utc);
+dayjs.extend(rt);
 
 const statusOptions = [
   { id: 1, name: 'Active' },
@@ -63,6 +76,7 @@ const defaultFormValues = {
 
 const OrgApiAccesskeys = () => {
   const user = useSelector((state) => state.user);
+  const showToast = useShowToast();
 
   const {
     data: networkRes,
@@ -70,20 +84,33 @@ const OrgApiAccesskeys = () => {
     loading: networkLoading,
   } = useApi('/Admin/custombundlingdetails');
 
-  const networks = useMemo(
-    () => networkRes?.data?.map((n) => ({ id: n?.networkId, name: n?.name }) || []),
-    [networkRes],
-  );
+  const {
+    data: orgKeysRes,
+    postData: getApiKeys,
+    loading: apiKeysLoading,
+  } = useApi('/Admin/orglicenses');
 
-  const [apiKeys, setApiKeys] = useState([]);
+  const { postData: submitApiKey, loading: submitLoading } = useApi('/Admin/addupdateorglicense');
+
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [editingKey, setEditingKey] = useState(null);
   const [visibleKeys, setVisibleKeys] = useState({});
-
-  // Form state
   const [formData, setFormData] = useState(defaultFormValues);
   const [errors, setErrors] = useState({});
+
+  const { postData: authenticateUser, loading: authenticationLoading } = useApi(
+    `/Common/login?email=${user?.userInfo?.email}&password=${formData.password}`,
+  );
+
+  const loading = useMemo(
+    () => apiKeysLoading || submitLoading || networkLoading || authenticationLoading,
+    [apiKeysLoading, submitLoading, networkLoading, authenticationLoading],
+  );
+
+  const networks = useMemo(
+    () => networkRes?.data?.map((n) => ({ id: n?.networkId, name: n?.name })) || [],
+    [networkRes],
+  );
 
   useEffect(() => {
     fetchNetworks({
@@ -96,54 +123,15 @@ const OrgApiAccesskeys = () => {
   }, []);
 
   const fetchApiKeys = async () => {
-    setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    const mockKeys = [
-      {
-        id: 1,
-        organizationId: 1,
-        publicKey: '123456',
-        apiKey: 'mock_key_example_1234567890',
-        networkId: 1,
-        expiryDate: dayjs().add(1, 'year').format('MM/DD/YYYY'),
-        status: 1,
-        keyType: 2, // Live
-      },
-      {
-        id: 2,
-        organizationId: 1,
-        publicKey: '789012',
-        apiKey: 'mock_key_example_abcdefgh',
-        networkId: 2,
-        expiryDate: dayjs().subtract(2, 'months').format('MM/DD/YYYY'), // Expired
-        status: 1,
-        keyType: 1, // Sandbox
-      },
-      {
-        id: 3,
-        organizationId: 1,
-        publicKey: '345678',
-        apiKey: 'mock_key_example_xyz123',
-        networkId: 1,
-        expiryDate: dayjs().add(3, 'months').format('MM/DD/YYYY'),
-        status: 2,
-        keyType: 1, // Sandbox
-      },
-      {
-        id: 4,
-        organizationId: 1,
-        publicKey: '567890',
-        apiKey: 'mock_key_example_qwerty',
-        networkId: 2,
-        expiryDate: dayjs().subtract(10, 'days').format('MM/DD/YYYY'), // Expired
-        status: 1,
-        keyType: 2, // Live
-      },
-    ];
-    setApiKeys(mockKeys);
-    setLoading(false);
+    await getApiKeys({
+      id: 0,
+      orgId: user?.orgId,
+      networkId: 0,
+      status: 0,
+      createdAt: dayjs().utc().subtract(100, 'years').format(),
+      expiryDate: dayjs().utc().format(),
+      rowVer: 0,
+    });
   };
 
   const isKeyExpired = (expiryDate) => {
@@ -198,104 +186,147 @@ const OrgApiAccesskeys = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const checkUser = async () => {
+    const res = await authenticateUser();
+    if (res?.status == true) {
+      return true;
+    }
+    showToast(res?.message, 'error');
+    return false;
+  };
+
   const handleGenerateKey = async () => {
     if (!validateForm()) return;
 
-    setLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const isUserAuthenticated = await checkUser();
+    if (!isUserAuthenticated) return;
 
     const keyPrefix = getKeyPrefix(formData.keyType);
+    const generatedAccessKey = `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
 
     if (formData.applyToAll) {
       // Create keys for all available networks
       const availableNetworks = getAvailableNetworks();
-      const newKeys = availableNetworks.map((network) => ({
-        id: Date.now() + Math.random(), // Ensure unique IDs
-        organizationId: 1,
-        publicKey: formData.publicKey,
-        apiKey: `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-        password: formData.password,
-        expiryDate: formData.expiryDate ? dayjs(formData.expiryDate).format('MM/DD/YYYY') : null,
-        networkId: network.id,
-        status: Number(formData.status),
-        keyType: Number(formData.keyType),
-      }));
+      const apiKeyBody = [];
+      for (const network of availableNetworks) {
+        const networkBody = {
+          id: 0,
+          orgId: user?.orgId,
+          Primarykey: formData.publicKey,
+          Accesskey: `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+          ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+          NetworkId: Number(network.id),
+          Status: Number(formData.status),
+          IsProduction: formData.keyType == 2 ? 1 : 0,
+          Name: '',
+          Description: '',
+          CreatedBy: user?.userId,
+          lastUpdatedBy: user?.userId,
+          LastUpdatedAt: dayjs().utc().format(),
+          CreatedAt: dayjs().utc().format(),
+          RowVer: 0,
+        };
+        apiKeyBody.push(networkBody);
+      }
+      console.log({ apiKeyBody });
+      const res = await submitApiKey(apiKeyBody);
 
-      setApiKeys((prev) => [...newKeys, ...prev]);
+      if (!res || !res?.status) {
+        showToast(res?.message || `Failed to generate keys`, 'error');
+        return;
+      }
+      showToast('API keys generated successfully for all networks', 'success');
+      await fetchApiKeys();
     } else {
       // Create single key for selected network
-      const newKey = {
-        id: Date.now(),
-        organizationId: 1,
-        publicKey: formData.publicKey,
-        apiKey: `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-        password: formData.password,
-        expiryDate: formData.expiryDate ? dayjs(formData.expiryDate).format('MM/DD/YYYY') : null,
-        networkId: Number(formData.selectedNetwork),
-        status: Number(formData.status),
-        keyType: Number(formData.keyType),
-      };
+      const networkName =
+        globalutil.networks().find((n) => n.id == formData.selectedNetwork)?.name || '';
+      const desc = `${networkName}_${formData.publicKey}`;
+      const apiKeyBody = [
+        {
+          id: 0,
+          orgId: user?.orgId,
+          Primarykey: formData.publicKey,
+          Accesskey: generatedAccessKey,
+          ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+          NetworkId: Number(formData.selectedNetwork),
+          Status: Number(formData.status),
+          IsProduction: formData.keyType == 2 ? 1 : 0,
+          Name: desc || '',
+          Description: desc || '',
+          CreatedBy: user?.userId,
+          lastUpdatedBy: user?.userId,
+          LastUpdatedAt: dayjs().utc().format(),
+          CreatedAt: dayjs().utc().format(),
+          RowVer: 0,
+        },
+      ];
+      console.log({ apiKeyBody });
+      const res = await submitApiKey(apiKeyBody);
 
-      setApiKeys((prev) => [newKey, ...prev]);
+      if (res && res?.status) {
+        showToast(res?.message || 'API key generated successfully', 'success');
+        await fetchApiKeys();
+      } else {
+        showToast(res?.message || 'Something went wrong generating key, try again later', 'error');
+        return;
+      }
     }
 
     setShowModal(false);
     resetForm();
-    setLoading(false);
   };
 
   const handleUpdateKey = async () => {
     if (!validateForm()) return;
 
-    setLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const isUserAuthenticated = await checkUser();
+    if (!isUserAuthenticated) return;
 
     const expired = isKeyExpired(editingKey.expiryDate);
     const keyPrefix = getKeyPrefix(formData.keyType);
 
-    if (formData.applyToAll && expired) {
-      // When regenerating expired key with "apply to all"
-      // Remove the old key and create new keys for all available networks
-      const availableNetworks = getAvailableNetworks();
-      const newKeys = availableNetworks.map((network) => ({
-        id: Date.now() + Math.random(), // Ensure unique IDs
-        organizationId: 1,
-        publicKey: formData.publicKey,
-        apiKey: `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-        password: formData.password,
-        expiryDate: formData.expiryDate ? dayjs(formData.expiryDate).format('MM/DD/YYYY') : null,
-        networkId: network.id,
-        status: Number(formData.status),
-        keyType: Number(formData.keyType),
-      }));
-
-      // Remove old key and add new keys
-      setApiKeys((prev) => [...newKeys, ...prev.filter((key) => key.id !== editingKey.id)]);
-    } else {
-      // Update single key
-      const updatedKey = {
-        ...editingKey,
-        publicKey: formData.publicKey,
-        apiKey: expired
+    // Update single key
+    const apiKeyBody = [
+      {
+        id: editingKey.id, // Pass the ID for update
+        orgId: user?.orgId,
+        Primarykey: formData.publicKey,
+        Accesskey: expired
           ? `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
-          : editingKey.apiKey,
-        expiryDate: formData.expiryDate ? dayjs(formData.expiryDate).format('MM/DD/YYYY') : null,
-        networkId: Number(formData.selectedNetwork),
-        status: Number(formData.status),
-        keyType: Number(formData.keyType),
-      };
+          : editingKey.accesskey, // Keep existing if not expired
+        ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+        NetworkId: Number(formData.selectedNetwork),
+        Status: Number(formData.status),
+        IsProduction: formData.keyType == 2 ? 1 : 0,
+        Name: editingKey.name || '',
+        Description: editingKey.description || '',
+        CreatedBy: editingKey.createdBy,
+        lastUpdatedBy: user?.userId,
+        LastUpdatedAt: dayjs().utc().format(),
+        CreatedAt: editingKey.createdAt,
+        RowVer: editingKey.rowVer,
+      },
+    ];
 
-      setApiKeys((prev) => prev.map((key) => (key.id === editingKey.id ? updatedKey : key)));
+    console.log({ apiKeyBody });
+    const res = await submitApiKey(apiKeyBody);
+
+    if (res && res?.status) {
+      showToast(
+        res?.message ||
+          (expired ? 'API key regenerated successfully' : 'API key updated successfully'),
+        'success',
+      );
+      await fetchApiKeys();
+    } else {
+      showToast(res?.message || 'Something went wrong updating key, try again later', 'error');
+      return;
     }
 
     setShowModal(false);
     setEditingKey(null);
     resetForm();
-    setLoading(false);
   };
 
   const handleEditKey = (key) => {
@@ -304,14 +335,14 @@ const OrgApiAccesskeys = () => {
     setEditingKey(key);
     setShowModal(true);
     setFormData({
-      publicKey: expired ? '' : key.publicKey,
+      publicKey: expired ? '' : key.primarykey,
       password: '',
       expiryDate: expired ? null : key.expiryDate ? dayjs(key.expiryDate).toDate() : null,
       expiryPreset: '',
-      applyToAll: key.networkId === 'all',
-      selectedNetwork: key.networkId !== 'all' ? key.networkId?.toString() : '',
+      applyToAll: false,
+      selectedNetwork: key.networkId?.toString() || '',
       status: expired ? 1 : key.status?.toString(),
-      keyType: key.keyType?.toString(),
+      keyType: (key.isProduction === 1 ? 2 : 1)?.toString(),
     });
   };
 
@@ -324,14 +355,13 @@ const OrgApiAccesskeys = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // If key type changes, set default expiry date
     if (name === 'keyType') {
       const newFormData = { ...formData, [name]: value };
 
       // Sandbox (1) - default to 15 days
       if (value == 1) {
         newFormData.expiryDate = dayjs().add(15, 'days').toDate();
-        newFormData.expiryPreset = '1'; // 15 Days preset
+        newFormData.expiryPreset = '1';
       }
       // Live (2) - no default, user must select
       else if (value == 2) {
@@ -402,7 +432,7 @@ const OrgApiAccesskeys = () => {
   };
 
   const maskKey = (key) => {
-    return '*'.repeat(key.length);
+    return '•'.repeat(Math.min(key.length, 20));
   };
 
   const getAvailableNetworks = () => {
@@ -414,54 +444,91 @@ const OrgApiAccesskeys = () => {
       return networks;
     }
 
-    const usedNetworkIdsForType = apiKeys
-      .filter((key) => key.keyType == formData.keyType)
-      .map((key) => key.networkId);
+    const usedNetworkIdsForType =
+      orgKeysRes?.data
+        ?.filter((key) => (key.isProduction === 1 ? 2 : 1) == formData.keyType)
+        .map((key) => key.networkId) || [];
 
     return networks.filter((network) => !usedNetworkIdsForType.includes(network.id));
   };
 
   // Transform API keys data for grid
   const gridRows = useMemo(() => {
-    return apiKeys.map((key) => ({
-      ...key,
-      content: key.id,
-      keyTypeName: keyTypeOptions.find((kt) => kt.id === key.keyType)?.name || '--',
-      networkName: globalutil.networks().find((n) => n.id === key.networkId)?.name || '--',
-      statusName: statusOptions.find((s) => s.id === key.status)?.name || '--',
-      isExpired: isKeyExpired(key.expiryDate),
-    }));
-  }, [apiKeys]);
+    return (
+      orgKeysRes?.data?.map((key) => ({
+        ...key, // Spread all original properties
+        publicKey: key?.primarykey || '',
+        apiKey: key?.accesskey,
+        expiryDate: key.expiryDate ? dayjs(key.expiryDate).format() : null,
+        keyType: key?.isProduction === 1 ? 2 : 1,
+        keyTypeName:
+          keyTypeOptions.find((kt) => kt.id === (key?.isProduction === 1 ? 2 : 1))?.name || '--',
+        networkName: globalutil.networks().find((n) => n.id === key.networkId)?.name || '--',
+        statusName: statusOptions.find((s) => s.id === key.status)?.name || '--',
+        isExpired: isKeyExpired(key.expiryDate),
+      })) || []
+    );
+  }, [orgKeysRes]);
 
-  // Grid columns
+  // Grid columns with modern styling
   const columns = useMemo(
     () => [
       {
         key: 'keyTypeName',
         name: 'Key Type',
+        renderGroupCell: ({ row }) => {
+          return (
+            <div className="d-flex align-items-center gap-2">
+              <div
+                className={`rounded-circle d-flex align-items-center justify-content-center ${
+                  row.groupKey === 'Live' ? 'bg-success bg-opacity-10' : 'bg-warning bg-opacity-10'
+                }`}
+                style={{ width: '36px', height: '36px', minWidth: '36px' }}
+              >
+                <FontAwesomeIcon
+                  icon={row.groupKey === 'Live' ? faShieldAlt : faKey}
+                  className={row.groupKey === 'Live' ? 'text-success' : 'text-warning'}
+                />
+              </div>
+              <div className="d-flex flex-column">
+                <span className="fw-semibold">{row.groupKey}</span>
+              </div>
+              <FontAwesomeIcon icon={row?.isExpanded ? faAngleDown : faAngleUp} />
+            </div>
+          );
+        },
       },
       {
         key: 'networkName',
         name: 'Network',
+        renderCell: ({ row }) => (
+          <div className="d-flex align-items-center justify-content-center">
+            <span
+              className="badge bg-light text-white border border-secondary px-2 py-2"
+              style={{ fontSize: '0.875rem', fontWeight: '500' }}
+            >
+              {row.networkName}
+            </span>
+          </div>
+        ),
       },
       {
         key: 'publicKey',
         name: 'Public Key',
         renderCell: ({ row }) => (
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <span className="text-truncate">
+          <div className="d-flex align-items-center gap-1">
+            <div
+              className="bg-dark bg-opacity-75 rounded px-3 py-1 flex-grow-1"
+              style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
+            >
               {visibleKeys[row.id] ? row.publicKey : maskKey(row.publicKey)}
-            </span>
+            </div>
             <button
-              className="btn btn-sm btn-link text-secondary p-0"
+              className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center"
               onClick={() => toggleKeyVisibility(row.id)}
               title={visibleKeys[row.id] ? 'Hide' : 'Show'}
             >
-              <FontAwesomeIcon
-                icon={visibleKeys[row.id] ? faEyeSlash : faEye}
-                size="sm"
-                className="text-dim"
-              />
+              <FontAwesomeIcon icon={visibleKeys[row.id] ? faEyeSlash : faEye} size="sm" />
             </button>
           </div>
         ),
@@ -470,19 +537,21 @@ const OrgApiAccesskeys = () => {
         key: 'apiKey',
         name: 'Private Key',
         renderCell: ({ row }) => (
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <span className="text-truncate">
+          <div className="d-flex align-items-center gap-1">
+            <div
+              className="bg-dark bg-opacity-75 text-white rounded px-3 py-1 flex-grow-1"
+              style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
+            >
               {visibleKeys[`private-${row.id}`] ? row.apiKey : maskKey(row.apiKey)}
-            </span>
+            </div>
             <button
-              className="btn btn-sm btn-link text-secondary p-0"
+              className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center"
               onClick={() => toggleKeyVisibility(`private-${row.id}`)}
               title={visibleKeys[`private-${row.id}`] ? 'Hide' : 'Show'}
             >
               <FontAwesomeIcon
                 icon={visibleKeys[`private-${row.id}`] ? faEyeSlash : faEye}
                 size="sm"
-                className="text-dim"
               />
             </button>
           </div>
@@ -492,28 +561,57 @@ const OrgApiAccesskeys = () => {
         key: 'statusName',
         name: 'Status',
         renderCell: ({ row }) => (
-          <>
+          <div className="d-flex align-items-center justify-content-center">
             {row.isExpired ? (
-              <span className="badge bg-danger">Expired</span>
+              <span
+                className="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2"
+                style={{ fontSize: '0.875rem' }}
+              >
+                <FontAwesomeIcon icon={faExclamationTriangle} className="me-1 text-danger" />
+                Expired
+              </span>
             ) : (
               <span
-                className={`badge ${
-                  row.status === 1 ? 'bg-success' : row.status === 2 ? 'bg-secondary' : 'bg-warning'
+                className={`badge px-3 py-2 ${
+                  row.status === 1
+                    ? 'bg-success bg-opacity-10 text-success border border-success'
+                    : row.status === 2
+                      ? 'bg-secondary bg-opacity-10 text-secondary border border-secondary'
+                      : 'bg-warning bg-opacity-10 text-warning border border-warning'
                 }`}
+                style={{ fontSize: '0.875rem' }}
               >
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className={
+                    row.status === 1
+                      ? 'text-success me-1'
+                      : row.status === 2
+                        ? 'text-secondary me-1'
+                        : 'text-warning me-1'
+                  }
+                />
                 {row.statusName}
               </span>
             )}
-          </>
+          </div>
         ),
       },
       {
         key: 'expiryDate',
         name: 'Expiry Date',
         renderCell: ({ row }) => (
-          <span className={row.isExpired ? 'text-danger fw-semibold' : ''}>
-            {row.expiryDate || 'No expiry'}
-          </span>
+          <div className="d-flex flex-column">
+            <span className={`${row.isExpired ? 'text-danger fw-bold' : 'text-white fw-semibold'}`}>
+              {formatDate(row.expiryDate) || 'No expiry'}
+            </span>
+            {row.expiryDate && !row.isExpired && (
+              <small className="text-dim">Expires {dayjs(row.expiryDate).fromNow()}</small>
+            )}
+            {row.isExpired && (
+              <small className="text-dim">Expired {dayjs(row.expiryDate).fromNow()}</small>
+            )}
+          </div>
         ),
       },
       {
@@ -522,12 +620,15 @@ const OrgApiAccesskeys = () => {
         renderCell: ({ row }) => (
           <div className="d-flex align-items-center justify-content-center gap-2">
             <button
-              className="btn btn-sm btn-link text-primary p-0"
+              className={`btn btn-sm text-white ${
+                row.isExpired ? 'btn-danger' : 'btn-primary'
+              } d-flex align-items-center gap-2 px-2 py-1`}
               onClick={() => handleEditKey(row)}
               disabled={loading}
               title={row.isExpired ? 'Regenerate Key' : 'Edit'}
             >
-              <CIcon icon={cilPencil} size="lg" />
+              <CIcon icon={cilPencil} className="sm-icon" />
+              <span>{row.isExpired ? 'Regenerate' : 'Edit'}</span>
             </button>
           </div>
         ),
@@ -546,7 +647,7 @@ const OrgApiAccesskeys = () => {
         groupBy={['keyTypeName']}
         defaultExpandedGroups={true}
         pagination={false}
-        // rowHeight={50}
+        rowHeight={60}
         maxHeight={700}
         enableSearch
         searchPlaceholder="Search by type, network, public keys"
@@ -720,16 +821,18 @@ const OrgApiAccesskeys = () => {
                   />
                 </CCol>
               )}
-              <CCol md={formData.applyToAll ? 12 : 6}>
-                <CFormCheck
-                  id="applyToAll"
-                  label="Apply to all networks"
-                  checked={formData.applyToAll}
-                  onChange={handleCheckboxChange}
-                  className="mt-2 pt-4"
-                  disabled={editingKey}
-                />
-              </CCol>
+              {formData.keyType && (
+                <CCol md={formData.applyToAll ? 12 : 6}>
+                  <CFormCheck
+                    id="applyToAll"
+                    label="Apply to all networks"
+                    checked={formData.applyToAll}
+                    onChange={handleCheckboxChange}
+                    className="mt-2 pt-4"
+                    disabled={editingKey || getAvailableNetworks()?.length === 0}
+                  />
+                </CCol>
+              )}
             </CRow>
           </CModalBody>
 
@@ -744,8 +847,8 @@ const OrgApiAccesskeys = () => {
               }
               onClick={editingKey ? handleUpdateKey : handleGenerateKey}
               className="w-auto px-4"
-              type="submit"
               loading={loading}
+              type="submit"
             />
             <Button
               title="Cancel"

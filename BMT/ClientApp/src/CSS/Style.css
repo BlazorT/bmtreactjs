@@ -4610,3 +4610,7 @@ select {
   width: 0.8rem !important;
   height: 0.8rem !important;
 }
+.sm-icon {
+  width: 0.9rem !important;
+  height: 0.9rem !important;
+}
