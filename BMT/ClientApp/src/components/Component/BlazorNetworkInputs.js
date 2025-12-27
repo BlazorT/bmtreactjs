@@ -850,7 +850,7 @@ const BlazorNetworkInputs = (prop) => {
               </CRow>
             )}
           </AppContainer>
-          {user?.roleId === 2 && ( //!!nneed to make it 1
+          {user?.roleId === 1 && ( //!!nneed to make it 1
             <AppContainer>
               <DataGridHeader
                 title="Integration Setting"
@@ -915,22 +915,22 @@ const BlazorNetworkInputs = (prop) => {
             <Button
               title="Submit"
               onClick={() => {
-                onSubmit();
-                // if (parseInt(networkState?.purchasedQouta || '0') > 0) {
-                //   if (networkList.length === 0) {
-                //     dispatch(
-                //       updateToast({
-                //         isToastOpen: true,
-                //         toastMessage: 'Save atleast one netrwork settings to submit.',
-                //         toastVariant: 'error',
-                //       }),
-                //     );
-                //     return;
-                //   }
-                //   togglePaymentMdl();
-                // } else {
-                //   onSubmit();
-                // }
+                // onSubmit();
+                if (parseInt(networkState?.purchasedQouta || '0') > 0) {
+                  if (networkList.length === 0) {
+                    dispatch(
+                      updateToast({
+                        isToastOpen: true,
+                        toastMessage: 'Save atleast one netrwork settings to submit.',
+                        toastVariant: 'error',
+                      }),
+                    );
+                    return;
+                  }
+                  togglePaymentMdl();
+                } else {
+                  onSubmit();
+                }
               }}
               loading={loading}
               loadingTitle="Submitting..."

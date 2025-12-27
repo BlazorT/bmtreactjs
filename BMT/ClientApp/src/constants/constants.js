@@ -53,6 +53,17 @@ export const icons = {
   Whatsapp: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
   Email: cibGmail, // Assuming Email is your component for Email icon
 };
+export const icons_id_map = {
+  1: cilShortText,
+  2: cibWhatsapp, // Assuming WhatsApp is your component for WhatsApp icon
+  3: cibGmail, // Assuming Email is your component for Email icon
+  4: cibTwitter,
+  5: cibFacebook,
+  6: cibInstagram,
+  7: cibLinkedin,
+  8: cibTiktok,
+  9: cibSnapchat,
+};
 export const daysList = [
   { id: 1, name: 'Sunday' },
   { id: 2, name: 'Monday' },

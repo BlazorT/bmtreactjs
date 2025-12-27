@@ -229,7 +229,11 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
       return Math.max(calculatedHeight, maxHeightNum);
     }
     // Without pagination, use maxHeight
-    return typeof maxHeight === 'number' ? maxHeight : 500;
+    return typeof maxHeight === 'number'
+      ? `${maxHeight}px`
+      : typeof maxHeight === 'string'
+        ? maxHeight
+        : '500px';
   }, [pagination, maxHeight, rowHeight, currentPageSize]);
 
   // Custom styles for React Data Grid
@@ -323,7 +327,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     topSummaryRows={summaryRows}
                     style={{
                       height: '100%',
-                      maxHeight: `${gridContainerHeight}px`,
+                      maxHeight: gridContainerHeight,
                       overflow: 'auto',
                     }}
                   />
@@ -347,7 +351,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     }}
                     style={{
                       height: '100%',
-                      maxHeight: `${gridContainerHeight}px`,
+                      maxHeight: gridContainerHeight,
                       overflow: 'auto',
                     }}
                   />

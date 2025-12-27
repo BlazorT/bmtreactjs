@@ -10,7 +10,6 @@ const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const AddVariable = React.lazy(() => import('./pages/Admin/AddVariable'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
-const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
@@ -27,7 +26,6 @@ const organizationreport = React.lazy(() => import('./pages/Reports/organization
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
 const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
-const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
@@ -49,6 +47,7 @@ export const rolesRoutes = [
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
   { path: '/campaignslisting', name: 'Delivery', element: campaignslisting },
+  { path: 'OrgApiAccesskeys', name: 'OrgApiAccesskeys', element: OrgApiAccesskeys },
 ];
 
 export const routes = [
@@ -57,10 +56,8 @@ export const routes = [
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
-  //{ path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
-  { path: '/OrgApiAccesskeys', name: 'OrgApiAccesskeys', element: OrgApiAccesskeys },
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/AddVariable', name: 'AddVariable', element: AddVariable },
   { path: '/bmtRoles', name: 'bmtRoles', element: BmtRoles },

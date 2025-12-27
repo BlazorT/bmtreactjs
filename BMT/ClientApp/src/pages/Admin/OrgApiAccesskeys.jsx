@@ -21,6 +21,7 @@ import {
   faCheckCircle,
   faAngleUp,
   faAngleDown,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
@@ -40,6 +41,7 @@ import CustomDatePicker from '../../components/UI/DatePicker';
 import Form from 'src/components/UI/Form';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { formatDateTime, formatDate } from 'src/helpers/formatDate';
+import { icons_id_map } from 'src/constants/constants';
 
 dayjs.extend(utc);
 dayjs.extend(rt);
@@ -214,7 +216,9 @@ const OrgApiAccesskeys = () => {
           orgId: user?.orgId,
           Primarykey: formData.publicKey,
           Accesskey: `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-          ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+          ExpiryDate: formData.expiryDate
+            ? dayjs(formData.expiryDate).endOf('day').local().format()
+            : null,
           NetworkId: Number(network.id),
           Status: Number(formData.status),
           IsProduction: formData.keyType == 2 ? 1 : 0,
@@ -248,7 +252,9 @@ const OrgApiAccesskeys = () => {
           orgId: user?.orgId,
           Primarykey: formData.publicKey,
           Accesskey: generatedAccessKey,
-          ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+          ExpiryDate: formData.expiryDate
+            ? dayjs(formData.expiryDate).endOf('day').local().format()
+            : null,
           NetworkId: Number(formData.selectedNetwork),
           Status: Number(formData.status),
           IsProduction: formData.keyType == 2 ? 1 : 0,
@@ -295,7 +301,9 @@ const OrgApiAccesskeys = () => {
         Accesskey: expired
           ? `${keyPrefix}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
           : editingKey.accesskey, // Keep existing if not expired
-        ExpiryDate: formData.expiryDate ? dayjs(formData.expiryDate).utc().format() : null,
+        ExpiryDate: formData.expiryDate
+          ? dayjs(formData.expiryDate).endOf('day').local().format()
+          : null,
         NetworkId: Number(formData.selectedNetwork),
         Status: Number(formData.status),
         IsProduction: formData.keyType == 2 ? 1 : 0,
@@ -452,6 +460,16 @@ const OrgApiAccesskeys = () => {
     return networks.filter((network) => !usedNetworkIdsForType.includes(network.id));
   };
 
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('API key copied', 'success');
+    } catch (err) {
+      console.error('Copy failed', err);
+      // optional: show error toast
+    }
+  };
+
   // Transform API keys data for grid
   const gridRows = useMemo(() => {
     return (
@@ -476,6 +494,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'keyTypeName',
         name: 'Key Type',
+        minWidth: 150,
         renderGroupCell: ({ row }) => {
           return (
             <div className="d-flex align-items-center gap-2">
@@ -502,11 +521,9 @@ const OrgApiAccesskeys = () => {
         key: 'networkName',
         name: 'Network',
         renderCell: ({ row }) => (
-          <div className="d-flex align-items-center justify-content-center">
-            <span
-              className="badge bg-light text-white border border-secondary px-2 py-2"
-              style={{ fontSize: '0.875rem', fontWeight: '500' }}
-            >
+          <div className="d-flex align-items-center justify-content-center badge bg-light text-white border border-secondary px-2 py-2 gap-2">
+            <CIcon icon={icons_id_map[row.networkId]} className="sm-icon" />
+            <span className="" style={{ fontSize: '0.875rem', fontWeight: '500' }}>
               {row.networkName}
             </span>
           </div>
@@ -516,15 +533,15 @@ const OrgApiAccesskeys = () => {
         key: 'publicKey',
         name: 'Public Key',
         renderCell: ({ row }) => (
-          <div className="d-flex align-items-center gap-1">
+          <div className="bg-dark text-truncate bg-opacity-50 text-white rounded px-2 py-1 flex-grow-1 d-flex align-items-center justify-content-between gap-1">
             <div
-              className="bg-dark bg-opacity-75 rounded px-3 py-1 flex-grow-1"
+              className="text-truncate"
               style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
             >
               {visibleKeys[row.id] ? row.publicKey : maskKey(row.publicKey)}
             </div>
             <button
-              className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center"
+              className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
               onClick={() => toggleKeyVisibility(row.id)}
               title={visibleKeys[row.id] ? 'Hide' : 'Show'}
             >
@@ -537,23 +554,33 @@ const OrgApiAccesskeys = () => {
         key: 'apiKey',
         name: 'Private Key',
         renderCell: ({ row }) => (
-          <div className="d-flex align-items-center gap-1">
+          <div className="bg-dark text-truncate bg-opacity-50 text-white rounded px-2 py-1 flex-grow-1 d-flex align-items-center justify-content-between gap-1">
             <div
-              className="bg-dark bg-opacity-75 text-white rounded px-3 py-1 flex-grow-1"
+              className="text-truncate "
               style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
             >
               {visibleKeys[`private-${row.id}`] ? row.apiKey : maskKey(row.apiKey)}
             </div>
-            <button
-              className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center"
-              onClick={() => toggleKeyVisibility(`private-${row.id}`)}
-              title={visibleKeys[`private-${row.id}`] ? 'Hide' : 'Show'}
-            >
-              <FontAwesomeIcon
-                icon={visibleKeys[`private-${row.id}`] ? faEyeSlash : faEye}
-                size="sm"
-              />
-            </button>
+            <div className="d-flex gap-1">
+              <button
+                className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
+                onClick={() => toggleKeyVisibility(`private-${row.id}`)}
+                title={visibleKeys[`private-${row.id}`] ? 'Hide' : 'Show'}
+              >
+                <FontAwesomeIcon
+                  icon={visibleKeys[`private-${row.id}`] ? faEyeSlash : faEye}
+                  size="sm"
+                />
+              </button>
+              {/* Copy */}
+              <button
+                className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
+                onClick={() => copyToClipboard(row.apiKey)}
+                title="Copy key"
+              >
+                <FontAwesomeIcon icon={faCopy} size="sm" />
+              </button>
+            </div>
           </div>
         ),
       },
@@ -642,13 +669,13 @@ const OrgApiAccesskeys = () => {
       <CustomDatagrid
         rows={gridRows}
         columns={columns}
-        loading={loading}
+        loading={apiKeysLoading || networkLoading}
         enableGrouping={true}
         groupBy={['keyTypeName']}
         defaultExpandedGroups={true}
         pagination={false}
         rowHeight={60}
-        maxHeight={700}
+        maxHeight={'70dvh'}
         enableSearch
         searchPlaceholder="Search by type, network, public keys"
         headerProps={{
