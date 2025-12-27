@@ -816,7 +816,7 @@ const OrgApiAccesskeys = () => {
               </CCol>
               <CCol md={6}>
                 <CustomInput
-                  label="Password"
+                  label="Login Password"
                   name="password"
                   type="password"
                   placeholder="Enter password"
