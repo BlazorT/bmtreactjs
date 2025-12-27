@@ -42,6 +42,7 @@ import Form from 'src/components/UI/Form';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { formatDateTime, formatDate } from 'src/helpers/formatDate';
 import { icons_id_map } from 'src/constants/constants';
+import usePageRoles from 'src/hooks/usePageRoles';
 
 dayjs.extend(utc);
 dayjs.extend(rt);
@@ -79,7 +80,7 @@ const defaultFormValues = {
 const OrgApiAccesskeys = () => {
   const user = useSelector((state) => state.user);
   const showToast = useShowToast();
-
+  const pageRoles = usePageRoles('Licenses');
   const {
     data: networkRes,
     postData: fetchNetworks,
@@ -641,27 +642,31 @@ const OrgApiAccesskeys = () => {
           </div>
         ),
       },
-      {
-        key: 'action',
-        name: 'Action',
-        renderCell: ({ row }) => (
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <button
-              className={`btn btn-sm text-white ${
-                row.isExpired ? 'btn-danger' : 'btn-primary'
-              } d-flex align-items-center gap-2 px-2 py-1`}
-              onClick={() => handleEditKey(row)}
-              disabled={loading}
-              title={row.isExpired ? 'Regenerate Key' : 'Edit'}
-            >
-              <CIcon icon={cilPencil} className="sm-icon" />
-              <span>{row.isExpired ? 'Regenerate' : 'Edit'}</span>
-            </button>
-          </div>
-        ),
-      },
+      ...(pageRoles?.canUpdate === 1
+        ? [
+            {
+              key: 'action',
+              name: 'Action',
+              renderCell: ({ row }) => (
+                <div className="d-flex align-items-center justify-content-center gap-2">
+                  <button
+                    className={`btn btn-sm text-white ${
+                      row.isExpired ? 'btn-danger' : 'btn-primary'
+                    } d-flex align-items-center gap-2 px-2 py-1`}
+                    onClick={() => handleEditKey(row)}
+                    disabled={loading}
+                    title={row.isExpired ? 'Regenerate Key' : 'Edit'}
+                  >
+                    <CIcon icon={cilPencil} className="sm-icon" />
+                    <span>{row.isExpired ? 'Regenerate' : 'Edit'}</span>
+                  </button>
+                </div>
+              ),
+            },
+          ]
+        : []),
     ],
-    [visibleKeys, loading],
+    [visibleKeys, loading, pageRoles],
   );
 
   return (
@@ -680,10 +685,10 @@ const OrgApiAccesskeys = () => {
         searchPlaceholder="Search by type, network, public keys"
         headerProps={{
           title: 'API Key Management',
-          addButton: 'Generate API Key',
+          addButton: pageRoles?.canAdd === 1 ? 'Generate API Key' : undefined,
           addBtnClick: () => setShowModal(true),
-          canExport: true,
-          canPrint: true,
+          canExport: pageRoles?.canExport === 1,
+          canPrint: pageRoles?.canPrint === 1,
           fileName: 'API_Keys',
           filterDisable: true,
         }}
