@@ -100,9 +100,16 @@ const OrgApiAccesskeys = () => {
   const [visibleKeys, setVisibleKeys] = useState({});
   const [formData, setFormData] = useState(defaultFormValues);
   const [errors, setErrors] = useState({});
+  const [passwordModal, setPasswordModal] = useState({
+    visible: false,
+    keyId: null,
+    password: '',
+    userName: '',
+    error: '',
+  });
 
   const { postData: authenticateUser, loading: authenticationLoading } = useApi(
-    `/Common/login?email=${user?.userInfo?.email}&password=${formData.password}`,
+    `/Common/login?email=${user?.userInfo?.email}&password=${passwordModal?.visible ? passwordModal?.password : formData.password}`,
   );
 
   const loading = useMemo(
@@ -471,6 +478,75 @@ const OrgApiAccesskeys = () => {
     }
   };
 
+  const handlePrivateKeyView = (keyId) => {
+    // If already visible, just hide it
+    if (visibleKeys[`private-${keyId}`]) {
+      setVisibleKeys((prev) => ({
+        ...prev,
+        [`private-${keyId}`]: false,
+      }));
+      return;
+    }
+
+    // Show password modal
+    setPasswordModal({
+      visible: true,
+      keyId: keyId,
+      password: '',
+      error: '',
+    });
+  };
+  const handlePasswordSubmit = async () => {
+    console.log();
+    if (!passwordModal.password) {
+      showToast('Password is required', 'error');
+      setPasswordModal((prev) => ({ ...prev, error: 'Password is required' }));
+      return;
+    }
+
+    try {
+      const data = await authenticateUser();
+
+      if (data?.status === true) {
+        // Authentication successful, show the key
+        setVisibleKeys((prev) => ({
+          ...prev,
+          [`private-${passwordModal.keyId}`]: true,
+        }));
+
+        // Close modal and reset
+        setPasswordModal({
+          visible: false,
+          keyId: null,
+          password: '',
+          error: '',
+        });
+
+        showToast('Access key revealed', 'success');
+      } else {
+        setPasswordModal((prev) => ({
+          ...prev,
+          error: data?.message || 'Invalid password',
+        }));
+        showToast('Authentication failed. Please try again.', 'error');
+      }
+    } catch (error) {
+      setPasswordModal((prev) => ({
+        ...prev,
+        error: 'Authentication failed. Please try again.',
+      }));
+    }
+  };
+
+  const closePasswordModal = () => {
+    setPasswordModal({
+      visible: false,
+      keyId: null,
+      password: '',
+      error: '',
+    });
+  };
+
   // Transform API keys data for grid
   const gridRows = useMemo(() => {
     return (
@@ -565,7 +641,7 @@ const OrgApiAccesskeys = () => {
             <div className="d-flex gap-1">
               <button
                 className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
-                onClick={() => toggleKeyVisibility(`private-${row.id}`)}
+                onClick={() => handlePrivateKeyView(row.id)}
                 title={visibleKeys[`private-${row.id}`] ? 'Hide' : 'Show'}
               >
                 <FontAwesomeIcon
@@ -573,14 +649,16 @@ const OrgApiAccesskeys = () => {
                   size="sm"
                 />
               </button>
-              {/* Copy */}
-              <button
-                className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
-                onClick={() => copyToClipboard(row.apiKey)}
-                title="Copy key"
-              >
-                <FontAwesomeIcon icon={faCopy} size="sm" />
-              </button>
+              {/* Copy - only show when key is visible */}
+              {visibleKeys[`private-${row.id}`] && (
+                <button
+                  className="btn btn-sm text-dim rounded-circle d-flex align-items-center justify-content-center px-0"
+                  onClick={() => copyToClipboard(row.apiKey)}
+                  title="Copy key"
+                >
+                  <FontAwesomeIcon icon={faCopy} size="sm" />
+                </button>
+              )}
             </div>
           </div>
         ),
@@ -893,6 +971,57 @@ const OrgApiAccesskeys = () => {
             />
           </CModalFooter>
         </Form>
+      </CModal>
+
+      <CModal
+        visible={passwordModal.visible}
+        alignment="center"
+        backdrop="static"
+        size="lg"
+        onClose={closePasswordModal}
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Prove your identity</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <p className="text-muted mb-3">Please enter your password to view the private key.</p>
+          <CustomInput
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            value={passwordModal.password}
+            onChange={(e) =>
+              setPasswordModal((prev) => ({
+                ...prev,
+                password: e.target.value,
+                error: '',
+              }))
+            }
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handlePasswordSubmit();
+              }
+            }}
+            icon={cilLockLocked}
+            isRequired={true}
+            message={passwordModal.error}
+          />
+        </CModalBody>
+        <CModalFooter>
+          <Button
+            title="Verify"
+            onClick={handlePasswordSubmit}
+            className="w-auto px-4"
+            loading={authenticationLoading}
+          />
+          <Button
+            title="Cancel"
+            onClick={closePasswordModal}
+            className="w-auto px-4"
+            disabled={authenticationLoading}
+          />
+        </CModalFooter>
       </CModal>
     </AppContainer>
   );

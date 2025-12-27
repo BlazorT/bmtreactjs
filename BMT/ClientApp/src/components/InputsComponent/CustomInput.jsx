@@ -33,6 +33,7 @@ const CustomInput = ({
   src,
   onPaste,
   info,
+  onKeyPress,
 }) => {
   // console.log({ src });
   return (
@@ -76,6 +77,7 @@ const CustomInput = ({
             maxLength={maxLength}
             defaultValue={defaultValue}
             onBlur={onBlur}
+            onKeyPress={onKeyPress}
           />
 
           {isRequired && <span className="invalid-tooltip">{message}</span>}
