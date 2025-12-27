@@ -200,6 +200,7 @@ namespace com.blazor.bmt.controllers
                     pkg.LastUpdatedAt = GlobalUTIL.CurrentDateTime;                    
                     pkg.Status = package.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : package.Status;
                     pkg.Accesskey = package.Accesskey??pkg.Accesskey;
+                    pkg.ExpiryDate = Convert.ToDateTime(package.ExpiryDate).Year<= 1900? pkg.ExpiryDate: package.ExpiryDate;
                     pkg.Primarykey = package.Primarykey ?? pkg.Primarykey;
                     pkg.RowVer = pkg.RowVer + 1;
                      await _orglicensingService.Update(pkg);
