@@ -187,9 +187,11 @@ namespace com.blazor.bmt.controllers
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            OrglicensingModel package = null; // ✅ declare here
             try
             {
-                OrglicensingModel package = lsModel.FirstOrDefault();
+                package = lsModel.FirstOrDefault();
+                // OrglicensingModel package = lsModel.FirstOrDefault();
                 if (package.Id > 0)
                 {
                     // UsersViewModel User = new UsersViewModel();
@@ -238,7 +240,7 @@ namespace com.blazor.bmt.controllers
             catch (Exception ex)
             {
                 blazorApiResponse.status = false;
-                blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATE_FAILED, (package.Name), (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
+                blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATE_FAILED, package?.Name ?? "Org License", (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
 
                 blazorApiResponse.status = false;
             }
