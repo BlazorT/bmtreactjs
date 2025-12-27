@@ -183,13 +183,13 @@ namespace com.blazor.bmt.controllers
         }
         [HttpPost("addupdateorglicense")]
         [Route("addupdateorglicense")]
-        public async Task<ActionResult> AddUpdateOrgLicense([FromBody] OrglicensingModel package)
+        public async Task<ActionResult> AddUpdateOrgLicense([FromBody] List<OrglicensingModel> lsModel)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             try
             {
-
+                OrglicensingModel package = lsModel.FirstOrDefault();
                 if (package.Id > 0)
                 {
                     // UsersViewModel User = new UsersViewModel();
@@ -203,7 +203,8 @@ namespace com.blazor.bmt.controllers
                     pkg.ExpiryDate = Convert.ToDateTime(package.ExpiryDate).Year<= 1900? pkg.ExpiryDate: package.ExpiryDate;
                     pkg.Primarykey = package.Primarykey ?? pkg.Primarykey;
                     pkg.RowVer = pkg.RowVer + 1;
-                     await _orglicensingService.Update(pkg);
+                    pkg.Accesskey = GlobalUTIL.Encrypt(package.Primarykey + "_" + package.NetworkId + "_" + GlobalUTIL.CurrentDateTime.Microsecond, true, BlazorConstant.SECKEY);
+                    await _orglicensingService.Update(pkg);
 
                     blazorApiResponse.status = true;
                     if (pkg.Id > 0)
@@ -214,18 +215,22 @@ namespace com.blazor.bmt.controllers
                 }
                 else if (package.Id <= 0)
                 {
-                    // UsersViewModel User = new UsersViewModel();
-                    //  OrglicensingModel pkg = await _packageService.GetPackageByIdAsync(package.Id);
-                    // OrganizationModel organization = new OrganizationModel();
+                    List<OrglicensingModel> lst = new List<OrglicensingModel>();
+                    foreach (OrglicensingModel lpkg in lsModel)
+                    {
+                        lpkg.Accesskey = GlobalUTIL.Encrypt(lpkg.Primarykey + "_"+ lpkg.NetworkId + GlobalUTIL.CurrentDateTime.Microsecond, true, BlazorConstant.SECKEY);
+                        lpkg.RowVer = lpkg.RowVer + 1;
+                        OrglicensingModel dbObj = await _orglicensingService.Create(lpkg);
+                        lst.Add(dbObj);
+                    }// foreach
 
-                    package.RowVer = package.RowVer + 1;
-                  OrglicensingModel dbModel=  await _orglicensingService.Create(package);
-
-                    blazorApiResponse.status = true;
-                    if (dbModel.Id > 0)
-                        blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (dbModel.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
+                    if (lst.Any())
+                    {
+                        blazorApiResponse.status = true;
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (lst.Count), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
+                    }
                     else
-                        blazorApiResponse.message = string.Format(util.BlazorConstant.INSERTED_FAILED, (dbModel.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.INSERTED_FAILED, (lst.Count), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
 
                 }
                 //  BlazorResponseViewModel.status = true;
