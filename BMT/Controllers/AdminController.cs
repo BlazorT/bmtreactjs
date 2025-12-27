@@ -238,7 +238,7 @@ namespace com.blazor.bmt.controllers
             catch (Exception ex)
             {
                 blazorApiResponse.status = false;
-                blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATE_FAILED, (package.Name), (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
+                blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATE_FAILED, (lsModel.FirstOrDefault().Name), (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
 
                 blazorApiResponse.status = false;
             }
