@@ -400,6 +400,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           columns={columns}
           loading={loading}
           enableGrouping
+          maxHeight={700}
           defaultExpandedGroups
           groupBy={['campaignDate', 'createdAt']}
           summary={[

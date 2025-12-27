@@ -55,6 +55,7 @@ const Products = () => {
         columns={pricingCols}
         loading={loading || !data}
         rowHeight={50}
+        maxHeight={700}
         isHeader={true}
         groupBy={['name']}
         enableGrouping

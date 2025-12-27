@@ -38,6 +38,7 @@ interface CustomDatagridProps {
   canPrint?: boolean;
   noRowsMessage?: string;
   enableSearch?: boolean;
+  searchPlaceholder?: string;
   footer?: React.ReactNode;
   cellBorder?: boolean;
   isZeroMargin?: boolean;
@@ -67,6 +68,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   sorting = [],
   noRowsMessage = 'No data available',
   enableSearch = false,
+  searchPlaceholder = '',
   footer,
   cellBorder = false,
   isZeroMargin = false,
@@ -224,7 +226,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
       const headerHeight = 35;
       const calculatedHeight = headerHeight + rowHeight * currentPageSize;
       const maxHeightNum = typeof maxHeight === 'number' ? maxHeight : 500;
-      return Math.min(calculatedHeight, maxHeightNum);
+      return Math.max(calculatedHeight, maxHeightNum);
     }
     // Without pagination, use maxHeight
     return typeof maxHeight === 'number' ? maxHeight : 500;
@@ -276,10 +278,11 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
           {enableSearch && (
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={searchPlaceholder || 'Search...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ marginBottom: '10px', padding: '5px', width: '100%' }}
+              style={{ padding: '5px', width: '100%' }}
+              className="form-control item"
             />
           )}
 
@@ -292,7 +295,6 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                 className="rdg-scroll-container"
                 style={{
                   ...gridStyles,
-
                   position: 'relative',
                 }}
               >

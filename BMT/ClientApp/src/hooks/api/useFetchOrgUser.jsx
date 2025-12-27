@@ -25,7 +25,7 @@ export const useFetchOrgUser = () => {
       lastName: '',
       firstName: '',
       password: '',
-      contact: "",
+      contact: '',
       rowVer: 0,
       genderId: 0,
       securityToken: '',
@@ -38,18 +38,17 @@ export const useFetchOrgUser = () => {
         : dayjs().utc().subtract(2, 'year').format('YYYY-MM-DD'),
       lastUpdatedAt: filters
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
     };
-    console.log(OrgUserBody,'body')
+    console.log(OrgUserBody, 'body');
     const res = await postData(OrgUserBody);
-     console.log(res,'orguserss') ;
+    console.log(res, 'orguserss');
     if (res.status) {
       return res.data;
     } else {
       showToast(res.message, 'error');
       return [];
     }
-
   };
 
   return { data, error, loading, fetchUsers };

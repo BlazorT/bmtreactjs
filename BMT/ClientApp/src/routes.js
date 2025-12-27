@@ -15,6 +15,7 @@ const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference'));
+const OrgApiAccesskeys = React.lazy(() => import('./pages/Admin/OrgApiAccesskeys'));
 const organizationsusers = React.lazy(() => import('./pages/DA/organizationsusers'));
 const campaignslisting = React.lazy(() => import('./pages/DA/campaignslisting'));
 const CampaignContacts = React.lazy(() => import('./pages/DA/campaignContacts'));
@@ -59,6 +60,7 @@ export const routes = [
   //{ path: '/PrivacyPolicy', name: 'PrivacyPolicy', element: PrivacyPolicy },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
+  { path: '/OrgApiAccesskeys', name: 'OrgApiAccesskeys', element: OrgApiAccesskeys },
   { path: '/pricing', name: 'pricing', element: pricing },
   { path: '/AddVariable', name: 'AddVariable', element: AddVariable },
   { path: '/bmtRoles', name: 'bmtRoles', element: BmtRoles },
