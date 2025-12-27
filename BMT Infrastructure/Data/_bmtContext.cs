@@ -26,7 +26,7 @@ public partial class _bmtContext : DbContext
     public virtual DbSet<Alertlevel> Alertlevels { get; set; }
 
     public virtual DbSet<Applog> Applogs { get; set; }
-
+    public virtual DbSet<Orglicensing> Orglicensings { get; set; }
     public virtual DbSet<Apptrace> Apptraces { get; set; }
 
     public virtual DbSet<Auditentity> Auditentities { get; set; }
@@ -318,6 +318,34 @@ public partial class _bmtContext : DbContext
         //        .HasMaxLength(500)
         //        .HasColumnName("UpdateSMSNotificationsQuery");
         //});
+        modelBuilder.Entity<Orglicensing>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("orglicensing");
+
+            entity.HasIndex(e => e.NetworkId, "fk_orglicensing_NetworkId");
+
+            entity.HasIndex(e => e.OrgId, "idx_OrgId");
+
+            entity.Property(e => e.Accesskey)
+                .HasMaxLength(1000)
+                .HasColumnName("accesskey");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+            entity.Property(e => e.IsProduction).HasColumnName("isProduction");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.Primarykey)
+                .HasMaxLength(1000)
+                .HasColumnName("primarykey");
+            entity.Property(e => e.RowVer).HasDefaultValueSql("'1'");
+
+        //entity.HasOne(d => d.Network).WithMany(p => p.Orglicensings)
+        //    .HasForeignKey(d => d.NetworkId)
+        //    .HasConstraintName("fk_NetworkId_orglicensing");
+        });
 
         modelBuilder.Entity<Bundlingpackagedetail>(entity =>
         {

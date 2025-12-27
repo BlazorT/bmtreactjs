@@ -82,6 +82,7 @@ namespace com.blazor.bmt
             CreateMap<Contactsalbum, ContactsalbumModel>().ReverseMap();
             CreateMap<Unsubscriber, UnsubscriberModel>().ReverseMap();
             CreateMap<Templatevariable, TemplatevariableModel>().ReverseMap();
+            CreateMap<Orglicensing, OrglicensingModel>().ReverseMap();
             // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }

@@ -39,6 +39,7 @@ services.AddScoped(typeof(IUsersRepository), typeof(UsersRepository));
 services.AddScoped(typeof(IOnlineUsersRepository), typeof(OnlineUsersRepository));
 services.AddScoped(typeof(INotificationsRepository), typeof(NotificationsRepository));
 services.AddScoped(typeof(IMediaContentRepository), typeof(MediaContentRepository));
+services.AddScoped(typeof(IOrglicensingRepository), typeof(OrglicensingRepository));
 
 services.AddScoped(typeof(IGlobalNetworkDetailsRepository), typeof(GlobalNetworkDetailsRepository));
 
@@ -89,6 +90,7 @@ services.AddScoped<ICampaignRecipientService, CampaignRecipientService>();
 services.AddScoped<IContactAlbumService, ContactAlbumsService>();
 services.AddScoped<IUnsubscriberService, UnsubscriberService>();
 services.AddScoped<ITemplatevariableService, TemplateVariablenService>();
+services.AddScoped<IOrglicensingService, OrglicensingService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();

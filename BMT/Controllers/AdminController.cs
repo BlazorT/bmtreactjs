@@ -1,24 +1,11 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
+﻿
 using Blazor.Web.UI.Interfaces;
-//using Blazor.Web.ViewModels;
-//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-//using Microsoft.AspNetCore.Cors;
-//using Blazor.Web.Application.Interfaces;
-//using Blazor.Web.Application.Models;
-//using Microsoft.AspNetCore.Http.HttpResults;
-//using Blazor.Web.UI.Services;
-//using System.IO;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
 using com.blazor.bmt.application.model;
-//using com.blazor.bmt.core;
 namespace com.blazor.bmt.controllers
 {
     [ApiController]
@@ -30,25 +17,24 @@ namespace com.blazor.bmt.controllers
         private readonly IBlazorRepoPageService _blazorRepoPageService;
         private readonly IPackageService _packageService;
         private readonly IBundlingPackageService _BundlingPackageService;
+        private readonly IOrglicensingService _orglicensingService;
         private readonly IGlobalNetworkDetailService _GlobalNetworkDetailService;
         private readonly IBlazorUtilPageService _utilPageService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
 
         //public IEnumerable<UserViewModel> usrvmodl { get; set; } = new List<UserViewModel>();
-        public AdminController(IBundlingPackageService BundlingPackageService, IBlazorRepoPageService blazorRepoPageService, IGlobalNetworkDetailService globalNetworkDetailService, IPackageService packageService,IBlazorUtilPageService utilPageService,  IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
+        public AdminController(IBundlingPackageService BundlingPackageService, IOrglicensingService orglicensingService, IBlazorRepoPageService blazorRepoPageService, IGlobalNetworkDetailService globalNetworkDetailService, IPackageService packageService,IBlazorUtilPageService utilPageService,  IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
         {
-            _BundlingPackageService = BundlingPackageService ?? throw new ArgumentNullException(nameof(BundlingPackageService));
-           // _usersPageService = usersPageService ?? throw new ArgumentNullException(nameof(usersPageService));
-            _GlobalNetworkDetailService = globalNetworkDetailService ?? throw new ArgumentNullException(nameof(globalNetworkDetailService));
-           // _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
+            _orglicensingService = orglicensingService ?? throw new ArgumentNullException(nameof(orglicensingService));
+            _BundlingPackageService = BundlingPackageService ?? throw new ArgumentNullException(nameof(BundlingPackageService));            
+            _GlobalNetworkDetailService = globalNetworkDetailService ?? throw new ArgumentNullException(nameof(globalNetworkDetailService));           
             _utilPageService = utilPageService ?? throw new ArgumentNullException(nameof(utilPageService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _packageService = packageService ?? throw new ArgumentNullException(nameof(packageService));
-            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-           // _addressPageService = addressPageService ?? throw new ArgumentNullException(nameof(addressPageService));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));           
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-           // _donationsPageService = donationsPageService ?? throw new ArgumentNullException(nameof(donationsPageService));
+           
 
         }
         [HttpGet("packageslist")]
@@ -71,6 +57,31 @@ namespace com.blazor.bmt.controllers
                 blazorApiResponse.errorCode = "408";
                 blazorApiResponse.message = ex.Message;
                // _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
+
+        [HttpGet("orglicenses")]
+        [HttpPost("orglicenses")]
+        [Route("orglicenses")]
+        public async Task<ActionResult> GetOrgLicenseKeysList([FromBody] OrglicensingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //var uvmr = UTIL.userls.Where(x => x.storeid == cvm.storeid && x.username == cvm.username && x.status == cvm.status && x.password == uvm.password);
+                blazorApiResponse.status = true;
+                blazorApiResponse.data = await _orglicensingService.GetOrglicensingsAllListAsync(model);
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                // _logger.LogError(ex.StackTrace);
             }
             return Ok(blazorApiResponse);
             // .ToArray();
@@ -157,6 +168,63 @@ namespace com.blazor.bmt.controllers
                         blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (pkg.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
                     else
                         blazorApiResponse.message = string.Format(util.BlazorConstant.INSERTED_FAILED, (pkg.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
+
+                }
+                //  BlazorResponseViewModel.status = true;
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATE_FAILED, (package.Name), (ex.InnerException == null ? ex.Message : ex.InnerException.Message));//: string.Format(UTIL.BlazorConstants.MERCHANT_ACTIVATION_FAILED, (uvm.FirstName + " " + uvm.LastName), (ex.InnerException == null ? ex.Message : ex.InnerException.Message)));
+
+                blazorApiResponse.status = false;
+            }
+            return Ok(blazorApiResponse);
+        }
+        [HttpPost("addupdateorglicense")]
+        [Route("addupdateorglicense")]
+        public async Task<ActionResult> AddUpdateOrgLicense([FromBody] OrglicensingModel package)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+
+                if (package.Id > 0)
+                {
+                    // UsersViewModel User = new UsersViewModel();
+                    OrglicensingModel pkg = await _orglicensingService.GetOrglicensingById(package.Id);
+                    // OrganizationModel organization = new OrganizationModel();
+                    pkg.CreatedBy = package.CreatedBy;
+                    pkg.LastUpdatedBy = package.LastUpdatedBy;
+                    pkg.LastUpdatedAt = GlobalUTIL.CurrentDateTime;                    
+                    pkg.Status = package.Status == 0 ? (int)util.COMMON_STATUS.ACTIVE : package.Status;
+                    pkg.Accesskey = package.Accesskey??pkg.Accesskey;
+                    pkg.Primarykey = package.Primarykey ?? pkg.Primarykey;
+                    pkg.RowVer = pkg.RowVer + 1;
+                     await _orglicensingService.Update(pkg);
+
+                    blazorApiResponse.status = true;
+                    if (pkg.Id > 0)
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (pkg.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
+                    else
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.INSERTED_FAILED, (pkg.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
+
+                }
+                else if (package.Id <= 0)
+                {
+                    // UsersViewModel User = new UsersViewModel();
+                    //  OrglicensingModel pkg = await _packageService.GetPackageByIdAsync(package.Id);
+                    // OrganizationModel organization = new OrganizationModel();
+
+                    package.RowVer = package.RowVer + 1;
+                  OrglicensingModel dbModel=  await _orglicensingService.Create(package);
+
+                    blazorApiResponse.status = true;
+                    if (dbModel.Id > 0)
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.UPDATED_SUCCESS, (dbModel.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss")); //: "Now that you’ve completed your registration, we want you to start to think about your Business Plan. If you could start a business what would it be? Who would be your customers? Why would your business be important? Begin to fill out the Business Plan and YMC Admin will help you along the way. When you have your initial ideas filled out click the submit button and we will review your plan and give you feedback. Remember, the faster you complete your Business Plan, the faster we can post it and you can begin to collect funds from sponsors!";
+                    else
+                        blazorApiResponse.message = string.Format(util.BlazorConstant.INSERTED_FAILED, (dbModel.Name), System.DateTime.Now.ToString("MM/dd/yyy hh:mm:ss"));
 
                 }
                 //  BlazorResponseViewModel.status = true;
