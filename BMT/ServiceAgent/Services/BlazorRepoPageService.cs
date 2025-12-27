@@ -500,7 +500,8 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         MySqlParameter email = new MySqlParameter("p_email", MySqlDbType.VarChar);
                         email.Value = "" + model.Email;
                         paras.Add(email);
-                        MySqlParameter cred = new MySqlParameter("p_password", model.Password);
+                        MySqlParameter cred = new MySqlParameter("p_password", MySqlDbType.VarChar);
+                        cred.Value = model.Password;
                         paras.Add(cred);
                         MySqlParameter pRoleId = new MySqlParameter("p_RoleId", MySqlDbType.Int32);
                         pRoleId.Value = model.RoleId;
