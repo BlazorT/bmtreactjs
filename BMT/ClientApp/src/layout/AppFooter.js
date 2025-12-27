@@ -38,9 +38,19 @@ function AppFooter() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img className="PlayStoreIcon appleIcon" src="AppStore.png" alt="Blazor Media Toolkit on App Store" />
+            <img
+              className="PlayStoreIcon appleIcon"
+              src="AppStore.png"
+              alt="Blazor Media Toolkit on App Store"
+            />
           </a>
-          <img className="PlaySoreIcon" src="GooglePlaystore.png" alt="logo" />
+          <a
+            href="https://play.google.com/store/apps/details?id=com.blazor.bdmt&hl=en"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img className="ms-2 PlayStoreIcon appleIcon" src="GooglePlaystore.png" alt="logo" />
+          </a>
         </div>
         <div className="col-md-4 order2">
           {/*<a className="labelName pointer"   target="_blank" onClick={TermsModal}>*/}
@@ -54,7 +64,6 @@ function AppFooter() {
           >
             Policy Statement
           </a>
-
         </div>
       </div>
 
@@ -64,7 +73,7 @@ function AppFooter() {
             Register Organization
           </a>
         </div>
-       
+
         <div className="col-md-4 order3 mt-2">
           <img className="socialMediaIcon" src="insta-removebg-preview.png" alt="logo" />
           <img className="socialMediaIcon" src="twitter.png" alt="logo" />
@@ -92,14 +101,11 @@ function AppFooter() {
             Account Closed ?
           </a>
         </div>
-        <div className="col-md-4 order1">
-        
-        </div>
+        <div className="col-md-4 order1"></div>
         <div className="col-md-4 order2">
-          <a className="labelName pointer" href="/pricingDetails" target="_blank" >
+          <a className="labelName pointer" href="/pricingDetails" target="_blank">
             Pricing Details
           </a>
-       
         </div>
       </div>
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={TermsModal} />

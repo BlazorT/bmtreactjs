@@ -3,8 +3,6 @@
 import { cilCalendar, cilLockLocked, cilLockUnlocked, cilPencil } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import {
-  CCard,
-  CCardBody,
   CCol,
   CFormCheck,
   CModal,
@@ -20,16 +18,16 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
+import AppContainer from 'src/components/UI/AppContainer';
 import { formValidator } from 'src/helpers/formValidator';
+import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
 import CustomInput from '../../components/InputsComponent/CustomInput';
 import CustomSelectInput from '../../components/InputsComponent/CustomSelectInput';
 import Button from '../../components/UI/Button';
 import CustomDatePicker from '../../components/UI/DatePicker';
 import Form from '../../components/UI/Form';
-import useApi from 'src/hooks/useApi';
-import AppContainer from 'src/components/UI/AppContainer';
-import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 
 dayjs.extend(utc);
 
