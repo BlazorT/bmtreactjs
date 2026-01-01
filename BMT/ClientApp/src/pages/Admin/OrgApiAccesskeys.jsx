@@ -13,36 +13,36 @@ import {
   CRow,
 } from '@coreui/react';
 import {
+  faAngleDown,
+  faAngleUp,
+  faCheckCircle,
+  faCopy,
+  faExclamationTriangle,
   faEye,
   faEyeSlash,
   faKey,
   faShieldAlt,
-  faExclamationTriangle,
-  faCheckCircle,
-  faAngleUp,
-  faAngleDown,
-  faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import rt from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import AppContainer from 'src/components/UI/AppContainer';
+import Form from 'src/components/UI/Form';
+import { icons_id_map } from 'src/constants/constants';
+import { formatDate } from 'src/helpers/formatDate';
 import { formValidator } from 'src/helpers/formValidator';
 import useApi from 'src/hooks/useApi';
+import usePageRoles from 'src/hooks/usePageRoles';
+import { useShowToast } from 'src/hooks/useShowToast';
 import globalutil from 'src/util/globalutil';
 import CustomInput from '../../components/InputsComponent/CustomInput';
 import CustomSelectInput from '../../components/InputsComponent/CustomSelectInput';
 import Button from '../../components/UI/Button';
 import CustomDatePicker from '../../components/UI/DatePicker';
-import Form from 'src/components/UI/Form';
-import { useShowToast } from 'src/hooks/useShowToast';
-import { formatDateTime, formatDate } from 'src/helpers/formatDate';
-import { icons_id_map } from 'src/constants/constants';
-import usePageRoles from 'src/hooks/usePageRoles';
 
 dayjs.extend(utc);
 dayjs.extend(rt);
@@ -497,7 +497,6 @@ const OrgApiAccesskeys = () => {
     });
   };
   const handlePasswordSubmit = async () => {
-    console.log();
     if (!passwordModal.password) {
       showToast('Password is required', 'error');
       setPasswordModal((prev) => ({ ...prev, error: 'Password is required' }));

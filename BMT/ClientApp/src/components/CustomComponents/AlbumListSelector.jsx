@@ -4,8 +4,6 @@ import { CRow, CCol } from '@coreui/react';
 import Button from '../UI/Button';
 import globalutil from 'src/util/globalutil';
 import { useShowToast } from 'src/hooks/useShowToast';
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilPlus, cilPencil } from '@coreui/icons';
 
 const NETWORK_COLOR_MAP = {
   1: '#0d6efd', // SMS - blue
@@ -19,8 +17,14 @@ const NETWORK_COLOR_MAP = {
   9: '#FFFC00', // Snapchat - yellow
 };
 
-const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedNetworks }) => {
+const AlbumListSelector = ({
+  selectedAlbumList,
+  toggleIsShowAlbumList,
+  selectedNetworks,
+  recipients,
+}) => {
   const showToast = useShowToast();
+
   const getNetworkName = (networkId) => {
     const networks = globalutil.networks();
     return networks?.find((n) => n.id === networkId)?.name || 'Unknown';
@@ -36,6 +40,18 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedN
     };
   };
 
+  // Group albums by network
+  const albumsByNetwork = React.useMemo(() => {
+    const grouped = {};
+    selectedAlbumList?.forEach((album) => {
+      if (!grouped[album.networkid]) {
+        grouped[album.networkid] = [];
+      }
+      grouped[album.networkid].push(album);
+    });
+    return grouped;
+  }, [selectedAlbumList]);
+
   const onSelectClick = () => {
     if (selectedNetworks?.length === 0) {
       showToast('Select at least one network first to select contact list', 'info');
@@ -43,6 +59,7 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedN
     }
     toggleIsShowAlbumList();
   };
+
   return (
     <CRow>
       <CCol>
@@ -62,44 +79,67 @@ const AlbumListSelector = ({ selectedAlbumList, toggleIsShowAlbumList, selectedN
                   <span className="text-muted">No contact lists selected</span>
                 </div>
               ) : (
-                <div className="d-flex flex-wrap gap-2">
-                  {selectedAlbumList?.map((album) => {
-                    const styles = getNetworkColorStyle(album.networkid);
+                <div className="d-flex flex-column gap-3">
+                  {Object.entries(albumsByNetwork).map(([networkId, albums]) => {
+                    const styles = getNetworkColorStyle(parseInt(networkId));
+                    const networkName = getNetworkName(parseInt(networkId));
 
                     return (
-                      <div
-                        key={album.id}
-                        className="d-inline-flex align-items-center px-3 py-2 rounded-pill"
-                        style={{
-                          background: styles.background,
-                          border: `1px solid ${styles.borderColor}`,
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: '50%',
-                            backgroundColor: styles.color,
-                            marginRight: 8,
-                            flexShrink: 0,
-                          }}
-                        />
-
-                        <span className="fw-medium me-2" style={{ color: styles.color }}>
-                          {album.name}
-                        </span>
-
-                        <span
-                          className="badge rounded-pill small"
-                          style={{
-                            backgroundColor: styles.color,
-                            color: '#fff',
-                            opacity: 0.85,
-                          }}
+                      <div key={networkId} className="network-group">
+                        <div
+                          className="d-flex align-items-center mb-2 pb-2"
+                          style={{ borderBottom: `2px solid ${styles.borderColor}` }}
                         >
-                          {getNetworkName(album.networkid)}
-                        </span>
+                          <span
+                            style={{
+                              width: 10,
+                              height: 10,
+                              borderRadius: '50%',
+                              backgroundColor: styles.color,
+                              marginRight: 8,
+                              flexShrink: 0,
+                            }}
+                          />
+                          <span
+                            className="fw-semibold small text-uppercase"
+                            style={{ color: styles.color, letterSpacing: '0.5px' }}
+                          >
+                            {networkName}
+                          </span>
+                          <span
+                            className="ms-2 badge rounded-pill small"
+                            style={{
+                              backgroundColor: styles.background,
+                              color: styles.color,
+                              border: `1px solid ${styles.borderColor}`,
+                            }}
+                          >
+                            {albums.length} {albums.length === 1 ? 'list' : 'lists'}
+                          </span>
+                        </div>
+
+                        <div className="d-flex flex-wrap gap-2 ms-3">
+                          {albums.map((album) => (
+                            <div
+                              key={album.id}
+                              className="d-inline-flex align-items-center px-3 py-2 rounded-pill"
+                              style={{
+                                background: styles.background,
+                                border: `1px solid ${styles.borderColor}`,
+                              }}
+                            >
+                              <i
+                                className="bi bi-check-circle-fill me-2"
+                                style={{ color: styles.color, fontSize: '0.85rem' }}
+                              ></i>
+                              <span className="fw-medium" style={{ color: styles.color }}>
+                                {album.name} (
+                                {recipients?.filter((r) => r?.albumid === album.id)?.length}{' '}
+                                contacts)
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     );
                   })}
