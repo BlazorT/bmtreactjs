@@ -8,7 +8,6 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'cityId',
@@ -16,7 +15,6 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'compaignsCount',
@@ -25,7 +23,6 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'currencyName',
@@ -34,7 +31,6 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'createdAt',
@@ -43,7 +39,6 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'expiryTime',
@@ -53,13 +48,11 @@ export const getOrgListCols = (fetchOrgList, orgsList, pageRoles) => [
     disableColumnMenu: true,
     hide: true,
     hideable: false,
-    headerCellClass: 'custom-header-data-grid',
   },
 
   {
     key: 'action',
     width: 150,
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     disableColumnMenu: true,

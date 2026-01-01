@@ -9,7 +9,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'orgName',
@@ -17,7 +16,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'roleName',
@@ -25,7 +23,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
@@ -34,7 +31,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
 
   {
@@ -44,7 +40,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'status',
@@ -53,12 +48,10 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
-    renderCell: (params) => 
+    renderCell: (params) =>
       globalutil.statuses().find((item) => item.id === params.row.status)
         ? globalutil.statuses().find((item) => item.id === params.row.status).name
-        : ''
-    
+        : '',
   },
 
   {
@@ -68,7 +61,6 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: false,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (params) => (
       <OrgUserActionCell
         value={params}

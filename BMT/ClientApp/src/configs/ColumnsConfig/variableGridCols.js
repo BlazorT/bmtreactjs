@@ -5,7 +5,6 @@ import globalutil from 'src/util/globalutil';
 /* eslint-disable react/react-in-jsx-scope */
 export const getVariableCols = (canDelete, fetching) => [
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Network',
@@ -18,7 +17,6 @@ export const getVariableCols = (canDelete, fetching) => [
     },
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Variable Name',
@@ -26,28 +24,23 @@ export const getVariableCols = (canDelete, fetching) => [
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Expression',
     key: 'expression',
     editable: false,
   },
-  
+
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Default Value',
     key: 'defaultValue',
     editable: false,
-    renderCell: (params) => (
-      params?.row?.defaultValue ? params.row.defaultValue : '---'
-    ),
+    renderCell: (params) => (params?.row?.defaultValue ? params.row.defaultValue : '---'),
   },
 
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Last Update Time',
@@ -58,7 +51,6 @@ export const getVariableCols = (canDelete, fetching) => [
     },
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Action',

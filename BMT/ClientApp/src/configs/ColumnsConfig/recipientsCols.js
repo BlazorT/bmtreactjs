@@ -9,7 +9,6 @@ export const getrecipietslistingCols = (albums) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'albumid',
@@ -17,7 +16,6 @@ export const getrecipietslistingCols = (albums) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contentId',
@@ -25,7 +23,6 @@ export const getrecipietslistingCols = (albums) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'createdAt',
@@ -33,6 +30,5 @@ export const getrecipietslistingCols = (albums) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
 ];

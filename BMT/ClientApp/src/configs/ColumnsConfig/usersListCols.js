@@ -38,31 +38,26 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     name: 'Picture',
     resizable: false,
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'completeName',
     name: 'Name',
     resizable: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
     resizable: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
     resizable: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
     resizable: true,
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
       const date = props.row.regDate;
@@ -79,7 +74,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
     key: 'lastUpdatedAt',
     name: 'Last Updated',
     resizable: true,
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       // Format date if needed
       const date = props.row.lastUpdatedAt;
@@ -104,7 +98,6 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
         pageRoles={pageRoles}
       />
     ),
-    headerCellClass: 'custom-header-data-grid',
   },
 ];
 
@@ -119,27 +112,22 @@ export const getUsersListColsFlexible = (
     name: 'Picture',
     width: 100, // Fixed width for image
     renderCell: (props) => <ProfileImageRenderer row={props.row} />,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'completeName',
     name: 'Name',
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'email',
     name: 'Email',
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'contact',
     name: 'Contact',
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'regDate',
     name: 'Registration Date',
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.regDate;
       if (!date) return '-';
@@ -154,7 +142,6 @@ export const getUsersListColsFlexible = (
   {
     key: 'lastUpdatedAt',
     name: 'Last Updated',
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (props) => {
       const date = props.row.lastUpdatedAt;
       if (!date) return '-';
@@ -177,7 +164,6 @@ export const getUsersListColsFlexible = (
         pageRoles={pageRoles}
       />
     ),
-    headerCellClass: 'custom-header-data-grid',
   },
 ];
 

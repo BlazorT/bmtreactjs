@@ -5,7 +5,6 @@ import globalutil from 'src/util/globalutil';
 /* eslint-disable react/react-in-jsx-scope */
 export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) => [
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Network',
@@ -18,7 +17,6 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     },
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Name',
@@ -26,7 +24,6 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Title',
@@ -35,7 +32,6 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
   },
 
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Template',
@@ -56,7 +52,6 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     },
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Last Update Time',
@@ -67,7 +62,6 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     },
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Action',

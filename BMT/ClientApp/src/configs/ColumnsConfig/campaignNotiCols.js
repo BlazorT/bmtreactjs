@@ -10,7 +10,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'startDate',
@@ -21,7 +20,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'finishDate',
@@ -32,7 +30,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'networkName',
@@ -42,7 +39,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'totalMessage',
@@ -52,7 +48,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'totalSent',
@@ -62,7 +57,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'totalFailed',
@@ -72,7 +66,6 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
   {
     field: 'totalUnDelivered',
@@ -82,6 +75,5 @@ export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerClassName: 'custom-header-data-grid',
   },
 ];

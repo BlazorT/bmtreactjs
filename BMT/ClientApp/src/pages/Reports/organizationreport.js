@@ -22,7 +22,6 @@ import usePageRoles from 'src/hooks/usePageRoles';
 const columns = [
   {
     key: 'orgName',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Organization Name',
     editable: false,
     filterable: true,
@@ -30,21 +29,18 @@ const columns = [
   },
   {
     key: 'contact',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Contact',
     editable: false,
     filterable: true,
   },
   {
     key: 'strength',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Strength',
     editable: false,
     filterable: true,
   },
   {
     key: 'packageName',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Package',
     editable: false,
     filterable: true,
@@ -52,7 +48,6 @@ const columns = [
 
   {
     key: 'status',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Current Status',
     editable: false,
     filterable: true,
@@ -61,7 +56,6 @@ const columns = [
 
   {
     key: 'expiryTime',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Expiry Date',
     editable: false,
     filterable: false,

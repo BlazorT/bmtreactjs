@@ -870,9 +870,6 @@ button:disabled {
   --cui-card-cap-padding-y: 0.5rem;
   --cui-card-cap-padding-x: 1rem;
   --cui-card-cap-bg: rgba(var(--cui-body-color-rgb), 0.03);
-  --cui-card-cap-color:;
-  --cui-card-height:;
-  --cui-card-color:;
   --cui-card-bg: #ffffff00;
   --cui-card-img-overlay-padding: 1rem;
   --cui-card-group-margin: 0.75rem;

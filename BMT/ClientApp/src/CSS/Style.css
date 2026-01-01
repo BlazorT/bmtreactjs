@@ -719,6 +719,7 @@ button[type='button']:hover {
 .custom-header-data-grid {
   font-weight: bold;
   font-size: 16px;
+  text-align: left !important;
   /* background-color: #0a1a2c; */
 }
 

@@ -33,14 +33,14 @@ const DARoles = (prop) => {
     {
       key: 'group',
       name: 'Group',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       width: 130,
       editable: false,
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params) =>
         params.row.group !== '' && (
-          <div className="d-flex justify-content-center align-items-center w-auto h-100">
+          <div className="d-flex justify-content-start align-items-center w-auto h-100">
             <RolesCheckBox
               name="parentAllRights"
               rolesSetting={rolesSetting}
@@ -57,7 +57,7 @@ const DARoles = (prop) => {
     {
       key: 'select',
       name: 'Full',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       width: 40,
       editable: false,
       filterable: false,
@@ -76,7 +76,7 @@ const DARoles = (prop) => {
     {
       key: 'screen',
       name: 'Screen / Right',
-      headerClassName: 'custom-header-data-grid',
+      // headerCellClass: 'custom-header-data-grid',
       width: 180,
       editable: false,
       filterable: false,
@@ -85,7 +85,7 @@ const DARoles = (prop) => {
     {
       key: 'view',
       name: 'View',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -105,7 +105,7 @@ const DARoles = (prop) => {
     {
       key: 'add',
       name: 'Add',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -125,7 +125,7 @@ const DARoles = (prop) => {
     {
       key: 'edit',
       name: 'Edit',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -145,7 +145,7 @@ const DARoles = (prop) => {
     {
       key: 'delete',
       name: 'Delete',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -165,7 +165,7 @@ const DARoles = (prop) => {
     {
       key: 'print',
       name: 'Print',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,
@@ -185,7 +185,7 @@ const DARoles = (prop) => {
     {
       key: 'export',
       name: 'Export',
-      headerClassName: 'custom-header-data-grid',
+      headerCellClass: 'custom-header-data-grid',
       flex: 1,
       minWidth: 100,
       editable: false,

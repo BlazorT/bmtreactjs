@@ -3,7 +3,6 @@ import PricingActionCell from 'src/components/DataGridCustomCells/PricingActionC
 
 export const getPricingCols = (user, getPricing) => [
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Network Name',
@@ -12,7 +11,6 @@ export const getPricingCols = (user, getPricing) => [
   },
 
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Pricing Unit',
@@ -20,7 +18,6 @@ export const getPricingCols = (user, getPricing) => [
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Unit Price',
@@ -28,7 +25,6 @@ export const getPricingCols = (user, getPricing) => [
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Discount',
@@ -36,7 +32,6 @@ export const getPricingCols = (user, getPricing) => [
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Free Quota',
@@ -44,7 +39,6 @@ export const getPricingCols = (user, getPricing) => [
     editable: false,
   },
   {
-    headerCellClass: 'custom-header-data-grid',
     filterable: true,
     disableColumnMenu: false,
     name: 'Applicable Date',
@@ -54,7 +48,6 @@ export const getPricingCols = (user, getPricing) => [
   ...(user?.roleId === 1
     ? [
         {
-          headerCellClass: 'custom-header-data-grid',
           filterable: true,
           disableColumnMenu: false,
           name: 'Action',
