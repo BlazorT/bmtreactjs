@@ -618,6 +618,7 @@ namespace com.blazor.bmt.controllers
                                 {
                                     Id = 0,
                                     UserName = "" + HttpContext.Request.Form["username"],
+                                    Password = "" + HttpContext.Request.Form["password"],
                                     FirstName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["firstname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["firstname"],
                                     LastName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["lastname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["lastname"],
                                     Status = 1,
