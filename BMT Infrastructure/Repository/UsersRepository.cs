@@ -40,7 +40,7 @@ namespace com.blazor.bmt.infrastructure.repositories
         public async Task<User> GetUserByEmailORLoginnameSync(string EmailOrLogin, string SecurityCode)
         {
             return await _dbContext.Users.AsNoTracking()
-            .Where(x => (x.Email == EmailOrLogin || x.UserName == EmailOrLogin) && x.SecurityToken == (string.IsNullOrEmpty(SecurityCode) ? x.SecurityToken : "" + SecurityCode) && x.Status == 1)
+            .Where(x => (x.Email == EmailOrLogin || x.UserName == EmailOrLogin) && x.SecurityToken == (string.IsNullOrEmpty(SecurityCode) ? x.SecurityToken : "" + SecurityCode))// && x.Status == 1)
                .FirstOrDefaultAsync();
 
             // second way

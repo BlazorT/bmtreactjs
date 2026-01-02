@@ -1,5 +1,4 @@
 ﻿using Blazor.Web.UI.Interfaces;
-using Blazor.Web.UI.Services;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.infrastructure;
 using com.blazor.bmt.ui.interfaces;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace com.blazor.bmt.controllers
@@ -610,40 +608,49 @@ namespace com.blazor.bmt.controllers
                         }// File Logo
                     }// Images
                     UserViewModel usrdb= await  _userPageService.GetUserByEmailOrLoginNameAsynch("" + HttpContext.Request.Form["email"],string.Empty);
-                        if ( usrdb == null  || usrdb.Id<=0) {
-                            var random = new Random();
-                            //string sixDigit = random.Next(9908, 1000000).ToString("D6");
-                            usrdb = await _userPageService.CreateUser(
-                                new UserViewModel
-                                {
-                                    Id = 0,
-                                    UserName = "" + HttpContext.Request.Form["username"],
-                                    Password = "" + HttpContext.Request.Form["password"],
-                                    FirstName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["firstname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["firstname"],
-                                    LastName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["lastname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["lastname"],
-                                    Status = 1,
-                                    Email = "" + HttpContext.Request.Form["email"],
-                                    Contact = "" + HttpContext.Request.Form["contact"],
-                                    RowVer = 1,
-                                    SecurityToken = random.Next(9908, 1000000).ToString("D6"),
-                                    OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
-                                    RoleId = Convert.ToInt32(HttpContext.Request.Form["roleid"]),
-                                    UserCode = "" + HttpContext.Request.Form["usercode"],
-                                    Avatar = filenamewithlogo,
-                                    CreatedAt = GlobalUTIL.CurrentDateTime,
-                                    LastUpdatedAt = GlobalUTIL.CurrentDateTime,
-                                    CreatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"]),
-                                    LastUpdatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"])
-                                }
-                                );
-                            blazorApiResponse.status = true;
-                            blazorApiResponse.message = string.Format("User {0} created and auto logged in!!", "" + HttpContext.Request.Form["email"]);
-                            blazorApiResponse.errorCode = "200";
-                        } else if (usrdb.Status != 1) {
-                            blazorApiResponse.status = false;
-                            blazorApiResponse.errorCode = "405";
-                            blazorApiResponse.message = string.Format("User {0} already exists and status is dormant!!!", "" + HttpContext.Request.Form["email"]);
-                        }
+                    if (usrdb == null || usrdb.Id <= 0)
+                    {
+                        var random = new Random();
+                        //string sixDigit = random.Next(9908, 1000000).ToString("D6");
+                        usrdb = await _userPageService.CreateUser(
+                            new UserViewModel
+                            {
+                                Id = 0,
+                                UserName = "" + HttpContext.Request.Form["username"],
+                                Password = "" + HttpContext.Request.Form["password"],
+                                FirstName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["firstname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["firstname"],
+                                LastName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["lastname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["lastname"],
+                                Status = 1,
+                                Email = "" + HttpContext.Request.Form["email"],
+                                Contact = "" + HttpContext.Request.Form["contact"],
+                                RowVer = 1,
+                                SecurityToken = random.Next(9908, 1000000).ToString("D6"),
+                                OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
+                                RoleId = Convert.ToInt32(HttpContext.Request.Form["roleid"]),
+                                UserCode = "" + HttpContext.Request.Form["usercode"],
+                                Avatar = filenamewithlogo,
+                                CreatedAt = GlobalUTIL.CurrentDateTime,
+                                LastUpdatedAt = GlobalUTIL.CurrentDateTime,
+                                CreatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"]),
+                                LastUpdatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"])
+                            }
+                            );
+                        blazorApiResponse.status = true;
+                        blazorApiResponse.message = string.Format("User {0} created and auto logged in!!", "" + HttpContext.Request.Form["email"]);
+                        blazorApiResponse.errorCode = "200";
+                    }
+                    else if (usrdb.Status != 1)
+                    {
+                        blazorApiResponse.status = false;
+                        blazorApiResponse.errorCode = "405";
+                        blazorApiResponse.message = string.Format("User {0} already exists and status is dormant!!!", "" + HttpContext.Request.Form["email"]);
+                    }
+                    else if (usrdb.Status ==(Int32) util.COMMON_STATUS.ACTIVE)
+                    {
+                        blazorApiResponse.status = true;
+                        blazorApiResponse.errorCode = "200";
+                        blazorApiResponse.message = string.Format("User {0} already exists and login is success!!!", "" + HttpContext.Request.Form["email"]);
+                    }
                         if (blazorApiResponse.status) {
                         usrdb.Password = string.Empty;
                         blazorApiResponse.data = usrdb;
