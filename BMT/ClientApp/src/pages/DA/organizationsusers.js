@@ -1,50 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import useFetch from 'src/hooks/useFetch';
 
-import { cilCalendarCheck, cilChevronBottom } from '@coreui/icons';
-import { updateToast } from 'src/redux/toast/toastSlice';
+import { cilChevronBottom } from '@coreui/icons';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import Loading from 'src/components/UI/Loading';
-import NotificationModal from 'src/components/Modals/NotificationModal';
 import CustomFilters from 'src/components/Filters/CustomFilters';
+import NotificationModal from 'src/components/Modals/NotificationModal';
 
 import { formatDate } from 'src/helpers/formatDate';
-import globalutil from 'src/util/globalutil';
 
-import { getorgUsersFilterFields } from 'src/configs/FiltersConfig/orgUserFilterConfig';
 import { getorgUsersCols } from 'src/configs/ColumnsConfig/orgUsersCols';
-import { formatDateTime } from 'src/helpers/formatDate';
+import { getorgUsersFilterFields } from 'src/configs/FiltersConfig/orgUserFilterConfig';
 
-import { useFetchOrgUser } from 'src/hooks/api/useFetchOrgUser';
 import AppContainer from 'src/components/UI/AppContainer';
+import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
+import { useFetchOrgUser } from 'src/hooks/api/useFetchOrgUser';
 import usePageRoles from 'src/hooks/usePageRoles';
 
+dayjs.extend(utc);
+
 const organizationsusers = () => {
-  dayjs.extend(utc);
+  const pageRoles = usePageRoles('Organizations Users');
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+
+  const { loading, fetchUsers: getUserbyRole, data: orgUserList } = useFetchOrgUser();
+  const { getOrgs, orgsLoading, orgData } = useFetchOrgs();
 
   useEffect(() => {
-    getOrgsList();
+    getOrgsUserList();
+    getOrganizationLst();
   }, []);
-
-  const pageRoles = usePageRoles('Organizations Users');
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
-  const [orgData, setOrgData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
-  const user = useSelector((state) => state.user);
-  const orgId = user.orgId;
   const [filters, setFilters] = useState({
     name: '',
     state: '',
@@ -52,17 +47,14 @@ const organizationsusers = () => {
     createdAt: dayjs().subtract(2, 'year').startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
-
   const [rows, setRows] = useState([]);
 
-  const { data, loading, fetchUsers: getUserbyRole } = useFetchOrgUser();
+  const orgId = user.orgId;
   const Role = user.roleId;
   // alert(Role);
-  const getOrgsList = async (filter) => {
-    const orgUsersList = await getUserbyRole(0, filter);
 
-    console.log({ orgUsersList });
-    setOrgData(orgUsersList);
+  const getOrgsUserList = async (filter) => {
+    const orgUsersList = await getUserbyRole(0, filter);
 
     const mappedArray = orgUsersList.map((data) => ({
       id: data.id,
@@ -74,11 +66,10 @@ const organizationsusers = () => {
       status: data.status,
       //status: data.status,
     }));
-    console.log(mappedArray, 'orgUsersList');
     setRows(mappedArray);
   };
+
   const changeFilter = (e, date) => {
-    console.log(e, date, 'iput');
     if (date === 'name') {
       setFilters((prevFilters) => ({
         ...prevFilters,
@@ -121,7 +112,7 @@ const organizationsusers = () => {
   };
 
   const handleReset = () => {
-    getOrgsList();
+    getOrgsUserList();
     setFilters({
       name: '',
       state: '',
@@ -130,131 +121,92 @@ const organizationsusers = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
-  const {
-    response: GetOrgRes,
-    loading: OrgLoading,
-    error: GetOrgError,
-    fetchData: GetOrg,
-  } = useFetch();
+
   useEffect(() => {
     getOrganizationLst(filters);
   }, []);
-  const getOrganizationLst = async (compaign) => {
-    const compaignBody = {
+
+  const getOrganizationLst = async () => {
+    const orgBody = {
       id: 0,
-      roleId: compaign,
+      roleId: 0,
       orgId: 0,
       email: '',
       name: '',
       contact: '',
       rowVer: 0,
-      cityId: filters?.state ? filters.state : 0,
-      createdAt: filters
-        ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
-        : dayjs().subtract(1, 'year').utc().format(),
-      lastUpdatedAt: filters
-        ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format(),
+      cityId: 0,
+      createdAt: dayjs().subtract(100, 'year').utc().format(),
+      lastUpdatedAt: dayjs().utc().format(),
       createdBy: 0,
       lastUpdatedBy: 0,
-      ...filters,
-      status: filters?.status ? parseInt(filters.status, 10) : 0, // <- force numeric
+      status: 0, // <- force numeric
     };
 
-    await GetOrg(
-      '/BlazorApi/orgsfulldata',
-      { method: 'POST', body: JSON.stringify(compaignBody) },
-      (res) => {
-        console.log(res, 'orgs');
-        if (res.status === true) {
-          // setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          /*   setRows([]);*/
-        }
-        setIsLoading(OrgLoading.current);
-      },
-    );
+    await getOrgs(orgBody);
   };
 
   useEffect(() => {
-    if (GetOrgRes?.current?.data?.length > 0) {
-      const orgData = GetOrgRes?.current?.data;
+    if (orgData?.length > 0) {
       const findUserOrg = orgData?.find((item) => item.id === orgId);
-      console.log(findUserOrg, 'findUserOrg');
       if (findUserOrg)
         setFilters((prevFilters) => ({
           ...prevFilters,
           name: findUserOrg,
         }));
     }
-  }, [GetOrgRes?.current?.data, orgId]);
-  const orgFilterFields = getorgUsersFilterFields(
-    filters,
-    changeFilter,
-    GetOrgRes?.current?.data || [],
-    Role,
-  );
-  console.log('orgFilterFields', orgFilterFields);
-  const orgUsersCols = getorgUsersCols(getOrgsList, orgData, pageRoles);
+  }, [orgData, orgId]);
 
-  if (loading) {
-    return <Loading />;
-  }
+  const orgFilterFields = getorgUsersFilterFields(filters, changeFilter, orgData || [], Role);
+  const orgUsersCols = getorgUsersCols(getOrgsUserList, orgUserList?.data || [], pageRoles);
+
   return (
     <React.Fragment>
-      {data && (
-        <React.Fragment>
-          <AppContainer>
-            <DataGridHeader
-              title="Advance Search"
-              onClick={toggleFilters}
-              otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
-              filterDisable={true}
+      <React.Fragment>
+        <AppContainer>
+          <DataGridHeader
+            title="Advance Search"
+            onClick={toggleFilters}
+            otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
+            filterDisable={true}
+          />
+
+          {showFilters && (
+            <CustomFilters
+              filters={filters}
+              changeFilter={changeFilter}
+              fetching={getOrgsUserList}
+              handleReset={handleReset}
+              filterFields={orgFilterFields}
             />
+          )}
+        </AppContainer>
 
-            {showFilters && (
-              <CustomFilters
-                filters={filters}
-                changeFilter={changeFilter}
-                fetching={getOrgsList}
-                handleReset={handleReset}
-                filterFields={orgFilterFields}
-              />
-            )}
-          </AppContainer>
+        <AppContainer>
+          <CustomDatagrid
+            rows={rows}
+            columns={orgUsersCols}
+            rowHeight={50}
+            pagination={true}
+            sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
+            showGrid={showDaGrid}
+            loading={orgsLoading || loading}
+            headerProps={{
+              title: 'Organization Users',
+              addButton: pageRoles?.canAdd === 1 ? 'Organization User' : '',
+              addBtnClick: () => navigate('/UserRegister'),
+              onClick: toggleGrid,
+              otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
+              filterDisable: true,
+              canPrint: pageRoles?.canPrint === 1,
+              canExport: pageRoles?.canExport === 1,
+              fileName: 'ORGANIZATION_USERS',
+            }}
+          />
 
-          <AppContainer>
-            <CustomDatagrid
-              rows={rows}
-              columns={orgUsersCols}
-              rowHeight={50}
-              pagination={true}
-              sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
-              showGrid={showDaGrid}
-              headerProps={{
-                title: 'Organization Users',
-                addButton: pageRoles?.canAdd === 1 ? 'Organization User' : '',
-                addBtnClick: () => navigate('/UserRegister'),
-                onClick: toggleGrid,
-                otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
-                filterDisable: true,
-                canPrint: pageRoles?.canPrint === 1,
-                canExport: pageRoles?.canExport === 1,
-                fileName: 'ORGANIZATION_USERS',
-              }}
-            />
-
-            <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />
-          </AppContainer>
-        </React.Fragment>
-      )}
+          <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />
+        </AppContainer>
+      </React.Fragment>
     </React.Fragment>
   );
 };

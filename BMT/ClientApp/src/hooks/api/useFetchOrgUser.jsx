@@ -18,7 +18,7 @@ export const useFetchOrgUser = () => {
       // userCode: user.userId.toString(),
       id: 0,
       roleId: role,
-      orgId: user.orgId,
+      orgId: filters ? filters?.name?.id : user.orgId,
       email: '',
       userCode: '',
       userName: '',

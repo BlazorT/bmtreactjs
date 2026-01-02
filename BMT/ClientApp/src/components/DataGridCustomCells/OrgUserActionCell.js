@@ -14,7 +14,7 @@ import Spinner from '../UI/Spinner';
 
 const OrgUserActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
-
+  console.log({ user });
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClose = () => {
@@ -120,7 +120,6 @@ const OrgUserActionCell = (prop) => {
         </CRow>
       )}
     </React.Fragment>
-
   );
 };
 export default OrgUserActionCell;

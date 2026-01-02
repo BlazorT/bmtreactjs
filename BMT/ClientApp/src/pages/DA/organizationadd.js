@@ -24,9 +24,7 @@ import Loading from 'src/components/UI/Loading'; // existing loader component
 
 const OrganizationAdd = () => {
   dayjs.extend(utc);
-  const pageRoles = useSelector((state) => state.navItems.pageRoles).find(
-    (item) => item.name.toLowerCase() === 'Organizations'.toLowerCase(),
-  );
+
   const user = useSelector((state) => state.user);
   const showConfirmation = useShowConfirmation();
   const navigate = useNavigate();
@@ -46,23 +44,10 @@ const OrganizationAdd = () => {
   const [loadingModal, setLoadingModal] = useState(false);
 
   useEffect(() => {
-    if ((pageRoles == null || pageRoles.canAdd === 0) && user) {
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage:
-            'You dont have rights to setup an organization, please contact admin for access',
-          toastVariant: 'warning',
-        }),
-      );
-      navigate(-1);
-      return;
-    }
-
     formValidator();
     const state = location.state;
     if (state !== null) {
-      const daData = state.user[0];
+      const daData = state.org[0];
       const initialData = {
         ...daData,
         isWhatsAppAsso: daData.secondaryContact ? true : false,
@@ -113,17 +98,13 @@ const OrganizationAdd = () => {
   }, []);
 
   const getCityList = async () => {
-    await GetCity(
-      '/Common/cities',
-      { method: 'POST' },
-      (res) => {
-        if (!res.status) {
-          dispatch(
-            updateToast({ isToastOpen: true, toastMessage: res.message, toastVariant: 'error' }),
-          );
-        }
-      },
-    );
+    await GetCity('/Common/cities', { method: 'POST' }, (res) => {
+      if (!res.status) {
+        dispatch(
+          updateToast({ isToastOpen: true, toastMessage: res.message, toastVariant: 'error' }),
+        );
+      }
+    });
   };
 
   const submitDA = async () => {
@@ -254,8 +235,6 @@ const OrganizationAdd = () => {
                 onChange={handleDAFormData}
               />
             </Inputs>
-
-          
           </Form>
         )}
 

@@ -38,15 +38,15 @@ export const useFetchUsers = () => {
 
       lastUpdatedAt: filters
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
     };
-    console.log(userBody,'body')
+    console.log(userBody, 'body');
     const res = await postData(userBody);
     // console.log({ res });
-    if (res.data.status) {
+    if (res?.data?.status) {
       return res.data.data;
     } else {
-      showToast(res.message, 'error');
+      showToast(res?.message, 'error');
       return [];
     }
   };

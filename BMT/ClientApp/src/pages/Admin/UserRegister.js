@@ -33,6 +33,7 @@ import {} from 'src/components/UI/ImagePicker';
 import Loading from 'src/components/UI/Loading';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import globalutil from 'src/util/globalutil';
+import useApi from 'src/hooks/useApi';
 
 const UserRegister = () => {
   dayjs.extend(utc);
@@ -48,6 +49,8 @@ const UserRegister = () => {
   const { loading: avatarLoading, uploadAvatar } = useUploadAvatar();
   const { checkUserAvailability } = useUserAvailability();
   const showConfirmation = useShowConfirmation();
+  const { postData: getCities, loading: citiesLoading, data: cityRes } = useApi('/Common/cities');
+
   const showToast = useShowToast();
   const inputRef = useRef(null);
 
@@ -56,7 +59,6 @@ const UserRegister = () => {
   const [orgList, setOrgList] = useState([]);
   const [isThisBrandnew, setIsThisBrandnew] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [emailReadonly, setEmailReadonly] = useState(true);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
@@ -65,11 +67,10 @@ const UserRegister = () => {
   useEffect(() => {
     formValidator();
     fetchDspList();
+    getCities();
     const state = location.state;
-    console.log({ state });
     if (state !== null) {
       const userData = state.user[0];
-      //console.log({ userData });
       setUserData({
         ...userData,
         roleId: userData.roleId === 0 ? '' : (userData.roleId ?? ''),
@@ -140,7 +141,6 @@ const UserRegister = () => {
       lastUpdatedAt: dayjs().utc().format(),
       remarks: 'created user',
     };
-    setIsLoading(false);
     // Upload & Submit
     const fUpload = document.getElementById('fileAvatar');
 
@@ -239,54 +239,10 @@ const UserRegister = () => {
 
   // Fetch DSP list
   const fetchDspList = async () => {
-    const orgData = await getOrgs();
+    const orgData = await getOrgs({
+      createdAt: dayjs().utc().subtract(100, 'years').format(),
+    });
     if (orgData && Array.isArray(orgData)) setOrgList(orgData?.filter((o) => o?.name !== ''));
-    setIsLoading(false);
-  };
-  const {
-    response: GetCityRes,
-    loading: CityLoading,
-    error: createCityError,
-    fetchData: GetCity,
-  } = useFetch();
-  useEffect(() => {
-    getCityList();
-  }, []);
-  const getCityList = async () => {
-    await GetCity(
-      '/Common/cities',
-      {
-        method: 'POST',
-        // body: JSON.stringify(fetchBody),
-      },
-      (res) => {
-        console.log(res, 'city');
-        if (res.status === true) {
-          //const mappedArray = res.data.map((data, index) => ({
-          //  id: data.id,
-          //  userId: data.userId,
-          //  dspid: user.dspId.toString(),
-          //  logDesc: data.logDesc,
-          //  entityName: data.entityName,
-          //  menuId: data.menuId,
-          //  machineIp: data.machineIp,
-          //  actionType: data.actionType,
-          //  logTime: formatDateTime(data.logTime),
-          //}));
-          // setRows(mappedArray);
-        } else {
-          dispatch(
-            updateToast({
-              isToastOpen: true,
-              toastMessage: res.message,
-              toastVariant: 'error',
-            }),
-          );
-          /*   setRows([]);*/
-        }
-        setIsLoading(CityLoading.current);
-      },
-    );
   };
 
   // Define user input fields
@@ -303,7 +259,7 @@ const UserRegister = () => {
     orgList,
     TermsModal,
     onBlur,
-    GetCityRes?.current?.data ? GetCityRes.current.data : [],
+    cityRes?.data ? cityRes?.data : [],
   );
 
   const comparableFields = [
@@ -352,7 +308,7 @@ const UserRegister = () => {
         comparableFields.some((key) => UserData?.[key] !== state?.[key]);
   return (
     <React.Fragment>
-      {userLoading || avatarLoading ? (
+      {userLoading || avatarLoading || citiesLoading ? (
         <Loading />
       ) : (
         <>

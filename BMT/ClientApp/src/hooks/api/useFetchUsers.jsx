@@ -41,10 +41,10 @@ export const useFetchUsers = () => {
         : dayjs().utc().format('YYYY-MM-DD'),
     };
     const res = await postData(userBody);
-    if (res.status) {
+    if (res?.status) {
       return res.data;
     } else {
-      showToast(res.message, 'error');
+      showToast(res?.message, 'error');
       return [];
     }
   };

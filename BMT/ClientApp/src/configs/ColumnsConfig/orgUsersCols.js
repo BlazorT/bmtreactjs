@@ -65,7 +65,7 @@ export const getorgUsersCols = (getDasList, daRes, pageRoles) => [
       <OrgUserActionCell
         value={params}
         fetching={getDasList}
-        user={daRes.filter((item) => item.id === params.row.id)}
+        user={daRes.filter((item) => item.id == params.row.id)}
         canUpdate={pageRoles.canUpdate}
         canDelete={pageRoles.canDelete}
       />

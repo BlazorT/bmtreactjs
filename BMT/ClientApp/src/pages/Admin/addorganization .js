@@ -1,40 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import useFetch from 'src/hooks/useFetch';
 
-import { CFormCheck } from '@coreui/react';
 import { cilChevronBottom } from '@coreui/icons';
+import { CFormCheck } from '@coreui/react';
 
 import { updateToast } from 'src/redux/toast/toastSlice';
 
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 
-import { formValidator } from 'src/helpers/formValidator';
-import {
-  getDaAppllyBirthInputs,
-  getDaAppllyIDInputs,
-  getDaAppllyInputs,
-  getDaAppllySsnInputs,
-  getInitialDaData,
-  getInitialDaIdentificationData,
-} from 'src/configs/InputConfig/addOrgsConfig';
-import validateEmail from 'src/helpers/validateEmail';
-import Loading from 'src/components/UI/Loading';
-import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
-import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
-import Form from 'src/components/UI/Form';
-import AppContainer from 'src/components/UI/AppContainer';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import Inputs from 'src/components/Filters/Inputs';
+import AppContainer from 'src/components/UI/AppContainer';
+import Form from 'src/components/UI/Form';
+import { getDaAppllyInputs, getInitialDaData } from 'src/configs/InputConfig/addOrgsConfig';
+import { formValidator } from 'src/helpers/formValidator';
+import validateEmail from 'src/helpers/validateEmail';
+import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
+import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowToast } from 'src/hooks/useShowToast';
-import useApi from 'src/hooks/useApi';
-import globalutil from '../../util/globalutil';
 
 const addorganization = () => {
   dayjs.extend(utc);
