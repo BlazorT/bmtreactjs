@@ -66,7 +66,7 @@ const UserRegister = () => {
   // useEffect to handle initial setup
   useEffect(() => {
     formValidator();
-    fetchDspList();
+    fetchOrgList();
     getCities();
   }, [location.state]);
 
@@ -74,7 +74,6 @@ const UserRegister = () => {
     const state = location.state;
     if (state !== null && cityRes?.data?.length > 0) {
       const userData = state.user[0];
-      console.log({ userData });
       const findState = cityRes?.data?.find((cl) => cl?.id == userData?.cityId)?.stateId;
       setUserData({
         ...userData,
@@ -187,13 +186,10 @@ const UserRegister = () => {
         }
       }
     } else {
-      console.log({ userBody });
       const res = await createUpdateUser(userBody);
-      console.log({ res });
       if (res.status === true) {
         navigate('/Users');
       } else if (res.errorCode) {
-        console.log('first');
         showToast(res?.message || res?.errorCode, 'danger');
       }
     }
@@ -243,10 +239,11 @@ const UserRegister = () => {
   };
 
   // Fetch DSP list
-  const fetchDspList = async () => {
+  const fetchOrgList = async () => {
     const orgData = await getOrgs({
       createdAt: dayjs().utc().subtract(100, 'years').format(),
     });
+
     if (orgData && Array.isArray(orgData)) setOrgList(orgData?.filter((o) => o?.name !== ''));
   };
 
@@ -303,7 +300,6 @@ const UserRegister = () => {
         comparableFields.some((key) => {
           const value = UserData?.[key];
           const defaultValue = DEFAULTS[key];
-          console.log({ key, value, defaultValue });
           // treat null / undefined / empty string as default
           if (value === null || value === undefined) return false;
 

@@ -185,6 +185,7 @@ export const getUserInputFields = (
     className: 'form-control item form-select',
     value: UserData.orgId,
     name: 'orgId',
+    optionsList: (opt) => opt.name + ' - ' + opt?.countryCode,
     onChange: (e) => handleUserInput(e),
     isRequired: true,
     disableOption: 'Select Organization',
