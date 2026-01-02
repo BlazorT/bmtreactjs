@@ -88,19 +88,19 @@ export const getUserInputFields = (
     // pattern: '.*[A-Z].*',
     message: 'Enter Last Name',
   },
-    {
-      component: CustomInput,
-      label: 'Whatsapp',
-      value: UserData.ims,
-      onChange: handleUserInput,
-      icon: cilScreenSmartphone,
-      type: 'text',
-      id: 'ims',
-      name: 'ims',
-      placeholder: 'Whatsapp number',
-      className: 'form-control item',
-      isRequired: false,
-    },
+  {
+    component: CustomInput,
+    label: 'Whatsapp',
+    value: UserData.ims,
+    onChange: handleUserInput,
+    icon: cilScreenSmartphone,
+    type: 'text',
+    id: 'ims',
+    name: 'ims',
+    placeholder: 'Whatsapp number',
+    className: 'form-control item',
+    isRequired: false,
+  },
   {
     component: CustomInput,
     label: 'Email',
@@ -116,7 +116,7 @@ export const getUserInputFields = (
 
     // pattern: '.*[A-Z].*',
     message: emailMessage,
-    },
+  },
 
   {
     component: CustomInput,
@@ -166,7 +166,7 @@ export const getUserInputFields = (
     // pattern: '[0-9]{3}[0-9]{3}[0-9]{4}',
     message: 'Enter valid contact number',
   },
-  
+
   //{
   //  component: CFormCheck,
   //  name: 'isWhatsappAsso',
@@ -218,7 +218,7 @@ export const getUserInputFields = (
     disableOption: UserData.country === '' ? 'Select State First' : 'Select City',
     message: 'Please select your city',
     // options: cityList,
-    options: !UserData?.cityId
+    options: !UserData?.country
       ? cityList?.filter((cl) => cl?.stateId == parseInt(UserData?.country || '0'))
       : cityList,
   },

@@ -227,8 +227,8 @@ export const getDaAppllyInputs = (
 export const getInitialDaData = (user) => ({
   id: 0,
   currencyId: 1,
-  stateId: 1,
-  cityId: 1,
+  stateId: '',
+  cityId: '',
   rowVer: 1,
   avatar: '',
   name: '',

@@ -21,6 +21,7 @@ import { updateToast } from 'src/redux/toast/toastSlice';
 import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import Loading from 'src/components/UI/Loading'; // existing loader component
+import useApi from 'src/hooks/useApi';
 
 const OrganizationAdd = () => {
   dayjs.extend(utc);
@@ -32,8 +33,10 @@ const OrganizationAdd = () => {
   const location = useLocation();
   const { checkEmailValidation } = useEmailVerification();
   const showToast = useShowToast();
-  const { uploadAvatar, uploadAttachments } = useUploadAvatar();
+  const { uploadAvatar, uploadAttachments, loading: avatarLoading } = useUploadAvatar();
   const [daApplyFormData, setDaApplyFormData] = useState(getInitialDaData(user));
+
+  const { postData: getCities, loading: citiesLoading, data: cityRes } = useApi('/Common/cities');
 
   const [showStock, setShowStock] = useState(true);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
@@ -44,6 +47,7 @@ const OrganizationAdd = () => {
   const [loadingModal, setLoadingModal] = useState(false);
 
   useEffect(() => {
+    getCities();
     formValidator();
     const state = location.state;
     if (state !== null) {
@@ -58,7 +62,7 @@ const OrganizationAdd = () => {
     }
   }, [user]);
 
-  const { createUpdateOrg } = useUpdateOrg();
+  const { createUpdateOrg, addOrgLoading } = useUpdateOrg();
   const { checkUserAvailability } = useUserAvailability();
 
   const handleDAFormData = (event, label = '') => {
@@ -89,22 +93,6 @@ const OrganizationAdd = () => {
         checkUserAvailability(fieldValue, '', daApplyFormData.id, setEmailMessage);
       }
     }
-  };
-
-  const { response: GetCityRes, loading: CityLoading, fetchData: GetCity } = useFetch();
-
-  useEffect(() => {
-    getCityList();
-  }, []);
-
-  const getCityList = async () => {
-    await GetCity('/Common/cities', { method: 'POST' }, (res) => {
-      if (!res.status) {
-        dispatch(
-          updateToast({ isToastOpen: true, toastMessage: res.message, toastVariant: 'error' }),
-        );
-      }
-    });
   };
 
   const submitDA = async () => {
@@ -203,7 +191,7 @@ const OrganizationAdd = () => {
     emailMessage,
     true,
     onBlur,
-    GetCityRes?.current?.data || [],
+    cityRes?.data || [],
   );
 
   return (
@@ -251,7 +239,7 @@ const OrganizationAdd = () => {
       <TermsAndConditionModal isOpen={termsmodalOpen} toggle={() => setTermsmodalOpen(false)} />
 
       {/* Loader while modal content loads */}
-      {loadingModal && <Loading />}
+      {(loadingModal || citiesLoading || addOrgLoading || avatarLoading) && <Loading />}
     </React.Fragment>
   );
 };

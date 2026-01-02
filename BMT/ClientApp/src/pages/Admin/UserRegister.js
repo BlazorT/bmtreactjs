@@ -68,20 +68,25 @@ const UserRegister = () => {
     formValidator();
     fetchDspList();
     getCities();
+  }, [location.state]);
+
+  useEffect(() => {
     const state = location.state;
-    if (state !== null) {
+    if (state !== null && cityRes?.data?.length > 0) {
       const userData = state.user[0];
+      console.log({ userData });
+      const findState = cityRes?.data?.find((cl) => cl?.id == userData?.cityId)?.stateId;
       setUserData({
         ...userData,
         roleId: userData.roleId === 0 ? '' : (userData.roleId ?? ''),
         password: userData.password ? atob(userData.password) : '',
-        country: userData.stateId < 54 ? 1 : (2 ?? ''),
+        country: findState,
         isTermsAccepted: false,
         contact: userData.contact,
         genderId: userData.genderId,
       });
     }
-  }, [location.state]);
+  }, [location.state, cityRes?.data]);
 
   // Handle user input changes
   const handleUserInput = async (e, label) => {
