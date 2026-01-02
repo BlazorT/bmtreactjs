@@ -580,19 +580,23 @@ namespace com.blazor.bmt.controllers
 
                     byte[] buffer = new byte[16 * 1024];
                     //Int32 storeId = Convert.ToInt32(HttpContext.Request.Form["id"]);
-                    string filename = String.Empty;
-                    string profileFileName = string.Empty;
+                    string applicationPath = _hostingEnvironment.ContentRootPath;
+                    string fileAbsolutePath = string.Empty;
+                    string filenamewithlogo = string.Empty;
+                    //string filename = String.Empty;
+                    // string profileFileName = string.Empty;
                     //  string id = files.get;
                     if (profiles != null && profiles.Any())
                     {
                         foreach (IFormFile file in profiles)
                         {
                             long totalBytes = file.Length;
-                            profileFileName = (new Random()).Next(1000, 19000).ToString() + Path.GetExtension(file.FileName);
-                            string filenameUltimate = GlobalUTIL.VehicleImageWebPath + profileFileName;
+                            string filename = Guid.NewGuid().ToString() + "_" + Path.GetExtension(file.FileName);
+                            fileAbsolutePath = applicationPath + BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename;
+                            filenamewithlogo = BlazorConstant.UPLOAD_WEB_ROOT_UPLOADFOLDER + filename;
                             using (Stream readStream = file.OpenReadStream())
                             {
-                                using (FileStream f = new FileStream(filenameUltimate, FileMode.Create))
+                                using (FileStream f = new FileStream(fileAbsolutePath, FileMode.Create))
                                 {
                                     int readBytes;
                                     while ((readBytes = readStream.Read(buffer, 0, buffer.Length)) > 0)
@@ -604,7 +608,7 @@ namespace com.blazor.bmt.controllers
                                 }
                             }
                         }// File Logo
-
+                    }// Images
                     UserViewModel usrdb= await  _userPageService.GetUserByEmailOrLoginNameAsynch("" + HttpContext.Request.Form["email"],string.Empty);
                         if (usrdb == null) {
                             var random = new Random();
@@ -624,7 +628,7 @@ namespace com.blazor.bmt.controllers
                                     OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
                                     RoleId = Convert.ToInt32(HttpContext.Request.Form["roleid"]),
                                     UserCode = "" + HttpContext.Request.Form["usercode"],
-                                    Avatar = profileFileName,
+                                    Avatar = filenamewithlogo,
                                     CreatedAt = GlobalUTIL.CurrentDateTime,
                                     LastUpdatedAt = GlobalUTIL.CurrentDateTime,
                                     CreatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"]),
@@ -642,8 +646,7 @@ namespace com.blazor.bmt.controllers
                         if (blazorApiResponse.status) { 
                        // _blazorRepoPageService.
                         }
-                    }
-                   
+                                       
                 }
                 catch (Exception ex)
                 {
