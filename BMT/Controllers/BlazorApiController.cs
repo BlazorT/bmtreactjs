@@ -1,4 +1,5 @@
 ﻿using Blazor.Web.UI.Interfaces;
+using Blazor.Web.UI.Services;
 using com.blazor.bmt.application.model;
 using com.blazor.bmt.infrastructure;
 using com.blazor.bmt.ui.interfaces;
@@ -561,7 +562,106 @@ namespace com.blazor.bmt.controllers
 
             return BlazorResponseViewModel;
         }
+        [HttpPost("useraccountwithlogin")]
+        [RequestSizeLimit(209715200)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
+        public async Task<ActionResult> AuthenticateMobileUserWithLogin([FromForm] IList<IFormFile> profiles)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            //List<VehiclesViewModel> plist = new List<VehiclesViewModel>();
+            // plist.Add(sdtl);
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            try
+            {
+                //  var previousRequest = _cache.Get(this.User.Identity.Name + Request.Path);
+                // if (previousRequest == null) {
+                try
+                {
 
+                    byte[] buffer = new byte[16 * 1024];
+                    //Int32 storeId = Convert.ToInt32(HttpContext.Request.Form["id"]);
+                    string filename = String.Empty;
+                    string profileFileName = string.Empty;
+                    //  string id = files.get;
+                    if (profiles != null && profiles.Any())
+                    {
+                        foreach (IFormFile file in profiles)
+                        {
+                            long totalBytes = file.Length;
+                            profileFileName = (new Random()).Next(1000, 19000).ToString() + Path.GetExtension(file.FileName);
+                            string filenameUltimate = GlobalUTIL.VehicleImageWebPath + profileFileName;
+                            using (Stream readStream = file.OpenReadStream())
+                            {
+                                using (FileStream f = new FileStream(filenameUltimate, FileMode.Create))
+                                {
+                                    int readBytes;
+                                    while ((readBytes = readStream.Read(buffer, 0, buffer.Length)) > 0)
+                                    {
+                                        f.Write(buffer, 0, readBytes);
+                                    }
+                                    f.Flush();
+                                    f.Close();
+                                }
+                            }
+                        }// File Logo
+
+                    UserViewModel usrdb= await  _userPageService.GetUserByEmailOrLoginNameAsynch("" + HttpContext.Request.Form["email"],string.Empty);
+                        if (usrdb == null) {
+                            var random = new Random();
+                            //string sixDigit = random.Next(9908, 1000000).ToString("D6");
+                            usrdb = await _userPageService.CreateUser(
+                                new UserViewModel
+                                {
+                                    Id = 0,
+                                    UserName = "" + HttpContext.Request.Form["username"],
+                                    FirstName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["firstname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["firstname"],
+                                    LastName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["lastname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["lastname"],
+                                    Status = 1,
+                                    Email = "" + HttpContext.Request.Form["email"],
+                                    RowVer = 1,
+                                    SecurityToken = random.Next(9908, 1000000).ToString("D6"),
+                                    OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
+                                    RoleId = Convert.ToInt32(HttpContext.Request.Form["roleid"]),
+                                    UserCode = "" + HttpContext.Request.Form["usercode"],
+                                    Avatar = profileFileName,
+                                    CreatedAt = GlobalUTIL.CurrentDateTime,
+                                    LastUpdatedAt = GlobalUTIL.CurrentDateTime,
+                                    CreatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"]),
+                                    LastUpdatedBy = Convert.ToInt32(HttpContext.Request.Form["createdby"])
+                                }
+                                );
+                            blazorApiResponse.status = true;
+                            blazorApiResponse.message = string.Format("User {0} created and auto logged in!!", "" + HttpContext.Request.Form["email"]);
+                            blazorApiResponse.errorCode = "200";
+                        } else if (usrdb.Status != 1) {
+                            blazorApiResponse.status = false;
+                            blazorApiResponse.errorCode = "405";
+                            blazorApiResponse.message = string.Format("User {0} already exists and status is dormant!!!", "" + HttpContext.Request.Form["email"]);
+                        }
+                        if (blazorApiResponse.status) { 
+                       // _blazorRepoPageService.
+                        }
+                    }
+                   
+                }
+                catch (Exception ex)
+                {
+                    blazorApiResponse.status = false;
+                    blazorApiResponse.message = ex.Message;
+                    throw ex;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                // _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
 
         [HttpPost]
         [Route("updateuserstatus")]

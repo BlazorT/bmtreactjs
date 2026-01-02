@@ -585,28 +585,28 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
         //            using (var command = connection.CreateCommand())
         //            {
         //                //************************  PARAMETERS*******************************//
-        //                List<SqlParameter> parameter = new List<SqlParameter>();
-        //                SqlParameter pkeyword = new MySqlParameter("p_keyword", "" + name);
+        //                List<MySqlParameter> parameter = new List<MySqlParameter>();
+        //                MySqlParameter pkeyword = new MySqlParameter("p_keyword", "" + name);
         //                parameter.Add(pkeyword);                  
-        //                SqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
+        //                MySqlParameter pStatus = new MySqlParameter("p_status", SqlDbType.Int);
         //                pStatus.Value = status;
         //                parameter.Add(pStatus);
-        //                SqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
+        //                MySqlParameter pOrgId = new MySqlParameter("p_OrgId", SqlDbType.Int);
         //                pOrgId.Value = orgId;
         //                parameter.Add(pOrgId);
-        //                SqlParameter pRoleid = new MySqlParameter("p_RoleId", SqlDbType.Int);
+        //                MySqlParameter pRoleid = new MySqlParameter("p_RoleId", SqlDbType.Int);
         //                pRoleid.Value = roleId;
         //                parameter.Add(pRoleid);
 
-        //                SqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
+        //                MySqlParameter pUserId = new MySqlParameter("p_UserId", SqlDbType.Int);
         //                pUserId.Value = UserId;
         //                parameter.Add(pUserId);
 
         //                //(@keyword varchar(100), @MerchantId int= 0, @SchoolId int= 0, @CategoryId int= 0, @DateFrom Date , @DateTo Date)
-        //                SqlParameter pDateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
+        //                MySqlParameter pDateFrom = new MySqlParameter("p_DateFrom", System.Data.SqlDbType.DateTime);
         //                pDateFrom.Value = dtFrom.Year <= 1900?new DateTime(UTIL.GlobalApp.CurrentDateTime.Year,1,1): dtFrom;
         //                parameter.Add(pDateFrom);
-        //                SqlParameter pDateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
+        //                MySqlParameter pDateTo = new MySqlParameter("p_DateTo", System.Data.SqlDbType.DateTime);
         //                pDateTo.Value = dtTo.Year <= 1900 ? UTIL.GlobalApp.CurrentDateTime : dtTo;
         //                parameter.Add(pDateTo);
         //                command.Parameters.AddRange(parameter.ToArray());
@@ -1276,18 +1276,18 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
         //            connection.Open();
         //            using (var command = connection.CreateCommand())
         //            {
-        //                List<SqlParameter> parameter = new List<SqlParameter>();
-        //                SqlParameter Key = new MySqlParameter("p_Key", "" + vvcm.videoKey);
+        //                List<MySqlParameter> parameter = new List<MySqlParameter>();
+        //                MySqlParameter Key = new MySqlParameter("p_Key", "" + vvcm.videoKey);
         //                parameter.Add(Key);
 
-        //                SqlParameter id = new MySqlParameter("p_Id", SqlDbType.Int);
+        //                MySqlParameter id = new MySqlParameter("p_Id", SqlDbType.Int);
         //                id.Value = vvcm.id;
         //                parameter.Add(id);
 
-        //                SqlParameter Count = new MySqlParameter("p_Count", SqlDbType.Int);
+        //                MySqlParameter Count = new MySqlParameter("p_Count", SqlDbType.Int);
         //                Count.Direction = ParameterDirection.Output;
         //                parameter.Add(Count);
-        //                SqlParameter ViewCount = new MySqlParameter("p_ViewCount", SqlDbType.Int);
+        //                MySqlParameter ViewCount = new MySqlParameter("p_ViewCount", SqlDbType.Int);
         //                ViewCount.Value = vvcm.viewsCount;
         //                parameter.Add(ViewCount);
         //                command.Parameters.AddRange(parameter.ToArray());
