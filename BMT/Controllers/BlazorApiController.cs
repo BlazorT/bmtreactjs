@@ -610,7 +610,7 @@ namespace com.blazor.bmt.controllers
                         }// File Logo
                     }// Images
                     UserViewModel usrdb= await  _userPageService.GetUserByEmailOrLoginNameAsynch("" + HttpContext.Request.Form["email"],string.Empty);
-                        if (usrdb == null) {
+                        if ( usrdb == null  || usrdb.Id<=0) {
                             var random = new Random();
                             //string sixDigit = random.Next(9908, 1000000).ToString("D6");
                             usrdb = await _userPageService.CreateUser(
@@ -644,8 +644,9 @@ namespace com.blazor.bmt.controllers
                             blazorApiResponse.errorCode = "405";
                             blazorApiResponse.message = string.Format("User {0} already exists and status is dormant!!!", "" + HttpContext.Request.Form["email"]);
                         }
-                        if (blazorApiResponse.status) { 
-                       // _blazorRepoPageService.
+                        if (blazorApiResponse.status) {
+                        usrdb.Password = string.Empty;
+                        blazorApiResponse.data = usrdb;
                         }
                                        
                 }
