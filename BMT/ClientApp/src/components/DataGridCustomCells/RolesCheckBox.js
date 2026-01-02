@@ -28,7 +28,7 @@ const RolesCheckBox = (prop) => {
   };
 
   return (
-    <div className="w-100 h-100 d-flex justify-content-start align-items-center">
+    <div className="h-100 d-flex justify-content-start align-items-center">
       <label className="custom-checkbox">
         <input
           type="checkbox"

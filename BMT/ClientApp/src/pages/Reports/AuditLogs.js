@@ -19,7 +19,6 @@ import usePageRoles from 'src/hooks/usePageRoles';
 const columns = [
   {
     key: 'attributeName',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Attribute',
     editable: false,
     filterable: true,
@@ -27,21 +26,18 @@ const columns = [
 
   {
     key: 'oldValue',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Previous Value ',
     editable: false,
     filterable: true,
   },
   {
     key: 'newValue',
-    headerCellClass: 'custom-header-data-grid',
     name: 'New Value',
     editable: false,
     filterable: true,
   },
   {
     key: 'username',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Updated By',
     editable: false,
     filterable: true,
@@ -49,7 +45,6 @@ const columns = [
   {
     key: 'createdAt',
     name: 'Updated At',
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     disableColumnMenu: true,

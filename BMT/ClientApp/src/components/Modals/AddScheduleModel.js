@@ -278,11 +278,14 @@ const AddScheduleModel = (prop) => {
   // console.log({ g: budgetData.TotalCampBudget });
   const getNetworkRecipients = (nId) => {
     if (![1, 2, 3].includes(nId)) return 1;
-    const findAlbumId = selectedAlbumList?.find((al) => al?.networkid === nId);
-    if (!findAlbumId) return 1;
+
+    const albumIds = selectedAlbumList?.filter((al) => al?.networkid === nId)?.map((al) => al?.id);
+
+    if (!albumIds || albumIds.length === 0) return 1;
+
     const rec =
-      recipients?.filter((r) => r?.networkId === nId && r?.albumid === findAlbumId?.id)?.length ||
-      1;
+      recipients?.filter((r) => r?.networkId === nId && albumIds.includes(r?.albumid))?.length || 1;
+
     return rec;
   };
 
@@ -612,10 +615,27 @@ const AddScheduleModel = (prop) => {
     // Use local schedule networks, not parent's selectedNetworks
     const networksToUse = isEditMode ? editModeNetworks : scheduleNetworks;
 
-    if (selectedAlbumList?.length !== networksToUse?.length) {
+    const networkIds = networksToUse
+      .map(
+        (n) => globalutil.networks().find((nw) => nw.name?.toLowerCase() === n?.toLowerCase())?.id,
+      )
+      .filter(Boolean);
+
+    // Required networks (unique)
+    const requiredNetworkSet = new Set(networkIds);
+
+    // Networks that actually have at least one album selected
+    const selectedNetworkSet = new Set(
+      selectedAlbumList
+        ?.filter((al) => requiredNetworkSet.has(al?.networkid))
+        ?.map((al) => al?.networkid),
+    );
+
+    if (selectedNetworkSet.size !== requiredNetworkSet.size) {
       showToast('Select contact list for selected networks', 'error');
       return;
     }
+
     if (!campaignRegData.intervalTypeId || networksToUse.length === 0) {
       showToast('All required fields must be filled.', 'error');
       return;
@@ -917,329 +937,319 @@ const AddScheduleModel = (prop) => {
           </h5>
         </ModalHeader>
         <ModalBody>
-          {submitFromGrid ? (
-            <div className="text-center py-4">
-              <p>Submitting campaign...</p>
-            </div>
-          ) : (
-            <form className="needs-validation shift-add-form" onSubmit={handleSubmit} noValidate>
-              <div className="d-flex flex-column gap-2">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body p-2 p-md-3">
-                    <DataGridHeader title="Networks" filterDisable={true} />
-                    <CRow className="mt-2 px-3 row-gap-3 column-gap-3 flex-wrap mb-2">
-                      {globalutil
-                        .networks()
-                        .filter((network) => {
-                          const networksToShow = isEditMode
-                            ? editModeNetworks
-                            : initialVisibleNetworks;
-                          return networksToShow.includes(network.name);
-                        })
-                        .map((network, index) => {
-                          const IconName =
-                            network.name.charAt(0).toUpperCase() +
-                            network.name.slice(1).toLowerCase();
+          <form className="needs-validation shift-add-form" onSubmit={handleSubmit} noValidate>
+            <div className="d-flex flex-column gap-2">
+              <div className="card border-0 shadow-sm">
+                <div className="card-body p-2 p-md-3">
+                  <DataGridHeader title="Networks" filterDisable={true} />
+                  <CRow className="mt-2 px-3 row-gap-3 column-gap-3 flex-wrap mb-2">
+                    {globalutil
+                      .networks()
+                      .filter((network) => {
+                        const networksToShow = isEditMode
+                          ? editModeNetworks
+                          : initialVisibleNetworks;
+                        return networksToShow.includes(network.name);
+                      })
+                      .map((network, index) => {
+                        const IconName =
+                          network.name.charAt(0).toUpperCase() +
+                          network.name.slice(1).toLowerCase();
 
-                          const matchedPricing = pricingData?.find(
-                            (price) => network?.id === price.networkId,
-                          );
-                          return (
-                            <div
-                              key={index}
-                              className="d-flex align-items-center w-auto gap-2 rounded-3 border p-2 h-100 shadow-sm-sm"
-                            >
-                              <span className="divCircle">
-                                <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
-                              </span>
-                              <CFormCheck
-                                id={IconName}
-                                name={IconName}
-                                disabled={loading}
-                                label={
-                                  <label>
-                                    {network.name}
-                                    <span className="text-dim" style={{ fontSize: 12 }}>
-                                      {` (Free Allowed: ${matchedPricing?.freeAllowed ?? 0})`}
-                                    </span>
-                                  </label>
-                                }
-                                checked={(isEditMode
-                                  ? editModeNetworks
-                                  : scheduleNetworks
-                                ).includes(network.name)}
-                                onChange={() => {
-                                  if (isEditMode) {
-                                    // In edit mode, only allow one network
-                                    const isSelected = editModeNetworks.includes(network.name);
-                                    setEditModeNetworks(isSelected ? [] : [network.name]);
-                                    setScheduleNetworks(isSelected ? [] : [network.name]);
-                                    if (!isSelected) {
-                                      // Clear album list when changing network
-                                      setSelectedAlbumList([]);
-                                    }
-                                  } else {
-                                    handleNetworkChange(network.name);
+                        const matchedPricing = pricingData?.find(
+                          (price) => network?.id === price.networkId,
+                        );
+                        return (
+                          <div
+                            key={index}
+                            className="d-flex align-items-center w-auto gap-2 rounded-3 border p-2 h-100 shadow-sm-sm"
+                          >
+                            <span className="divCircle">
+                              <CIcon className="BlazorIcon" icon={icons[IconName]} size="xl" />
+                            </span>
+                            <CFormCheck
+                              id={IconName}
+                              name={IconName}
+                              disabled={loading}
+                              label={
+                                <label>
+                                  {network.name}
+                                  <span className="text-dim" style={{ fontSize: 12 }}>
+                                    {` (Free Allowed: ${matchedPricing?.freeAllowed ?? 0})`}
+                                  </span>
+                                </label>
+                              }
+                              checked={(isEditMode ? editModeNetworks : scheduleNetworks).includes(
+                                network.name,
+                              )}
+                              onChange={() => {
+                                if (isEditMode) {
+                                  // In edit mode, only allow one network
+                                  const isSelected = editModeNetworks.includes(network.name);
+                                  setEditModeNetworks(isSelected ? [] : [network.name]);
+                                  setScheduleNetworks(isSelected ? [] : [network.name]);
+                                  if (!isSelected) {
+                                    // Clear album list when changing network
+                                    setSelectedAlbumList([]);
                                   }
-                                }}
-                                className="d-flex align-items-center m-0 fw-semibold text-capitalize"
-                              />
-                            </div>
-                          );
-                        })}
-                    </CRow>
-                    <AlbumListSelector
-                      selectedNetworks={isEditMode ? editModeNetworks : scheduleNetworks}
-                      selectedAlbumList={selectedAlbumList}
-                      toggleIsShowAlbumList={toggleIsShowAlbumList}
-                    />
-                  </div>
+                                } else {
+                                  handleNetworkChange(network.name);
+                                }
+                              }}
+                              className="d-flex align-items-center m-0 fw-semibold text-capitalize"
+                            />
+                          </div>
+                        );
+                      })}
+                  </CRow>
+                  <AlbumListSelector
+                    selectedNetworks={isEditMode ? editModeNetworks : scheduleNetworks}
+                    selectedAlbumList={selectedAlbumList}
+                    toggleIsShowAlbumList={toggleIsShowAlbumList}
+                    recipients={recipients}
+                  />
                 </div>
+              </div>
 
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body p-2 p-md-3">
-                    <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-0">
-                      <h6 className="mb-0 fw-semibold">Schedule Details</h6>
-                      <span className="badge text-bg-dark px-3 py-2">
-                        Configure timing, interval and recurrence
-                      </span>
-                    </div>
-                    <CRow className="gy-3">
-                      <CCol md="6">
-                        <CustomSelectInput
-                          label="Interval Types"
-                          icon={cilFlagAlt}
-                          disabled={loading}
-                          disableOption="Select Interval Types"
-                          id="intervalTypes"
-                          options={globalutil.intervals()}
-                          className="form-control item form-select scheduleClass"
-                          value={campaignRegData.intervalTypeId}
-                          name="intervalTypes"
-                          isRequired="true"
-                          title=" Select Interval Types "
-                          onChange={handleIntervalTypeChange}
-                        />
-                      </CCol>
-                      <CCol md="6">
-                        <CFormCheck
-                          disabled={loading}
-                          label="Is Fixed Time"
-                          name="isFixedTime"
-                          checked={campaignRegData.isFixedTime}
-                          onChange={(e) =>
-                            setCampaignRegData({
-                              ...campaignRegData,
-                              isFixedTime: e.target.checked,
-                            })
-                          }
-                          className="d-flex mt-4 pt-2 align-items-center"
-                        />
-                      </CCol>
-                    </CRow>
-
-                    <div className="mt-0">
-                      <fieldset className="mb-0">
-                        <legend className="legend mb-0">Select Days</legend>
-                        <CRow className="mt-2 gy-2 px-3 column-gap-3 row-gap-3 flex-wrap">
-                          {daysList.map((day) => (
-                            <div className="border rounded-3 px-3 py-1 h-100 w-auto" key={day.id}>
-                              <CFormCheck
-                                type="checkbox"
-                                label={day.name}
-                                id={`day-${day.id}`}
-                                checked={campaignRegData.selectedDays.includes(day.id)}
-                                onChange={() => handleDayChange(day.id)}
-                                disabled={campaignRegData.intervalTypeId === 2 || loading}
-                                className="fw-semibold d-flex align-items-center"
-                              />
-                            </div>
-                          ))}
-                        </CRow>
-                      </fieldset>
-                    </div>
-
-                    <CRow className="mt-1 gy-3">
-                      <CustomInput
-                        label="Interval Size (in seconds)"
-                        value={campaignRegData.Intervalval}
-                        onChange={handleCampaignAddForm}
+              <div className="card border-0 shadow-sm">
+                <div className="card-body p-2 p-md-3">
+                  <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-0">
+                    <h6 className="mb-0 fw-semibold">Schedule Details</h6>
+                    <span className="badge text-bg-dark px-3 py-2">
+                      Configure timing, interval and recurrence
+                    </span>
+                  </div>
+                  <CRow className="gy-3">
+                    <CCol md="6">
+                      <CustomSelectInput
+                        label="Interval Types"
                         icon={cilFlagAlt}
-                        type="number"
-                        id="Intervalval"
-                        name="Intervalval"
-                        placeholder="interval size"
-                        className="form-control item"
-                        isRequired={false}
+                        disabled={loading}
+                        disableOption="Select Interval Types"
+                        id="intervalTypes"
+                        options={globalutil.intervals()}
+                        className="form-control item form-select scheduleClass"
+                        value={campaignRegData.intervalTypeId}
+                        name="intervalTypes"
+                        isRequired="true"
+                        title=" Select Interval Types "
+                        onChange={handleIntervalTypeChange}
+                      />
+                    </CCol>
+                    <CCol md="6">
+                      <CFormCheck
+                        disabled={loading}
+                        label="Is Fixed Time"
+                        name="isFixedTime"
+                        checked={campaignRegData.isFixedTime}
+                        onChange={(e) =>
+                          setCampaignRegData({
+                            ...campaignRegData,
+                            isFixedTime: e.target.checked,
+                          })
+                        }
+                        className="d-flex mt-4 pt-2 align-items-center"
+                      />
+                    </CCol>
+                  </CRow>
+
+                  <div className="mt-0">
+                    <fieldset className="mb-0">
+                      <legend className="legend mb-0">Select Days</legend>
+                      <CRow className="mt-2 gy-2 px-3 column-gap-3 row-gap-3 flex-wrap">
+                        {daysList.map((day) => (
+                          <div className="border rounded-3 px-3 py-1 h-100 w-auto" key={day.id}>
+                            <CFormCheck
+                              type="checkbox"
+                              label={day.name}
+                              id={`day-${day.id}`}
+                              checked={campaignRegData.selectedDays.includes(day.id)}
+                              onChange={() => handleDayChange(day.id)}
+                              disabled={campaignRegData.intervalTypeId === 2 || loading}
+                              className="fw-semibold d-flex align-items-center"
+                            />
+                          </div>
+                        ))}
+                      </CRow>
+                    </fieldset>
+                  </div>
+
+                  <CRow className="mt-1 gy-3">
+                    <CustomInput
+                      label="Interval Size (in seconds)"
+                      value={campaignRegData.Intervalval}
+                      onChange={handleCampaignAddForm}
+                      icon={cilFlagAlt}
+                      type="number"
+                      id="Intervalval"
+                      name="Intervalval"
+                      placeholder="interval size"
+                      className="form-control item"
+                      isRequired={false}
+                      disabled={loading}
+                    />
+                  </CRow>
+
+                  <CRow className="gy-3">
+                    <CCol md="6">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        disabled={loading}
+                        label="Date From"
+                        id="startDate"
+                        name="startDate"
+                        value={campaignRegData.startDate}
+                        minDate={dayjs(submitData.startTime)}
+                        maxDate={dayjs(submitData.finishTime)}
+                        title="start date"
+                        className="scheduleClass"
+                        disablePast="true"
+                        onChange={(e) => handleCampaignAddForm(e, 'startDate')}
+                      />
+                    </CCol>
+                    <CCol md="6">
+                      <CustomDatePicker
+                        icon={cilCalendar}
+                        label="Date To"
+                        id="endDate"
+                        name="endDate"
+                        title="end date"
+                        className="scheduleClass"
+                        value={campaignRegData.endDate}
+                        disabled={loading}
+                        disablePast="true"
+                        minDate={dayjs(submitData.startTime)}
+                        maxDate={dayjs(submitData.finishTime)}
+                        onChange={(e) => handleCampaignAddForm(e, 'endDate')}
+                      />
+                    </CCol>
+                  </CRow>
+
+                  <CRow className="gy-3">
+                    <CCol md="6">
+                      <CustomTimePicker
+                        icon={cilCalendar}
+                        label="Start Time"
+                        id="startTime"
+                        name="startTime"
+                        title="Start Time"
+                        className="scheduleClass"
+                        value={campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null}
+                        onChange={(e) => handleCampaignAddForm(e, 'startTime')}
                         disabled={loading}
                       />
-                    </CRow>
-
-                    <CRow className="gy-3">
-                      <CCol md="6">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          disabled={loading}
-                          label="Date From"
-                          id="startDate"
-                          name="startDate"
-                          value={campaignRegData.startDate}
-                          minDate={dayjs(submitData.startTime)}
-                          maxDate={dayjs(submitData.finishTime)}
-                          title="start date"
-                          className="scheduleClass"
-                          disablePast="true"
-                          onChange={(e) => handleCampaignAddForm(e, 'startDate')}
-                        />
-                      </CCol>
-                      <CCol md="6">
-                        <CustomDatePicker
-                          icon={cilCalendar}
-                          label="Date To"
-                          id="endDate"
-                          name="endDate"
-                          title="end date"
-                          className="scheduleClass"
-                          value={campaignRegData.endDate}
-                          disabled={loading}
-                          disablePast="true"
-                          minDate={dayjs(submitData.startTime)}
-                          maxDate={dayjs(submitData.finishTime)}
-                          onChange={(e) => handleCampaignAddForm(e, 'endDate')}
-                        />
-                      </CCol>
-                    </CRow>
-
-                    <CRow className="gy-3">
-                      <CCol md="6">
-                        <CustomTimePicker
-                          icon={cilCalendar}
-                          label="Start Time"
-                          id="startTime"
-                          name="startTime"
-                          title="Start Time"
-                          className="scheduleClass"
-                          value={
-                            campaignRegData.startTime ? dayjs(campaignRegData.startTime) : null
-                          }
-                          onChange={(e) => handleCampaignAddForm(e, 'startTime')}
-                          disabled={loading}
-                        />
-                      </CCol>
-                      <CCol md="6">
-                        <CustomTimePicker
-                          icon={cilCalendar}
-                          label="End Time"
-                          id="finishTime"
-                          name="finishTime"
-                          className="scheduleClass"
-                          value={
-                            campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null
-                          }
-                          onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
-                          disabled={loading}
-                          title=" End Time"
-                        />
-                      </CCol>
-                    </CRow>
-                  </div>
+                    </CCol>
+                    <CCol md="6">
+                      <CustomTimePicker
+                        icon={cilCalendar}
+                        label="End Time"
+                        id="finishTime"
+                        name="finishTime"
+                        className="scheduleClass"
+                        value={
+                          campaignRegData.finishTime ? dayjs(campaignRegData.finishTime) : null
+                        }
+                        onChange={(e) => handleCampaignAddForm(e, 'finishTime')}
+                        disabled={loading}
+                        title=" End Time"
+                      />
+                    </CCol>
+                  </CRow>
                 </div>
+              </div>
 
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body p-2 p-md-3">
-                    <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
-                      <h6 className="mb-0 fw-semibold">Budget Overview</h6>
-                      <span className="text-muted small">
-                        Auto-calculated based on selected networks and contacts
-                      </span>
+              <div className="card border-0 shadow-sm">
+                <div className="card-body p-2 p-md-3">
+                  <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+                    <h6 className="mb-0 fw-semibold">Budget Overview</h6>
+                    <span className="text-muted small">
+                      Auto-calculated based on selected networks and contacts
+                    </span>
+                  </div>
+                  <CRow className="gy-3">
+                    <CCol md={4} sm={6}>
+                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                        Schedule Messages
+                      </label>
+                      <input
+                        id="TotalSchMessages"
+                        className="form-control item user-profile-input labelName"
+                        value={budgetData.TotalSchMessages}
+                        disabled
+                      />
+                    </CCol>
+                    <CCol md={4} sm={6}>
+                      <label htmlFor="" className="labelName profile-user-labels mt-2">
+                        Schedule Budget({currencyName || ''})
+                      </label>
+                      <input
+                        id="TotalSchBudget"
+                        className="form-control item user-profile-input"
+                        value={budgetData.TotalSchBudget}
+                        disabled
+                      />
+                    </CCol>
+                    <CCol md={4} sm={12}>
+                      <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                        Campaign Budget({currencyName || ''})
+                      </label>
+                      <input
+                        id="TotalCampBudget"
+                        className="form-control item user-profile-input"
+                        value={budgetData.TotalCampBudget}
+                        disabled
+                      />
+                    </CCol>
+                  </CRow>
+                </div>
+              </div>
+
+              <div className="card border-0 shadow-sm mb-0">
+                <div className="card-body p-3 p-md-3">
+                  <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <div>
+                      <p className="text-muted mb-1 small">Actions</p>
+                      <h6 className="mb-0 fw-semibold">Save schedule or submit campaign</h6>
                     </div>
-                    <CRow className="gy-3">
-                      <CCol md={4} sm={6}>
-                        <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                          Schedule Messages
-                        </label>
-                        <input
-                          id="TotalSchMessages"
-                          className="form-control item user-profile-input labelName"
-                          value={budgetData.TotalSchMessages}
-                          disabled
-                        />
-                      </CCol>
-                      <CCol md={4} sm={6}>
-                        <label htmlFor="" className="labelName profile-user-labels mt-2">
-                          Schedule Budget({currencyName || ''})
-                        </label>
-                        <input
-                          id="TotalSchBudget"
-                          className="form-control item user-profile-input"
-                          value={budgetData.TotalSchBudget}
-                          disabled
-                        />
-                      </CCol>
-                      <CCol md={4} sm={12}>
-                        <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                          Campaign Budget({currencyName || ''})
-                        </label>
-                        <input
-                          id="TotalCampBudget"
-                          className="form-control item user-profile-input"
-                          value={budgetData.TotalCampBudget}
-                          disabled
-                        />
-                      </CCol>
-                    </CRow>
-                  </div>
-                </div>
-
-                <div className="card border-0 shadow-sm mb-0">
-                  <div className="card-body p-3 p-md-3">
-                    <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                      <div>
-                        <p className="text-muted mb-1 small">Actions</p>
-                        <h6 className="mb-0 fw-semibold">Save schedule or submit campaign</h6>
-                      </div>
-                      <div className="d-flex flex-wrap gap-2">
-                        <Button
-                          disabled={loading}
-                          onClick={onCancel}
-                          type="button"
-                          className="w-auto px-4 btn-light"
-                        >
-                          Back
-                        </Button>
-                        <Button
-                          disabled={loading}
-                          onClick={onSave}
-                          type="button"
-                          className="w-auto px-4 btn-outline-primary"
-                        >
-                          {isEditMode ? 'Update Schedule' : 'Add Schedule'}
-                        </Button>
-                        <Button
-                          content={
-                            scheduleJson?.length === 0
-                              ? 'Please add at least one schedule before submitting.'
-                              : ''
-                          }
-                          disabled={loading || scheduleJson?.length === 0}
-                          loading={loading}
-                          onClick={() =>
-                            budgetData?.TotalCampBudget < 1
-                              ? submitCompaign('')
-                              : togglePaymentMdl()
-                          }
-                          type="submit"
-                          className="w-auto px-4"
-                        >
-                          Submit Campaign
-                        </Button>
-                      </div>
+                    <div className="d-flex flex-wrap gap-2">
+                      <Button
+                        disabled={loading}
+                        onClick={onCancel}
+                        type="button"
+                        className="w-auto px-4 btn-light"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        disabled={loading}
+                        onClick={onSave}
+                        type="button"
+                        className="w-auto px-4 btn-outline-primary"
+                      >
+                        {isEditMode ? 'Update Schedule' : 'Add Schedule'}
+                      </Button>
+                      <Button
+                        content={
+                          scheduleJson?.length === 0
+                            ? 'Please add at least one schedule before submitting.'
+                            : ''
+                        }
+                        disabled={loading || scheduleJson?.length === 0}
+                        loading={loading}
+                        onClick={() =>
+                          budgetData?.TotalCampBudget < 1 ? submitCompaign('') : togglePaymentMdl()
+                        }
+                        type="submit"
+                        className="w-auto px-4"
+                      >
+                        Submit Campaign
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
-            </form>
-          )}
+            </div>
+          </form>
         </ModalBody>
       </Modal>
       <AlbumListModel

@@ -8,6 +8,7 @@ import {
   CModalTitle,
   CAlert,
   CPopover,
+  CFormCheck,
 } from '@coreui/react';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,12 +38,14 @@ export const AlbumListModel = ({
   const showToast = useShowToast();
   const [activeTab, setActiveTab] = useState(null);
   const [isShowAlbumMdl, setIsShowAlbumMdl] = useState(false);
+  // Changed to store arrays of album IDs per network
   const [selectedAlbums, setSelectedAlbums] = useState({});
   const [albumsByNetwork, setAlbumsByNetwork] = useState({});
   const [showContactInput, setShowContactInput] = useState(false);
   const [contactInput, setContactInput] = useState('');
   const [newContacts, setNewContacts] = useState([]);
   const [isAddingContacts, setIsAddingContacts] = useState(false);
+  const [selectedAlbumForContacts, setSelectedAlbumForContacts] = useState(null);
 
   const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const { data: recipients, loading: recipientsLoading, fetchRecipients } = useFetchRecipients();
@@ -83,11 +86,14 @@ export const AlbumListModel = ({
       fetchAlbums();
       fetchRecipients(body);
 
-      // Initialize selected albums from selectedAlbumList
+      // Initialize selected albums from selectedAlbumList (now supporting multiple per network)
       const initial = {};
       if (selectedAlbumList?.length > 0) {
         selectedAlbumList.forEach((album) => {
-          initial[album.networkid] = album.id;
+          if (!initial[album.networkid]) {
+            initial[album.networkid] = [];
+          }
+          initial[album.networkid].push(album.id);
         });
       }
       setSelectedAlbums(initial);
@@ -98,6 +104,7 @@ export const AlbumListModel = ({
       setShowContactInput(false);
       setContactInput('');
       setNewContacts([]);
+      setSelectedAlbumForContacts(null);
     }
   }, [isOpen]);
 
@@ -118,16 +125,36 @@ export const AlbumListModel = ({
     setShowContactInput(false);
     setContactInput('');
     setNewContacts([]);
+    setSelectedAlbumForContacts(null);
   };
 
   const handleAlbumSelect = (networkId, albumId) => {
+    setSelectedAlbums((prev) => {
+      const currentSelections = prev[networkId] || [];
+      const isSelected = currentSelections.includes(albumId);
+
+      return {
+        ...prev,
+        [networkId]: isSelected
+          ? currentSelections.filter((id) => id !== albumId)
+          : [...currentSelections, albumId],
+      };
+    });
+  };
+
+  const handleSelectAllAlbums = (networkId) => {
+    const currentAlbums = albumsByNetwork[networkId] || [];
+    const currentSelections = selectedAlbums[networkId] || [];
+    const allAlbumIds = currentAlbums.map((a) => a.id);
+
+    // If all are selected, deselect all; otherwise select all
+    const allSelected =
+      allAlbumIds.length > 0 && allAlbumIds.every((id) => currentSelections.includes(id));
+
     setSelectedAlbums((prev) => ({
       ...prev,
-      [networkId]: prev[networkId] === albumId ? null : albumId,
+      [networkId]: allSelected ? [] : allAlbumIds,
     }));
-    setShowContactInput(false);
-    setContactInput('');
-    setNewContacts([]);
   };
 
   const validateRecipient = (networkName, value) => {
@@ -154,13 +181,12 @@ export const AlbumListModel = ({
     return networks?.find((n) => n.id === activeTab)?.name || '';
   };
 
-  const getExistingContacts = () => {
-    const selectedAlbumId = selectedAlbums[currentNetworkId];
-    if (!selectedAlbumId) return [];
+  const getExistingContacts = (albumId) => {
+    if (!albumId) return [];
 
     return (
       recipients?.data
-        ?.filter((r) => r?.albumid === selectedAlbumId && r?.networkId === currentNetworkId)
+        ?.filter((r) => r?.albumid === albumId && r?.networkId === currentNetworkId)
         ?.map((r) => r.contentId) || []
     );
   };
@@ -189,7 +215,7 @@ export const AlbumListModel = ({
     }
 
     // Check against existing contacts
-    const existingContacts = getExistingContacts();
+    const existingContacts = getExistingContacts(selectedAlbumForContacts);
     if (existingContacts.includes(value)) {
       showToast(`"${value}" is already in this album.`, 'error');
       return false;
@@ -252,8 +278,7 @@ export const AlbumListModel = ({
       return;
     }
 
-    const selectedAlbumId = selectedAlbums[currentNetworkId];
-    if (!selectedAlbumId) {
+    if (!selectedAlbumForContacts) {
       showToast('Please select an album first.', 'error');
       return;
     }
@@ -266,7 +291,7 @@ export const AlbumListModel = ({
           Id: 0,
           OrgId: user.orgId,
           NetworkId: currentNetworkId,
-          Albumid: selectedAlbumId,
+          Albumid: selectedAlbumForContacts,
           Contentlst: newContacts,
           Desc: '',
           CreatedBy: user.userId,
@@ -296,6 +321,7 @@ export const AlbumListModel = ({
         setNewContacts([]);
         setContactInput('');
         setShowContactInput(false);
+        setSelectedAlbumForContacts(null);
 
         // Refresh recipients list
         const body = {
@@ -323,7 +349,10 @@ export const AlbumListModel = ({
   };
 
   const handleSubmit = (isToogle = true, rec = null) => {
-    const selectedIds = Object.values(selectedAlbums).filter((id) => id !== null);
+    // Flatten all selected album IDs from all networks
+    const selectedIds = Object.values(selectedAlbums)
+      .flat()
+      .filter((id) => id !== null);
 
     const selectedAlbumsList = Array.isArray(albums)
       ? albums.filter((al) => selectedIds.includes(al.id))
@@ -360,14 +389,19 @@ export const AlbumListModel = ({
     toggleAlbumMdl();
   };
 
-  const isSubmitDisabled = Object.values(selectedAlbums).every((v) => v === null) || disabled;
+  const isSubmitDisabled =
+    Object.values(selectedAlbums).every((arr) => !arr || arr.length === 0) || disabled;
 
   const currentNetworkId = networks?.find((n) => n.id === activeTab)?.id;
   const currentAlbums = albumsByNetwork[currentNetworkId] || [];
   const loading = albumsLoading || recipientsLoading;
-  const selectedAlbumId = selectedAlbums[currentNetworkId];
-  const existingContacts = getExistingContacts();
+  const currentNetworkSelections = selectedAlbums[currentNetworkId] || [];
   const networkName = getCurrentNetworkName();
+
+  // Check if all albums are selected for current network
+  const allAlbumsSelected =
+    currentAlbums.length > 0 &&
+    currentAlbums.every((album) => currentNetworkSelections.includes(album.id));
 
   const getTooltipContent = () => {
     const lowerNetwork = networkName.toLowerCase();
@@ -419,9 +453,25 @@ export const AlbumListModel = ({
                   </div>
                 ) : (
                   <>
+                    {/* Select All Checkbox */}
+                    <div className="mb-3 d-flex align-items-center gap-2 p-2 bg-light rounded">
+                      <CFormCheck
+                        id={`select-all-${currentNetworkId}`}
+                        checked={allAlbumsSelected}
+                        onChange={() => handleSelectAllAlbums(currentNetworkId)}
+                      />
+                      <label
+                        htmlFor={`select-all-${currentNetworkId}`}
+                        className="mb-0 fw-semibold"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        Select All Albums ({currentNetworkSelections.length}/{currentAlbums.length})
+                      </label>
+                    </div>
+
                     <div className="album-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                       {currentAlbums.map((item) => {
-                        const isSelected = selectedAlbums[currentNetworkId] === item.id;
+                        const isSelected = currentNetworkSelections.includes(item.id);
                         const contactCount =
                           recipients?.data?.filter(
                             (r) => r?.albumid === item.id && r?.networkId === item.networkid,
@@ -430,16 +480,12 @@ export const AlbumListModel = ({
                         return (
                           <div
                             key={item.id}
-                            onClick={() => {
-                              handleAlbumSelect(currentNetworkId, item.id);
-                            }}
                             className={`album-item mb-2 rounded-3 border position-relative ${
                               isSelected
                                 ? 'border-success bg-opacity-10 shadow-sm'
                                 : 'border-secondary'
                             }`}
                             style={{
-                              cursor: 'pointer',
                               transition: 'all 0.2s ease',
                               padding: '0.85rem 1rem',
                               display: 'flex',
@@ -448,24 +494,45 @@ export const AlbumListModel = ({
                               gap: '0.75rem',
                             }}
                           >
-                            <span
-                              style={{
-                                width: '4px',
-                                alignSelf: 'stretch',
-                                borderRadius: '999px',
-                                backgroundColor: isSelected ? '#198754' : '#dee2e6',
-                              }}
-                            />
+                            <div className="d-flex align-items-center gap-3 flex-grow-1">
+                              <CFormCheck
+                                id={`album-${item.id}`}
+                                checked={isSelected}
+                                onChange={() => handleAlbumSelect(currentNetworkId, item.id)}
+                              />
 
-                            <div className="flex-grow-1">
-                              <div className="fw-semibold text-truncate">{item.name}</div>
-                              <small className="text-muted d-block mt-1">
-                                {contactCount} contact{contactCount === 1 ? '' : 's'}
-                              </small>
+                              <span
+                                style={{
+                                  width: '4px',
+                                  height: '40px',
+                                  borderRadius: '999px',
+                                  backgroundColor: isSelected ? '#198754' : '#dee2e6',
+                                }}
+                              />
+
+                              <div className="flex-grow-1">
+                                <div className="fw-semibold text-truncate">{item.name}</div>
+                                <small className="text-muted d-block mt-1">
+                                  {contactCount} contact{contactCount === 1 ? '' : 's'}
+                                </small>
+                              </div>
                             </div>
 
                             {isSelected && (
-                              <CIcon icon={cilCheckCircle} size="lg" className="text-success" />
+                              <>
+                                <CIcon icon={cilCheckCircle} size="lg" className="text-success" />
+                                <Button
+                                  title="Add Contacts"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedAlbumForContacts(item.id);
+                                    setShowContactInput(true);
+                                    setContactInput('');
+                                    setNewContacts([]);
+                                  }}
+                                  className="w-auto btn-sm ms-2"
+                                />
+                              </>
                             )}
                           </div>
                         );
@@ -473,91 +540,98 @@ export const AlbumListModel = ({
                     </div>
 
                     {/* Add Contacts Section */}
-                    {selectedAlbumId && (
+                    {selectedAlbumForContacts && showContactInput && (
                       <div className="mt-3 border-top pt-3">
                         <div className="d-flex justify-content-between align-items-center mb-2">
-                          <h6 className="mb-0">Manage Contacts</h6>
+                          <h6 className="mb-0">
+                            Add Contacts to{' '}
+                            {currentAlbums.find((a) => a.id === selectedAlbumForContacts)?.name}
+                          </h6>
                           <Button
-                            title={showContactInput ? 'Cancel' : 'Add Contacts'}
-                            onClick={() => setShowContactInput(!showContactInput)}
+                            title="Cancel"
+                            onClick={() => {
+                              setShowContactInput(false);
+                              setSelectedAlbumForContacts(null);
+                              setContactInput('');
+                              setNewContacts([]);
+                            }}
                             className="w-auto btn-sm"
                           />
                         </div>
 
-                        {showContactInput && (
-                          <div className="mt-2">
-                            <CAlert color="info" className="mb-2 py-2 small">
-                              {getTooltipContent()}
-                            </CAlert>
+                        <div className="mt-2">
+                          <CAlert color="info" className="mb-2 py-2 small">
+                            {getTooltipContent()}
+                          </CAlert>
 
-                            <div className="position-relative mb-2">
-                              <CustomInput
-                                type="text"
-                                width={'w-100'}
-                                value={contactInput}
-                                placeholder="Enter contact and press Enter or Comma"
-                                onChange={(e) => setContactInput(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                onPaste={handlePaste}
-                              />
-
-                              {newContacts.length > 0 && (
-                                <CPopover
-                                  content={
-                                    <div className="popover-recipient-list">
-                                      {newContacts.map((contact, idx) => (
-                                        <div key={idx} className="recipient-tag">
-                                          {contact}
-                                          <span
-                                            className="delete-icon"
-                                            onClick={() => handleDeleteNewContact(idx)}
-                                          >
-                                            &times;
-                                          </span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  }
-                                  placement="left"
-                                  trigger="click"
-                                  className="recipient-popover"
-                                >
-                                  <span
-                                    className="recipient-count"
-                                    style={{
-                                      position: 'absolute',
-                                      right: '10px',
-                                      top: '50%',
-                                      transform: 'translateY(-50%)',
-                                    }}
-                                  >
-                                    {newContacts.length}
-                                  </span>
-                                </CPopover>
-                              )}
-                            </div>
+                          <div className="position-relative mb-2">
+                            <CustomInput
+                              type="text"
+                              width={'w-100'}
+                              value={contactInput}
+                              placeholder="Enter contact and press Enter or Comma"
+                              onChange={(e) => setContactInput(e.target.value)}
+                              onKeyDown={handleKeyDown}
+                              onPaste={handlePaste}
+                            />
 
                             {newContacts.length > 0 && (
-                              <Button
-                                title={
-                                  isAddingContacts
-                                    ? 'Saving...'
-                                    : `Save ${newContacts.length} Contact(s)`
+                              <CPopover
+                                content={
+                                  <div className="popover-recipient-list">
+                                    {newContacts.map((contact, idx) => (
+                                      <div key={idx} className="recipient-tag">
+                                        {contact}
+                                        <span
+                                          className="delete-icon"
+                                          onClick={() => handleDeleteNewContact(idx)}
+                                        >
+                                          &times;
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
                                 }
-                                onClick={handleSaveNewContacts}
-                                disabled={isAddingContacts}
-                                className="w-100"
-                              />
+                                placement="left"
+                                trigger="click"
+                                className="recipient-popover"
+                              >
+                                <span
+                                  className="recipient-count"
+                                  style={{
+                                    position: 'absolute',
+                                    right: '10px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                  }}
+                                >
+                                  {newContacts.length}
+                                </span>
+                              </CPopover>
                             )}
                           </div>
-                        )}
+
+                          {newContacts.length > 0 && (
+                            <Button
+                              title={
+                                isAddingContacts
+                                  ? 'Saving...'
+                                  : `Save ${newContacts.length} Contact(s)`
+                              }
+                              onClick={handleSaveNewContacts}
+                              disabled={isAddingContacts}
+                              className="w-100"
+                            />
+                          )}
+                        </div>
 
                         {/* Existing Contacts Display */}
-                        {existingContacts.length > 0 && (
+                        {getExistingContacts(selectedAlbumForContacts).length > 0 && (
                           <div className="mt-3">
                             <div className="d-flex justify-content-between align-items-center mb-2">
                               <small className="text-muted">
-                                Existing Contacts ({existingContacts.length})
+                                Existing Contacts (
+                                {getExistingContacts(selectedAlbumForContacts).length})
                               </small>
                             </div>
                             <div
@@ -568,7 +642,7 @@ export const AlbumListModel = ({
                                 fontSize: '0.875rem',
                               }}
                             >
-                              {existingContacts.map((contact, idx) => (
+                              {getExistingContacts(selectedAlbumForContacts).map((contact, idx) => (
                                 <div
                                   key={idx}
                                   className="py-1 px-2 mb-1 btn-bg rounded fit-content-width justify-content-between align-items-center"

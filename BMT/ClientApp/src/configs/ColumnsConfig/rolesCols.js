@@ -3,7 +3,6 @@ import BmtRolesCustomCell from 'src/components/DataGridCustomCells/BmtRolesCusto
 export const getRolesCols = (pageRoles) => [
   //{
   //  key: 'id',
-  //  headerCellClass: 'custom-header-data-grid',
   //  editable: false,
   //  filterable: false,
   //  disableColumnMenu: true,
@@ -16,7 +15,6 @@ export const getRolesCols = (pageRoles) => [
   //},
   {
     key: 'roleName',
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
@@ -27,7 +25,6 @@ export const getRolesCols = (pageRoles) => [
   },
   {
     key: 'status',
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
@@ -38,7 +35,6 @@ export const getRolesCols = (pageRoles) => [
   },
   {
     key: 'lastUpdate',
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
@@ -50,7 +46,6 @@ export const getRolesCols = (pageRoles) => [
   {
     key: 'imageUrl',
     width: 150,
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     disableColumnMenu: true,

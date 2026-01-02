@@ -35,35 +35,30 @@ dayjs.extend(utc);
 const columns = [
   {
     key: 'userName',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Name',
     editable: false,
     filterable: true,
   },
   {
     key: 'roleName',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Role',
     editable: false,
     filterable: true,
   },
   {
     key: 'contact',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Contact',
     editable: false,
     filterable: true,
   },
   {
     key: 'email',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Email',
     editable: false,
     filterable: true,
   },
   {
     key: 'status',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Current Status',
     editable: false,
     filterable: true,
@@ -72,7 +67,6 @@ const columns = [
   },
   {
     key: 'createdAt',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Date',
     editable: false,
     filterable: false,

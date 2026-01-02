@@ -14,7 +14,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'name',
@@ -22,7 +21,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'totalBudget',
@@ -30,7 +28,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'createdBy',
@@ -38,7 +35,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   {
     key: 'createdAt',
@@ -46,7 +42,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
   },
   // {
   //   key: 'orgName',
@@ -54,7 +49,6 @@ export const getcampaignslistingCols = (
   //   editable: false,
   //   filterable: true,
   //   disableColumnMenu: true,
-  //   headerCellClass: 'custom-header-data-grid',
   // },
   {
     key: 'startTime',
@@ -62,7 +56,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
     type: 'timestamp',
   },
   {
@@ -73,7 +66,6 @@ export const getcampaignslistingCols = (
     disableColumnMenu: true,
     hide: true,
     hideable: false,
-    headerCellClass: 'custom-header-data-grid',
     type: 'timestamp',
   },
   {
@@ -82,7 +74,6 @@ export const getcampaignslistingCols = (
     editable: false,
     filterable: false,
     disableColumnMenu: true,
-    headerCellClass: 'custom-header-data-grid',
     renderCell: (params) => {
       // ✅ Prevent rendering for group rows
       if (params.row.isGroupRow) return null;

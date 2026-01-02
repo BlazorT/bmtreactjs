@@ -18,7 +18,6 @@ import usePageRoles from 'src/hooks/usePageRoles';
 const columns = [
   {
     key: 'logDesc',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Log',
     editable: false,
     filterable: true,
@@ -26,7 +25,6 @@ const columns = [
   },
   {
     key: 'machineIp',
-    headerCellClass: 'custom-header-data-grid',
     name: 'Machine ',
     editable: false,
     filterable: true,
@@ -34,7 +32,6 @@ const columns = [
   {
     key: 'logTimeFrom',
     name: 'Log Time',
-    headerCellClass: 'custom-header-data-grid',
     editable: false,
     filterable: false,
     disableColumnMenu: true,

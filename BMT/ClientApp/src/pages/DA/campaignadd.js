@@ -541,7 +541,7 @@ const campaignadd = () => {
       name: 'Action',
       minWidth: 150,
       renderCell: (params) => (
-        <div className="d-flex gap-2 align-items-center">
+        <div className="d-flex gap-2 align-items-center justify-content-center">
           <CIcon
             icon={cilPencil}
             onClick={() => handleEditSchedule(params.row.id)}
@@ -692,8 +692,6 @@ const campaignadd = () => {
     };
   }, []);
 
-  // console.log({ campaignRegData });
-
   if (pricingLoading || templatesLoading) {
     return <Loading />;
   }
@@ -802,11 +800,12 @@ const campaignadd = () => {
 
                         {/* Locations + Detailed Targeting */}
                         <CRow className="mt-2">
-                          <LocationSelector
-                            campaignRegData={campaignRegData}
-                            setCampaignRegData={setCampaignRegData}
-                          />
-
+                          <CCol md="6">
+                            <LocationSelector
+                              campaignRegData={campaignRegData}
+                              setCampaignRegData={setCampaignRegData}
+                            />
+                          </CCol>
                           <CCol md="6">
                             <h5>Interests</h5>
                             <input
@@ -850,12 +849,12 @@ const campaignadd = () => {
                               </div>
                             )}
 
-                            <div className="mt-2">
+                            <div className="mt-2 d-flex flex-wrap gap-2">
                               {(campaignRegData.interests || []).map((interest, index) => (
                                 <span
                                   key={index}
-                                  className="badge bg-primary me-2"
-                                  style={{ cursor: 'pointer' }}
+                                  className="bg-secondary me-2 w-auto p-2 rounded-2"
+                                  style={{ cursor: 'pointer', fontSize: '0.8rem' }}
                                   onClick={() => {
                                     setCampaignRegData({
                                       ...campaignRegData,
