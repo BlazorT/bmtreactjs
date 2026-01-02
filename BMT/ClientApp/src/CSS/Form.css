@@ -486,11 +486,11 @@ button[type='submit']:hover {
 #DateTo::after {
   color: white;
 }
-.icon:not(.icon-c-s):not(.icon-custom-size).icon-sm {
+/* .icon:not(.icon-c-s):not(.icon-custom-size).icon-sm {
   width: 1.3rem;
   height: 1.875rem;
   font-size: 0.875rem;
-}
+} */
 .icon:not(.icon-c-s):not(.icon-custom-size) {
   /* margin-left: 5px;*/
   width: 1.3rem;
