@@ -618,6 +618,7 @@ namespace com.blazor.bmt.controllers
                                     LastName = string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["lastname"]) ? "" + HttpContext.Request.Form["email"] : "" + HttpContext.Request.Form["lastname"],
                                     Status = 1,
                                     Email = "" + HttpContext.Request.Form["email"],
+                                    Contact = "" + HttpContext.Request.Form["contact"],
                                     RowVer = 1,
                                     SecurityToken = random.Next(9908, 1000000).ToString("D6"),
                                     OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
