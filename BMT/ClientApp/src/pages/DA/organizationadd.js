@@ -57,6 +57,7 @@ const OrganizationAdd = () => {
         isWhatsAppAsso: daData.secondaryContact ? true : false,
         mailAddress: daData.address,
         dspId: daData.dspid,
+        avatar: daData?.logoAvatar || '',
       };
       setDaApplyFormData(initialData);
     }
