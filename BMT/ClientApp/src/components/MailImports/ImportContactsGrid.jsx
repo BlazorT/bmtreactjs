@@ -22,7 +22,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
         editable: false,
         filterable: true,
         disableColumnMenu: false,
-        headerCellClass: 'custom-header-data-grid',
       },
       {
         key: 'type',
@@ -30,7 +29,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
         editable: false,
         filterable: true,
         disableColumnMenu: true,
-        headerCellClass: 'custom-header-data-grid',
         renderCell: (params) => (params.row.type === 1 ? 'Contact' : 'Email'),
       },
     ];
@@ -44,7 +42,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           editable: false,
           filterable: true,
           disableColumnMenu: true,
-          headerCellClass: 'custom-header-data-grid',
           renderCell: (params) => {
             const country = params.row?.country;
             const confidence = params.row?.countryConfidence;
@@ -67,7 +64,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           editable: false,
           filterable: true,
           disableColumnMenu: true,
-          headerCellClass: 'custom-header-data-grid',
           renderCell: (params) => {
             const city = params.row?.city;
             const cityMatches = params.row?.cityMatches;
@@ -84,7 +80,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
           editable: false,
           filterable: true,
           disableColumnMenu: true,
-          headerCellClass: 'custom-header-data-grid',
           renderCell: (params) => {
             const url = params.row?.source;
 
@@ -120,7 +115,6 @@ const ImportContactsGrid = ({ data, getRecipientList, recipientsList, isShowCoun
         editable: false,
         filterable: true,
         disableColumnMenu: true,
-        headerCellClass: 'custom-header-data-grid',
       },
       baseCols[1], // Type
     ];
