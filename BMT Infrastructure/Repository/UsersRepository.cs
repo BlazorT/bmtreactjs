@@ -51,7 +51,7 @@ namespace com.blazor.bmt.infrastructure.repositories
             var sUsers= await _dbContext.Users.AsNoTracking()
                 .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.RoleId == (model.RoleId == 0 ? x.RoleId : model.RoleId) && x.Status == (model.Status == 0 ? x.Status : model.Status) && x.Email.Contains((String.IsNullOrWhiteSpace(model.Email) ? x.Email : model.Email)) && x.CreatedAt >= (model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddYears(-1) : model.CreatedAt) && x.CreatedAt <= (Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? System.DateTime.Now : model.LastUpdatedAt) && x.OrgId == ((model.OrgId== null || model.OrgId== 0) ? x.OrgId: model.OrgId) && x.UserName.Contains(("" + model.UserName).Trim())).OrderBy(x => x.FirstName)
                 .ToListAsync();
-            return sUsers.Where(x => x.RoleId == (int)util.USERROLES.SUPERADMIN || x.RoleId == (int)util.USERROLES.ORG_ADMIN  || x.RoleId == (int)util.USERROLES.SUPERVISOR).ToList();
+            return sUsers.Where(x => x.RoleId == (int)util.USERROLES.SUPERADMIN || x.RoleId == (int)util.USERROLES.OPERATION_MANAGER  || x.RoleId == (int)util.USERROLES.SUPERVISOR).ToList();
         }
         public async Task<IEnumerable<User>> GetOrgMobileUsersAllFiltersAsync(User model) {
             return await _dbContext.Users.AsNoTracking()

@@ -376,7 +376,7 @@ namespace com.blazor.bmt.controllers
                         org.RowVer = 1;
                         org.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                         //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
-                        OrganizationViewModel urg = await _orgPageService.Create(dvm);
+                        OrganizationViewModel urg = await _orgPageService.Create(org);
                         if (urg != null && urg.Status == 1)
                         {
                             await _utilPageService.sendOrgRegistrationEmailNotfification(urg.Id, "" + urg.Email, "" + urg.Name);
@@ -657,7 +657,7 @@ namespace com.blazor.bmt.controllers
                             org.RowVer = 1;
                             org.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
                             //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
-                             urg = await _orgPageService.Create(dvm);
+                             urg = await _orgPageService.Create(org);
                             if (urg != null && urg.Status == 1)
                             {
                                 await _utilPageService.sendOrgRegistrationEmailNotfification(urg.Id, "" + urg.Email, "" + urg.Name);
