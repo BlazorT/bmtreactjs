@@ -1,15 +1,11 @@
 ﻿using Blazor.Web.Application.Interfaces;
 using Blazor.Web.Infrastructure.Services;
-using Blazor.Web.Application.Models;
 using Blazor.Web.UI.Interfaces;
-using Blazor.Web.ViewModels;
 using AutoMapper;
 using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-using com.blazor.bmt.util;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
-
 namespace Blazor.Web.UI.Services
 {
     public class BlazorUtilPageService : IBlazorUtilPageService
@@ -347,6 +343,25 @@ namespace Blazor.Web.UI.Services
                     await EmailSender.SendMerchantEmailNotificationAsync(recipientId, tokenURI, uri);
 
                 _logger.LogInformation("Email has been sent to " + recipientId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to send email, Error - " + ex.Message);
+                throw ex;
+            }
+
+        }
+        public async Task sendOrgRegistrationEmailNotfification(int orgId,string recipient, string orgName)
+        {
+            try
+            {
+                EmailSender EmailSender = new EmailSender();
+                if (string.IsNullOrWhiteSpace(GlobalBasicConfigurationsViewModel.SmtpServer))
+                    GlobalUTIL.loadConfigurations(1);
+               
+                    await EmailSender.OrgRegistrationEmailNotificationAsync(orgId, recipient,orgName);
+
+                _logger.LogInformation("Email has been sent to " + recipient);
             }
             catch (Exception ex)
             {

@@ -16,6 +16,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<ConfigurationsViewModel>> GetConfigurationsByStatusAsync(int status);
         Task<IEnumerable<ConfigrationsCombinedViewModel>> LoadOrgConfigurationsData(int showRoomId);
         //Task<ConfigrationsCombinedViewModel> loadSettingsAndConfigurations();
+        Task sendOrgRegistrationEmailNotfification(int orgId, string recipient, string orgName);
         Task<ConfigrationsMergedViewModel> UpdateConfigurationChangeSet(int UserId, ConfigrationsMergedViewModel config);
        
         Task<ConfigurationsViewModel> GetConfigurationsByKeyAsync(string key);

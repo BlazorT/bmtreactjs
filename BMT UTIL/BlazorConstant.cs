@@ -90,6 +90,7 @@ namespace com.blazor.bmt.util
         public static string SMS_SERVICE_USERNAME = "SMSUserName";
         public static string SMS_SENDER_CODE = "SMSSenderName";
         public static string SMS_SERVICE_URL = "SMSServiceURL";
+        public static string ORG_REGISTRATION_EMAIL_BODY = "orgRegistrationEmailBody";
         public static string SMS_QOUTA = "SMSQouta";
         public static string SMS_SENT_COUNT = "SentSMSMessages";
         public static string TIME_INTERVAL_FOR_SENDING_SMS_SECS = "TimeIntervalForSendingSMS";

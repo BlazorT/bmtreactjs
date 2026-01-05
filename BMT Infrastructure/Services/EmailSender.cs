@@ -1,12 +1,13 @@
-﻿using System;
+﻿using com.blazor.bmt.core;
+using com.blazor.bmt.util;
+using com.blazor.bmt.viewmodels;
+using Org.BouncyCastle.Ocsp;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Mail;
-using System.Net;
-using com.blazor.bmt.viewmodels;
-using com.blazor.bmt.util;
-using Org.BouncyCastle.Ocsp;
-using System.Linq;
 
 namespace Blazor.Web.Infrastructure.Services
 {
@@ -456,6 +457,51 @@ namespace Blazor.Web.Infrastructure.Services
                 }
 
 
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                //  return null;
+
+            }
+
+        }
+        public Task OrgRegistrationEmailNotificationAsync(int orgId, string recipient, string orgName)
+        {
+            try
+            {
+                if (GlobalSettings.Configurations == null || GlobalSettings.Configurations.Where(x => x.OrgId == GlobalSettings.DefaultOrgId).FirstOrDefault() == null)
+                    GlobalUTIL.loadConfigurations(1);
+                // Store Configuration Loaded
+                ConfigurationsViewModel viewModel = GlobalSettings.Configurations.Where(x => x.OrgId == GlobalSettings.DefaultOrgId).FirstOrDefault();
+                var fromAddress = new MailAddress(GlobalBasicConfigurationsViewModel.SmtpSenderEmail, "BMT");
+                var toAddress = new MailAddress(recipient, "BMT");
+                // const string fromPassword = "fromPassword";
+                string subject = "BMT- Organization Registration!!!";
+                string body = string.Format(viewModel.OrgRegistrationEmailBody, recipient, orgName);
+               
+                var smtp = new SmtpClient
+                {
+                    Host = GlobalBasicConfigurationsViewModel.SmtpServer,
+                    Port = Convert.ToInt32(GlobalBasicConfigurationsViewModel.Smtpport),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(GlobalBasicConfigurationsViewModel.SmtpUser, GlobalBasicConfigurationsViewModel.SmtpUserPwd)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body,
+                    BodyEncoding = Encoding.UTF8,
+                    IsBodyHtml = true
+
+                })
+                {
+
+                    smtp.Send(message);
+                }
                 return Task.CompletedTask;
             }
             catch (Exception ex)

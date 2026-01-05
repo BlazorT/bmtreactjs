@@ -294,6 +294,8 @@ namespace com.blazor.bmt.util
                                 viewModel.enableAppNotification = string.IsNullOrWhiteSpace("" + (dr["value"])) ? false : Convert.ToBoolean(Convert.ToInt16("" + (dr["value"])));
                            if (BlazorConstant.INVITATION_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())
                                 viewModel.invitationEmailBody = "" + (dr["value"]);
+                            if (BlazorConstant.ORG_REGISTRATION_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())
+                                viewModel.OrgRegistrationEmailBody = "" + (dr["value"]);
                             if (BlazorConstant.INVITATION_EMAIL_SUBJECT.ToLower() == ("" + (dr["key"])).ToLower())
                                 viewModel.invitationEmailSubject = "" + (dr["value"]);                                                     
                             if (BlazorConstant.ACCOUNT_DELETED_EMAIL_BODY.ToLower() == ("" + (dr["key"])).ToLower())// Account Status

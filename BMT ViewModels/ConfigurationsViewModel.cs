@@ -13,10 +13,10 @@ namespace com.blazor.bmt.viewmodels
         public int OrgId { get; set; } = 1;
         public int? LastUpdatedBy { get; set; }
         public string OrgName { get; set; } = String.Empty;
-       
-       
+              
         public string ViewCountIntervalSeconds { get; set; } = "30";
-   
+        public string OrgRegistrationEmailBody { get; set; } = "";
+
         public bool enableEmailNotification { get; set; } = true;
         public bool enableAppNotification { get; set; } = false;
         // public static string flagReportEmailBody { get; set; } = String.Empty;
