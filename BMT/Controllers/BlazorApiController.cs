@@ -361,6 +361,32 @@ namespace com.blazor.bmt.controllers
             {
                 if (uvm != null && uvm.Id <= 0)
                 {
+                    if (uvm.OrgId <= 0 && !string.IsNullOrWhiteSpace(uvm.OrgName))
+                    {
+                        OrganizationViewModel org = new OrganizationViewModel();
+                        org.CreatedAt = GlobalUTIL.CurrentDateTime;
+                        org.Contact = uvm.Contact;
+                        org.Email = uvm.Email;
+                        org.Name = uvm.OrgName;
+                        org.Address = uvm.Address?? uvm.CompleteName;
+                        org.CityId = uvm.CityId;// ?? uvm.CompleteName;
+                        org.CurrencyId = util.BlazorConstant.DEFAULT_CURRENCY;
+                        org.CreatedBy = (uvm.LastUpdatedBy == null || uvm.LastUpdatedBy == 0) ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : uvm.LastUpdatedBy;
+                        org.LastUpdatedBy = (uvm.LastUpdatedBy == null || uvm.LastUpdatedBy == 0) ? GlobalBasicConfigurationsViewModel.DefaultPublicUserId : uvm.LastUpdatedBy;
+                        org.RowVer = 1;
+                        org.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                        //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
+                        OrganizationViewModel urg = await _orgPageService.Create(dvm);
+                        if (urg != null && urg.Status == 1)
+                        {
+                            await _utilPageService.sendOrgRegistrationEmailNotfification(urg.Id, "" + urg.Email, "" + urg.Name);
+                        }
+                        uvm.OrgId = urg.Id;
+                    }
+                   // blazorApiResponse.data = urg;
+
+
+
                     uvm.CreatedAt = GlobalUTIL.CurrentDateTime;
                     uvm.CreatedBy = uvm.LastUpdatedBy;
                     //uvm.VerificationMethod = uvm.VerificationMethod==null?0: uvm.VerificationMethod;            
@@ -571,19 +597,18 @@ namespace com.blazor.bmt.controllers
             BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
             try
             {
+                Int32 orgId = 0;
                 //  var previousRequest = _cache.Get(this.User.Identity.Name + Request.Path);
                 // if (previousRequest == null) {
                 try
                 {
-
+                 
                     byte[] buffer = new byte[16 * 1024];
                     //Int32 storeId = Convert.ToInt32(HttpContext.Request.Form["id"]);
                     string applicationPath = _hostingEnvironment.ContentRootPath;
                     string fileAbsolutePath = string.Empty;
                     string filenamewithlogo = string.Empty;
-                    //string filename = String.Empty;
-                    // string profileFileName = string.Empty;
-                    //  string id = files.get;
+                   
                     if (profiles != null && profiles.Any())
                     {
                         foreach (IFormFile file in profiles)
@@ -610,8 +635,37 @@ namespace com.blazor.bmt.controllers
                     UserViewModel usrdb= await  _userPageService.GetUserByEmailOrLoginNameAsynch("" + HttpContext.Request.Form["email"],string.Empty);
                     if (usrdb == null || usrdb.Id <= 0)
                     {
+                        OrganizationViewModel urg = null;
                         var random = new Random();
                         //string sixDigit = random.Next(9908, 1000000).ToString("D6");
+
+                        /*
+                         Create Organization if its new and by new public user                       
+                         */
+                        if (Convert.ToInt32("" + HttpContext.Request.Form["orgid"]) <= 0 && !string.IsNullOrWhiteSpace("" + HttpContext.Request.Form["orgname"]))
+                        {
+                            OrganizationViewModel org = new OrganizationViewModel();
+                            org.CreatedAt = GlobalUTIL.CurrentDateTime;
+                            org.Contact = "" + HttpContext.Request.Form["contact"];
+                            org.Email = "" + HttpContext.Request.Form["email"];
+                            org.Name = "" + HttpContext.Request.Form["orgname"];
+                            org.Address = "" + HttpContext.Request.Form["address"];
+                            org.CityId = Convert.ToInt32("" + HttpContext.Request.Form["cityid"]);
+                            org.CurrencyId = util.BlazorConstant.DEFAULT_CURRENCY;
+                            org.CreatedBy = GlobalBasicConfigurationsViewModel.DefaultPublicUserId ;
+                            org.LastUpdatedBy = GlobalBasicConfigurationsViewModel.DefaultPublicUserId;
+                            org.RowVer = 1;
+                            org.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                            //dvm.LastUpdatedBy = dvm.LastUpdatedBy;
+                             urg = await _orgPageService.Create(dvm);
+                            if (urg != null && urg.Status == 1)
+                            {
+                                await _utilPageService.sendOrgRegistrationEmailNotfification(urg.Id, "" + urg.Email, "" + urg.Name);
+                            }
+                           // uvm.OrgId = urg.Id;
+                        }
+
+
                         usrdb = await _userPageService.CreateUser(
                             new UserViewModel
                             {
@@ -625,7 +679,7 @@ namespace com.blazor.bmt.controllers
                                 Contact = "" + HttpContext.Request.Form["contact"],
                                 RowVer = 1,
                                 SecurityToken = random.Next(9908, 1000000).ToString("D6"),
-                                OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"]),
+                                OrgId = Convert.ToInt32(HttpContext.Request.Form["orgid"])<=0? urg.Id: Convert.ToInt32(HttpContext.Request.Form["orgid"]),
                                 RoleId = Convert.ToInt32(HttpContext.Request.Form["roleid"]),
                                 UserCode = "" + HttpContext.Request.Form["usercode"],
                                 Avatar = filenamewithlogo,
