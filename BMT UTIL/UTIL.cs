@@ -148,13 +148,13 @@ namespace com.blazor.bmt.util
         [Description("Admin")]
         ADMIN = 2,
         [Description("Supervisor")]
-        SUPERVISOR = 3,
-        [Description("Staff")]
-        STAFF = 4,
+        SUPERVISOR = 3,       
         [Description("Public User")]
-        PUBLIC_USER = 5,
-        [Description("Organization Admin")]
-        ORG_ADMIN = 6,
+        PUBLIC_USER = 4,
+        [Description("Operation Manager")]
+        OPERATION_MANAGER = 5,
+        [Description("Staff")]
+        STAFF = 6,
 
     }
     public enum COMMON_STATUS_ALL
