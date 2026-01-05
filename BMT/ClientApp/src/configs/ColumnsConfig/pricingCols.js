@@ -54,7 +54,7 @@ export const getPricingCols = (user, getPricing) => [
           key: 'action',
           editable: false,
           renderCell: (params) =>
-            params?.row?.name ? null : <PricingActionCell value={params} getPricing={getPricing} />,
+            <PricingActionCell value={params} getPricing={getPricing} />,
         },
       ]
     : []),
