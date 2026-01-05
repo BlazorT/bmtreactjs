@@ -363,14 +363,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
               {pagination && !enableGrouping && sortedRows.length > 0 && (
                 <div
+                  className="d-flex align-items-center justify-content-between p-2 text-white flex-wrap"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '10px',
                     backgroundColor: '#0A1A2C',
-                    // borderTop: '1px solid #495d73',
-                    color: 'white',
                   }}
                 >
                   {/* Left: Page size selector */}
@@ -383,16 +378,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     <select
                       value={currentPageSize}
                       onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                      style={{
-                        height: '30px',
-                        padding: '1px 1px',
-                        backgroundColor: '#031c34',
-                        color: 'white',
-                        border: '1px solid #495d73',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                      }}
-                      className="fs-6"
+                      className="pagination-select"
                     >
                       {(pageSizeOptions || [10, 25, 50, 100]).map((size) => (
                         <option key={size} value={size}>
@@ -419,7 +405,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                           alignItems: 'center',
                         }}
                       >
-                        <CIcon icon={cilChevronDoubleLeft} size="sm" />
+                        <CIcon icon={cilChevronDoubleLeft} size="lg" />
                       </button>
                     </CTooltip>
 
@@ -438,7 +424,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                           alignItems: 'center',
                         }}
                       >
-                        <CIcon icon={cilChevronLeft} size="sm" />
+                        <CIcon icon={cilChevronLeft} size="lg" />
                       </button>
                     </CTooltip>
 
@@ -461,7 +447,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                           alignItems: 'center',
                         }}
                       >
-                        <CIcon icon={cilChevronRight} size="sm" />
+                        <CIcon icon={cilChevronRight} size="lg" />
                       </button>
                     </CTooltip>
 
@@ -480,7 +466,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                           alignItems: 'center',
                         }}
                       >
-                        <CIcon icon={cilChevronDoubleRight} size="sm" />
+                        <CIcon icon={cilChevronDoubleRight} size="lg" />
                       </button>
                     </CTooltip>
                   </div>
