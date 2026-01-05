@@ -15,7 +15,7 @@ namespace com.blazor.bmt.viewmodels
         public string OrgName { get; set; } = String.Empty;
               
         public string ViewCountIntervalSeconds { get; set; } = "30";
-        public string OrgRegistrationEmailBody { get; set; } = "";
+        public string OrgRegistrationEmailBody { get; set; } = "Dear {0}, <br> <br>Congratulations!   Your registration of organization <b>{1}</b> has been successfully completed.  <br><br> For login can use this url https://bmt.blazortech.com <br><br> Thank you,<br> <br>NOTE :- PLEASE DO NOT REPLY TO THIS MESSAGE <br><br> BMT admin <br>Ph.92-333-7069742 <br> https://bmt.blazortech.com";
 
         public bool enableEmailNotification { get; set; } = true;
         public bool enableAppNotification { get; set; } = false;
