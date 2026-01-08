@@ -1,9 +1,5 @@
-﻿using Blazor.Web.ViewModels;
-using com.blazor.bmt.util;
+﻿using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Blazor.Web.UI.Interfaces
 {
     public interface IAppLogPageService

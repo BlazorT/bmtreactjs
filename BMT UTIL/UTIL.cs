@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using static System.Net.Mime.MediaTypeNames;
 using System.Text;
 namespace com.blazor.bmt.util
 {

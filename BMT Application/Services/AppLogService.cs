@@ -75,7 +75,7 @@ namespace com.blazor.bmt.application.services
                 throw new ApplicationException($"Entity could not be mapped.");
            
             var newEntity = await _appLogRepository.AddAsync(mappedEntity);
-            _logger.LogInformation($"Entity successfully added - DeenScreenLogService");
+            _logger.LogInformation($"Entity successfully added - BMTLogService");
 
            // var newMappedEntity = ObjectMapper.Mapper.Map<AppLogModel>(newEntity);
            // return newMappedEntity;

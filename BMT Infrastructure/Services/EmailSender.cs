@@ -1,7 +1,5 @@
-﻿using com.blazor.bmt.core;
-using com.blazor.bmt.util;
+﻿using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-using Org.BouncyCastle.Ocsp;
 using System;
 using System.Linq;
 using System.Net;

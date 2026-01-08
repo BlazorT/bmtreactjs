@@ -1,11 +1,8 @@
 ﻿using System.Data.Common;
-using System.Data.SqlClient;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Data;
-
-using System.Globalization;
 using com.blazor.bmt.viewmodels;
 using MySql.Data.MySqlClient;
 
