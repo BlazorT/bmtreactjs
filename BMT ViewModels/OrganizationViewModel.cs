@@ -11,6 +11,7 @@ public partial class OrganizationViewModel
     public int? Strength { get; set; }
     public string? FMCToken { get; set; }
     public string? Address { get; set; }
+    public string? Signature { get; set; }
 
     public string? Contact { get; set; }
     public string? PackageName { get; set; }

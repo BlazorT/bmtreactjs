@@ -15,7 +15,7 @@ public partial class OrganizationModel : BaseModel
     public int? Strength { get; set; }
 
     public string? Address { get; set; }
-
+    public string? Signature { get; set; }
     public string? Contact { get; set; }
 
     public string? Email { get; set; }
