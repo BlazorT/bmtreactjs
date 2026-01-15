@@ -3,7 +3,7 @@ import { useShowToast } from '../useShowToast';
 //import { uploadimageData } from 'src/components/UI/ImagePicker';
 export const useUpdateOrg = () => {
   const showToast = useShowToast();
-  const { postData: fetchData, loading: addOrgLoading } = useApi('/BlazorApi/adupdateor');
+  const { postData: fetchData, loading: addOrgLoading } = useApi('/BlazorApi/adupdateorg');
   const createUpdateOrg = async (body) => {
     //  alert(JSON.stringify(body));
     const res = await fetchData(body);

@@ -34,7 +34,7 @@ function SignIn() {
 
   useEffect(() => {
     if (user?.isAuthenticated) navigate('/Dashboard');
-  }, [user]);
+  }, []);
 
   const {
     response: utilRes,
@@ -194,7 +194,6 @@ function SignIn() {
         });
         setModalOpen(true);
         ClickProceed(data?.data?.[0] || {});
-        navigate('/dashboard');
       } else if (loginRes.current?.status === 400) {
         dispatch(
           updateToast({
@@ -222,6 +221,18 @@ function SignIn() {
         isAuthenticated: true,
       }),
     );
+    if (loginRes?.current?.data?.roleId === 2 && !orgInfo?.signature) {
+      console.log('yo');
+      dispatch(
+        updateToast({
+          isToastOpen: true,
+          toastMessage: 'To proceed, review and sign the aggreement.',
+          toastVariant: 'warning',
+        }),
+      );
+      navigate('/organizationadd', { state: { id: orgInfo?.id, org: [orgInfo] } });
+      return;
+    }
     if (location.state?.redirectPath) navigate(location.state.redirectPath.pathname);
     else navigate('/dashboard');
 

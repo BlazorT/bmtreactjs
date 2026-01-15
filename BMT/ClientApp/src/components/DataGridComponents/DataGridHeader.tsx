@@ -57,6 +57,7 @@ export interface DataGridHeaderProps {
   canPrint?: boolean;
   canExport?: boolean;
   fileName?: string;
+  info?: string;
   gridRef?: React.Ref<DataGridHandle>;
 }
 
@@ -79,6 +80,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
   canPrint = false,
   fileName,
   gridRef,
+  info,
 }) => {
   const showExportDropdown = (canExport || canPrint) && gridRef;
   const timestamp = dayjs().format('YYYYMMDDHHmmss');
@@ -126,7 +128,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
                 : undefined
             }
           >
-            {title}
+            {title} {info ? <span className="label-info"> {info}</span> : null}
           </div>
         </CCol>
 

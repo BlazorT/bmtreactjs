@@ -1,32 +1,35 @@
-import { CFormCheck } from '@coreui/react';
+import { CCol, CFormCheck } from '@coreui/react';
+import { faFileContract, faSign, faSignature } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Inputs from 'src/components/Filters/Inputs';
+import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import AppContainer from 'src/components/UI/AppContainer';
+import Button from 'src/components/UI/Button';
 import Form from 'src/components/UI/Form';
+import Loading from 'src/components/UI/Loading'; // existing loader component
 import { getDaAppllyInputs, getInitialDaData } from 'src/configs/InputConfig/addOrgsConfig';
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
 import { useUpdateOrg } from 'src/hooks/api/useUpdateOrg';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
-import useEmailVerification from 'src/hooks/useEmailVerification';
-import useFetch from 'src/hooks/useFetch';
-import { useShowToast } from 'src/hooks/useShowToast';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import ConfirmationModal from 'src/components/Modals/ConfirmationModal';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import Loading from 'src/components/UI/Loading'; // existing loader component
 import useApi from 'src/hooks/useApi';
+import useEmailVerification from 'src/hooks/useEmailVerification';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { generateAgreementPDF } from 'src/reports/orgAggrrement';
 
 const OrganizationAdd = () => {
   dayjs.extend(utc);
 
   const user = useSelector((state) => state.user);
+  // console.log({ user });
   const showConfirmation = useShowConfirmation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,6 +46,8 @@ const OrganizationAdd = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
   const [submitting, setSubmitting] = useState(false);
+  const [signature, setSignature] = useState('');
+  const [signatureJSON, setSignatureJSON] = useState('');
   // Loader states
   const [loadingModal, setLoadingModal] = useState(false);
 
@@ -59,9 +64,18 @@ const OrganizationAdd = () => {
         dspId: daData.dspid,
         avatar: daData?.logoAvatar || '',
       };
+      const sJSON = daData?.signature ? JSON.parse(daData?.signature) : '';
+      setSignatureJSON(sJSON);
+      setSignature(sJSON?.signature || '');
       setDaApplyFormData(initialData);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (signature && !daApplyFormData.isTermsAccepted) {
+      setDaApplyFormData((prev) => ({ ...prev, isTermsAccepted: true }));
+    }
+  }, [signature]);
 
   const { createUpdateOrg, addOrgLoading } = useUpdateOrg();
   const { checkUserAvailability } = useUserAvailability();
@@ -97,14 +111,22 @@ const OrganizationAdd = () => {
   };
 
   const submitDA = async () => {
+    if (termsmodalOpen) setTermsmodalOpen(false);
     formValidator();
     const form = document.querySelector('.apply-org-form');
     if (!form.checkValidity()) return;
+
+    if (user?.isAuthenticated && user?.roleId === 2 && !signature) {
+      showToast('To proceed, review and sign the aggreement.', 'warning');
+      setTermsmodalOpen(true);
+      return;
+    }
 
     setSubmitting(true); // start submitting loader
 
     const daBody = {
       ...daApplyFormData,
+      signature: JSON.stringify(signatureJSON),
       contact: daApplyFormData.contact,
       address: daApplyFormData.mailAddress,
       cityId: daApplyFormData?.cityId ? parseInt(daApplyFormData?.cityId) : 0,
@@ -141,7 +163,7 @@ const OrganizationAdd = () => {
       }
     } catch (error) {
       console.error(error);
-      showToast('Error submitting form', 'error');
+      // showToast('Error submitting form', 'error');
     } finally {
       setSubmitting(false); // stop submitting loader
     }
@@ -206,6 +228,78 @@ const OrganizationAdd = () => {
               submitFn={submitDA}
               submitting={submitting} // ✅ pass submitting state
             >
+              {user?.isAuthenticated && (user?.roleId === 2 || signature) && (
+                <CCol
+                  md={
+                    user?.isAuthenticated &&
+                    user?.roleId === 2 &&
+                    signature &&
+                    user?.userId === signatureJSON?.adminId
+                      ? 3
+                      : 6
+                  }
+                >
+                  <div className="d-flex flex-column ">
+                    <label className="login_label labelName text-left mb-2 mt-2">
+                      Agreement Contract
+                    </label>
+                    <Button
+                      title={
+                        signature
+                          ? 'View and Download'
+                          : !signature
+                            ? 'View and Sign'
+                            : 'View and Download'
+                      }
+                      onClick={async () => {
+                        if (signature)
+                          await generateAgreementPDF(
+                            signature,
+                            signatureJSON?.adminName,
+                            signatureJSON?.dt,
+                          );
+                        else setTermsmodalOpen(true);
+                      }}
+                      className="w-auto"
+                      icon={
+                        <FontAwesomeIcon
+                          icon={faFileContract}
+                          size="xl"
+                          style={{
+                            marginRight: 10,
+                          }}
+                        />
+                      }
+                    />
+                  </div>
+                </CCol>
+              )}
+              {user?.isAuthenticated &&
+                user?.roleId === 2 &&
+                signature &&
+                user?.userId === signatureJSON?.adminId && (
+                  <CCol md={3}>
+                    <div className="d-flex flex-column ">
+                      <div className="change-signature-margin"></div>
+                      <Button
+                        title={'Change Signature'}
+                        onClick={() => {
+                          setTermsmodalOpen(true);
+                        }}
+                        className="w-auto"
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faSignature}
+                            size="xl"
+                            style={{
+                              marginRight: 10,
+                            }}
+                          />
+                        }
+                      />
+                    </div>
+                  </CCol>
+                )}
               <CFormCheck
                 className="mt-3 d-flex flex-row justify-content-center"
                 title="Are you agree for this?"
@@ -237,7 +331,14 @@ const OrganizationAdd = () => {
       </AppContainer>
 
       {/* Terms & Conditions Modal */}
-      <TermsAndConditionModal isOpen={termsmodalOpen} toggle={() => setTermsmodalOpen(false)} />
+      <TermsAndConditionModal
+        isOpen={termsmodalOpen}
+        toggle={() => setTermsmodalOpen(false)}
+        signature={signature}
+        setSignature={user?.roleId === 2 && user?.isAuthenticated ? setSignature : null}
+        onSubmit={submitDA}
+        setSignatureJSON={setSignatureJSON}
+      />
 
       {/* Loader while modal content loads */}
       {(loadingModal || citiesLoading || addOrgLoading || avatarLoading) && <Loading />}

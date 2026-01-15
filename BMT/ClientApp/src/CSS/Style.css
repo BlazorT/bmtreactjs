@@ -340,6 +340,16 @@ p {
 
 .Login-form {
   text-align: center;
+  max-height: 80dvh;
+  overflow-y: scroll;
+}
+.login-form {
+  max-height: 50dvh;
+  overflow-y: scroll;
+}
+.default-height {
+  max-height: 80dvh;
+  overflow-y: scroll;
 }
 .counter {
   padding-left: 0.8em;
@@ -4625,4 +4635,49 @@ select {
   cursor: pointer !important;
   font-family: none !important;
   font-size: 14px !important;
+}
+.image-container {
+  position: relative;
+  display: flex; /* Ensures the text stays on top of the image */
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.sigCanvas {
+  background-color: #031c34;
+  border-radius: 0.5rem;
+}
+.canvas-icon {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  z-index: 1;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.image-container:hover .hover-text {
+  opacity: 1; /* Make the text visible on hover */
+}
+.image-container:hover .canvas-icon {
+  opacity: 1; /* Make the text visible on hover */
+}
+/* @media only screen and (min-width: 200px) and (max-width: 767px) {
+  .sigCanvas {
+    width: 340px;
+  }
+}
+@media only screen and (min-width: 200px) and (max-width: 400px) {
+  .sigCanvas {
+    width: 250px;
+  }
+} */
+.btnsize {
+  width: 50%;
+}
+.change-signature-margin {
+  margin-top: 2.2rem;
 }

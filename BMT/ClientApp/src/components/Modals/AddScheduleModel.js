@@ -814,7 +814,7 @@ const AddScheduleModel = (prop) => {
       StartTime: dayjs(startTime).toISOString(),
       // FinishTime: finishTimeWithMaxTime.toISOString(),
       FinishTime: dayjs(finishTime).toISOString(),
-      Status: status ? 1 : 0,
+      Status: !user?.orgInfo?.signature ? 4 : status ? 1 : 0,
       CreatedAt: dayjs().toISOString(),
       RowVer: 1,
       Discount: 0,
@@ -842,7 +842,14 @@ const AddScheduleModel = (prop) => {
       console.log({ result });
 
       if (result.status === true) {
-        showToast(`Campaign "${name}" submitted successfully!`, 'success');
+        if (!user?.orgInfo?.signature) {
+          showToast(
+            `Campaign "${name}" has been created successfully. This campaign will be activated once the admin signs the contract.`,
+            'success',
+          );
+        } else {
+          showToast(`Campaign "${name}" submitted successfully!`, 'success');
+        }
         const campaignId = parseInt(result.data, 10);
         // alert(campaignId);
 

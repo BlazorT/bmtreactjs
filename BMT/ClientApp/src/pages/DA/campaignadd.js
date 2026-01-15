@@ -193,6 +193,11 @@ const campaignadd = () => {
   };
 
   useEffect(() => {
+    // if (user?.roleId === 2 && !user?.orgInfo?.signature) {
+    //   navigate('/organizationadd', { state: { id: user?.orgInfo?.id, org: [user?.orgInfo] } });
+    //   showToast('To proceed, review and sign the aggreement.', 'warning');
+    //   return;
+    // }
     const campaign = state?.campaign;
     getTemplates();
     getNetworksList(!!campaign);
@@ -709,8 +714,13 @@ const campaignadd = () => {
         <React.Fragment>
           <AppContainer>
             <DataGridHeader
-              title="Basic Information"
+              title={`Basic Information`}
               onClick={toggleStock}
+              info={
+                !user?.orgInfo?.signature
+                  ? 'Note : Campaign will be auto activated once admin sign the contract!!!'
+                  : ''
+              }
               otherControls={[{ icon: cilChevronBottom, fn: toggleStock }]}
               filterDisable={true}
             />

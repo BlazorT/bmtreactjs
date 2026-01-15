@@ -105,9 +105,8 @@ const Inputs = ({
             </CCol>
           );
         })}
+        {children}
       </CRow>
-
-      {children}
 
       {isBtn !== false && (
         <CRow className="CenterAlign gap-3 mt-2">
