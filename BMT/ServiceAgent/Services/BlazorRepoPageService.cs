@@ -966,6 +966,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 org.CityId = Convert.ToInt32(reader["CityId"]);
                                 org.StateId = Convert.ToInt32(reader["StateId"]); 
                                 org.Instagram = ""+ (reader["Instagram"]);
+                                org.Signature = "" + (reader["Signature"]);
                                 org.WhatsApp = "" + (reader["WhatsApp"]);
                                 org.Fb = "" + (reader["FB"]);
 								org.CountryCode = "" + (reader["code"]);
