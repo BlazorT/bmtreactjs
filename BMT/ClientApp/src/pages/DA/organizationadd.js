@@ -126,6 +126,7 @@ const OrganizationAdd = () => {
 
     const daBody = {
       ...daApplyFormData,
+      // signature: JSON.stringify(signatureJSON),
       signature: signatureJSON === '' ? signatureJSON : JSON.stringify(signatureJSON),
       contact: daApplyFormData.contact,
       address: daApplyFormData.mailAddress,
@@ -137,7 +138,7 @@ const OrganizationAdd = () => {
       remarks: 'Organization registered successfully',
       lastUpdatedBy: user?.userId || 1,
     };
-
+    // console.log("daBody", daBody);
     try {
       const fUpload = document.getElementById('fileAvatar');
       if (fUpload?.files?.length > 0) {
