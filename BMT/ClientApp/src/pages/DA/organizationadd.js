@@ -126,7 +126,7 @@ const OrganizationAdd = () => {
 
     const daBody = {
       ...daApplyFormData,
-      signature: JSON.stringify(signatureJSON),
+      signature: signatureJSON === '' ? signatureJSON : JSON.stringify(signatureJSON),
       contact: daApplyFormData.contact,
       address: daApplyFormData.mailAddress,
       cityId: daApplyFormData?.cityId ? parseInt(daApplyFormData?.cityId) : 0,
