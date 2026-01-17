@@ -153,10 +153,11 @@ const OrganizationAdd = () => {
         formData.append('createdAt', dayjs().utc().format());
 
         const uploadAvatarRes = await uploadAvatar(formData);
+        console.log({ uploadAvatarRes })
         if (uploadAvatarRes?.status === true) {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
-          const res = await createUpdateOrg({ ...daBody, avatar: avatarPath });
+          const res = await createUpdateOrg({ ...daBody, logoAvatar: avatarPath });
           if (res.status === true) {
             if (user?.orgId === daBody?.id) {
 
