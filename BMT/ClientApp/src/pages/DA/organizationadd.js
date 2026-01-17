@@ -23,6 +23,7 @@ import useApi from 'src/hooks/useApi';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
+import { setUserData } from 'src/redux/user/userSlice';
 import { generateAgreementPDF } from 'src/reports/orgAggrrement';
 
 const OrganizationAdd = () => {
@@ -156,11 +157,34 @@ const OrganizationAdd = () => {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
           const res = await createUpdateOrg({ ...daBody, avatar: avatarPath });
-          if (res.status === true) await uploadDaAttachments(res.data.id);
+          if (res.status === true) {
+            if (user?.orgId === daBody?.id) {
+
+              dispatch(
+                setUserData({
+                  orgInfo: { ...user?.orgInfo, signature: daBody?.signature },
+                  isAuthenticated: true,
+                }),
+              );
+            }
+            await uploadDaAttachments(res.data.id)
+          }
         }
       } else {
         const res = await createUpdateOrg(daBody);
-        if (res.status === true) await uploadDaAttachments(res.data.id);
+        if (res.status === true) {
+          if (user?.orgId === daBody?.id) {
+
+            dispatch(
+              setUserData({
+                orgInfo: { ...user?.orgInfo, signature: daBody?.signature },
+                isAuthenticated: true,
+              }),
+            );
+          }
+
+          await uploadDaAttachments(res.data.id);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -233,9 +257,9 @@ const OrganizationAdd = () => {
                 <CCol
                   md={
                     user?.isAuthenticated &&
-                    user?.roleId === 2 &&
-                    signature &&
-                    user?.userId === signatureJSON?.adminId
+                      user?.roleId === 2 &&
+                      signature &&
+                      user?.userId === signatureJSON?.adminId
                       ? 3
                       : 6
                   }

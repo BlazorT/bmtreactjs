@@ -11,9 +11,11 @@ import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from '../UI/Spinner';
+import { useSelector } from 'react-redux';
 
 const CampaignActionCell = (prop) => {
   const { value, campaign, canDelete, fetching } = prop;
+  const user = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const showToast = useShowToast();
@@ -22,6 +24,17 @@ const CampaignActionCell = (prop) => {
   const { loading, updateStatus } = useToggleCampaignStatus();
 
   const toggleStatus = (status) => {
+    if (status === 1 && !user?.orgInfo?.signature) {
+
+      showConfirmation({
+        header: 'Information!',
+        body: `Campaign will be auto activated once admin sign the contract!!!?`,
+        isOpen: true,
+        onYes: null,
+        onNo: () => onNoConfirm(),
+      });
+      return
+    }
     const campaignName = campaign?.[0]?.name || value?.row?.name || 'this campaign';
 
     // Define action labels based on status code
@@ -90,7 +103,7 @@ const CampaignActionCell = (prop) => {
             <div className="d-flex align-items-center justify-content-center gap-4">
               <CTooltip content="Re-Activate Campaign">
                 <CIcon
-                  onClick={() => toggleStatus(5)}
+                  onClick={() => toggleStatus(1)}
                   className="stock-toggle-icon"
                   icon={cilReload}
                   style={{ cursor: 'pointer' }}

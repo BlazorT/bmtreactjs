@@ -31,7 +31,7 @@ const Page401 = React.lazy(() => import('./pages/Error/Page401'));
 const App = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const confirMdl = useSelector((state) => state.confirMdl);
-
+console.log({confirMdl})
   useEffect(() => {
     function hideError(e) {
       if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
@@ -61,7 +61,7 @@ const App = () => {
         header={confirMdl.header}
         body={confirMdl.body}
         isOpen={confirMdl.isOpen}
-        onYes={() => confirMdl.onYes()}
+        onYes={confirMdl?.onYes?() => confirMdl.onYes():null}
         onNo={() => confirMdl.onNo()}
       />
       <BrowserRouter>
