@@ -1,10 +1,7 @@
-﻿using System.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.EntityFrameworkCore;
 using com.blazor.bmt.viewmodels;
 using com.blazor.bmt.util;
-using com.blazor.bmt.ui.interfaces;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
 
@@ -20,17 +17,19 @@ namespace com.blazor.bmt.controllers
         private IMemoryCache _cache;
         private readonly ILogger<LogController> _logger;
         private readonly IAppLogPageService _appLogPageService;
+        private readonly IAppLogService _appLogService;
         private readonly IAuditLogService _auditLogService;
         private readonly IBlazorRepoPageService _blazorRepoPageService;       
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         // string applicationPath = string.Empty;
         #region "Constructor and initialization"
-        public LogController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IAppLogPageService appLogPageService,  IAuditLogService auditLogService, IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<LogController> logger,  IMemoryCache cache)
+        public LogController(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IAppLogPageService appLogPageService, IAppLogService appLogService,  IAuditLogService auditLogService, IBlazorRepoPageService blazorRepoPageService, IHttpContextAccessor httpContextAccessor, ILogger<LogController> logger,  IMemoryCache cache)
         {
             _logger = logger;         
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-            _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));           
+            _appLogPageService = appLogPageService ?? throw new ArgumentNullException(nameof(appLogPageService));
+            _appLogService = appLogService ?? throw new ArgumentNullException(nameof(appLogService));
             _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _auditLogService = auditLogService ?? throw new ArgumentNullException(nameof(auditLogService));
            
@@ -153,9 +152,36 @@ namespace com.blazor.bmt.controllers
             return Ok(blazorApiResponse);
             // .ToArray();
         }
-        #endregion       
 
-      
+       // [HttpGet("bulkapplog")]
+        [HttpPost("bulkapplog")]
+        [Route("bulkapplog")]
+        public async Task<ActionResult> subBulkAppLog([FromBody] List<ApplogModel> ls)
+        {
+            BlazorApiResponse blazorApiResponse = new BlazorApiResponse();
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
+            try
+            {
+
+                await _appLogService.InsertUpdateBulk(ls);
+                blazorApiResponse.data = null;
+                blazorApiResponse.status = true;
+
+
+            }
+            catch (Exception ex)
+            {
+                blazorApiResponse.status = false;
+                blazorApiResponse.errorCode = "408";
+                blazorApiResponse.message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(blazorApiResponse);
+            // .ToArray();
+        }
+        #endregion
+
+
     }
 
 }

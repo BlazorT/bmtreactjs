@@ -15,5 +15,6 @@ namespace com.blazor.bmt.core.repositories
         Task<IEnumerable<Applog>> GetAppLogByUserAsync(int userId);
         Task<IEnumerable<Applog>> GetAppLogAllFiltersAsync(AppLogViewModel model);
         Task<IEnumerable<Applog>> GetAppLogByKeywordAsync(string keyword);
+        Task<IEnumerable<Applog>> InsertUpdateBulk(List<Applog> nlst);
     }
 }

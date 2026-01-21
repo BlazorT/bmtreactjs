@@ -50,6 +50,17 @@ namespace com.blazor.bmt.infrastructure.repositories
                 .Where(x => x.Id == (model.Id == 0 ? x.Id : model.Id) && x.OrgId == (Convert.ToInt32(model.OrgId) == 0 ? x.OrgId : model.OrgId)  && x.LogDesc.Contains("" + x.LogDesc) && x.LogTime >= model.LogTimeFrom && x.LogTime <= model.LogTimeTo)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Applog>> InsertUpdateBulk(List<Applog> nlst)
+        {
+            if (nlst != null && nlst.Any()) //.Where(x => x.Id <= 0).Any())
+            {
+                await _dbContext.Applogs.AddRangeAsync(nlst);
+                // Save changes to the database (generates MERGE statement)
+                _dbContext.SaveChanges();
+            }            
+            return nlst;
+
+        }
         public async Task<IEnumerable<Applog>> GetAppLogByUserAsync(int userId)
         {
             return await _dbContext.Applogs.AsNoTracking()

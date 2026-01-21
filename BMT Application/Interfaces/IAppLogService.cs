@@ -14,6 +14,7 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<ApplogModel>> GetAppLogAllFiltersDetails(AppLogViewModel AppLogModel);
         Task<IEnumerable<ApplogModel>> GetAppLogByUserId(int userId);
         Task<IEnumerable<ApplogModel>> GetLogBySearchKeyword(string keyword);
+        Task<IEnumerable<ApplogModel>> InsertUpdateBulk(List<ApplogModel> nlst);
         Task Create(ApplogModel appLogModel);
         Task Update(ApplogModel appLogModel);       
     }

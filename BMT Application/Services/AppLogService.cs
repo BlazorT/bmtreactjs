@@ -7,6 +7,7 @@ using com.blazor.bmt.core.repositories;
 using com.blazor.bmt.viewmodels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace com.blazor.bmt.application.services
@@ -94,7 +95,20 @@ namespace com.blazor.bmt.application.services
             await _appLogRepository.UpdateAsync(editAddress);
             _logger.LogInformation($"Entity successfully updated - AppLogService");
         }
+        public async Task<IEnumerable<ApplogModel>> InsertUpdateBulk(List<ApplogModel> nlst)
+        {
+            // await ValidateEntityIfExist(notificationModel);
 
+            var lst = _mapper.Map<IEnumerable<Applog>>(nlst);
+            if (nlst == null)
+                throw new ApplicationException($"Entity could not be mapped.");
+
+            var newEntity = await _appLogRepository.InsertUpdateBulk(lst.ToList());
+            _logger.LogInformation($"Entity successfully added - AppLogService");
+
+            var newMappedEntity = _mapper.Map<IEnumerable<ApplogModel>>(newEntity);
+            return newMappedEntity;
+        }
         public async Task Delete(ApplogModel AppLogModel)
         {
            // ValidateProductIfNotExist(AppLogModel);
