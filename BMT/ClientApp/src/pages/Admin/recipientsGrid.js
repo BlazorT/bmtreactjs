@@ -91,8 +91,6 @@ const recipientslisting = () => {
       setFullRecipientsData(recipientsList); // <-- store full list once
     }
 
-    // const networks = globalutil.networks();
-    // const groupedData = getGroupedRecipients(recipientsList, albumsList || [], networks);
     setRows(
       recipientsList?.map((r) => ({
         ...r,
@@ -102,112 +100,6 @@ const recipientslisting = () => {
         createdAt: formatDateTime(r?.createdAt),
       })),
     );
-    // const mappedArray = recipientsList.map((data) => {
-    //   const network = networks.find((n) => n.id === data.networkId);
-
-    //   return {
-    //     id: data.id,
-    //     contentId: data.contentId,
-    //     albumid: data.albumid,
-    //     networkId: network ? network.name : '',
-    //     orgName: data.orgName,
-    //     status: data.status,
-    //     createdAt: formatDateTime(data.createdAt),
-    //   };
-    // });
-
-    // setRows(mappedArray);
-  };
-
-  const getGroupedRecipients = (recipients, albums, networks) => {
-    const groupedRows = [];
-
-    // 1. Sort recipients by createdAt (latest first)
-    const sortedRecipients = [...recipients].sort(
-      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
-    );
-
-    // 2. Group recipients by networkId
-    const recipientsByNetwork = _.groupBy(sortedRecipients, 'networkId');
-
-    Object.entries(recipientsByNetwork).forEach(([networkId, networkRecipients]) => {
-      const network = networks.find((n) => n.id === parseInt(networkId));
-      const networkName = network ? network.name : `Network ${networkId}`;
-
-      // Network header
-      groupedRows.push({
-        id: `network-${networkId}`,
-        type: 'network-header',
-        networkId: networkName,
-        albumid: '',
-        contentId: '',
-        createdAt: '',
-        isGroupHeader: true,
-        level: 0,
-      });
-
-      // 3. Group by albumId
-      const recipientsByAlbum = _.groupBy(networkRecipients, 'albumid');
-
-      Object.entries(recipientsByAlbum).forEach(([albumId, albumRecipients]) => {
-        // 4. Sort again inside album (latest first)
-        const sortedAlbumRecipients = [...albumRecipients].sort(
-          (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
-        );
-
-        const album = albums.find((a) => a.id === parseInt(albumId));
-
-        // No album case
-        if (!album) {
-          sortedAlbumRecipients.forEach((recipient) => {
-            groupedRows.push({
-              id: recipient.id,
-              type: 'recipient-no-album',
-              networkId: '',
-              albumid: '--',
-              contentId: recipient.contentId,
-              createdAt: formatDateTime(recipient.createdAt),
-              orgName: recipient.orgName,
-              status: recipient.status,
-              isGroupHeader: false,
-              level: 1,
-              originalData: recipient,
-            });
-          });
-        } else {
-          // Album header
-          groupedRows.push({
-            id: `album-${networkId}-${albumId}`,
-            type: 'album-header',
-            networkId: '',
-            albumid: album.name,
-            contentId: '',
-            createdAt: '',
-            isGroupHeader: true,
-            level: 1,
-          });
-
-          // Album recipients
-          sortedAlbumRecipients.forEach((recipient) => {
-            groupedRows.push({
-              id: recipient.id,
-              type: 'recipient',
-              networkId: '',
-              albumid: '',
-              contentId: recipient.contentId,
-              createdAt: formatDateTime(recipient.createdAt),
-              orgName: recipient.orgName,
-              status: recipient.status,
-              isGroupHeader: false,
-              level: 2,
-              originalData: recipient,
-            });
-          });
-        }
-      });
-    });
-
-    return groupedRows;
   };
 
   const changeFilter = (event, key, label) => {
@@ -395,11 +287,11 @@ const recipientslisting = () => {
             headerProps={{
               title: 'Recipients List',
               onClick: toggleGrid,
-              addSecButton: 'Recipients',
-              addSecBtnClick: () => navigate('/campaignContacts'),
-              addButton: 'Import From Gmail | Outlook',
-              addBtnClick: toggleIsShowImportOptions,
               actions: [
+                {
+                  title: 'Import From Gmail | Outlook',
+                  onClick: toggleIsShowImportOptions,
+                },
                 {
                   title: 'Add Album (+)',
                   onClick: toggleAlbumMdl,
@@ -407,6 +299,10 @@ const recipientslisting = () => {
                 {
                   title: 'Crawl Contacts (+)',
                   onClick: toggleCrawlerMdl,
+                },
+                {
+                  title: 'Recipients (+)',
+                  onClick: () => navigate('/campaignContacts'),
                 },
               ],
               otherControls: [

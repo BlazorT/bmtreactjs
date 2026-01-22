@@ -12,10 +12,10 @@ export const useFetchAlbums = () => {
 
   const { data, error, loading, postData } = useApi('/Compaigns/albumlists');
 
-  const fetchAlbums = async () => {
+  const fetchAlbums = async (body) => {
     const albumBody = {
       id: 0,
-      orgId: user?.orgId,
+      orgId: body?.orgId || user?.orgId,
       rowVer: 1,
       networkId: 0,
       name: '',

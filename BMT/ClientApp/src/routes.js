@@ -3,6 +3,8 @@ import React from 'react';
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
 const OrganizationAdd = React.lazy(() => import('./pages/DA/organizationadd'));
 const Packages = React.lazy(() => import('./pages/Admin/Packages'));
+const ImportTransferAlbums = React.lazy(() => import('./pages/Admin/ImportTransferAlbums'));
+const VerifyImportRequest = React.lazy(() => import('./pages/Admin/VerifyImportRequest'));
 const pricingDetails = React.lazy(() => import('./pages/Admin/pricingDetails'));
 const GlobalTemplates = React.lazy(() => import('./pages/Admin/GlobalTemplates'));
 const VariablesGridView = React.lazy(() => import('./pages/Admin/VariablesGridView'));
@@ -29,6 +31,7 @@ const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
 
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
+  { path: 'ImportTransferAlbums', name: 'ImportTransferAlbums', element: ImportTransferAlbums },
   { path: '/Users', name: 'Users', element: Users },
   { path: 'globaltemplate', name: 'GlobalTemplates', element: GlobalTemplates },
   { path: 'VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
@@ -52,6 +55,11 @@ export const rolesRoutes = [
 
 export const routes = [
   { path: '/home', exact: true, name: 'Home' },
+  {
+    path: '/verify-import',
+    name: 'VerifyImportRequest',
+    element: VerifyImportRequest,
+  },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },

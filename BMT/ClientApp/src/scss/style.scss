@@ -14,6 +14,13 @@ $form-switch-widths: (
 ) !default;
 $enable-rtl: true;
 $progress-bar-bg: #3399ff;
+
+.nav-tabs {
+  --cui-nav-tabs-link-active-bg: #547ea1 !important;
+  --cui-nav-tabs-link-active-color: #ffffff !important;
+  --cui-nav-link-color: #ffffff98 !important;
+  --cui-nav-link-hover-color: #ffffff !important;
+}
 // Import CoreUI for React components library
 @import '@coreui/coreui/scss/coreui';
 

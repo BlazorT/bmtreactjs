@@ -219,6 +219,7 @@ function SignIn() {
         userInfo: loginRes.current.data,
         orgInfo,
         isAuthenticated: true,
+        socialApiKey: '',
       }),
     );
     if (loginRes?.current?.data?.roleId === 2 && !orgInfo?.signature) {

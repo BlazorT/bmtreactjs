@@ -28,7 +28,7 @@ const BlazorTabs = (prop) => {
   };
 
   return (
-    <CContainer fluid>
+    <div>
       <CRow className="p-0">
         <CCol className="p-0">
           <div className="mobile-tabs-view">
@@ -78,7 +78,7 @@ const BlazorTabs = (prop) => {
           </CCol>
         )}
       </CRow>
-    </CContainer>
+    </div>
   );
 };
 

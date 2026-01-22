@@ -92,6 +92,7 @@ const AppHeaderDropdown = () => {
           roleId: '',
           userInfo: {},
           isAuthenticated: false,
+          socialApiKey: '',
         }),
       );
 

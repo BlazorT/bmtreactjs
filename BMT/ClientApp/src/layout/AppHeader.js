@@ -79,6 +79,7 @@ const AppHeader = (phoneNumber) => {
           roleId: '',
           userInfo: {},
           isAuthenticated: false,
+          socialApiKey: '',
         }),
       );
       dispatch(setNavItems([]));

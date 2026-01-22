@@ -28,7 +28,7 @@ const useApi = <T>(
   // alert(url);
   const showToast = useShowToast();
 
-  const postData = async (postData?: ApiPostDataType<T>) => {
+  const postData = async (postData?: ApiPostDataType<T>, failStatus: boolean = false) => {
     try {
       setLoading(true);
 
@@ -56,7 +56,12 @@ const useApi = <T>(
 
       const responseData = await response.json();
       setData(responseData);
-      return responseData;
+
+      if (failStatus) {
+        return { response: responseData, status: response?.status };
+      } else {
+        return responseData;
+      }
     } catch (error) {
       setError(error as Error);
       showToast('Error Making Request', 'error');

@@ -15,6 +15,7 @@ import PaymentConfirmation from './pages/Admin/EPToken';
 import PricingDetails from './pages/Admin/pricingDetails';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsOfUse from './pages/PrivacyPolicy/TermsOfUse';
+import VerifyImportRequest from './pages/Admin/VerifyImportRequest';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));
 
@@ -31,7 +32,7 @@ const Page401 = React.lazy(() => import('./pages/Error/Page401'));
 const App = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const confirMdl = useSelector((state) => state.confirMdl);
-console.log({confirMdl})
+
   useEffect(() => {
     function hideError(e) {
       if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
@@ -61,7 +62,7 @@ console.log({confirMdl})
         header={confirMdl.header}
         body={confirMdl.body}
         isOpen={confirMdl.isOpen}
-        onYes={confirMdl?.onYes?() => confirMdl.onYes():null}
+        onYes={confirMdl?.onYes ? () => confirMdl.onYes() : null}
         onNo={() => confirMdl.onNo()}
       />
       <BrowserRouter>

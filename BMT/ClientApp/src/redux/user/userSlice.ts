@@ -7,6 +7,7 @@ type UserState = {
   userInfo: Record<string, unknown>;
   orgInfo: Record<string, unknown>;
   isAuthenticated: boolean;
+  socialApiKey: string;
 };
 
 const initialState: UserState = {
@@ -16,6 +17,7 @@ const initialState: UserState = {
   userInfo: {},
   orgInfo: {},
   isAuthenticated: false,
+  socialApiKey: '',
 };
 
 export const userSlice = createSlice({
@@ -23,7 +25,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<UserState>) => {
-      const { userId, orgId, roleId, userInfo, orgInfo, isAuthenticated } = action.payload;
+      const { userId, orgId, roleId, userInfo, orgInfo, isAuthenticated, socialApiKey } =
+        action.payload;
 
       // Update only the provided fields, keeping the rest unchanged
       if (userId !== undefined) {
@@ -43,6 +46,9 @@ export const userSlice = createSlice({
       }
       if (isAuthenticated !== undefined) {
         state.isAuthenticated = isAuthenticated;
+      }
+      if (socialApiKey !== undefined) {
+        state.socialApiKey = socialApiKey;
       }
     },
   },
