@@ -1,73 +1,101 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable no-undef */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from 'react';
-import { CCard, CCardBody, CCardHeader, CAlert, CSpinner } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilWarning, cilX } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { CAlert, CCard, CCardBody, CCardHeader } from '@coreui/react';
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import PasswordModal from 'src/components/ImportContacts/PasswordModal';
+import AppContainer from 'src/components/UI/AppContainer';
+import Button from 'src/components/UI/Button';
+import Loading from 'src/components/UI/Loading';
+import useApi from 'src/hooks/useApi';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { setUserData } from 'src/redux/user/userSlice';
 
 const VerifyImportRequest = () => {
+  const dispatch = useDispatch();
+  const showToast = useShowToast();
   const user = useSelector((state) => state.user);
-  const [loading, setLoading] = useState(true);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState('');
   const [requestInfo, setRequestInfo] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const { postData: sendEmail, loading: emailLoading } = useApi(
+    process.env.REACT_APP_BMT_SERVIVE + '/send/message',
+    'POST',
+    null,
+    {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user?.socialApiKey || ''}`,
+    },
+  );
+
+  const { postData: getSocialApiKey, loading: passwordLoading } = useApi(
+    process.env.REACT_APP_BMT_SERVIVE + '/auth/login',
+  );
+
+  const {
+    postData: getOrgs,
+    loading: orgsLoading,
+    data: orgsData,
+  } = useApi('/BlazorApi/orgsfulldata');
 
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
   const orgId = urlParams.get('orgId');
   const requesterId = urlParams.get('requesterId');
   const requesterOrgId = urlParams.get('requesterOrgId');
   const requesterOrgName = urlParams.get('requesterOrgName');
+  const code = urlParams.get('code');
+  const expiresAt = urlParams.get('expiresAt');
 
   useEffect(() => {
+    if (!user) return;
     validateRequest();
+    fetchInitialData();
   }, [user]);
 
+  const fetchInitialData = async () => {
+    const orgsBody = {
+      id: 0,
+      roleId: 0,
+      orgId: 0,
+      email: '',
+      name: '',
+      contact: '',
+      rowVer: 0,
+      cityId: 0,
+      status: 0,
+      createdAt: dayjs().utc().subtract(5, 'year').format('YYYY-MM-DD'),
+      lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
+      createdBy: 0,
+      lastUpdatedBy: 0,
+    };
+    await getOrgs(orgsBody);
+  };
+
   const validateRequest = async () => {
-    if (!user || user?.orgId !== orgId || user?.roleId !== 2) {
+    if (!user || user?.orgId != orgId || user?.roleId != 2) {
       setError('Invalid verification link');
-      setLoading(false);
       return;
     }
-    if (!token || !orgId || !requesterId) {
+    if (!orgId || !requesterId || !code || !expiresAt) {
       setError('Invalid verification link');
       return;
     }
 
     // Check if verification exists in localStorage
-    const key = `album_import_verification_${orgId}`;
-    const stored = localStorage.getItem(key);
-
-    if (!stored) {
-      setError('Verification request not found or has expired');
-      setLoading(false);
-      return;
-    }
 
     try {
-      const data = JSON.parse(stored);
       const now = new Date().getTime();
 
       // Check if expired
-      if (now > data.expiresAt) {
+      if (now > expiresAt) {
         setError('Verification link has expired (24 hours limit)');
-        setLoading(false);
-        return;
-      }
-
-      // Check if token matches
-      if (data.token !== token) {
-        setError('Invalid verification token');
-        setLoading(false);
-        return;
-      }
-
-      // Check if already verified
-      if (data.verified) {
-        setError('This request has already been verified');
-        setLoading(false);
         return;
       }
 
@@ -75,25 +103,27 @@ const VerifyImportRequest = () => {
         orgId,
         requesterId,
         requesterOrgId,
-        code: data.code,
-        requestedAt: data.requestedAt,
+        code: code,
       });
-      setLoading(false);
     } catch (e) {
       console.error('Error validating request:', e);
       setError('Error validating verification request');
-      setLoading(false);
     }
   };
 
-  const handleApprove = async () => {
-    setLoading(true);
+  const org = orgsData?.data?.find((o) => o.id == orgId);
 
+  const handleApprove = async () => {
     try {
       // Send verification code to super admin via email
+      const org = orgsData?.data?.find((o) => o.id == orgId);
+      if (!org || !org?.email) {
+        setError('Failed to get organization. Please try again.');
+        return;
+      }
       const emailBody = {
         networkId: 3,
-        recipients: ['superadmin@example.com'], // Replace with actual super admin email
+        recipients: [org?.email], // Replace with actual super admin email
         subject: 'Album Import Verification Code',
         message: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -124,33 +154,58 @@ const VerifyImportRequest = () => {
         attachments: [],
       };
 
-      const response = await fetch('http://192.168.18.203:5001/send/message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailBody),
-      });
+      const { response, status } = await sendEmail(emailBody, true);
 
-      if (!response.ok) {
-        throw new Error('Failed to send verification code email');
+      if (status === 401) {
+        showToast(response?.error?.code + ': ' + response?.error?.message, 'warning');
+        setShowPasswordModal(true);
+        return;
       }
 
-      // Mark as verified (but not completed - super admin still needs to enter code)
-      const key = `album_import_verification_${orgId}`;
-      const stored = localStorage.getItem(key);
-
-      if (stored) {
-        const data = JSON.parse(stored);
-        data.adminApproved = true;
-        data.approvedAt = new Date().getTime();
-        localStorage.setItem(key, JSON.stringify(data));
+      if (response?.success) {
+        setVerified(true);
       }
-
-      setVerified(true);
-      setLoading(false);
     } catch (error) {
       console.error('Error approving request:', error);
       setError('Failed to send verification code. Please try again.');
-      setLoading(false);
+    }
+  };
+  const handlePasswordSubmit = async (password) => {
+    if (!password) {
+      showToast('Password is required', 'error');
+      return;
+    }
+
+    try {
+      const { response: data, status } = await getSocialApiKey(
+        {
+          email: user?.userInfo?.email,
+          password,
+        },
+        true,
+      );
+
+      if (status !== 200) {
+        showToast(data?.error?.code + ': ' + data?.error?.message, 'error');
+        return;
+      }
+
+      if (data?.token) {
+        showToast('Access key generated', 'success');
+        dispatch(
+          setUserData({
+            socialApiKey: data?.token,
+          }),
+        );
+        setShowPasswordModal(false);
+        setTimeout(() => {
+          handleApprove();
+        }, 2000);
+      } else {
+        showToast('Authentication failed. Please try again.', 'error');
+      }
+    } catch (error) {
+      showToast('Authentication failed. Please try again.', 'error');
     }
   };
 
@@ -164,20 +219,13 @@ const VerifyImportRequest = () => {
     window.location.href = '/';
   };
 
-  if (loading) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: '100vh' }}
-      >
-        <CSpinner color="primary" />
-      </div>
-    );
+  if (emailLoading || orgsLoading) {
+    return <Loading />;
   }
 
   if (error) {
     return (
-      <div className="container mt-5">
+      <AppContainer>
         <div className="row justify-content-center">
           <div className="col-md-6">
             <CCard>
@@ -192,21 +240,19 @@ const VerifyImportRequest = () => {
                   {error}
                 </CAlert>
                 <div className="mt-3 text-center">
-                  <button className="btn btn-primary" onClick={goToDashboard}>
-                    Go to Dashboard
-                  </button>
+                  <Button onClick={goToDashboard} title="Go To Dashboard" className="w-auto" />
                 </div>
               </CCardBody>
             </CCard>
           </div>
         </div>
-      </div>
+      </AppContainer>
     );
   }
 
   if (verified) {
     return (
-      <div className="container mt-5">
+      <AppContainer>
         <div className="row justify-content-center">
           <div className="col-md-6">
             <CCard>
@@ -233,12 +279,18 @@ const VerifyImportRequest = () => {
             </CCard>
           </div>
         </div>
-      </div>
+      </AppContainer>
     );
   }
 
   return (
-    <div className="container mt-5">
+    <AppContainer>
+      <PasswordModal
+        visible={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSubmit={handlePasswordSubmit}
+        loading={passwordLoading}
+      />
       <div className="row justify-content-center">
         <div className="col-md-8">
           <CCard>
@@ -258,9 +310,9 @@ const VerifyImportRequest = () => {
                   <tbody>
                     <tr>
                       <th className="text-white" style={{ width: '40%' }}>
-                        Requester Organization ID:
+                        Requester Organization:
                       </th>
-                      <td className="text-white">{requesterOrgId}</td>
+                      <td className="text-white">{requesterOrgName}</td>
                     </tr>
                     <tr>
                       <th className="text-white">Requester User ID:</th>
@@ -270,14 +322,14 @@ const VerifyImportRequest = () => {
                       <th className="text-white">Your Organization ID:</th>
                       <td className="text-white">{orgId}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <th className="text-white">Request Date:</th>
                       <td className="text-white">
-                        {requestInfo?.requestedAt
-                          ? dayjs(requestInfo.requestedAt).format('MMM DD, YYYY hh:mm A')
+                        {expiresAt
+                          ? dayjs(expiresAt).subtract(24, 'hours').format('MMM DD, YYYY hh:mm A')
                           : 'N/A'}
                       </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>
@@ -304,15 +356,15 @@ const VerifyImportRequest = () => {
                 <button className="btn btn-danger" onClick={handleReject}>
                   Reject Request
                 </button>
-                <button className="btn btn-success" onClick={handleApprove} disabled={loading}>
-                  {loading ? 'Processing...' : 'Approve Request'}
+                <button className="btn btn-success" onClick={handleApprove} disabled={emailLoading}>
+                  {emailLoading ? 'Processing...' : 'Approve Request'}
                 </button>
               </div>
             </CCardBody>
           </CCard>
         </div>
       </div>
-    </div>
+    </AppContainer>
   );
 };
 

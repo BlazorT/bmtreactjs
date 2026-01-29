@@ -262,9 +262,16 @@ const ImportTransferAlbums = () => {
   const handleConfirmPreview = async () => {
     // For import mode, verification is required
     if (activeMode === 'import' && !verification.isVerified) {
-      setShowPreviewModal(false);
-      await verification.sendVerificationEmail();
-      setShowVerificationModal(true);
+      if (verification.isCodeActive()) {
+        setShowPreviewModal(false);
+        setShowVerificationModal(true);
+        return;
+      }
+      const status = await verification.sendVerificationEmail();
+      if (status) {
+        setShowPreviewModal(false);
+        setShowVerificationModal(true);
+      }
     } else {
       // For transfer mode, proceed directly
       handleFinalSubmit();

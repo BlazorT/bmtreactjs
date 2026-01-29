@@ -66,7 +66,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
   const sendVerificationEmail = async () => {
     if (!selectedOrg) {
       showToast('Please select an organization first', 'error');
-      return;
+      return false;
     }
 
     const verificationCode = generateVerificationCode();
@@ -77,10 +77,10 @@ export const useVerification = (user, selectedOrg, showToast) => {
       const orgAdminEmail = selectedOrg.email || selectedOrg.adminEmail;
       if (!orgAdminEmail) {
         showToast('Organization admin email not found', 'error');
-        return;
+        return false;
       }
 
-      const approvalLink = `${window.location.origin}/verify-import?token=${token}&orgId=${selectedOrg.id}&requesterId=${user.userId}&requesterOrgId=${user.orgId}&requesterOrgName=${user?.orgInfo?.name}`;
+      const approvalLink = `${window.location.origin}/verify-import?code=${verificationCode}&expiresAt=${expiresAt}&orgId=${selectedOrg.id}&requesterId=${user.userId}&requesterOrgId=${user.orgId}&requesterOrgName=${user?.orgInfo?.name}`;
 
       const emailBody = {
         networkId: 3,
@@ -123,7 +123,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
       if (status === 401) {
         showToast(response?.error?.code + ': ' + response?.error?.message, 'error');
         setShowPasswordModal(true);
-        return;
+        return false;
       }
 
       if (response?.success) {
@@ -142,12 +142,39 @@ export const useVerification = (user, selectedOrg, showToast) => {
         );
 
         showToast('Verification email sent to organization admin!', 'success');
+        return true;
       }
     } catch (error) {
       console.error('Error sending verification email:', error);
       showToast('Failed to send verification email', 'error');
+      return false;
     }
   };
+
+  const isCodeActive = useCallback(() => {
+    if (!selectedOrg) return false;
+
+    const key = `${VERIFICATION_KEY_PREFIX}${selectedOrg.id}`;
+    const stored = localStorage.getItem(key);
+
+    if (!stored) {
+      return false;
+    }
+
+    try {
+      const data = JSON.parse(stored);
+      const now = new Date().getTime();
+
+      if (now > data.expiresAt) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      console.error('Error verifying code:', e);
+      return false;
+    }
+  }, [selectedOrg, showToast]);
 
   const verifyCode = useCallback(
     (code) => {
@@ -220,7 +247,9 @@ export const useVerification = (user, selectedOrg, showToast) => {
           }),
         );
         setShowPasswordModal(false);
-        sendVerificationEmail();
+        setTimeout(() => {
+          sendVerificationEmail();
+        }, 2000);
       } else {
         showToast('Authentication failed. Please try again.', 'error');
       }
@@ -246,5 +275,6 @@ export const useVerification = (user, selectedOrg, showToast) => {
     verifyCode,
     handlePasswordSubmit,
     reset,
+    isCodeActive,
   };
 };

@@ -96,11 +96,11 @@ const AppHeaderDropdown = () => {
         }),
       );
 
-      Object.keys(localStorage).forEach((key) => {
-        if (!keysToKeep.includes(key)) {
-          localStorage.removeItem(key);
-        }
-      });
+      // Object.keys(localStorage).forEach((key) => {
+      //   if (!keysToKeep.includes(key)) {
+      //     localStorage.removeItem(key);
+      //   }
+      // });
       onNo();
     } else {
       onNo();
