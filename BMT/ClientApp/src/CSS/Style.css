@@ -4730,3 +4730,90 @@ input[id^='recipient-'] {
   left: -1.5rem !important;
   position: relative;
 }
+/* Loading State */
+.approval-action-cell__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
+}
+
+/* Action Buttons */
+.approval-action-cell__btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.approval-action-cell__btn:focus {
+  outline: 2px solid;
+  outline-offset: 2px;
+}
+
+/* Reject Button */
+.approval-action-cell__btn--reject {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.approval-action-cell__btn--reject:hover {
+  background-color: #dc3545;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.approval-action-cell__btn--reject:active {
+  transform: scale(0.98);
+}
+
+.approval-action-cell__btn--reject:focus {
+  outline-color: #dc3545;
+}
+
+/* Approve Button */
+.approval-action-cell__btn--approve {
+  color: #198754;
+  border-color: #198754;
+}
+
+.approval-action-cell__btn--approve:hover {
+  background-color: #198754;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.approval-action-cell__btn--approve:active {
+  transform: scale(0.98);
+}
+
+.approval-action-cell__btn--approve:focus {
+  outline-color: #198754;
+}
+
+/* Status Badge */
+.approval-action-cell__badge {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Disabled State */
+.approval-action-cell__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.approval-action-cell__btn:disabled:hover {
+  background-color: transparent;
+  transform: none;
+}

@@ -12,6 +12,7 @@ const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const AddVariable = React.lazy(() => import('./pages/Admin/AddVariable'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
+const ApprovalRequests = React.lazy(() => import('./pages/Admin/ApprovalRequests'));
 const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
@@ -61,6 +62,7 @@ export const routes = [
     element: VerifyImportRequest,
   },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
+  { path: 'ApprovalRequests', name: 'ApprovalRequests', element: ApprovalRequests },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
