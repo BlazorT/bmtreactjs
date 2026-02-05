@@ -4714,3 +4714,19 @@ input[id^='recipient-'] {
 .bg-btn {
   background-color: #547ea1 !important;
 }
+.w-10 {
+  width: 7rem !important;
+}
+.helper-src {
+  border-radius: 0px !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  flex: 1 !important;
+  padding-left: 1.5rem !important;
+  background-color: #013c34 !important;
+  position: relative;
+}
+.helper-text {
+  left: -1.5rem !important;
+  position: relative;
+}
