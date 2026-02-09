@@ -60,6 +60,7 @@ public partial class _bmtContext : DbContext
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<Currency> Currencies { get; set; }
+    public virtual DbSet<Approvalrequest> Approvalrequests { get; set; }
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
 
@@ -155,6 +156,31 @@ public partial class _bmtContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
+        });
+        modelBuilder.Entity<Approvalrequest>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("approvalrequest");
+
+            entity.HasIndex(e => e.CreatedBy, "fk_approvalrequest_CreatedBy");
+
+            entity.Property(e => e.Albumid).HasColumnName("albumid");
+            entity.Property(e => e.ApprovalTime).HasColumnType("datetime");
+            entity.Property(e => e.Authcode)
+                .HasMaxLength(60)
+                .HasColumnName("authcode");
+            entity.Property(e => e.Authexpiry)
+                .HasColumnType("datetime")
+                .HasColumnName("authexpiry");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(2000);
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Remarks).HasMaxLength(2000);
+            entity.Property(e => e.Reqcode)
+                .HasMaxLength(60)
+                .HasColumnName("reqcode");
+            entity.Property(e => e.Targetorgid).HasColumnName("targetorgid");
         });
         modelBuilder.Entity<Compaignrecipient>(entity =>
         {

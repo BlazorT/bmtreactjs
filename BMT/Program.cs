@@ -40,20 +40,14 @@ services.AddScoped(typeof(IOnlineUsersRepository), typeof(OnlineUsersRepository)
 services.AddScoped(typeof(INotificationsRepository), typeof(NotificationsRepository));
 services.AddScoped(typeof(IMediaContentRepository), typeof(MediaContentRepository));
 services.AddScoped(typeof(IOrglicensingRepository), typeof(OrglicensingRepository));
-
+services.AddScoped(typeof(IApprovalRequestRepository), typeof(ApprovalRequestRepository));
 services.AddScoped(typeof(IGlobalNetworkDetailsRepository), typeof(GlobalNetworkDetailsRepository));
 
 // Repositry
 services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 services.AddScoped<IAddressRepository, AddressRepository>();
-//services.AddScoped<IDsppartnerRepository, DsppartnerRepository>();
-//services.AddScoped<IDspRepository, DspRepository>();
-//services.AddScoped<IUsersRepository, UsersRepository>();
-//services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IConfigurationsRepository, ConfigurationsRepository>();
-//services.AddScoped<IBasicConfigurationsRepository, BasicConfigurationsRepository>();
 services.AddScoped<ICitiesRepository, CitiesRepository>();
-//services.AddScoped<IIntegrationRepository, IntegrationRepository>();
 services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 services.AddScoped<IGlobalNetworkDetailService, GlobalNetworkDetailService>();
 services.AddScoped<IBundlingPackageRepository, BundlingPackageRepository>();
@@ -91,6 +85,7 @@ services.AddScoped<IContactAlbumService, ContactAlbumsService>();
 services.AddScoped<IUnsubscriberService, UnsubscriberService>();
 services.AddScoped<ITemplatevariableService, TemplateVariablenService>();
 services.AddScoped<IOrglicensingService, OrglicensingService>();
+services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
 // Page Service Layer
 
 services.AddScoped<IAppLogPageService, AppLogPageService>();

@@ -83,6 +83,7 @@ namespace com.blazor.bmt
             CreateMap<Unsubscriber, UnsubscriberModel>().ReverseMap();
             CreateMap<Templatevariable, TemplatevariableModel>().ReverseMap();
             CreateMap<Orglicensing, OrglicensingModel>().ReverseMap();
+            CreateMap<Approvalrequest, ApprovalrequestModel>().ReverseMap();
             // CreateMap<Notification, RolemenuModel>().ReverseMap();
 
         }
