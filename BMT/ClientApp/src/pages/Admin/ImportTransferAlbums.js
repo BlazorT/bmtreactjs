@@ -1,5 +1,5 @@
 // ============================================================================
-// MAIN COMPONENT: ImportTransferAlbums.jsx
+// MAIN COMPONENT: ImportTransferAlbums.jsx - Updated with DB verification
 // ============================================================================
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -90,21 +90,21 @@ const ImportTransferAlbums = () => {
 
   // Check verification when org changes
   useEffect(() => {
-    if (selectedOrg) {
+    if (selectedOrg && activeMode === 'import') {
       verification.checkStatus();
     } else {
       verification.reset();
     }
-  }, [selectedOrg]);
+  }, [selectedOrg, activeMode]);
 
-  // Fetch source data when org is verified (import) or selected (transfer)
+  // Fetch source data when org is selected
   useEffect(() => {
     const shouldFetch = selectedOrg;
 
     if (shouldFetch) {
       fetchSourceData();
     }
-  }, [selectedOrg, verification.isVerified, activeMode]);
+  }, [selectedOrg, activeMode]);
 
   useEffect(() => {
     if (activeMode === 'transfer') {
@@ -262,18 +262,23 @@ const ImportTransferAlbums = () => {
   const handleConfirmPreview = async () => {
     // For import mode, verification is required
     if (activeMode === 'import' && !verification.isVerified) {
-      if (verification.isCodeActive()) {
+      // Check if there's an active verification code
+      const hasActiveCode = await verification.isCodeActive();
+      if (hasActiveCode) {
+        // Show verification modal to enter code
         setShowPreviewModal(false);
         setShowVerificationModal(true);
         return;
       }
+
+      // Send new verification email
       const status = await verification.sendVerificationEmail();
       if (status) {
         setShowPreviewModal(false);
         setShowVerificationModal(true);
       }
     } else {
-      // For transfer mode, proceed directly
+      // For transfer mode or already verified, proceed directly
       handleFinalSubmit();
     }
   };
@@ -334,8 +339,9 @@ const ImportTransferAlbums = () => {
                 setActiveMode(mode);
               } else {
                 setActiveMode(mode);
-                setSelectedOrg('');
+                setSelectedOrg(null);
               }
+              resetSelection();
             }}
             isSuperAdmin={isSuperAdmin}
           />
@@ -354,12 +360,13 @@ const ImportTransferAlbums = () => {
             resetSelection={resetSelection}
           />
 
-          {/* {activeMode === 'import' && selectedOrg && !verification.isVerified && (
+          {activeMode === 'import' && selectedOrg && !verification.isVerified && (
             <VerificationAlert
               onSendVerification={verification.sendVerificationEmail}
               loading={verification.loading}
+              verificationData={verification.verificationData}
             />
-          )} */}
+          )}
 
           {selectedOrg && (
             <AlbumSelectionSection

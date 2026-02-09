@@ -32,6 +32,7 @@ const Organizations = React.lazy(() => import('./pages/Admin/Organizations'));
 
 export const rolesRoutes = [
   { path: 'Dashboard', name: 'Dashboard', element: Dashboard },
+  { path: 'ApprovalRequests', name: 'ApprovalRequests', element: ApprovalRequests },
   { path: 'ImportTransferAlbums', name: 'ImportTransferAlbums', element: ImportTransferAlbums },
   { path: '/Users', name: 'Users', element: Users },
   { path: 'globaltemplate', name: 'GlobalTemplates', element: GlobalTemplates },
@@ -61,8 +62,8 @@ export const routes = [
     name: 'VerifyImportRequest',
     element: VerifyImportRequest,
   },
+  { path: 'ApprovalRequests/:id?', name: 'ApprovalRequests', element: ApprovalRequests },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
-  { path: 'ApprovalRequests', name: 'ApprovalRequests', element: ApprovalRequests },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },

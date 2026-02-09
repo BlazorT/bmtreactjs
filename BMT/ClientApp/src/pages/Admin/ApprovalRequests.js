@@ -1,7 +1,7 @@
 import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
@@ -22,74 +22,56 @@ const ApprovalRequests = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
-  const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const {
     postData: getOrgs,
     loading: orgsLoading,
     data: orgsData,
   } = useApi('/BlazorApi/orgsfulldata');
 
-  const pageRoles = usePageRoles('Recipients');
+  const {
+    postData: getApprovalRequests,
+    loading: approvalReqLoading,
+    data: approvalReqs,
+  } = useApi('/Organization/approvalrequests');
+
+  const approvalReqsData = useMemo(
+    () =>
+      approvalReqs?.data
+        ? approvalReqs?.data?.filter(
+            (a) => a?.orgId == user?.orgId || a?.targetorgid == user?.orgId,
+          )
+        : [],
+    [approvalReqs, user],
+  );
+
+  const pageRoles = usePageRoles('ApprovalRequests');
   const orgId = user.orgId;
   const roleId = user.roleId;
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
-  const [rows, setRows] = useState([]);
-  const [fullRecipientsData, setFullRecipientsData] = useState([]);
   const [filters, setFilters] = useState({
     id: 0,
     orgId: user.orgId,
-    contentId: '',
-    rowVer: 0,
-    networkId: 0,
     status: 0,
-    albumid: 0,
     createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
 
   useEffect(() => {
-    fetchFullRecipients();
-    getRecipientsList(filters);
     getOrganizationLst();
+    fetchApprovalReq();
   }, []);
 
-  const fetchFullRecipients = async () => {
-    const body = {
+  const fetchApprovalReq = async (filters) => {
+    await getApprovalRequests({
       id: 0,
-      orgId: user.orgId,
-      contentId: '',
-      rowVer: 0,
-      networkId: 0,
-      albumid: 0,
-      status: 0,
-      createdAt: dayjs().subtract(5, 'year').startOf('year').format(),
-      lastUpdatedAt: dayjs().utc().endOf('day').format(),
-    };
-
-    const fullList = await getRecipientList(body);
-    setFullRecipientsData(fullList);
-  };
-
-  const getRecipientsList = async (filters) => {
-    const recipientsList = await getRecipientList(filters);
-    const albumsList = await fetchAlbums();
-    // If this is the first load (no filters applied yet)
-    if (fullRecipientsData.length === 0) {
-      setFullRecipientsData(recipientsList); // <-- store full list once
-    }
-
-    setRows(
-      recipientsList?.map((r) => ({
-        ...r,
-        nId: r?.networkId,
-        networkId: globalutil.networks()?.find((n) => n.id === r?.networkId)?.name || '--',
-        albumid: albumsList?.find((n) => n.id === r?.albumid)?.name || '--',
-        createdAt: formatDateTime(r?.createdAt),
-      })),
-    );
+      orgId: filters?.orgId || 0,
+      createdAt: filters?.createdAt || dayjs().utc().format(),
+      lastUpdatedAt: dayjs().utc().startOf('day').format(),
+      status: filters?.status || 0,
+      rowVer: 1,
+    });
   };
 
   const changeFilter = (event, key, label) => {
@@ -136,21 +118,15 @@ const ApprovalRequests = () => {
     setFilters({
       id: 0,
       orgId: user.orgId,
-      rowVer: 0,
-      networkId: 0,
       status: 0,
-      albumid: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
-    getRecipientsList({
+
+    fetchApprovalReq({
       id: 0,
       orgId: user.orgId,
-      contentId: '',
-      rowVer: 0,
-      networkId: 0,
       status: 0,
-      albumid: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
@@ -168,7 +144,7 @@ const ApprovalRequests = () => {
       cityId: 0,
       status: 0,
       // keyword: filters ? filters.keyword : '',
-      createdAt: dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
+      createdAt: dayjs().utc().subtract(100, 'year').format('YYYY-MM-DD'),
       lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
       createdBy: 0,
       lastUpdatedBy: 0,
@@ -191,43 +167,8 @@ const ApprovalRequests = () => {
 
   const orgFilterFields = approvalFilterConfig(filters, changeFilter, orgsData?.data || [], roleId);
 
-  const getBothLists = () => {
-    fetchFullRecipients();
-    getRecipientsList({
-      id: 0,
-      orgId: user.orgId,
-      contentId: '',
-      rowVer: 0,
-      networkId: 0,
-      status: 0,
-      createdAt: dayjs().startOf('month').format(),
-      lastUpdatedAt: dayjs().utc().startOf('day').format(),
-    });
-  };
-  const approvalCols = getApprovalCols(orgsData?.data);
-  const dummyData = [
-    {
-      id: 1,
-      requestedBy: 1,
-      code: '659785',
-      expiryDate: dayjs().add(24, 'hours').format(),
-      status: 1,
-    },
-    {
-      id: 1,
-      requestedBy: 2,
-      code: '134569',
-      expiryDate: dayjs().add(48, 'hours').format(),
-      status: 2,
-    },
-    {
-      id: 1,
-      requestedBy: 2,
-      code: '123456',
-      expiryDate: dayjs().add(48, 'hours').format(),
-      status: 3,
-    },
-  ];
+  const approvalCols = getApprovalCols(orgsData?.data, fetchApprovalReq, user);
+
   return (
     <React.Fragment>
       <React.Fragment>
@@ -243,7 +184,7 @@ const ApprovalRequests = () => {
             <CustomFilters
               filters={filters}
               changeFilter={changeFilter}
-              fetching={getRecipientsList}
+              fetching={fetchApprovalReq}
               handleReset={handleReset}
               filterFields={orgFilterFields}
             />
@@ -251,14 +192,11 @@ const ApprovalRequests = () => {
         </AppContainer>
         <AppContainer>
           <CustomDatagrid
-            enableGrouping
-            defaultExpandedGroups
             rowHeight={50}
-            rows={dummyData}
+            rows={approvalReqsData}
             showGrid={showDaGrid}
             columns={approvalCols}
-            groupBy={['networkId', 'albumid']}
-            loading={loading || orgsLoading || albumsLoading}
+            loading={orgsLoading || approvalReqLoading}
             sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
             hiddenCols={{
               columnVisibilityModel: {

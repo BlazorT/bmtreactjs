@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // ============================================================================
-// HOOK: useVerification.js
+// HOOK: useVerification.js - Database-based verification
 // ============================================================================
 import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -8,14 +8,14 @@ import { setUserData } from 'src/redux/user/userSlice';
 import useApi from 'src/hooks/useApi';
 import dayjs from 'dayjs';
 
-const VERIFICATION_KEY_PREFIX = 'album_import_verification_';
-
 export const useVerification = (user, selectedOrg, showToast) => {
   const dispatch = useDispatch();
   const [isVerified, setIsVerified] = useState(false);
   const [verificationData, setVerificationData] = useState(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentRequestId, setCurrentRequestId] = useState(null);
 
+  // API Hooks
   const { postData: sendEmail, loading: emailLoading } = useApi(
     process.env.REACT_APP_BMT_SERVIVE + '/send/message',
     'POST',
@@ -30,39 +30,139 @@ export const useVerification = (user, selectedOrg, showToast) => {
     process.env.REACT_APP_BMT_SERVIVE + '/auth/login',
   );
 
-  const checkStatus = useCallback(() => {
+  const { postData: createOrUpdateRequest, loading: requestLoading } = useApi(
+    '/Organization/addupdateapprequest',
+  );
+
+  const { postData: getApprovalRequests, loading: checkLoading } = useApi(
+    '/Organization/approvalrequests',
+  );
+
+  /**
+   * Check if there's an existing pending request for this org
+   */
+  const checkExistingRequest = useCallback(async () => {
+    if (!selectedOrg) return null;
+
+    try {
+      const { response, status } = await getApprovalRequests(
+        {
+          id: 0,
+          orgId: selectedOrg.id,
+          targetorgid: user.orgId,
+          createdAt: dayjs().subtract(7, 'days').format(),
+          lastUpdatedAt: dayjs().utc().format(),
+          status: 1, // Pending status
+          rowVer: 1,
+        },
+        true,
+      );
+
+      if (status === 200 && response?.data?.length > 0) {
+        // Find the most recent pending request
+        const pendingRequest = response.data[0];
+
+        // Check if it's still valid (not expired)
+        if (pendingRequest.authexpiry) {
+          const expiryDate = new Date(pendingRequest.authexpiry);
+          const now = new Date();
+
+          if (now < expiryDate) {
+            return pendingRequest;
+          }
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error checking existing request:', error);
+      return null;
+    }
+  }, [selectedOrg, user.orgId]);
+
+  /**
+   * Check verification status from database
+   */
+  const checkStatus = useCallback(async () => {
     if (!selectedOrg) return;
 
-    const key = `${VERIFICATION_KEY_PREFIX}${selectedOrg.id}`;
-    const stored = localStorage.getItem(key);
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        const now = new Date().getTime();
+    const existingRequest = await checkExistingRequest();
 
-        if (data.expiresAt && now < data.expiresAt) {
-          setIsVerified(data.verified);
-          setVerificationData(data);
-        } else {
-          localStorage.removeItem(key);
-          setIsVerified(false);
-          setVerificationData(null);
-        }
-      } catch (e) {
-        console.error('Error parsing verification data:', e);
+    if (existingRequest) {
+      setCurrentRequestId(existingRequest.id);
+      setVerificationData(existingRequest);
+
+      // Check if approved (status = 2)
+      if (existingRequest.status === 2) {
         setIsVerified(false);
-        setVerificationData(null);
+        // showToast('Import request already approved', 'success');
+      } else if (existingRequest.status === 1) {
+        // Still pending
+        setIsVerified(false);
+      } else if (existingRequest.status === 3) {
+        // Rejected
+        setIsVerified(false);
+        showToast('Previous import request was rejected', 'warning');
       }
     } else {
       setIsVerified(false);
       setVerificationData(null);
+      setCurrentRequestId(null);
     }
-  }, [selectedOrg]);
+  }, [selectedOrg, checkExistingRequest, showToast]);
 
+  /**
+   * Generate 6-digit verification code
+   */
   const generateVerificationCode = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
+  /**
+   * Create or update approval request in database
+   */
+  const createApprovalRequest = async (verificationCode, expiresAt) => {
+    if (!selectedOrg) return null;
+
+    try {
+      const requestBody = {
+        id: currentRequestId || 0, // 0 for new, existing ID for update
+        targetorgid: user.orgId, // Requesting org
+        orgId: selectedOrg.id, // Source org (who owns the albums)
+        albumid: 0, // Not tracking specific album for now
+        description: '', // Empty for now
+        remarks: '', // Empty for now
+        authcode: '', // Empty for now as per requirements
+        reqcode: verificationCode, // Store verification code here
+        authexpiry: dayjs(expiresAt).format('YYYY-MM-DDTHH:mm:ss'),
+        status: 1, // Pending
+        createdBy: user.userId,
+        createdAt: dayjs().format(),
+        lastUpdatedBy: user.userId,
+        lastUpdatedAt: dayjs().format(),
+        approvalTime: null,
+        rowVer: currentRequestId ? (verificationData?.rowVer || 0) + 1 : 0,
+      };
+
+      const { response, status } = await createOrUpdateRequest(requestBody, true);
+
+      if (status === 200 && response?.data?.id) {
+        setCurrentRequestId(response.data.id);
+        return response.data;
+      } else {
+        showToast('Failed to create approval request', 'error');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error creating approval request:', error);
+      showToast('Failed to create approval request', 'error');
+      return null;
+    }
+  };
+
+  /**
+   * Send verification email to org admin
+   */
   const sendVerificationEmail = async () => {
     if (!selectedOrg) {
       showToast('Please select an organization first', 'error');
@@ -70,8 +170,14 @@ export const useVerification = (user, selectedOrg, showToast) => {
     }
 
     const verificationCode = generateVerificationCode();
-    const token = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const expiresAt = new Date().getTime() + 24 * 60 * 60 * 1000;
+    const expiresAt = new Date().getTime() + 24 * 60 * 60 * 1000; // 24 hours
+
+    // Create/update approval request in database
+    const approvalRequest = await createApprovalRequest(verificationCode, expiresAt);
+
+    if (!approvalRequest) {
+      return false;
+    }
 
     try {
       const orgAdminEmail = selectedOrg.email || selectedOrg.adminEmail;
@@ -80,7 +186,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
         return false;
       }
 
-      const approvalLink = `${window.location.origin}/verify-import?code=${verificationCode}&expiresAt=${expiresAt}&orgId=${selectedOrg.id}&requesterId=${user.userId}&requesterOrgId=${user.orgId}&requesterOrgName=${user?.orgInfo?.name}`;
+      const approvalLink = `${window.location.origin}/ApprovalRequests/${approvalRequest.id}`;
 
       const emailBody = {
         networkId: 3,
@@ -100,17 +206,23 @@ export const useVerification = (user, selectedOrg, showToast) => {
               </ul>
             </div>
 
-            <p>If you approve this request, please click the button below:</p>
+            <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p><strong>Verification Code:</strong></p>
+              <h1 style="text-align: center; color: #333; letter-spacing: 5px;">${verificationCode}</h1>
+              <p style="text-align: center; color: #666; font-size: 14px;">Share this code with the requester to approve their import request.</p>
+            </div>
+
+            <p>You can review this request by clicking the link below:</p>
             
             <div style="text-align: center; margin: 30px 0;">
               <a href="${approvalLink}" 
                  style="background-color: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
-                Approve Import Request
+                View Request Details
               </a>
             </div>
 
-            <p style="color: #666; font-size: 12px;">This link will expire in 24 hours.</p>
-            <p style="color: #666; font-size: 12px;">If you did not expect this request, please ignore this email.</p>
+            <p style="color: #666; font-size: 12px;">This request will expire in 24 hours.</p>
+            <p style="color: #666; font-size: 12px;">If you did not expect this request, please ignore this email or reject it from the link above.</p>
           </div>
         `,
         title: 'Album Import Verification',
@@ -127,22 +239,12 @@ export const useVerification = (user, selectedOrg, showToast) => {
       }
 
       if (response?.success) {
-        const verificationInfo = {
-          orgId: selectedOrg.id,
-          verified: false,
-          code: verificationCode,
-          token: token,
-          expiresAt: expiresAt,
-          requestedAt: new Date().getTime(),
-        };
-
-        localStorage.setItem(
-          `${VERIFICATION_KEY_PREFIX}${selectedOrg.id}`,
-          JSON.stringify(verificationInfo),
-        );
-
         showToast('Verification email sent to organization admin!', 'success');
+        setVerificationData(approvalRequest);
         return true;
+      } else {
+        showToast('Failed to send verification email', 'error');
+        return false;
       }
     } catch (error) {
       console.error('Error sending verification email:', error);
@@ -151,74 +253,110 @@ export const useVerification = (user, selectedOrg, showToast) => {
     }
   };
 
-  const isCodeActive = useCallback(() => {
+  /**
+   * Check if there's an active verification code
+   */
+  const isCodeActive = useCallback(async () => {
     if (!selectedOrg) return false;
 
-    const key = `${VERIFICATION_KEY_PREFIX}${selectedOrg.id}`;
-    const stored = localStorage.getItem(key);
+    const existingRequest = await checkExistingRequest();
 
-    if (!stored) {
+    if (!existingRequest) {
       return false;
     }
 
-    try {
-      const data = JSON.parse(stored);
-      const now = new Date().getTime();
+    const now = new Date().getTime();
+    const expiry = new Date(existingRequest.authexpiry).getTime();
 
-      if (now > data.expiresAt) {
-        return false;
-      }
+    return now < expiry && existingRequest.status === 1; // Pending and not expired
+  }, [selectedOrg, checkExistingRequest]);
 
-      return true;
-    } catch (e) {
-      console.error('Error verifying code:', e);
-      return false;
-    }
-  }, [selectedOrg, showToast]);
-
+  /**
+   * Verify the code entered by user
+   */
   const verifyCode = useCallback(
-    (code) => {
-      if (!selectedOrg) return false;
-
-      const key = `${VERIFICATION_KEY_PREFIX}${selectedOrg.id}`;
-      const stored = localStorage.getItem(key);
-
-      if (!stored) {
+    async (code) => {
+      if (!selectedOrg || !currentRequestId) {
         showToast('No verification request found', 'error');
         return false;
       }
 
       try {
-        const data = JSON.parse(stored);
-        const now = new Date().getTime();
+        // Fetch the current request to verify code
+        const { response, status } = await getApprovalRequests(
+          {
+            id: currentRequestId,
+            orgId: 0,
+            createdAt: dayjs().subtract(7, 'days').format(),
+            lastUpdatedAt: dayjs().utc().format(),
+            status: 0, // Get all statuses to check current state
+            rowVer: 1,
+          },
+          true,
+        );
 
-        if (now > data.expiresAt) {
-          localStorage.removeItem(key);
-          showToast('Verification code expired. Please request a new one.', 'error');
-          return false;
-        }
+        if (status === 200 && response?.data?.length > 0) {
+          const request = response.data[0];
 
-        if (code.trim() === data.code) {
-          const updatedData = { ...data, verified: true };
-          localStorage.setItem(key, JSON.stringify(updatedData));
+          // Check if expired
+          const now = new Date().getTime();
+          const expiry = new Date(request.authexpiry).getTime();
 
-          setIsVerified(true);
-          setVerificationData(updatedData);
-          showToast('Organization verified successfully!', 'success');
-          return true;
+          if (now > expiry) {
+            showToast('Verification code expired. Please request a new one.', 'error');
+            return false;
+          }
+
+          // Check if code matches
+          if (code.trim() === request.reqcode) {
+            // Update request status to approved (2)
+            const updateBody = {
+              ...request,
+              status: 2, // Approved
+              approvalTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              lastUpdatedBy: user.userId,
+              lastUpdatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              rowVer: request.rowVer + 1,
+            };
+
+            const { status: updateStatus } = await createOrUpdateRequest(updateBody, true);
+
+            if (updateStatus === 200) {
+              setIsVerified(true);
+              setVerificationData(updateBody);
+              showToast('Organization verified successfully!', 'success');
+              return true;
+            } else {
+              showToast('Failed to update verification status', 'error');
+              return false;
+            }
+          } else {
+            showToast('Invalid verification code', 'error');
+            return false;
+          }
         } else {
-          showToast('Invalid verification code', 'error');
+          showToast('Verification request not found', 'error');
           return false;
         }
-      } catch (e) {
-        console.error('Error verifying code:', e);
+      } catch (error) {
+        console.error('Error verifying code:', error);
         showToast('Error verifying code', 'error');
         return false;
       }
     },
-    [selectedOrg, showToast],
+    [
+      selectedOrg,
+      currentRequestId,
+      user.userId,
+      showToast,
+      createOrUpdateRequest,
+      getApprovalRequests,
+    ],
   );
 
+  /**
+   * Handle password submission for API key generation
+   */
   const handlePasswordSubmit = async (password) => {
     if (!password) {
       showToast('Password is required', 'error');
@@ -258,15 +396,20 @@ export const useVerification = (user, selectedOrg, showToast) => {
     }
   };
 
+  /**
+   * Reset verification state
+   */
   const reset = () => {
     setIsVerified(false);
     setVerificationData(null);
+    setCurrentRequestId(null);
   };
 
   return {
     isVerified,
     verificationData,
-    loading: emailLoading,
+    currentRequestId,
+    loading: emailLoading || requestLoading || checkLoading,
     showPasswordModal,
     setShowPasswordModal,
     passwordLoading,

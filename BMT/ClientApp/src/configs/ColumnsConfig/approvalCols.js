@@ -2,31 +2,31 @@
 
 import dayjs from 'dayjs';
 import ApprovalActionCell from 'src/components/DataGridCustomCells/ApprovalActionCell';
-import globalutil from 'src/util/globalutil';
 
-export const getApprovalCols = (orgs) => [
+export const getApprovalCols = (orgs, fetchApprovalReq, user) => [
   {
-    key: 'requestedBy',
+    key: 'targetorgid',
     name: 'Requested By',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    renderCell: (params) => orgs?.find((o) => o?.id === params.row.requestedBy)?.name || '',
+    renderCell: (params) => orgs?.find((o) => o?.id === params.row.targetorgid)?.name || '',
   },
   {
-    key: 'code',
+    key: 'reqcode',
     name: 'Code',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
+    renderCell: (params) => (params.row.orgId === user?.orgId ? params.row.reqcode : '******'),
   },
   {
-    key: 'expiryDate',
+    key: 'authexpiry',
     name: 'Expiry',
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    renderCell: (params) => dayjs(params.row.expiryDate).local().format('MMM d, YYYY hh:ss A'),
+    renderCell: (params) => dayjs(params.row.authexpiry).local().format('MMM d, YYYY hh:ss A'),
   },
   {
     key: 'action',
@@ -37,7 +37,9 @@ export const getApprovalCols = (orgs) => [
     renderCell: (params) => (
       <ApprovalActionCell
         value={params}
-        org={orgs?.find((o) => o?.id === params.row.requestedBy) || null}
+        org={orgs?.find((o) => o?.id === params.row.targetorgid) || null}
+        fetchApprovalReq={fetchApprovalReq}
+        allOrgs={orgs}
       />
     ),
   },
