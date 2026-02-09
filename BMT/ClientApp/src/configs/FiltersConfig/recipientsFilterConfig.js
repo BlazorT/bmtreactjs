@@ -1,7 +1,6 @@
 // userFormConfig.js
 
 import { cilFlagAlt, cilCalendar, cilUser } from '@coreui/icons';
-import dayjs from 'dayjs';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';

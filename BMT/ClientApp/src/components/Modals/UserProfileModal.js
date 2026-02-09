@@ -24,12 +24,13 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
   const fields = [
-    {
-      label: 'Login Name',
-      value: user.userInfo.userName,
-    },
+    ...(user.userInfo.userName
+      ? {
+          label: 'Login Name',
+          value: user.userInfo.userName,
+        }
+      : []),
     {
       label: 'Full Name',
       value: user.userInfo.fullName,
@@ -42,10 +43,12 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
       label: 'Date Of Joining',
       value: formatDate(user.userInfo.doj),
     },
-    {
-      label: 'Contact',
-      value: user.userInfo.userContact,
-    },
+    ...(user.userInfo.userContact
+      ? {
+          label: 'Contact',
+          value: user.userInfo.userContact,
+        }
+      : []),
   ];
 
   const changePassword = async () => {
@@ -109,7 +112,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
           <CCol md={9} className="text-left align-self-center">
             <h4 className="profile-user-name">{user.userInfo.fullName}</h4>
             <p className="profile-user-email">{user.userInfo.email}</p>
-            <p className="profile-user-email">{"0000"+user.userInfo.id}</p>
+            <p className="profile-user-email">{user.userInfo.id}</p>
             <p className="profile-user-role">{user.userInfo.userRole}</p>
           </CCol>
         </CRow>

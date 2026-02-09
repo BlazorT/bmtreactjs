@@ -62,7 +62,6 @@ const PricingModal = ({
   const handleSubmit = async () => {
     formValidator();
     const form = document.querySelector('.pricing-form');
-
     if (!form.checkValidity()) {
       return;
     }
@@ -73,7 +72,7 @@ const PricingModal = ({
     }
 
     const submissionData = {
-      id: parseInt(networkData?.id?.split('-')[0]),
+      id: parseInt(networkData?.id),
       name: '',
       unitId: parseInt(pricingData?.unitId || '0'),
       unitName:

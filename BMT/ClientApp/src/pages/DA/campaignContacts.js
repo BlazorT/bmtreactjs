@@ -230,7 +230,6 @@ const campaignContacts = () => {
       if (dropdown) dropdown.style.display = 'none';
     }
   };
-
   const handleCampaignAddContacts = (e, networkId) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -466,7 +465,6 @@ const campaignContacts = () => {
     Whatsapp: cibWhatsapp,
     Email: cibGmail,
   };
-
   return (
     <Form name="dsp-reg-form">
       <CContainer fluid className="mt-4">
@@ -572,7 +570,8 @@ const campaignContacts = () => {
                           accept=".csv, .xls, .xlsx"
                           disabled={isChecked}
                           onChange={(e) => handleCampaignAddContacts(e, networkId)}
-                          className="form-control item"
+                          helperText={selectedFiles?.[networkId]?.name || ''}
+                          width="w-100"
                         />
                       </li>
 
