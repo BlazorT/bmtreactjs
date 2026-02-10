@@ -11,6 +11,15 @@ const getDayName = (date) => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return dayNames[date.getDay()];
 };
+export const safeParseJSON = (value, fallback = null) => {
+  if (typeof value !== 'string') return fallback;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
 
 // Helper function to calculate fraction of day
 const calculateFractionOfDay = (durationInMinutes) => {

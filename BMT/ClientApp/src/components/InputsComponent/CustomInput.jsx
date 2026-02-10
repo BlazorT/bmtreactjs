@@ -132,7 +132,7 @@ const CustomInput = ({
       onDrop={handleDrop}
     >
       {label && (
-        <label htmlFor={id} className={`login_label labelName mb-2 ${labelClass}`}>
+        <label htmlFor={id} className={`login_label labelName ${labelClass}`}>
           {label} {labelNote && <span className="label-note-warning">{labelNote}</span>}
         </label>
       )}

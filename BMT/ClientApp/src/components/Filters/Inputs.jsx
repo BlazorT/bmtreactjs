@@ -34,7 +34,7 @@ const Inputs = ({
   };
 
   const getColWidth = (inputName) => {
-    const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo', 'networkId'];
+    const fullWidthFields = ['isTermsAccepted', 'avatar', 'ssnNo', 'idNo'];
     const smallWidthFields = [
       'isWhatsAppAsso',
       'isWhatsappAsso',
@@ -96,7 +96,7 @@ const Inputs = ({
           // 🟩 2️⃣ Default behavior for all other components
           const FieldComponent = input.component;
           const conditionalProps = Object.fromEntries(
-            Object.entries(input).filter(([key, value]) => Boolean(value)),
+            Object.entries(input).filter(([key, value]) => value !== null && value !== undefined),
           );
 
           return (

@@ -127,7 +127,7 @@ const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
             containerClass="w-75"
           />
 
-          <div className="d-flex flex-column align-items-center gap-1 mt-4 pt-3">
+          <div className="d-flex flex-column align-items-center gap-1 mt-3 pt-3">
             <label className="btn btn-outline-secondary btn-sm p-2 text-white d-flex align-items-center gap-2 mb-0 cursor-pointer text-nowrap">
               <FontAwesomeIcon icon={faUpload} className="text-white" />
               Upload {param.type}
@@ -230,33 +230,35 @@ const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
           </div>
         )}
       </div>
-
-      {/* Parameter Inputs */}
-      <div className="border rounded p-2">
-        <div className="fw-bold mb-1">Fill Template Parameters:</div>
-        <CRow>
-          {parameters.header?.length > 0 && (
-            <CCol md={12} className="mb-2">
-              <div className="fw-semibold text-info mb-1">Header Parameters:</div>
-              {parameters.header.map((param, index) => (
-                <div key={`header-${index}`} className="mb-1">
-                  {renderParameterInput('header', index, param)}
-                </div>
-              ))}
-            </CCol>
-          )}
-          {parameters.body?.length > 0 && (
-            <CCol md={12} className="mb-2">
-              <div className="fw-semibold text-primary mb-1">Body Parameters:</div>
-              {parameters.body.map((param, index) => (
-                <div key={`body-${index}`} className="mb-1">
-                  {renderParameterInput('body', index, param)}
-                </div>
-              ))}
-            </CCol>
-          )}
-        </CRow>
-      </div>
+      {parameters?.body?.length === 0 &&
+      parameters?.footer?.length === 0 &&
+      parameters?.header?.length === 0 ? null : (
+        <div className="border rounded p-2">
+          <div className="fw-bold mb-1">Fill Template Parameters:</div>
+          <CRow>
+            {parameters.header?.length > 0 && (
+              <CCol md={12} className="mb-2">
+                <div className="fw-semibold text-info mb-1">Header Parameters:</div>
+                {parameters.header.map((param, index) => (
+                  <div key={`header-${index}`} className="mb-1">
+                    {renderParameterInput('header', index, param)}
+                  </div>
+                ))}
+              </CCol>
+            )}
+            {parameters.body?.length > 0 && (
+              <CCol md={12} className="mb-2">
+                <div className="fw-semibold text-primary mb-1">Body Parameters:</div>
+                {parameters.body.map((param, index) => (
+                  <div key={`body-${index}`} className="mb-1">
+                    {renderParameterInput('body', index, param)}
+                  </div>
+                ))}
+              </CCol>
+            )}
+          </CRow>
+        </div>
+      )}
     </div>
   );
 };

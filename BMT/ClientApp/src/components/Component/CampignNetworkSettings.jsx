@@ -167,7 +167,7 @@ const CampignNetworkSettings = ({
                   handlePostTypeToggle(network.name, singleTypeId);
                 }
               }
-
+              // console.log(selectedTemplates);
               return (
                 <CCol md={6} lg={4} key={index} className="mb-4">
                   <CCard className="border-0 shadow-sm">
@@ -250,28 +250,34 @@ const CampignNetworkSettings = ({
                           className="px-2 py-2 border-start-0 rounded border-end-0 d-flex"
                           //   onClick={() => handleTemplateToggle(network.name, template)}
                         >
-                          <div className="d-flex justify-content-between align-items-start">
+                          <div className="d-flex flex-grow-1 justify-content-between align-items-start">
                             <div className="flex-grow-1">
                               <div className="fw-bold text-primary text-center small mb-1">
                                 Selected Template
                               </div>
-                              {selectedTemplates?.[network.name]?.template && (
-                                <div className="text-primary small">
-                                  <strong>Content:</strong>{' '}
-                                  {truncateText(selectedTemplates?.[network.name]?.template, 80)}
-                                </div>
-                              )}
-                              {selectedTemplates?.[network.name]?.templateJson && (
-                                <div className="text-primary small">
-                                  <strong>Content:</strong>{' '}
-                                  {truncateText(
-                                    JSON.parse(
-                                      selectedTemplates?.[network.name]?.templateJson,
-                                    )?.components?.find((c) => c?.type == 'BODY')?.text || '--',
-                                    80,
-                                  )}
-                                </div>
-                              )}
+                              {JSON.parse(selectedTemplates?.[network.name]?.templateJson)
+                                ?.templateType == 2 &&
+                                selectedTemplates?.[network.name]?.template && (
+                                  <div className="text-primary small">
+                                    <strong>Content:</strong>{' '}
+                                    {truncateText(selectedTemplates?.[network.name]?.template, 80)}
+                                  </div>
+                                )}
+                              {(!JSON.parse(selectedTemplates?.[network.name]?.templateJson)
+                                ?.templateType ||
+                                JSON.parse(selectedTemplates?.[network.name]?.templateJson)
+                                  ?.templateType == 1) &&
+                                selectedTemplates?.[network.name]?.templateJson && (
+                                  <div className="text-primary small">
+                                    <strong>Content:</strong>{' '}
+                                    {truncateText(
+                                      JSON.parse(
+                                        selectedTemplates?.[network.name]?.templateJson,
+                                      )?.components?.find((c) => c?.type == 'BODY')?.text || '--',
+                                      80,
+                                    )}
+                                  </div>
+                                )}
                             </div>
                           </div>
                           <CBadge className="d-flex gap-2 justify-content-center align-items-center">
@@ -342,6 +348,7 @@ const CampignNetworkSettings = ({
                                 isWhatsApp && template?.templateJson
                                   ? JSON.parse(template?.templateJson)
                                   : null;
+
                               return (
                                 <CListGroupItem
                                   key={template.id || templateIndex}

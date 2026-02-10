@@ -12,6 +12,8 @@ export const getTemplateInputFields = (
   loading,
   onEdit,
   networkId,
+  handleWhatsAppTemplateTypeChange,
+  whatsappTemplateType,
 ) => [
   {
     component: CustomSelectInput,
@@ -28,9 +30,31 @@ export const getTemplateInputFields = (
     message: 'Select Network',
     disabled: onEdit || loading || templateData?.id !== 0 || networkId,
   },
+  ...(templateData?.networkId == 2
+    ? [
+        {
+          component: CustomSelectInput,
+          label: 'Template Type',
+          icon: cilFlagAlt,
+          id: 'whatsappTemplateType',
+          options: [
+            { id: 1, name: 'Template' },
+            { id: 2, name: 'Text' },
+          ],
+          className: 'form-control item form-select',
+          value: whatsappTemplateType,
+          name: 'whatsappTemplateType',
+          onChange: (e) => handleWhatsAppTemplateTypeChange(e),
+          isRequired: true,
+          message: 'Template Type',
+          disabled: loading,
+          showDisableOption: false,
+        },
+      ]
+    : []),
   {
     component: CustomInput,
-    label: templateData?.networkId == 2 ? 'Template Name' : 'Name',
+    label: templateData?.networkId == 2 && whatsappTemplateType == 1 ? 'Template Name' : 'Name',
     value: templateData.name,
     onChange: handleTemplateData,
     icon: cilUser,
@@ -47,7 +71,8 @@ export const getTemplateInputFields = (
   },
   {
     component: CustomInput,
-    label: templateData?.networkId == 2 ? 'Template Language' : 'Title',
+    label:
+      templateData?.networkId == 2 && whatsappTemplateType == 1 ? 'Template Language' : 'Title',
     value: templateData.title,
     onChange: handleTemplateData,
     icon: cilUser,

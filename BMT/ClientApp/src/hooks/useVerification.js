@@ -60,6 +60,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
 
       if (status === 200 && response?.data?.length > 0) {
         const findExistingReq = response?.data?.find((r) => r?.targetorgid == selectedOrg.id);
+        console.log({ findExistingReq, selectedOrg, user: user?.orgId });
         if (!findExistingReq) return null;
         // Find the most recent pending request
         const pendingRequest = findExistingReq;

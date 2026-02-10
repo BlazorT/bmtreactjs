@@ -47,7 +47,9 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
       const template =
         typeof networkTemplate === 'string'
           ? networkTemplate
-          : networkTemplate?.components?.find((c) => c.type === 'BODY')?.text || '--';
+          : networkTemplate?.templateType == 2
+            ? params.row?.template
+            : networkTemplate?.components?.find((c) => c.type === 'BODY')?.text || '--';
       return <div title={params.row?.template}>{template?.slice(0, 20)}...</div>;
     },
   },

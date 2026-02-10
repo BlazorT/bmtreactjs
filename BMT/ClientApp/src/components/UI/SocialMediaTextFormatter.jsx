@@ -280,7 +280,7 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
             </ToolbarButton>
 
             <ToolbarButton onClick={() => onChange('')} title="Clear Text">
-              <CIcon icon={cilX} size="sm" />
+              <p className="fs-5">X</p>
             </ToolbarButton>
 
             {showEmojiPicker && (

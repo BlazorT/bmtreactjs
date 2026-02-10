@@ -12,7 +12,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import CustomTimePicker from 'src/components/UI/TimePicker';
 import { daysList, icons } from 'src/constants/constants';
-import { calculateValidDays } from 'src/helpers/campaignHelper';
+import { calculateValidDays, safeParseJSON } from 'src/helpers/campaignHelper';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
@@ -647,11 +647,17 @@ const AddScheduleModel = (prop) => {
       .map((n) => {
         const networkName = n.name.toUpperCase();
         const postTypeIds = selectedPostTypes[networkName] || [];
+        const parseTemplateJson = safeParseJSON(selectedTemplates[networkName]?.templateJson);
         const templateJson = selectedTemplates[networkName]
           ? JSON.stringify({
               template:
                 n?.id == 2
-                  ? selectedTemplates[networkName]?.templateJson || ''
+                  ? parseTemplateJson?.templateType === 2
+                    ? JSON.stringify({
+                        template: selectedTemplates[networkName]?.template,
+                        templateType: 2,
+                      })
+                    : selectedTemplates[networkName]?.templateJson || ''
                   : selectedTemplates[networkName]?.template || '',
               subject: selectedTemplates[networkName]?.subject || '',
               title: selectedTemplates[networkName]?.title || '',

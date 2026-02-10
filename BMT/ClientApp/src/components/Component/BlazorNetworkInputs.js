@@ -27,7 +27,8 @@ import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
 import EmailTextEditor from '../UI/email-editor';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
-import { generateInitialParameters } from 'src/helpers/campaignHelper';
+import { generateInitialParameters, safeParseJSON } from 'src/helpers/campaignHelper';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 
 dayjs.extend(utc);
 
@@ -48,6 +49,7 @@ const BlazorNetworkInputs = (prop) => {
   const [showTemplateList, setShowTemplateList] = useState(false);
   const [showTestEmailModel, setShowTestEmailModel] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [whatsappTemplateType, setWhatsappTemplateType] = useState(1); // 1 = Template, 2 = Text
 
   const togglePaymentMdl = () => setIsPaymentOpen((prev) => !prev);
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
@@ -112,6 +114,13 @@ const BlazorNetworkInputs = (prop) => {
           packageId = 7; // 2 Year
         else if (diffYears === 3) packageId = 8; // 3 Year
       }
+      const initialWhatsAppTemplateType =
+        data?.networkId === 2 && templateData?.templateType === 2 ? 2 : 1;
+
+      if (data?.networkId === 2) {
+        setWhatsappTemplateType(initialWhatsAppTemplateType);
+      }
+
       setNetworkState({
         id: data?.id,
         orgId: data?.orgId,
@@ -155,9 +164,13 @@ const BlazorNetworkInputs = (prop) => {
         smtpport: data?.smtpport || '',
         templateSubject: templateData?.subject || '',
         templateTitle: templateData?.title || '',
+        whatsappTemplateType: initialWhatsAppTemplateType,
       });
     } else {
       setNetworkState(getInitialNetworkData(organizationId, user, networkId));
+      if (networkId === 2) {
+        setWhatsappTemplateType(1);
+      }
     }
   }, [networkSettingsData]);
 
@@ -230,6 +243,9 @@ const BlazorNetworkInputs = (prop) => {
   useEffect(() => {
     if (!foundSavedId) return;
     setNetworkState(foundSavedId);
+    if (foundSavedId.networkId === 2) {
+      setWhatsappTemplateType(foundSavedId.whatsappTemplateType || 1);
+    }
   }, [foundSavedId]);
 
   const handleNetworkSetting = (e, label) => {
@@ -374,6 +390,20 @@ const BlazorNetworkInputs = (prop) => {
         );
         return;
       }
+      if (
+        (whatsappTemplateType === 1 && !networkState?.Custom2) ||
+        (whatsappTemplateType === 2 && !networkState?.Custom1)
+      ) {
+        setshowFilters(true);
+        dispatch(
+          updateToast({
+            isToastOpen: true,
+            toastMessage: 'Template content is required for WhatsApp.',
+            toastVariant: 'error',
+          }),
+        );
+        return;
+      }
     }
     if (networkState?.name === '') {
       dispatch(
@@ -407,6 +437,10 @@ const BlazorNetworkInputs = (prop) => {
     }
 
     const updatedState = { ...networkState };
+
+    if (updatedState.networkId === 2) {
+      updatedState.whatsappTemplateType = whatsappTemplateType;
+    }
 
     // Append networkId to file names (if files exist)
     if (updatedState.attachment?.name) {
@@ -468,12 +502,20 @@ const BlazorNetworkInputs = (prop) => {
         purchasedQouta: nl?.purchasedQouta ? parseInt(nl?.purchasedQouta) : 0,
         Custom1:
           nl?.networkId === 2
-            ? JSON.stringify({
-                template: nl?.templateTitle,
-                subject: nl?.templateSubject,
-                title: nl?.templateTitle,
-                templateData: nl?.Custom2 ? JSON.parse(nl.Custom2) : null,
-              })
+            ? nl?.whatsappTemplateType === 2
+              ? JSON.stringify({
+                  templateType: 2,
+                  template: nl?.Custom1,
+                  subject: nl?.templateSubject,
+                  title: nl?.templateTitle,
+                })
+              : JSON.stringify({
+                  templateType: 1,
+                  template: nl?.templateTitle,
+                  subject: nl?.templateSubject,
+                  title: nl?.templateTitle,
+                  templateData: nl?.Custom2 ? JSON.parse(nl.Custom2) : null,
+                })
             : JSON.stringify({
                 template: nl?.Custom1,
                 subject: nl?.templateSubject,
@@ -558,31 +600,49 @@ const BlazorNetworkInputs = (prop) => {
   const onSelectTemplate = (t) => {
     if (networkId === 2) {
       // WhatsApp Logic
+      console.log({ t });
+      if (t?.whatsappTemplate) {
+        // 1. Get raw template data
 
-      // 1. Get raw template data
-      const rawTemplate = t.whatsappTemplate;
-      console.log({ rawTemplate });
-      // 2. Generate the defaults immediately
-      const initialParams = generateInitialParameters(rawTemplate.components);
-      // 3. Create the ONE TRUTH object
-      const fullWhatsAppState = {
-        templateName: rawTemplate.name,
-        templateLanguage: rawTemplate.language,
-        category: rawTemplate.category,
-        templateId: rawTemplate.id,
-        // Save the structure so the Editor can render the preview without needing 'selectedTemplate'
-        components: rawTemplate.components,
-        // Save the editable parameters
-        parameters: initialParams,
-      };
+        const rawTemplate = t.whatsappTemplate;
+        console.log({ rawTemplate });
+        // 2. Generate the defaults immediately
+        const initialParams = generateInitialParameters(rawTemplate.components);
+        // 3. Create the ONE TRUTH object
+        const fullWhatsAppState = {
+          templateType: 1, // 1 = Template
+          templateName: rawTemplate.name,
+          templateLanguage: rawTemplate.language,
+          category: rawTemplate.category,
+          templateId: rawTemplate.id,
+          // Save the structure so the Editor can render the preview without needing 'selectedTemplate'
+          components: rawTemplate.components,
+          // Save the editable parameters
+          parameters: initialParams,
+        };
 
-      setNetworkState((prev) => ({
-        ...prev,
-        Custom1: '', // Not used
-        Custom2: JSON.stringify(fullWhatsAppState), // Save EVERYTHING here
-        templateSubject: rawTemplate.language,
-        templateTitle: rawTemplate.name,
-      }));
+        setWhatsappTemplateType(1);
+
+        setNetworkState((prev) => ({
+          ...prev,
+          Custom1: '', // Not used for template type
+          Custom2: JSON.stringify(fullWhatsAppState), // Save EVERYTHING here
+          templateSubject: rawTemplate.language,
+          templateTitle: rawTemplate.name,
+          whatsappTemplateType: 1,
+        }));
+        setWhatsappTemplateType(1);
+      } else {
+        setNetworkState((prev) => ({
+          ...prev,
+          Custom1: t?.template,
+          Custom2: t?.templateJson || '',
+          templateSubject: t?.subject || '',
+          templateTitle: t?.title || '',
+          whatsappTemplateType: 2,
+        }));
+        setWhatsappTemplateType(2);
+      }
     } else {
       // Other Networks Logic (Unchanged)
       setNetworkState((prev) => ({
@@ -778,7 +838,7 @@ const BlazorNetworkInputs = (prop) => {
             />
             {showFilters && (
               <CRow>
-                <CCol md={6}>
+                <CCol md={networkState?.networkId === 2 ? 3 : 6}>
                   <CustomInput
                     label="Template Title"
                     icon={cilUser}
@@ -794,9 +854,13 @@ const BlazorNetworkInputs = (prop) => {
                     message="Enter Template Title"
                   />
                 </CCol>
-                <CCol md={6}>
+                <CCol md={networkState?.networkId === 2 ? 3 : 6}>
                   <CustomInput
-                    label={networkId === 2 ? 'Template Language' : 'Template Subject'}
+                    label={
+                      networkId === 2 && whatsappTemplateType == 1
+                        ? 'Template Language'
+                        : 'Template Subject'
+                    }
                     icon={cilUser}
                     value={networkState.templateSubject}
                     onChange={handleNetworkSetting}
@@ -810,18 +874,54 @@ const BlazorNetworkInputs = (prop) => {
                     message={networkId === 2 ? 'Enter Language Code' : 'Enter Template Subject'}
                   />
                 </CCol>
-                <CCol className="mt-2" md={12}>
-                  {networkState?.networkId === 2 ? (
-                    <WhatsAppTemplateEditor
-                      value={networkState.Custom2 ? JSON.parse(networkState.Custom2) : null}
-                      onChange={(updatedFullObject) => {
-                        // The Editor gives us the full updated object, we just stringify and save
-                        setNetworkState((prev) => ({
-                          ...prev,
-                          Custom2: JSON.stringify(updatedFullObject),
-                        }));
-                      }}
+                {networkState?.networkId === 2 && (
+                  <CCol md={3}>
+                    <CustomSelectInput
+                      label="Template Type"
+                      id="whatsappTemplateType"
+                      name="whatsappTemplateType"
+                      isRequired={true}
+                      options={[
+                        { id: 1, name: 'Template' },
+                        { id: 2, name: 'Text' },
+                      ]}
+                      value={whatsappTemplateType}
+                      icon={cilUser}
+                      onChange={(e) => setWhatsappTemplateType(parseInt(e.target.value, 10) || 1)}
+                      className="form-control"
+                      message="Select template type"
+                      showDisableOption={false}
                     />
+                  </CCol>
+                )}
+                <CCol md={12}>
+                  {networkState?.networkId === 2 ? (
+                    <>
+                      {whatsappTemplateType === 1 ? (
+                        <WhatsAppTemplateEditor
+                          value={networkState.Custom2 ? JSON.parse(networkState.Custom2) : null}
+                          onChange={(updatedFullObject) => {
+                            // The Editor gives us the full updated object, we just stringify and save
+                            setNetworkState((prev) => ({
+                              ...prev,
+                              Custom2: JSON.stringify({
+                                templateType: 1,
+                                ...updatedFullObject,
+                              }),
+                            }));
+                          }}
+                        />
+                      ) : (
+                        <SocialMediaTextEditor
+                          networkId={2}
+                          value={networkState.Custom1}
+                          onChange={(e) => {
+                            setNetworkState((prev) => ({ ...prev, Custom1: e }));
+                          }}
+                          placeholder="WhatsApp text message..."
+                        />
+                      )}
+                    </>
                   ) : networkState?.networkId !== 3 ? (
                     <SocialMediaTextEditor
                       networkId={networkState?.networkId}
@@ -915,22 +1015,22 @@ const BlazorNetworkInputs = (prop) => {
             <Button
               title="Submit"
               onClick={() => {
-                // onSubmit();
-                if (parseInt(networkState?.purchasedQouta || '0') > 0) {
-                  if (networkList.length === 0) {
-                    dispatch(
-                      updateToast({
-                        isToastOpen: true,
-                        toastMessage: 'Save atleast one netrwork settings to submit.',
-                        toastVariant: 'error',
-                      }),
-                    );
-                    return;
-                  }
-                  togglePaymentMdl();
-                } else {
-                  onSubmit();
-                }
+                onSubmit();
+                // if (parseInt(networkState?.purchasedQouta || '0') > 0) {
+                //   if (networkList.length === 0) {
+                //     dispatch(
+                //       updateToast({
+                //         isToastOpen: true,
+                //         toastMessage: 'Save atleast one netrwork settings to submit.',
+                //         toastVariant: 'error',
+                //       }),
+                //     );
+                //     return;
+                //   }
+                //   togglePaymentMdl();
+                // } else {
+                //   onSubmit();
+                // }
               }}
               loading={loading}
               loadingTitle="Submitting..."

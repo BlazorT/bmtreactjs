@@ -20,7 +20,9 @@ const CustomSelectInput = (prop) => {
     onClick,
     width,
     optionsList,
+    showDisableOption = true,
   } = prop;
+
   return (
     <div className={`form-outline text-start ${icon ? 'mt-2' : width ? width : 'w-75'}`}>
       {label && (
@@ -50,9 +52,11 @@ const CustomSelectInput = (prop) => {
             disabled={disabled}
             // autoFocus
           >
-            <option className="text-dim" value="">
-              {disableOption ? disableOption : 'Please select an option'}
-            </option>
+            {showDisableOption && (
+              <option className="text-dim" value="">
+                {disableOption ? disableOption : 'Please select an option'}
+              </option>
+            )}
             {/* <optgroup className="option-border"></optgroup>*/}
             {Array.isArray(options) &&
               options.map((option, index) => (

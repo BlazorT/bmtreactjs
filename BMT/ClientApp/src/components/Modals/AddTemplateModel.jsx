@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import SendTestEmailModel from './SendTestEmailModel';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
 import WhatsappTemplate from '../UI/WhatsappTemplate';
-import { generateInitialParameters } from 'src/helpers/campaignHelper';
+import { generateInitialParameters, safeParseJSON } from 'src/helpers/campaignHelper';
 
 const defaultTemplateData = {
   id: 0,
@@ -50,9 +50,30 @@ const AddTemplateModal = ({
   const [templateData, setTemplateData] = React.useState(defaultTemplateData);
   const [showEmailEditor, setShowEmailEditor] = useState(false);
   const [showTestEmailModel, setShowTestEmailModel] = useState(false);
+  const [whatsappTemplateType, setWhatsappTemplateType] = useState(1); // 1 = Template, 2 = Text
 
   useEffect(() => {
     if (!template || !isOpen) return;
+
+    let initialTemplateJson =
+      (template?.networkId === 3 || template?.networkId === 2) && template?.templateJson
+        ? template?.templateJson
+        : null;
+
+    // When editing WhatsApp templates, read templateType from templateJson if present
+    if (template?.networkId === 2 && initialTemplateJson) {
+      try {
+        const parsed = JSON.parse(initialTemplateJson);
+        if (parsed?.templateType === 1 || parsed?.templateType === 2) {
+          setWhatsappTemplateType(parsed.templateType);
+        } else {
+          setWhatsappTemplateType(1);
+        }
+      } catch {
+        setWhatsappTemplateType(1);
+      }
+    }
+
     setTemplateData({
       id: template.id,
       name: template?.name || '',
@@ -61,10 +82,7 @@ const AddTemplateModal = ({
       template: template?.template,
       title: template?.title,
       status: template?.status || 1,
-      templateJson:
-        (template?.networkId === 3 || template?.networkId === 2) && template?.templateJson
-          ? template?.templateJson
-          : null,
+      templateJson: initialTemplateJson,
       rowVer: 1,
     });
   }, [template, isOpen]);
@@ -73,6 +91,11 @@ const AddTemplateModal = ({
     if (!isOpen || !networkId || template) return;
 
     setTemplateData((prev) => ({ ...prev, networkId: networkId }));
+
+    if (networkId === 2) {
+      // New WhatsApp template defaults to Template type
+      setWhatsappTemplateType(1);
+    }
   }, [template, isOpen, networkId]);
 
   const toggleEmailEditor = () => setShowEmailEditor((prev) => !prev);
@@ -92,9 +115,16 @@ const AddTemplateModal = ({
     if (!form.checkValidity()) {
       return;
     }
-    if (templateData?.templateJson === '' && templateData?.networkId == 2) {
-      showToast('Select template first.', 'warning');
-      return;
+    if (templateData?.networkId == 2) {
+      if (whatsappTemplateType === 1 && templateData?.templateJson === '') {
+        showToast('Select template first.', 'warning');
+        return;
+      }
+
+      if (whatsappTemplateType === 2 && !templateData?.template) {
+        showToast('Enter WhatsApp text first.', 'warning');
+        return;
+      }
     }
 
     if (templateData?.template === '' && templateData?.networkId != 2) {
@@ -161,6 +191,7 @@ const AddTemplateModal = ({
     const initialParams = generateInitialParameters(rawTemplate.components);
     // 3. Create the ONE TRUTH object
     const fullWhatsAppState = {
+      templateType: 1, // 1 = Template
       templateName: rawTemplate.name,
       templateLanguage: rawTemplate.language,
       category: rawTemplate.category,
@@ -179,13 +210,54 @@ const AddTemplateModal = ({
     }));
   };
 
+  const handleWhatsAppTemplateTypeChange = (e) => {
+    const selectedType = Number(e.target.value);
+    setWhatsappTemplateType(selectedType);
+
+    // Ensure templateJson always carries templateType for WhatsApp
+    setTemplateData((prev) => {
+      let existing = {};
+      if (prev.templateJson) {
+        try {
+          existing = JSON.parse(prev.templateJson) || {};
+        } catch {
+          existing = {};
+        }
+      }
+
+      // For Text type we only need templateType (text body is stored in template field)
+      if (selectedType === 2) {
+        return {
+          ...prev,
+          templateJson: JSON.stringify({
+            templateType: 2,
+          }),
+        };
+      }
+
+      // For Template type, preserve the existing template data but enforce templateType = 1
+      return {
+        ...prev,
+        templateJson: JSON.stringify({
+          ...existing,
+          templateType: 1,
+        }),
+      };
+    });
+  };
+
   const templateInputFields = getTemplateInputFields(
     templateData,
     handleTemplateData,
     loading,
     onEdit,
     networkId,
+    handleWhatsAppTemplateTypeChange,
+    whatsappTemplateType,
   );
+
+  const parsedTemplateData = safeParseJSON(templateData?.templateJson, null);
+
   return (
     <CModal
       visible={isOpen}
@@ -204,32 +276,53 @@ const AddTemplateModal = ({
 
           <Inputs inputFields={templateInputFields} isBtn={false}>
             {templateData?.networkId == 2 ? (
-              <>
-                {!templateData?.templateJson ? (
-                  <WhatsappTemplate
-                    WABA={whatsappNetworkSettings?.businessId || ''}
-                    WAT={whatsappNetworkSettings?.apikeySecret || ''}
-                    onSelect={onSelectWhatsapp}
-                  />
+              <div className="mt-2">
+                {whatsappTemplateType === 1 ? (
+                  !templateData?.templateJson ||
+                  (parsedTemplateData?.templateType === 1 && !parsedTemplateData?.components) ? (
+                    <WhatsappTemplate
+                      WABA={whatsappNetworkSettings?.businessId || ''}
+                      WAT={whatsappNetworkSettings?.apikeySecret || ''}
+                      onSelect={onSelectWhatsapp}
+                      whatsappTemplateType={whatsappTemplateType}
+                    />
+                  ) : (
+                    <WhatsAppTemplateEditor
+                      value={
+                        templateData.templateJson ? JSON.parse(templateData.templateJson) : null
+                      }
+                      onChange={(updatedFullObject) => {
+                        // The Editor gives us the full updated object, we just stringify and save
+                        setTemplateData((prev) => ({
+                          ...prev,
+                          templateJson: JSON.stringify({
+                            templateType: 1,
+                            ...updatedFullObject,
+                          }),
+                        }));
+                      }}
+                      onClear={() =>
+                        setTemplateData((prev) => ({
+                          ...prev,
+                          templateJson: '',
+                        }))
+                      }
+                    />
+                  )
                 ) : (
-                  <WhatsAppTemplateEditor
-                    value={templateData.templateJson ? JSON.parse(templateData.templateJson) : null}
-                    onChange={(updatedFullObject) => {
-                      // The Editor gives us the full updated object, we just stringify and save
+                  <SocialMediaTextEditor
+                    networkId={2}
+                    value={templateData.template}
+                    onChange={(e) => {
                       setTemplateData((prev) => ({
                         ...prev,
-                        templateJson: JSON.stringify(updatedFullObject),
+                        template: e,
                       }));
                     }}
-                    onClear={() =>
-                      setTemplateData((prev) => ({
-                        ...prev,
-                        templateJson: '',
-                      }))
-                    }
+                    placeholder="WhatsApp text message..."
                   />
                 )}
-              </>
+              </div>
             ) : templateData?.networkId != '3' ? (
               <SocialMediaTextEditor
                 networkId={parseInt(templateData?.networkId)}

@@ -3719,9 +3719,9 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 1rem;
   width: 25rem;
 }
-.modal-title {
+/* .modal-title {
   width: 100%;
-}
+} */
 .tab-style {
   width: 7em;
   height: 6.5em;
