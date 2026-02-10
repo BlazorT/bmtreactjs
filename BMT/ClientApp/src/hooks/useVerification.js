@@ -273,7 +273,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
     const now = new Date().getTime();
     const expiry = new Date(existingRequest.authexpiry).getTime();
 
-    return now < expiry && existingRequest.status === 1; // Pending and not expired
+    return (now < expiry && existingRequest.status === 1) || existingRequest.status === 2; // Pending or approved and not expired
   }, [selectedOrg, checkExistingRequest]);
 
   /**

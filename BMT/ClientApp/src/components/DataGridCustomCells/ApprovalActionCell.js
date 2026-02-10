@@ -269,7 +269,7 @@ const ApprovalActionCell = (prop) => {
         const isSend = await sendNotificationEmail(status, updateBody);
 
         // Refresh the approval requests list
-        if (isSend) await fetchApprovalReq();
+        await fetchApprovalReq();
       } else {
         showToast(response.message || 'Failed to update request', 'error');
       }
