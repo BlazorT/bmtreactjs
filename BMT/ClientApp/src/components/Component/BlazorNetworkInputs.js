@@ -221,7 +221,7 @@ const BlazorNetworkInputs = (prop) => {
     setNetworkState((prev) => ({
       ...prev,
       startTime: start.format(), // e.g. "2025-10-16T00:00:00Z"
-      finishTime: finish ? finish.format() : null, // e.g. "2025-10-23T00:00:00Z"
+      finishTime: finish ? finish.format() : dayjs().utc().format(), // e.g. "2025-10-23T00:00:00Z"
     }));
   }, [networkState?.packageId]);
 
