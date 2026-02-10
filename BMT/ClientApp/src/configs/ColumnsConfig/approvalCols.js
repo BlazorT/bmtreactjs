@@ -5,12 +5,24 @@ import ApprovalActionCell from 'src/components/DataGridCustomCells/ApprovalActio
 
 export const getApprovalCols = (orgs, fetchApprovalReq, user) => [
   {
-    key: 'targetorgid',
+    key: 'orgId',
     name: 'Requested By',
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    renderCell: (params) => orgs?.find((o) => o?.id === params.row.targetorgid)?.name || '',
+    renderCell: (params) =>
+      (orgs?.find((o) => o?.id == params.row.orgId)?.name || '') +
+      (params.row.orgId == user?.orgId ? ' (You)' : ''),
+  },
+  {
+    key: 'targetorgid',
+    name: 'Requested To',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: false,
+    renderCell: (params) =>
+      (orgs?.find((o) => o?.id === params.row.targetorgid)?.name || '') +
+      (params.row.targetorgid == user?.orgId ? ' (You)' : ''),
   },
   {
     key: 'reqcode',
@@ -18,7 +30,8 @@ export const getApprovalCols = (orgs, fetchApprovalReq, user) => [
     editable: false,
     filterable: true,
     disableColumnMenu: false,
-    renderCell: (params) => (params.row.orgId === user?.orgId ? params.row.reqcode : '******'),
+    renderCell: (params) =>
+      params.row.targetorgid === user?.orgId ? params.row.reqcode : '******',
   },
   {
     key: 'authexpiry',
@@ -37,7 +50,7 @@ export const getApprovalCols = (orgs, fetchApprovalReq, user) => [
     renderCell: (params) => (
       <ApprovalActionCell
         value={params}
-        org={orgs?.find((o) => o?.id === params.row.targetorgid) || null}
+        org={orgs?.find((o) => o?.id === params.row.orgId) || null}
         fetchApprovalReq={fetchApprovalReq}
         allOrgs={orgs}
       />

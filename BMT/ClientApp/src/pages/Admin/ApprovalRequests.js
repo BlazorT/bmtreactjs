@@ -52,7 +52,7 @@ const ApprovalRequests = () => {
   const [showDaGrid, setshowDaGrid] = useState(true);
   const [filters, setFilters] = useState({
     id: 0,
-    orgId: user.orgId,
+    orgId: 0,
     status: 0,
     createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
@@ -67,7 +67,7 @@ const ApprovalRequests = () => {
     await getApprovalRequests({
       id: 0,
       orgId: filters?.orgId || 0,
-      createdAt: filters?.createdAt || dayjs().utc().format(),
+      createdAt: filters?.createdAt || dayjs().utc().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
       status: filters?.status || 0,
       rowVer: 1,
@@ -117,7 +117,7 @@ const ApprovalRequests = () => {
   const handleReset = () => {
     setFilters({
       id: 0,
-      orgId: user.orgId,
+      orgId: 0,
       status: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
@@ -125,7 +125,7 @@ const ApprovalRequests = () => {
 
     fetchApprovalReq({
       id: 0,
-      orgId: user.orgId,
+      orgId: 0,
       status: 0,
       createdAt: dayjs().startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
@@ -143,9 +143,8 @@ const ApprovalRequests = () => {
       rowVer: 0,
       cityId: 0,
       status: 0,
-      // keyword: filters ? filters.keyword : '',
-      createdAt: dayjs().utc().subtract(100, 'year').format('YYYY-MM-DD'),
-      lastUpdatedAt: dayjs().utc().format('YYYY-MM-DD'),
+      createdAt: dayjs().utc().subtract(100, 'year').format(),
+      lastUpdatedAt: dayjs().utc().format(),
       createdBy: 0,
       lastUpdatedBy: 0,
     };

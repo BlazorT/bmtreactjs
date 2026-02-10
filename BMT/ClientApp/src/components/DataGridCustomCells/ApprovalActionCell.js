@@ -10,7 +10,7 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from '../UI/Spinner';
 import useApi from 'src/hooks/useApi';
 import dayjs from 'dayjs';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PasswordModal from '../ImportContacts/PasswordModal';
 
 export const approvalStatus = [
@@ -40,6 +40,7 @@ const ApprovalActionCell = (prop) => {
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
@@ -48,8 +49,16 @@ const ApprovalActionCell = (prop) => {
   const [pendingAction, setPendingAction] = useState(null); // Store pending action info
 
   useEffect(() => {
-    if (id && value.row.id == id && value.row.status === 1) {
+    if (
+      id &&
+      value.row.id == id &&
+      value.row.status === 1 &&
+      value.row.targetorgid == user?.orgId
+    ) {
       toggleStatus(2);
+    } else {
+      // remove id from URL
+      navigate('/ApprovalRequests', { replace: true });
     }
   }, [value.row, id]);
 
@@ -84,7 +93,7 @@ const ApprovalActionCell = (prop) => {
   const sendNotificationEmail = async (status, requestData, token) => {
     try {
       // Get the requesting organization (who wanted to import)
-      const requestingOrg = getOrgById(requestData.targetorgid);
+      const requestingOrg = getOrgById(requestData.orgId);
       const requestingOrgEmail = requestingOrg?.email || requestingOrg?.adminEmail;
 
       if (!requestingOrgEmail) {
@@ -210,11 +219,12 @@ const ApprovalActionCell = (prop) => {
         // Retry the pending action
         if (pendingAction) {
           setTimeout(async () => {
-            await sendNotificationEmail(
-              pendingAction.status,
-              pendingAction.requestData,
-              data?.token,
-            );
+            await onYesToggle(pendingAction.status, data?.token);
+            // await sendNotificationEmail(
+            //   pendingAction.status,
+            //   pendingAction.requestData,
+            //   data?.token,
+            // );
             setPendingAction(null);
           }, 1000);
         }
@@ -231,7 +241,7 @@ const ApprovalActionCell = (prop) => {
    */
   const toggleStatus = (status) => {
     const action = status === 2 ? 'approve' : 'reject';
-    const requestingOrg = getOrgById(value.row.targetorgid);
+    const requestingOrg = getOrgById(value.row.orgId);
 
     showConfirmation({
       header: 'Confirmation Required',
@@ -245,7 +255,7 @@ const ApprovalActionCell = (prop) => {
   /**
    * Handle approval/rejection
    */
-  const onYesToggle = async (status) => {
+  const onYesToggle = async (status, token = null) => {
     onNoConfirm();
 
     try {
@@ -257,7 +267,9 @@ const ApprovalActionCell = (prop) => {
         lastUpdatedBy: user?.userId,
         rowVer: 1,
       };
-
+      const isSend = await sendNotificationEmail(status, updateBody, token);
+      console.log({ isSend });
+      if (!isSend) return;
       const response = await createOrUpdateRequest(updateBody);
 
       if (response?.status === true) {
@@ -266,10 +278,9 @@ const ApprovalActionCell = (prop) => {
 
         // Send notification email
 
-        const isSend = await sendNotificationEmail(status, updateBody);
-
         // Refresh the approval requests list
         await fetchApprovalReq();
+        if (id) navigate('/ApprovalRequests', { replace: true });
       } else {
         showToast(response.message || 'Failed to update request', 'error');
       }
@@ -300,7 +311,7 @@ const ApprovalActionCell = (prop) => {
   return (
     <>
       <div className="approval-action-cell">
-        {value.row.status === 1 && user?.orgId === value.row?.orgId ? (
+        {value.row.status === 1 && user?.orgId === value.row?.targetorgid ? (
           <CRow className="g-2 justify-content-center align-items-center">
             <div className="col-auto">
               <CTooltip content="Reject Request" placement="top">

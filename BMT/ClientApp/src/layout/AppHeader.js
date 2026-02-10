@@ -182,12 +182,10 @@ const AppHeader = (phoneNumber) => {
                 content={popoverContent}
                 placement="bottom"
               >
-                <CIcon className="labelName" icon={cilBell} size="xxl">
-                  {/*  {notificationCount > 0 && <CBadge shape="pill" color="danger">{notificationCount}</CBadge>}*/}
-                </CIcon>
+                <CIcon className="labelName" icon={cilBell} size="lg" />
               </CPopover>
               {notificationCount > 0 && (
-                <CBadge shape="pill" color="danger">
+                <CBadge shape="pill" color="danger" size="sm">
                   {notificationCount}
                 </CBadge>
               )}
@@ -202,9 +200,9 @@ const AppHeader = (phoneNumber) => {
           {/*</CNavItem>*/}
           <CNavItem>
             <CNavLink>
-              <CIcon icon={cilPeople} className="color-set" />
+              <CIcon icon={cilPeople} className="color-set" size="lg" />
               {notificationCount > 0 && (
-                <CBadge shape="pill" color="danger">
+                <CBadge shape="pill" color="danger" size="sm">
                   {notificationCount}
                 </CBadge>
               )}

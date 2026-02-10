@@ -48,8 +48,8 @@ export const useVerification = (user, selectedOrg, showToast) => {
       const { response, status } = await getApprovalRequests(
         {
           id: 0,
-          orgId: selectedOrg.id,
-          targetorgid: user.orgId,
+          orgId: user.orgId,
+          targetorgid: selectedOrg.id,
           createdAt: dayjs().subtract(7, 'days').format(),
           lastUpdatedAt: dayjs().utc().format(),
           status: 1, // Pending status
@@ -59,7 +59,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
       );
 
       if (status === 200 && response?.data?.length > 0) {
-        const findExistingReq = response?.data?.find((r) => r?.targetorgid == user.orgId);
+        const findExistingReq = response?.data?.find((r) => r?.targetorgid == selectedOrg.id);
         if (!findExistingReq) return null;
         // Find the most recent pending request
         const pendingRequest = findExistingReq;
@@ -129,8 +129,8 @@ export const useVerification = (user, selectedOrg, showToast) => {
     try {
       const requestBody = {
         id: currentRequestId || 0, // 0 for new, existing ID for update
-        targetorgid: user.orgId, // Requesting org
-        orgId: selectedOrg.id, // Source org (who owns the albums)
+        targetorgid: selectedOrg.id, // Source org (who owns the albums)
+        orgId: user.orgId, // Requesting org
         albumid: 0, // Not tracking specific album for now
         description: '', // Empty for now
         remarks: '', // Empty for now

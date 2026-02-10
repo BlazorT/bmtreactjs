@@ -50,31 +50,42 @@ function SignIn() {
     fetchData: fetchMenus,
   } = useFetch();
 
-  const {
-    response: loginRes,
-    error: loginErr,
-    loading: loginLoading,
-    fetchData: userLogin,
-  } = useFetch();
+  const { postData: getOrgs, loading: orgLoading } = useApi('/BlazorApi/orgsfulldata');
 
-  const {
-    postData: getOrgs,
-    loading: orgLoading,
-    data: orgRes,
-  } = useApi('/BlazorApi/orgsfulldata');
+  const { postData: getSocialApiKey, loading: socialApiKeyLoading } = useApi(
+    // eslint-disable-next-line no-undef
+    process.env.REACT_APP_BMT_SERVIVE + '/auth/login',
+  );
 
   const [showPassword, setShowPassword] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const [userDetail, setuserDetail] = useState({
     fullName: '',
     password: '',
-    //roleId: 1,
-    //userStatus: 0,
-    //alreadyLoginStatus:0,
   });
+
+  const { postData: userLogin, loading: loginLoading } = useApi(
+    `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`,
+  );
+
+  const fetchSocialApiKey = async (email, password) => {
+    try {
+      const { response: data } = await getSocialApiKey(
+        {
+          email,
+          password,
+        },
+        true,
+      );
+
+      if (data?.token) return data?.token;
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -117,32 +128,21 @@ function SignIn() {
 
   const getUtils = async () => {
     await fetchUtils('/Common/lovs');
-
     if (utilRes?.current?.status === true) {
       console.log(utilRes.current.data, 'util');
       addGlobalUtils(utilRes.current.data);
-    } /*else {
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: 'something went wrong try again later',
-          toastVariant: 'error',
-        }),
-      );
-    }*/
+    }
   };
+
   useEffect(() => {
-    // This runs once on component mount
     getUtils();
-  }, []); // empty array ensures it runs only once
-  const getMenus = async () => {
+  }, []);
+
+  const getMenus = async (roleId) => {
     const menuBody = {
-      roleId: loginRes && loginRes.current?.data.roleId.toString(),
+      roleId,
     };
-    console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
-    console.log(menuRes, 'menusRes');
-    console.log(menuRes.current, menuErr);
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));
@@ -156,29 +156,24 @@ function SignIn() {
       );
     }
   };
+
   const LoginClick = async (event) => {
     event.preventDefault();
     if (userDetail.fullName === '' || userDetail.password === '') {
       setErrorMessage('Username & password are mandatory !');
-      setIsLoading(false);
       return;
     } else {
-      setIsLoading(true);
-      const requestUrl = `/Common/login?email=${userDetail.fullName}&password=${userDetail.password}`;
-      const requestOptions = { method: 'POST' };
-
       // 🔍 log it in readable JSON
-      console.log('Login Request:', JSON.stringify({ requestUrl, requestOptions }, null, 2));
 
-      await userLogin(requestUrl, requestOptions);
+      const loginRes = await userLogin();
 
-      // console.log(loginRes.current, loginErr);
-      if (loginRes.current?.status === true) {
-        // console.log((loginRes.current),'login');
+      if (loginRes?.status === true) {
         getUtils();
-        getMenus();
+        getMenus(loginRes?.data.roleId.toString());
+
+        const socialApiKey = await fetchSocialApiKey(userDetail.fullName, userDetail.password);
         const data = await getOrgs({
-          id: loginRes?.current?.data?.orgId,
+          id: loginRes?.data?.orgId,
           roleId: 0,
           orgId: 0,
           email: '',
@@ -193,37 +188,34 @@ function SignIn() {
           lastUpdatedBy: 0,
         });
         setModalOpen(true);
-        ClickProceed(data?.data?.[0] || {});
-      } else if (loginRes.current?.status === 400) {
+        ClickProceed(data?.data?.[0] || {}, socialApiKey, loginRes);
+      } else if (loginRes?.status === 400) {
         dispatch(
           updateToast({
             isToastOpen: true,
-            toastMessage: loginRes.current.message,
+            toastMessage: loginRes?.message,
             toastVariant: 'error',
           }),
         );
-        setIsLoading(false);
       } else {
         // alert(JSON.stringify(loginRes.current));
-        setErrorMessage(loginRes.current.message);
-        setIsLoading(false);
+        setErrorMessage(loginRes?.message);
       }
     }
   };
-  const ClickProceed = (orgInfo) => {
+  const ClickProceed = (orgInfo, socialApiKey, loginRes) => {
     dispatch(
       setUserData({
-        userId: loginRes.current.data.id,
-        roleId: loginRes.current.data.roleId,
-        orgId: loginRes.current.data.orgId,
-        userInfo: loginRes.current.data,
+        userId: loginRes.data.id,
+        roleId: loginRes.data.roleId,
+        orgId: loginRes.data.orgId,
+        userInfo: loginRes.data,
         orgInfo,
         isAuthenticated: true,
-        socialApiKey: '',
+        socialApiKey: socialApiKey || '',
       }),
     );
-    if (loginRes?.current?.data?.roleId === 2 && !orgInfo?.signature) {
-      console.log('yo');
+    if (loginRes?.data?.roleId === 2 && !orgInfo?.signature) {
       dispatch(
         updateToast({
           isToastOpen: true,
@@ -240,7 +232,7 @@ function SignIn() {
     dispatch(
       updateToast({
         isToastOpen: true,
-        toastMessage: loginRes.current.message,
+        toastMessage: loginRes?.message,
         toastVariant: 'success',
       }),
     );
@@ -248,12 +240,11 @@ function SignIn() {
 
   return (
     <>
-      {isLoading ||
-        (orgLoading && (
-          <div className="loading-overlay">
-            <Loading />
-          </div>
-        ))}
+      {(orgLoading || loginLoading || socialApiKeyLoading) && (
+        <div className="loading-overlay">
+          <Loading />
+        </div>
+      )}
       <section>
         <video controls={false} autoPlay={true} muted={true} className="landingPicView">
           <source src="BackgroundVideo.mp4" type="video/mp4" />
