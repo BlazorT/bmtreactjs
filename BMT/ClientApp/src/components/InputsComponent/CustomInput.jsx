@@ -63,6 +63,7 @@ const CustomInput = ({
   labelNote,
   mfa,
   onMfaClick,
+  containerClass,
 }) => {
   const [fileError, setFileError] = useState('');
   const handleFileChange = (e) => {
@@ -124,7 +125,7 @@ const CustomInput = ({
 
   return (
     <div
-      className={`form-outline text-start ${label ? 'mt-2' : icon ? '' : width ? width : 'w-30'} `}
+      className={`form-outline text-start ${label ? 'mt-2' : icon ? '' : width ? width : 'w-30'} ${containerClass || ''}`}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
@@ -146,6 +147,7 @@ const CustomInput = ({
             <CIcon
               className={isRequired ? 'mandatory-control' : 'stock-toggle-icon '}
               icon={icon}
+              size="lg"
             />
           </span>
         )}

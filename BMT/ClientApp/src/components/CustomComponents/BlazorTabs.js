@@ -1,84 +1,31 @@
-import React, { useState } from 'react';
-import {
-  CNavItem,
-  CNav,
-  CNavLink,
-  CContainer,
-  CRow,
-  CCol,
-  CDropdown,
-  CDropdownToggle,
-  CDropdownMenu,
-  CDropdownItem,
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilMenu } from '@coreui/icons';
+/* eslint-disable react/react-in-jsx-scope */
+import { CCol, CRow } from '@coreui/react';
 
 const BlazorTabs = (prop) => {
-  const { title, tabs, handleActiveTab, activeTab, onAddVehicle } = prop;
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { tabs, handleActiveTab, activeTab, onAddVehicle, disable } = prop;
 
   const handleTab = (i) => {
     handleActiveTab(i);
-    setDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
   };
 
   return (
-    <div>
-      <CRow className="p-0">
-        <CCol className="p-0">
-          <div className="mobile-tabs-view">
-            <CDropdown>
-              <CDropdownToggle caret>
-                <CIcon icon={cilMenu} />
-              </CDropdownToggle>
-              <CDropdownMenu className="cDropdown">
-                {tabs?.map((tab, index) => (
-                  <CDropdownItem
-                    key={tab.id}
-                    className="cDropdown"
-                    active={activeTab === tab.id}
-                    onClick={() => handleTab(tab.id)}
-                  >
-                    {tab.name}
-                  </CDropdownItem>
-                ))}
-              </CDropdownMenu>
-            </CDropdown>
-          </div>
-          <CNav className="dashboard-links">
-            {tabs?.map((tab, index) => (
-              <CNavItem key={tab.id}>
-                <CNavLink
-                  onClick={() => handleTab(tab.id)}
-                  active={activeTab === tab.id}
-                  className={activeTab === tab.id ? 'dashboard-link-active' : 'dashboard-link'}
-                >
-                  {tab.name}
-                </CNavLink>
-              </CNavItem>
-            ))}
-          </CNav>
-        </CCol>
-        {onAddVehicle && (
-          <CCol className="text-right p-0" sm="2">
-            {title !== 'DA' && (
-              <button
-                type="button"
-                className="btn_Default w-auto mt-0 ps-4 pe-4 h-auto"
-                onClick={onAddVehicle}
+    <CRow className="p-0">
+      <CCol>
+        <div className="dashboard-links">
+          {tabs?.map((link, index) => (
+            <div key={index}>
+              <div
+                onClick={() => (disable ? undefined : handleTab(link?.id || index))}
+                disabled={disable}
+                className={activeTab === link?.id ? 'dashboard-link-active' : 'dashboard-link'}
               >
-                Add Vehicles
-              </button>
-            )}
-          </CCol>
-        )}
-      </CRow>
-    </div>
+                {link?.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </CCol>
+    </CRow>
   );
 };
 

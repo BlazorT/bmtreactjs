@@ -696,15 +696,7 @@ button[type='button']:hover {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.dashboard-links {
-  gap: 20px;
-}
-.dashboard-link {
-  color: #dbdac2;
-  border-bottom: 2px solid #3399ff;
-  cursor: pointer;
-  border-radius: 2px;
-}
+
 .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
   color: white !important;
 }
@@ -820,19 +812,7 @@ button[type='button']:hover {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.dashboard-link:hover {
-  color: #dbdac2;
-}
-.dashboard-link-active {
-  font-weight: 700;
-  color: #dedfe5;
-  border-bottom: 3px solid white;
-  cursor: pointer;
-  border-radius: 2px;
-}
-.dashboard-link-active:hover {
-  color: white;
-}
+
 .lblNotification {
   font-size: 1.5rem;
   font-weight: 500;
@@ -2062,11 +2042,6 @@ input[type='radio']:checked {
   }
 }
 @media (min-width: 1200px) and (max-width: 1700px) {
-  .dashboard-link {
-    font-size: 0.8em !important;
-    font-weight: 700 !important;
-  }
-
   .carousalImg {
     height: 25em !important;
     border-radius: 7px;
@@ -2364,11 +2339,7 @@ input-bill-qty {
     display: none;
   }
 }
-@media (max-width: 1020px) {
-  .dashboard-links {
-    display: none;
-  }
-}
+
 @media (min-width: 900px) and (max-width: 1600px) {
   .btn_Default_SmallAdd {
     border-radius: 6px;
@@ -3129,7 +3100,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   }
 }
 .icon {
-  vertical-align: middle !important;
+  /* vertical-align: middle !important; */
   cursor: pointer;
 }
 table caption {
@@ -4816,4 +4787,70 @@ input[id^='recipient-'] {
 .approval-action-cell__btn:disabled:hover {
   background-color: transparent;
   transform: none;
+}
+.dashboard-links {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0;
+  position: relative; /* Helps with z-index stacking */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  scroll-behavior: smooth; /* smooth scrolling on desktop */
+  scrollbar-width: none;
+}
+/* Hide scrollbar in mobile */
+.dashboard-links::-webkit-scrollbar {
+  display: none;
+}
+.dashboard-link-active {
+  font-weight: 700;
+  color: #dedfe5;
+  border-bottom: 3px solid white;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.dashboard-link-active:hover {
+  color: white;
+}
+/* Active Tab = highlight with thick bottom line */
+.dashboard-link-active {
+  color: #3399ff !important;
+  border-bottom: 2px solid #3399ff;
+}
+.dashboard-link,
+.dashboard-link-active {
+  position: relative;
+  padding: 12px 20px 14px 20px !important; /* Increase bottom padding slightly */
+  /* This gives space for the indicator to sit on the line without text touching it */
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cfd8e3;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .dashboard-link,
+  .dashboard-link-active {
+    font-size: 14px;
+    padding: 10px 6px; /* adjust horizontal padding for mobile */
+  }
+}
+
+.dashboard-link {
+  color: #dbdac2;
+  border-bottom: 2px solid #3399ff;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.dashboard-link:hover {
+  color: #ffffff;
+}
+
+.dashboard-link {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
 }

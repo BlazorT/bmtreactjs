@@ -1,17 +1,63 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useSelector } from 'react-redux';
 import { CCol, CRow, CAlert, CBadge } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import { cilText, cilImage, cilVideo, cilFile } from '@coreui/icons';
 import { getStatusColor } from 'src/helpers/campaignHelper';
 import Button from '../InputsComponent/Button';
+import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
+import { useShowToast } from 'src/hooks/useShowToast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+
+dayjs.extend(utc);
 
 const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
+  const user = useSelector((state) => state.user);
+  const { uploadAvatar } = useUploadAvatar();
+  const showToast = useShowToast();
   if (!value || !value.components) {
     return <CAlert color="info">Please select a WhatsApp template from the template list.</CAlert>;
   }
 
   const { components, parameters } = value;
+
+  const handleMediaUpload = async (section, index, file) => {
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('id', '0');
+      formData.append('name', file.name);
+      formData.append('fileName', file.name);
+      formData.append('createdBy', user?.userId || 1);
+      formData.append('createdAt', dayjs().utc().format());
+
+      const uploadAvatarRes = await uploadAvatar(formData);
+
+      if (uploadAvatarRes?.status === true) {
+        const uploadedPath =
+          window.location.origin +
+          '/productimages/' +
+          uploadAvatarRes.keyValue.toString().split('\\').pop();
+        handleParameterChange(section, index, uploadedPath);
+        if (showToast) {
+          showToast('File uploaded successfully', 'success');
+        }
+      } else if (uploadAvatarRes?.message && showToast) {
+        showToast(uploadAvatarRes.message, 'error');
+      }
+    } catch (error) {
+      if (showToast) {
+        showToast('Failed to upload file', 'error');
+      }
+    }
+  };
+
   const handleParameterChange = (section, index, newValue) => {
     const updatedParams = { ...parameters };
 
@@ -68,16 +114,34 @@ const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
 
     if (mediaTypes[param.type]) {
       return (
-        <CustomInput
-          key={`${section}-${index}`}
-          label={mediaTypes[param.type].label}
-          icon={mediaTypes[param.type].icon}
-          value={param[param.type]?.link || ''}
-          onChange={(e) => handleParameterChange(section, index, e.target.value)}
-          placeholder="Enter media URL..."
-          type="url"
-          className="form-control"
-        />
+        <div className="d-flex flex-row align-items-center gap-3">
+          <CustomInput
+            key={`${section}-${index}`}
+            label={mediaTypes[param.type].label}
+            icon={mediaTypes[param.type].icon}
+            value={param[param.type]?.link || ''}
+            onChange={(e) => handleParameterChange(section, index, e.target.value)}
+            placeholder="Enter media URL..."
+            type="url"
+            className="form-control"
+            containerClass="w-75"
+          />
+
+          <div className="d-flex flex-column align-items-center gap-1 mt-4 pt-3">
+            <label className="btn btn-outline-secondary btn-sm p-2 text-white d-flex align-items-center gap-2 mb-0 cursor-pointer text-nowrap">
+              <FontAwesomeIcon icon={faUpload} className="text-white" />
+              Upload {param.type}
+              <input
+                type="file"
+                accept={
+                  param.type === 'image' ? 'image/*' : param.type === 'video' ? 'video/*' : '*/*'
+                }
+                onChange={(e) => handleMediaUpload(section, index, e.target.files?.[0])}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
+        </div>
       );
     }
 

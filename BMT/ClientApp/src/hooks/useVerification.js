@@ -163,7 +163,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
   /**
    * Send verification email to org admin
    */
-  const sendVerificationEmail = async () => {
+  const sendVerificationEmail = async (token) => {
     if (!selectedOrg) {
       showToast('Please select an organization first', 'error');
       return false;
@@ -230,7 +230,10 @@ export const useVerification = (user, selectedOrg, showToast) => {
         attachments: [],
       };
 
-      const { response, status } = await sendEmail(emailBody, true);
+      const { response, status } = await sendEmail(emailBody, true, {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token || user?.socialApiKey || ''}`,
+      });
 
       if (status === 401) {
         showToast(response?.error?.code + ': ' + response?.error?.message, 'error');
@@ -386,7 +389,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
         );
         setShowPasswordModal(false);
         setTimeout(() => {
-          sendVerificationEmail();
+          sendVerificationEmail(data?.token);
         }, 2000);
       } else {
         showToast('Authentication failed. Please try again.', 'error');

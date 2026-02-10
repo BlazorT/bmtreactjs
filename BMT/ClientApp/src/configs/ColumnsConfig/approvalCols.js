@@ -26,7 +26,7 @@ export const getApprovalCols = (orgs, fetchApprovalReq, user) => [
     editable: false,
     filterable: true,
     disableColumnMenu: true,
-    renderCell: (params) => dayjs(params.row.authexpiry).local().format('MMM d, YYYY hh:ss A'),
+    renderCell: (params) => dayjs(params.row.authexpiry).local().format('MMM DD, YYYY hh:ss A'),
   },
   {
     key: 'action',

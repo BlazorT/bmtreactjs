@@ -170,8 +170,8 @@ const AppHeader = (phoneNumber) => {
   return (
     <CHeader position="sticky" className="bg-body-color">
       <CContainer fluid>
-        <CHeaderToggler className="" onClick={() => dispatch(toggleSidebar())}>
-          <CIcon icon={cilMenu} />
+        <CHeaderToggler className="px-2 py-1" onClick={() => dispatch(toggleSidebar())}>
+          <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderNav>
           <CNavItem>

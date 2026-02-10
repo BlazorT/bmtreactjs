@@ -81,7 +81,7 @@ const ApprovalActionCell = (prop) => {
   /**
    * Send approval/rejection email
    */
-  const sendNotificationEmail = async (status, requestData) => {
+  const sendNotificationEmail = async (status, requestData, token) => {
     try {
       // Get the requesting organization (who wanted to import)
       const requestingOrg = getOrgById(requestData.targetorgid);
@@ -147,7 +147,10 @@ const ApprovalActionCell = (prop) => {
         attachments: [],
       };
 
-      const { response, status: emailStatus } = await sendEmail(emailBody, true);
+      const { response, status: emailStatus } = await sendEmail(emailBody, true, {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token || user?.socialApiKey || ''}`,
+      });
       if (emailStatus === 401) {
         showToast(response?.error?.code + ': ' + response?.error?.message, 'error');
         // Store the pending action to retry after password verification
@@ -207,7 +210,11 @@ const ApprovalActionCell = (prop) => {
         // Retry the pending action
         if (pendingAction) {
           setTimeout(async () => {
-            await sendNotificationEmail(pendingAction.status, pendingAction.requestData);
+            await sendNotificationEmail(
+              pendingAction.status,
+              pendingAction.requestData,
+              data?.token,
+            );
             setPendingAction(null);
           }, 1000);
         }

@@ -28,7 +28,11 @@ const useApi = <T>(
   // alert(url);
   const showToast = useShowToast();
 
-  const postData = async (postData?: ApiPostDataType<T>, failStatus: boolean = false) => {
+  const postData = async (
+    postData?: ApiPostDataType<T>,
+    failStatus: boolean = false,
+    customHeader = null,
+  ) => {
     try {
       setLoading(true);
 
@@ -39,16 +43,18 @@ const useApi = <T>(
         ...initialOptions,
         method,
         body,
-        headers: headers
-          ? headers
-          : url?.includes(process.env.REACT_APP_BMT_SERVIVE || '')
-            ? {
-                'Content-Type': 'application/json',
-                'x-api-key': String(CRAWLER_API_KEY),
-              }
-            : isFormData
-              ? undefined // Let the browser set the Content-Type for FormData
-              : initialOptions.headers,
+        headers: customHeader
+          ? customHeader
+          : headers
+            ? headers
+            : url?.includes(process.env.REACT_APP_BMT_SERVIVE || '')
+              ? {
+                  'Content-Type': 'application/json',
+                  'x-api-key': String(CRAWLER_API_KEY),
+                }
+              : isFormData
+                ? undefined // Let the browser set the Content-Type for FormData
+                : initialOptions.headers,
       });
       if (!response.ok) {
         showToast(`API error: ${response.status}`, 'error');

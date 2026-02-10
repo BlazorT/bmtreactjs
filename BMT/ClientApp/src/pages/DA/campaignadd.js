@@ -14,29 +14,26 @@ import Inputs from 'src/components/Filters/Inputs';
 import AddScheduleModel from 'src/components/Modals/AddScheduleModel';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import AppContainer from 'src/components/UI/AppContainer';
+import Button from 'src/components/UI/Button';
 import Form from 'src/components/UI/Form';
 import Loading from 'src/components/UI/Loading';
 import Range from 'src/components/UI/Range';
-import Button from 'src/components/UI/Button';
-import {
-  getCampaignAddConfig,
-  getInitialCampaignData,
-} from 'src/configs/InputConfig/campaignAddConfig';
+import { getCampaignAddConfig } from 'src/configs/InputConfig/campaignAddConfig';
 import { availableInterests, icons } from 'src/constants/constants';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
+import useApi from 'src/hooks/useApi';
+import { useCampaignForm } from 'src/hooks/useCampaignForm';
 import useFetch from 'src/hooks/useFetch';
+import { useNetworkSelection } from 'src/hooks/useNetworkSelection';
+import { useScheduleManagement } from 'src/hooks/useScheduleManagement';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import useApi from 'src/hooks/useApi';
-import { useCampaignForm } from 'src/hooks/useCampaignForm';
-import { useScheduleManagement } from 'src/hooks/useScheduleManagement';
-import { useNetworkSelection } from 'src/hooks/useNetworkSelection';
 
 const campaignadd = () => {
   const user = useSelector((state) => state.user);
