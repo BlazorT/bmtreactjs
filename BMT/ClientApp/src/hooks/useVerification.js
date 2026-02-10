@@ -59,8 +59,10 @@ export const useVerification = (user, selectedOrg, showToast) => {
       );
 
       if (status === 200 && response?.data?.length > 0) {
+        const findExistingReq = response?.data?.find((r) => r?.targetorgid == user.orgId);
+        if (!findExistingReq) return null;
         // Find the most recent pending request
-        const pendingRequest = response.data[0];
+        const pendingRequest = findExistingReq;
 
         // Check if it's still valid (not expired)
         if (pendingRequest.authexpiry) {
