@@ -61,7 +61,8 @@ const UsersActionCell = (prop) => {
                   <CIcon
                     onClick={() => toggleStatus(1)}
                     className="stock-toggle-icon"
-                    icon={cilReload}
+                      icon={cilReload}
+                      size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -74,7 +75,8 @@ const UsersActionCell = (prop) => {
                   <CIcon
                     onClick={() => editUser(params.id)}
                     className="stock-toggle-icon"
-                    icon={cilPencil}
+                        icon={cilPencil}
+                        size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -84,7 +86,8 @@ const UsersActionCell = (prop) => {
                     <CIcon
                       className="stock-toggle-icon IconColorRed"
                       onClick={() => toggleStatus(2)}
-                      icon={cilTrash}
+                          icon={cilTrash}
+                          size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>

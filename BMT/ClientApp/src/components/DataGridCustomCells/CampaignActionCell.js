@@ -1,12 +1,15 @@
 import React from 'react';
-
-import { cilMediaPause, cilMediaStop, cilPencil, cilReload, cilTrash } from '@coreui/icons';
+import {
+  cilMediaPause,
+  cilMediaPlay,
+  cilMediaStop,
+  cilPencil,
+  cilReload,
+  cilTrash,
+} from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
-
 import CIcon from '@coreui/icons-react';
-
 import { CBadge, CCol, CRow, CTooltip } from '@coreui/react';
-
 import { useSelector } from 'react-redux';
 import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
@@ -15,41 +18,50 @@ import Spinner from '../UI/Spinner';
 
 const CampaignActionCell = (prop) => {
   const { value, campaign, canDelete, fetching } = prop;
-  const user = useSelector((state) => state.user);
 
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-
   const { loading, updateStatus } = useToggleCampaignStatus();
 
+  // Status constants
+  const STATUS = {
+    REACTIVATE: 1,
+    DELETE: 4,
+    PAUSE: 6,
+    RESUME: 7,
+  };
+
   const toggleStatus = (status) => {
-    if (status === 1 && !user?.orgInfo?.signature) {
+    if (status === STATUS.REACTIVATE && !user?.orgInfo?.signature) {
       showConfirmation({
         header: 'Information!',
-        body: `Campaign will be auto activated once admin sign the contract!!!?`,
+        body: `Campaign will be auto activated once admin signs the contract!`,
         isOpen: true,
         onYes: null,
         onNo: () => onNoConfirm(),
       });
       return;
     }
-    const campaignName = campaign?.[0]?.name || value?.row?.name || 'this campaign';
 
-    // Define action labels based on status code
+    const campaignName =
+      campaign?.[0]?.name || value?.row?.name || 'this campaign';
+
     let actionLabel = '';
+
     switch (status) {
-      case 1:
+      case STATUS.REACTIVATE:
         actionLabel = 're-activate';
         break;
-      case 4:
+      case STATUS.DELETE:
         actionLabel = 'delete';
         break;
-      case 6:
+      case STATUS.PAUSE:
         actionLabel = 'pause';
         break;
-      case 7:
-        actionLabel = 'stop';
+      case STATUS.RESUME:
+        actionLabel = 'resume';
         break;
       default:
         actionLabel = 'update';
@@ -63,19 +75,45 @@ const CampaignActionCell = (prop) => {
       onNo: () => onNoConfirm(),
     });
   };
+
   const onYesToggle = async (status) => {
     onNoConfirm();
+
     try {
       const response = await updateStatus(campaign, status);
-      console.log('response', response);
+
       if (response?.status) {
         fetching();
-        showToast(`${campaign[0].name} ${status === 1 ? 're activated' : 'deleted'} successfully`);
+
+        const campaignName =
+          campaign?.[0]?.name || value?.row?.name || 'Campaign';
+
+        let successMessage = '';
+
+        switch (status) {
+          case STATUS.REACTIVATE:
+            successMessage = 're-activated';
+            break;
+          case STATUS.DELETE:
+            successMessage = 'deleted';
+            break;
+          case STATUS.PAUSE:
+            successMessage = 'paused';
+            break;
+          case STATUS.RESUME:
+            successMessage = 'resumed';
+            break;
+          default:
+            successMessage = 'updated';
+        }
+
+        showToast(`${campaignName} ${successMessage} successfully`);
       } else {
-        showToast(response?.message, 'error');
+        showToast(response?.message || 'Something went wrong', 'error');
       }
-    } catch (e) {
-      console.log(e, 'error');
+    } catch (error) {
+      console.log(error);
+      showToast('Something went wrong', 'error');
     }
   };
 
@@ -86,44 +124,62 @@ const CampaignActionCell = (prop) => {
   };
 
   const editCampaign = () => {
-    navigate('/campaignadd', { state: { id: value.row.id, campaign: campaign?.[0] } });
+    navigate('/campaignadd', {
+      state: { id: value.row.id, campaign: campaign?.[0] },
+    });
   };
 
   if (loading) {
     return <Spinner />;
   }
-  // console.log("canUpdate", canUpdate);
-  // console.log("canDelete", canDelete);
+
   const isPaid = value.row?.paymentStatus === 1;
+  const currentStatus = value.row?.status;
+
   return (
-    <React.Fragment>
+    <>
       {isPaid ? (
         <CRow>
           <CCol className="d-flex justify-content-center">
             <div className="d-flex align-items-center justify-content-center gap-4">
               <CBadge color="success">Paid</CBadge>
-              <CTooltip content="Pause Campaign">
-                <CIcon
-                  onClick={() => toggleStatus(6)} // 6 = Pause
-                  className="stock-toggle-icon"
-                  icon={cilMediaPause}
-                  style={{ cursor: 'pointer' }}
-                />
-              </CTooltip>
+
+              {currentStatus === STATUS.PAUSE ? (
+                <CTooltip content="Resume Campaign">
+                  <CIcon
+                    onClick={() => toggleStatus(STATUS.RESUME)}
+                    className="stock-toggle-icon"
+                    icon={cilMediaPlay}
+                    size="lg"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              ) : (
+                <CTooltip content="Pause Campaign">
+                  <CIcon
+                    onClick={() => toggleStatus(STATUS.PAUSE)}
+                    className="stock-toggle-icon"
+                      icon={cilMediaPause}
+                    size="lg"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </CTooltip>
+              )}
             </div>
           </CCol>
         </CRow>
       ) : (
         <>
-          {value.row.status === 4 ? (
+          {currentStatus === STATUS.DELETE ? (
             <CRow>
               <CCol className="d-flex justify-content-center">
                 <div className="d-flex align-items-center justify-content-center gap-4">
                   <CTooltip content="Re-Activate Campaign">
                     <CIcon
-                      onClick={() => toggleStatus(1)}
+                      onClick={() => toggleStatus(STATUS.REACTIVATE)}
                       className="stock-toggle-icon"
-                      icon={cilReload}
+                        icon={cilReload}
+                        size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>
@@ -134,43 +190,58 @@ const CampaignActionCell = (prop) => {
             <CRow>
               <CCol className="d-flex justify-content-center">
                 <div className="d-flex align-items-center justify-content-center gap-4">
-                  {/* Edit Campaign */}
+                  {/* Edit */}
                   <CTooltip content="Edit Campaign">
                     <CIcon
-                      onClick={() => editCampaign(value.row.id)}
+                      onClick={editCampaign}
                       className="stock-toggle-icon"
-                      icon={cilPencil}
+                          icon={cilPencil}
+                          size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>
 
-                  {/* Pause Campaign */}
-                  <CTooltip content="Pause Campaign">
-                    <CIcon
-                      onClick={() => toggleStatus(6)} // 6 = Pause
-                      className="stock-toggle-icon"
-                      icon={cilMediaPause}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </CTooltip>
+                  {/* Pause / Resume */}
+                  {currentStatus === STATUS.PAUSE ? (
+                    <CTooltip content="Resume Campaign">
+                      <CIcon
+                        onClick={() => toggleStatus(STATUS.RESUME)}
+                        className="stock-toggle-icon"
+                            icon={cilMediaPlay}
+                            size="lg"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </CTooltip>
+                  ) : (
+                    <CTooltip content="Pause Campaign">
+                      <CIcon
+                        onClick={() => toggleStatus(STATUS.PAUSE)}
+                        className="stock-toggle-icon"
+                              icon={cilMediaPause}
+                              size="lg"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </CTooltip>
+                  )}
 
-                  {/* Stop Campaign */}
-                  <CTooltip content="Stop Campaign">
-                    <CIcon
-                      onClick={() => toggleStatus(7)} // 7 = Stop
-                      className="stock-toggle-icon"
-                      icon={cilMediaStop}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </CTooltip>
+                  {/* Stop */}
+                  {/*<CTooltip content="Stop Campaign">*/}
+                  {/*  <CIcon*/}
+                  {/*    onClick={() => toggleStatus(STATUS.RESUME)}*/}
+                  {/*    className="stock-toggle-icon"*/}
+                  {/*    icon={cilMediaStop}*/}
+                  {/*    style={{ cursor: 'pointer' }}*/}
+                  {/*  />*/}
+                  {/*</CTooltip>*/}
 
-                  {/* Delete Campaign */}
+                  {/* Delete */}
                   {canDelete === 1 && (
                     <CTooltip content="Delete Campaign">
                       <CIcon
                         className="stock-toggle-icon IconColorRed"
-                        icon={cilTrash}
-                        onClick={() => toggleStatus(4)}
+                            icon={cilTrash}
+                            size="lg"
+                        onClick={() => toggleStatus(STATUS.DELETE)}
                         style={{ cursor: 'pointer' }}
                       />
                     </CTooltip>
@@ -181,7 +252,8 @@ const CampaignActionCell = (prop) => {
           )}
         </>
       )}
-    </React.Fragment>
+    </>
   );
 };
+
 export default CampaignActionCell;

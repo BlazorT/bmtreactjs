@@ -69,7 +69,8 @@ const TemplateActionCell = ({ template, canDelete, fetching, whatsappNetworkSett
                   <CIcon
                     onClick={() => toggleStatus(1)}
                     className="stock-toggle-icon"
-                    icon={cilReload}
+                      icon={cilReload}
+                      size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -82,7 +83,8 @@ const TemplateActionCell = ({ template, canDelete, fetching, whatsappNetworkSett
                   <CIcon
                     onClick={() => editUser(template.id)}
                     className="stock-toggle-icon"
-                    icon={cilPencil}
+                        icon={cilPencil}
+                        size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -92,7 +94,8 @@ const TemplateActionCell = ({ template, canDelete, fetching, whatsappNetworkSett
                     <CIcon
                       className="stock-toggle-icon IconColorRed"
                       onClick={() => toggleStatus(2)}
-                      icon={cilTrash}
+                          icon={cilTrash}
+                          size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>

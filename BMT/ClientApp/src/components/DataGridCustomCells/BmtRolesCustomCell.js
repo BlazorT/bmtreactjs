@@ -41,14 +41,18 @@ const BmtRolesCustomCell = (prop) => {
       {canUpdate !== 1 && (
         <CCol>
           <CTooltip content={'Setting Bmt roles'}>
-            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilSettings} />
+            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilSettings}
+              size="lg"
+            />
           </CTooltip>
         </CCol>
       )}
       {canUpdate === 1 && (
         <CCol>
           <CTooltip content={'Edit Bmt roles'}>
-            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilPencil} />
+            <CIcon className="stock-toggle-icon" onClick={getRolesSetting} icon={cilPencil}
+              size="lg"
+            />
           </CTooltip>
         </CCol>
       )}

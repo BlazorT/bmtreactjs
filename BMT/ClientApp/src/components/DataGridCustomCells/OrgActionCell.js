@@ -73,6 +73,7 @@ const OrgActionCell = (prop) => {
                   onClick={() => toggleStatus(5)}
                   className="stock-toggle-icon"
                   icon={cilReload}
+                  size="lg"
                   style={{ cursor: 'pointer' }}
                 />
               </CTooltip>
@@ -88,7 +89,8 @@ const OrgActionCell = (prop) => {
                   <CIcon
                     onClick={toOrgAccessKeys}
                     className="stock-toggle-icon"
-                    icon={cilLockLocked}
+                      icon={cilLockLocked}
+                      size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -98,7 +100,8 @@ const OrgActionCell = (prop) => {
                   <CIcon
                     onClick={() => editUser(value.row.id)}
                     className="stock-toggle-icon"
-                    icon={cilPencil}
+                      icon={cilPencil}
+                      size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -108,7 +111,8 @@ const OrgActionCell = (prop) => {
                 <CTooltip content="Delete Organization">
                   <CIcon
                     className="stock-toggle-icon IconColorRed"
-                    icon={cilTrash}
+                      icon={cilTrash}
+                      size="lg"
                     onClick={() => toggleStatus(4)}
                     style={{ cursor: 'pointer' }}
                   />
