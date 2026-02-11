@@ -1,5 +1,5 @@
-import { cilChevronBottom, cilUser } from '@coreui/icons';
-import { CCol, CRow } from '@coreui/react';
+import { cilCheckCircle, cilChevronBottom, cilInfo, cilUser, cilWarning } from '@coreui/icons';
+import { CBadge, CCard, CCardBody, CCol, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -30,6 +30,7 @@ import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
 import { NETWORKS, ROLES } from 'src/util/constants';
+import CIcon from '@coreui/icons-react';
 
 dayjs.extend(utc);
 
@@ -70,8 +71,6 @@ const BlazorNetworkInputs = (prop) => {
     data: networkSettingsData,
     loading: networkSettingsLoading,
   } = useApi('/Organization/orgpackagedetails', 'POST', networkSettingBody);
-
-  // console.log(globalutil.campaignunits());
 
   useEffect(() => {
     if (networkSettingsData?.data && networkSettingsData.data.length > 0) {
@@ -142,7 +141,11 @@ const BlazorNetworkInputs = (prop) => {
         autoReplyContent: data?.autoReplyContent,
         replyAttachment: data?.replyMediaContentId || '',
         virtualAccount: data?.virtualAccount,
-        purchasedQouta: data?.purchasedQouta || '',
+        // Keep server-side purchased and used quota separate from the new top-up
+        existingPurchasedQouta: data?.purchasedQouta || 0,
+        usedQuota: data?.usedQuota || 0,
+        // This is the *additional* quota user wants to buy in this operation
+        purchasedQouta: '',
         posttypejson: [],
         networkId: data?.networkId,
         rowVer: 1,
@@ -181,7 +184,6 @@ const BlazorNetworkInputs = (prop) => {
 
   useEffect(() => {
     // valid purchasedQouta number
-    // console.log({ findNetworkPrice });
     setTimeout(() => {
       setNetworkState((prev) => ({
         ...prev,
@@ -203,7 +205,6 @@ const BlazorNetworkInputs = (prop) => {
 
     switch (parseInt(networkState.packageId)) {
       case 1: // Day
-        console.log('hi');
         finish = start.add(1, 'day');
         break;
       case 2: // Week
@@ -350,6 +351,7 @@ const BlazorNetworkInputs = (prop) => {
       }),
     );
   };
+
   const onYesConfirm = () => {
     /* toggle();*/
     navigate('/Dashboard');
@@ -482,9 +484,8 @@ const BlazorNetworkInputs = (prop) => {
       return [...prev, updatedState];
     });
     showToast('Note : To complete network changes, you need to submit finally', 'warning');
-
-    console.log('Updated Network State', updatedState);
   };
+
   const onSubmit = async () => {
     try {
       if (networkState?.packageId === 9 && !networkState?.finishTime) {
@@ -503,43 +504,46 @@ const BlazorNetworkInputs = (prop) => {
         return;
       }
 
-      const body = networkList?.map((nl) => ({
-        ...nl,
-        finishTime: nl?.finishTime
-          ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')
-          : null,
-        autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
-        status: nl?.status ? 1 : 0,
-        smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
-        virtualAccount: nl?.virtualAccount ? 1 : 0,
-        unitId: nl?.unitId ? parseInt(nl?.unitId) : 0,
-        purchasedQouta: nl?.purchasedQouta ? parseInt(nl?.purchasedQouta) : 0,
-        usedQuota: 5,
-        Custom1:
-          nl?.networkId === NETWORKS.WHATSAPP
-            ? nl?.whatsappTemplateType === 2
-              ? JSON.stringify({
-                  templateType: 2,
+      const body = networkList?.map((nl) => {
+        const existingPurchased = Number(nl?.existingPurchasedQouta || 0);
+        const newPurchased = Number(nl?.purchasedQouta || 0);
+
+        return {
+          ...nl,
+          finishTime: nl?.finishTime
+            ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')
+            : null,
+          autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
+          status: nl?.status ? 1 : 0,
+          smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
+          virtualAccount: nl?.virtualAccount ? 1 : 0,
+          unitId: nl?.unitId ? parseInt(nl?.unitId) : 0,
+          // Send TOTAL purchased quota = existing (from server) + new (from user input)
+          purchasedQouta: existingPurchased + newPurchased,
+          Custom1:
+            nl?.networkId === NETWORKS.WHATSAPP
+              ? nl?.whatsappTemplateType === 2
+                ? JSON.stringify({
+                    templateType: 2,
+                    template: nl?.Custom1,
+                    subject: nl?.templateSubject,
+                    title: nl?.templateTitle,
+                  })
+                : JSON.stringify({
+                    templateType: 1,
+                    template: nl?.templateTitle,
+                    subject: nl?.templateSubject,
+                    title: nl?.templateTitle,
+                    templateData: nl?.Custom2 ? JSON.parse(nl.Custom2) : null,
+                  })
+              : JSON.stringify({
                   template: nl?.Custom1,
                   subject: nl?.templateSubject,
                   title: nl?.templateTitle,
-                })
-              : JSON.stringify({
-                  templateType: 1,
-                  template: nl?.templateTitle,
-                  subject: nl?.templateSubject,
-                  title: nl?.templateTitle,
-                  templateData: nl?.Custom2 ? JSON.parse(nl.Custom2) : null,
-                })
-            : JSON.stringify({
-                template: nl?.Custom1,
-                subject: nl?.templateSubject,
-                title: nl?.templateTitle,
-              }),
-      }));
-      console.log({ body });
+                }),
+        };
+      });
       const res = await postData(body);
-      console.log({ res });
       if (res?.status === true && res?.data) {
         await refetchNetworkSettings(networkSettingBody);
         // setNetworkState((prev) => ({ ...prev, id: res?.id }));
@@ -548,7 +552,6 @@ const BlazorNetworkInputs = (prop) => {
         showToast(res?.message, 'success');
         const GlobalPreferenceId = res?.data;
         const userId = user.userId;
-        console.log('Backend returned GlobalPreferenceId:', GlobalPreferenceId, ' userId:', userId);
 
         // Upload attachments for each network
         for (const net of networkList) {
@@ -560,13 +563,7 @@ const BlazorNetworkInputs = (prop) => {
           if (net.attachment?.file) filesToUpload.push(net.attachment.file);
           if (net.excelAttachment?.file) filesToUpload.push(net.excelAttachment.file);
 
-          console.log(
-            `networkId=${net.networkId}, filesToUpload count=${filesToUpload.length}`,
-            filesToUpload,
-          );
-
           if (filesToUpload.length === 0) {
-            console.log('⚠️ No files to upload for this network, skipping fetch.');
             continue;
           }
 
@@ -574,25 +571,20 @@ const BlazorNetworkInputs = (prop) => {
             const extension = f.name.includes('.') ? f.name.substring(f.name.lastIndexOf('.')) : '';
             const baseName = f.name.replace(extension, '');
             const renamed = `${baseName}_${net.networkId}${extension}`;
-            console.log(`📎 Renaming ${f.name} → ${renamed}`);
 
             formData.append('files', f, renamed);
           });
 
           try {
-            console.log('⬆️ Uploading files for', net.name);
             const res = await fetch('/BlazorApi/uploadattachments', {
               method: 'POST',
               body: formData,
             });
             const result = await res.json();
-            console.log('✅ Upload result:', result);
           } catch (err) {
             console.error('❌ File upload failed for network:', net.networkId, err);
           }
         }
-
-        console.log('All uploads attempted. Success toast dispatched.');
       } else {
         showToast(res?.message || res?.title, 'error');
       }
@@ -615,12 +607,10 @@ const BlazorNetworkInputs = (prop) => {
   const onSelectTemplate = (t) => {
     if (networkId === NETWORKS.WHATSAPP) {
       // WhatsApp Logic
-      console.log({ t });
       if (t?.whatsappTemplate) {
         // 1. Get raw template data
 
         const rawTemplate = t.whatsappTemplate;
-        console.log({ rawTemplate });
         // 2. Generate the defaults immediately
         const initialParams = generateInitialParameters(rawTemplate.components);
         // 3. Create the ONE TRUTH object
@@ -710,14 +700,10 @@ const BlazorNetworkInputs = (prop) => {
       pp_SecureHash,
     };
 
-    // console.log({ pp_ResponseMessage });
     setTimeout(() => {
       if (amount || orderRefNumber || message) {
-        console.log({ amount, orderRefNumber, message });
         if (window.opener) {
           if (pp_ResponseCode) {
-            console.log({ filteredResponse });
-
             window.opener.postMessage(
               {
                 status: pp_ResponseCode === '000' ? 'failed' : 'success',
@@ -735,7 +721,6 @@ const BlazorNetworkInputs = (prop) => {
               amount,
               transactionRefNumber,
             };
-            console.log({ data });
 
             window.opener.postMessage(
               {
@@ -759,15 +744,9 @@ const BlazorNetworkInputs = (prop) => {
   useEffect(() => {
     const handleMessage = (event) => {
       // Optional: check event.origin for security
-      // console.log("Received message from popup:", event.data);
-      // console.log({ event });
       // Validate the structure
       if (event.data?.status) {
         const { message, data, status } = event.data;
-        console.log('status:', status);
-        console.log('Message:', message);
-        console.log('Raw Data:', data);
-        console.log('Parsed data', JSON.parse(atob(data)));
         if (status === 'failed') {
           showToast(message, 'error');
         } else {
@@ -784,6 +763,7 @@ const BlazorNetworkInputs = (prop) => {
       window.removeEventListener('message', handleMessage);
     };
   }, []);
+
   const totalPrice = networkList?.reduce((total, item) => total + (item.price || 0), 0);
 
   return (
@@ -1011,19 +991,64 @@ const BlazorNetworkInputs = (prop) => {
               filterDisable={true}
             />
             {showPackageDetails && (
-              <Inputs
-                inputFields={networkInputFields?.filter(
-                  (f) =>
-                    f?.label === 'Unit' ||
-                    f?.label === 'Quota' ||
-                    f?.label === 'Price' ||
-                    f?.label === 'Discount' ||
-                    f?.label === 'Package' ||
-                    f?.label === 'Date From' ||
-                    f?.label === 'Date To',
-                )}
-                isBtn={false}
-              ></Inputs>
+              <>
+                {/* Quota summary */}
+                {/* Quota summary */}
+                <CCardBody className="small text-white bg-card d-flex flex-row align-items-center gap-3 p-2 w-auto">
+                  <div className="d-flex align-items-center gap-2">
+                    <CIcon icon={cilCheckCircle} size="lg" className="text-success" />
+                    <strong>Purchased Quota :</strong>
+                    <CBadge color="info" shape="rounded-pill">
+                      {Number(networkState?.existingPurchasedQouta || 0)}
+                    </CBadge>
+                  </div>
+
+                  <div className="d-flex align-items-center gap-2">
+                    <CIcon icon={cilWarning} size="lg" className="text-warning" />
+                    <strong>Used Quota :</strong>
+                    <CBadge color="warning" shape="rounded-pill">
+                      {Number(networkState?.usedQuota || 0)}
+                    </CBadge>
+                  </div>
+
+                  <div className="d-flex align-items-center gap-2">
+                    <CIcon icon={cilInfo} size="lg" className="text-info" />
+                    <strong>Remaining Quota :</strong>
+                    <CBadge
+                      color={
+                        Math.max(
+                          Number(networkState?.existingPurchasedQouta || 0) -
+                            Number(networkState?.usedQuota || 0),
+                          0,
+                        ) === 0
+                          ? 'danger'
+                          : 'success'
+                      }
+                      shape="rounded-pill"
+                    >
+                      {Math.max(
+                        Number(networkState?.existingPurchasedQouta || 0) -
+                          Number(networkState?.usedQuota || 0),
+                        0,
+                      )}
+                    </CBadge>
+                  </div>
+                </CCardBody>
+                {/* Package inputs (unit, quota, price, etc.) */}
+                <Inputs
+                  inputFields={networkInputFields?.filter(
+                    (f) =>
+                      f?.label === 'Unit' ||
+                      f?.label === 'Quota' ||
+                      f?.label === 'Price' ||
+                      f?.label === 'Discount' ||
+                      f?.label === 'Package' ||
+                      f?.label === 'Date From' ||
+                      f?.label === 'Date To',
+                  )}
+                  isBtn={false}
+                ></Inputs>
+              </>
             )}
           </AppContainer>
           <div className="CenterAlign pt-2 gap-4">
@@ -1040,22 +1065,22 @@ const BlazorNetworkInputs = (prop) => {
             <Button
               title="Submit"
               onClick={() => {
-                onSubmit();
-                // if (parseInt(networkState?.purchasedQouta || '0') > 0) {
-                //   if (networkList.length === 0) {
-                //     dispatch(
-                //       updateToast({
-                //         isToastOpen: true,
-                //         toastMessage: 'Save atleast one netrwork settings to submit.',
-                //         toastVariant: 'error',
-                //       }),
-                //     );
-                //     return;
-                //   }
-                //   togglePaymentMdl();
-                // } else {
-                //   onSubmit();
-                // }
+                // onSubmit();
+                if (parseInt(networkState?.purchasedQouta || '0') > 0) {
+                  if (networkList.length === 0) {
+                    dispatch(
+                      updateToast({
+                        isToastOpen: true,
+                        toastMessage: 'Save atleast one netrwork settings to submit.',
+                        toastVariant: 'error',
+                      }),
+                    );
+                    return;
+                  }
+                  togglePaymentMdl();
+                } else {
+                  onSubmit();
+                }
               }}
               loading={loading}
               loadingTitle="Submitting..."

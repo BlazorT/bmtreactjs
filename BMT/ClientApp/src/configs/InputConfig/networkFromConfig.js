@@ -401,6 +401,10 @@ export const getInitialNetworkData = (organizationId, user, networkId) => ({
   port: 0,
   smtpcreduser: '',
   smtpcredpwd: '',
+  // existing purchased quota and usage come from server (read-osnly summary)
+  existingPurchasedQouta: 0,
+  usedQuota: 0,
+  // purchasedQouta is the *additional* quota user is buying now
   purchasedQouta: '',
   smtpsslenabled: 0,
   smtpsecretkey: '',
