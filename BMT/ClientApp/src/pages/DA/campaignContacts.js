@@ -1,26 +1,3 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { CCard, CTooltip, CCol, CRow, CFormSelect, CButton, CAlert } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilPlus } from '@coreui/icons';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
-import ImportContactsListData from 'src/components/InputsComponent/ImportContactsList';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
-import AddAlbumModel from 'src/components/Modals/AddAlbumModel'; // Import your modal
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import { CContainer } from '@coreui/react';
-import globalutil from 'src/util/globalutil';
-import AppContainer from 'src/components/UI/AppContainer';
-import { CFormCheck } from '@coreui/react';
-import Form from 'src/components/UI/Form';
-import Loading from 'src/components/UI/Loading';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useDispatch, useSelector } from 'react-redux';
-import { useShowToast } from 'src/hooks/useShowToast';
-import { CPopover } from '@coreui/react';
-import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import {
   cibFacebook,
   cibGmail,
@@ -32,7 +9,33 @@ import {
   cibWhatsapp,
   cilShortText,
 } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import {
+  CAlert,
+  CCol,
+  CContainer,
+  CFormCheck,
+  CFormSelect,
+  CPopover,
+  CTooltip,
+} from '@coreui/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+import DownloadContactsTemplate from 'src/components/InputsComponent/DownloadContactsTemplate ';
+import ImportContactsListData from 'src/components/InputsComponent/ImportContactsList';
+import AddAlbumModel from 'src/components/Modals/AddAlbumModel'; // Import your modal
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import AppContainer from 'src/components/UI/AppContainer';
 import Button from 'src/components/UI/Button';
+import Form from 'src/components/UI/Form';
+import Loading from 'src/components/UI/Loading';
+import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
+import { useShowToast } from 'src/hooks/useShowToast';
+import globalutil from 'src/util/globalutil';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 
 const campaignContacts = () => {
   const user = useSelector((state) => state.user);
@@ -40,7 +43,7 @@ const campaignContacts = () => {
   const showToast = useShowToast();
 
   // Album management
-  const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
+  const { data: albums, fetchAlbums } = useFetchAlbums();
   const [networkAlbums, setNetworkAlbums] = useState({}); // { networkId: albumId }
   const [isShowAlbumMdl, setIsShowAlbumMdl] = useState(false);
   const [selectedNetworkForAlbum, setSelectedNetworkForAlbum] = useState(null);
@@ -52,7 +55,6 @@ const campaignContacts = () => {
   const [selectedNetworks, setSelectedNetworks] = useState(allNetworkNames ?? []);
   const [importedData, setImportedData] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
-  const [cityData, setCityData] = useState([]);
   const [groupedContacts, setGroupedContacts] = useState([]);
   const [showTableModal, setShowTableModal] = useState(false);
   const [recipientInput, setRecipientInput] = useState({});

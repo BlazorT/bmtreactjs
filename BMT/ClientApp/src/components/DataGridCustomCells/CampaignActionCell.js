@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
 
-import { CCol, CRow, CTooltip } from '@coreui/react';
+import { CBadge, CCol, CRow, CTooltip } from '@coreui/react';
 
+import { useSelector } from 'react-redux';
 import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from '../UI/Spinner';
-import { useSelector } from 'react-redux';
 
 const CampaignActionCell = (prop) => {
   const { value, campaign, canDelete, fetching } = prop;
@@ -25,7 +25,6 @@ const CampaignActionCell = (prop) => {
 
   const toggleStatus = (status) => {
     if (status === 1 && !user?.orgInfo?.signature) {
-
       showConfirmation({
         header: 'Information!',
         body: `Campaign will be auto activated once admin sign the contract!!!?`,
@@ -33,7 +32,7 @@ const CampaignActionCell = (prop) => {
         onYes: null,
         onNo: () => onNoConfirm(),
       });
-      return
+      return;
     }
     const campaignName = campaign?.[0]?.name || value?.row?.name || 'this campaign';
 
@@ -95,38 +94,14 @@ const CampaignActionCell = (prop) => {
   }
   // console.log("canUpdate", canUpdate);
   // console.log("canDelete", canDelete);
+  const isPaid = value.row?.paymentStatus === 1;
   return (
     <React.Fragment>
-      {value.row.status === 4 ? (
+      {isPaid ? (
         <CRow>
           <CCol className="d-flex justify-content-center">
             <div className="d-flex align-items-center justify-content-center gap-4">
-              <CTooltip content="Re-Activate Campaign">
-                <CIcon
-                  onClick={() => toggleStatus(1)}
-                  className="stock-toggle-icon"
-                  icon={cilReload}
-                  style={{ cursor: 'pointer' }}
-                />
-              </CTooltip>
-            </div>
-          </CCol>
-        </CRow>
-      ) : (
-        <CRow>
-          <CCol className="d-flex justify-content-center">
-            <div className="d-flex align-items-center justify-content-center gap-4">
-              {/* Edit Campaign */}
-              <CTooltip content="Edit Campaign">
-                <CIcon
-                  onClick={() => editCampaign(value.row.id)}
-                  className="stock-toggle-icon"
-                  icon={cilPencil}
-                  style={{ cursor: 'pointer' }}
-                />
-              </CTooltip>
-
-              {/* Pause Campaign */}
+              <CBadge color="success">Paid</CBadge>
               <CTooltip content="Pause Campaign">
                 <CIcon
                   onClick={() => toggleStatus(6)} // 6 = Pause
@@ -135,31 +110,76 @@ const CampaignActionCell = (prop) => {
                   style={{ cursor: 'pointer' }}
                 />
               </CTooltip>
-
-              {/* Stop Campaign */}
-              <CTooltip content="Stop Campaign">
-                <CIcon
-                  onClick={() => toggleStatus(7)} // 7 = Stop
-                  className="stock-toggle-icon"
-                  icon={cilMediaStop}
-                  style={{ cursor: 'pointer' }}
-                />
-              </CTooltip>
-
-              {/* Delete Campaign */}
-              {canDelete === 1 && (
-                <CTooltip content="Delete Campaign">
-                  <CIcon
-                    className="stock-toggle-icon IconColorRed"
-                    icon={cilTrash}
-                    onClick={() => toggleStatus(4)}
-                    style={{ cursor: 'pointer' }}
-                  />
-                </CTooltip>
-              )}
             </div>
           </CCol>
         </CRow>
+      ) : (
+        <>
+          {value.row.status === 4 ? (
+            <CRow>
+              <CCol className="d-flex justify-content-center">
+                <div className="d-flex align-items-center justify-content-center gap-4">
+                  <CTooltip content="Re-Activate Campaign">
+                    <CIcon
+                      onClick={() => toggleStatus(1)}
+                      className="stock-toggle-icon"
+                      icon={cilReload}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </CTooltip>
+                </div>
+              </CCol>
+            </CRow>
+          ) : (
+            <CRow>
+              <CCol className="d-flex justify-content-center">
+                <div className="d-flex align-items-center justify-content-center gap-4">
+                  {/* Edit Campaign */}
+                  <CTooltip content="Edit Campaign">
+                    <CIcon
+                      onClick={() => editCampaign(value.row.id)}
+                      className="stock-toggle-icon"
+                      icon={cilPencil}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </CTooltip>
+
+                  {/* Pause Campaign */}
+                  <CTooltip content="Pause Campaign">
+                    <CIcon
+                      onClick={() => toggleStatus(6)} // 6 = Pause
+                      className="stock-toggle-icon"
+                      icon={cilMediaPause}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </CTooltip>
+
+                  {/* Stop Campaign */}
+                  <CTooltip content="Stop Campaign">
+                    <CIcon
+                      onClick={() => toggleStatus(7)} // 7 = Stop
+                      className="stock-toggle-icon"
+                      icon={cilMediaStop}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </CTooltip>
+
+                  {/* Delete Campaign */}
+                  {canDelete === 1 && (
+                    <CTooltip content="Delete Campaign">
+                      <CIcon
+                        className="stock-toggle-icon IconColorRed"
+                        icon={cilTrash}
+                        onClick={() => toggleStatus(4)}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </CTooltip>
+                  )}
+                </div>
+              </CCol>
+            </CRow>
+          )}
+        </>
       )}
     </React.Fragment>
   );

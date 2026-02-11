@@ -1,13 +1,15 @@
 import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import MailOptionsModal from 'src/components/MailImports/MailOptionsModal';
+import AddAlbumModel from 'src/components/Modals/AddAlbumModel';
+import CrawlDomainsModal from 'src/components/Modals/CrawlDomainsModal';
 import AppContainer from 'src/components/UI/AppContainer';
 import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCols';
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
@@ -15,18 +17,15 @@ import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import useApi from 'src/hooks/useApi';
-import globalutil from 'src/util/globalutil';
-import _ from 'lodash';
-import AddAlbumModel from 'src/components/Modals/AddAlbumModel';
-import CrawlDomainsModal from 'src/components/Modals/CrawlDomainsModal';
 import usePageRoles from 'src/hooks/usePageRoles';
+import globalutil from 'src/util/globalutil';
 dayjs.extend(utc);
 
 const recipientslisting = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const { loading, fetchRecipients: getRecipientList } = useFetchRecipients();
   const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const {
     postData: getOrgs,
@@ -222,7 +221,7 @@ const recipientslisting = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
-  const recipientslistingCols = getrecipietslistingCols(albums);
+  const recipientslistingCols = getrecipietslistingCols();
 
   return (
     <React.Fragment>

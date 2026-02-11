@@ -1,9 +1,10 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { cilCalendar, cilFlagAlt } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CCol, CFormCheck, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -13,16 +14,17 @@ import CustomDatePicker from 'src/components/UI/DatePicker';
 import CustomTimePicker from 'src/components/UI/TimePicker';
 import { daysList, icons } from 'src/constants/constants';
 import { calculateValidDays, safeParseJSON } from 'src/helpers/campaignHelper';
+import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import globalutil from 'src/util/globalutil';
+import QuotaBadge from '../Component/QuotaBadge';
 import AlbumListSelector from '../CustomComponents/AlbumListSelector';
 import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import Button from '../UI/Button';
 import { AlbumListModel } from './AlbumListModel';
 import PaymentModel from './PaymentModel';
-import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
-import QuotaBadge from '../Component/QuotaBadge';
+import { NETWORKS } from 'src/util/constants';
 
 const SMS_SEGMENT_LENGTH = 160;
 dayjs.extend(utc);
@@ -337,7 +339,7 @@ const AddScheduleModel = (prop) => {
 
       const recipients = getNetworkRecipients(networkId);
 
-      const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+      const segments = networkId === NETWORKS.SMS ? getSmsSegments(templateForPricing) : 1;
       return sum + validDays * recipients * segments;
     }, 0);
 
@@ -350,7 +352,7 @@ const AddScheduleModel = (prop) => {
       if (!matchedPricing) return sum;
 
       const recipients = getNetworkRecipients(networkId);
-      const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+      const segments = networkId === NETWORKS.SMS ? getSmsSegments(templateForPricing) : 1;
 
       const totalMessages = validDays * recipients * segments;
 
@@ -381,7 +383,7 @@ const AddScheduleModel = (prop) => {
           .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
         const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
         const freeAllowed = matchedPricing?.freeAllowed;
-        const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
+        const segments = networkId === NETWORKS.SMS ? getSmsSegments(templateForPricing) : 1;
         const recipients = getNetworkRecipients(networkId);
         const totalMessages = validDays * recipients * segments;
 
@@ -692,7 +694,7 @@ const AddScheduleModel = (prop) => {
         const templateJson = selectedTemplates[networkName]
           ? JSON.stringify({
               template:
-                n?.id == 2
+                n?.id == NETWORKS.WHATSAPP
                   ? parseTemplateJson?.templateType === 2
                     ? JSON.stringify({
                         template: selectedTemplates[networkName]?.template,
@@ -892,7 +894,7 @@ const AddScheduleModel = (prop) => {
       });
 
       const result = await response.json();
-      console.log({ result });
+      // console.log({ result });
 
       if (result.status === true) {
         if (!user?.orgInfo?.signature) {

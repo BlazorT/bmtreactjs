@@ -23,12 +23,7 @@ const BmtRolesModal = (prop) => {
   const { showToast: showSnackbar, showConfirmation } = useNotification();
   const { loading, postData: postRoles } = useApi('/Common/submitgrouprights');
 
-  const {
-    response: menuRes,
-    error: menuErr,
-    loading: menuLoading,
-    fetchData: fetchMenus,
-  } = useFetch();
+  const { response: menuRes, error: menuErr, fetchData: fetchMenus } = useFetch();
 
   const [rolesSetting, setRoleSetting] = useState([]);
 
@@ -43,7 +38,7 @@ const BmtRolesModal = (prop) => {
   }, [rolesData]);
 
   const handleRoleChange = (parentName, pageName, right, value) => {
-    console.log({ parentName, pageName, right, value });
+    // console.log({ parentName, pageName, right, value });
     setRoleSetting((prevData) => {
       const newData = prevData.map((parent) => {
         if (parent.parent === parentName) {
@@ -146,7 +141,7 @@ const BmtRolesModal = (prop) => {
           if (frontendItem && frontendItem.childs && frontendItem.childs.length > 0) {
             // If frontend data is found and has children, update child-specific values
             const childPrivileges = frontendItem.childs.find((child) => child.page === item.name);
-            console.log('childPrivileges', { childPrivileges, item });
+            // console.log('childPrivileges', { childPrivileges, item });
             if (childPrivileges) {
               const newItem = {
                 id: item.assignmentId,
@@ -179,9 +174,7 @@ const BmtRolesModal = (prop) => {
     };
 
     const body = updatePrivileges(rolesData, rolesSetting);
-    console.log('updatePrivileges', JSON.stringify(body.filter((b) => b.id != 0)));
     const res = await postRoles(body);
-    console.log('res', res);
     if (res?.status === true) {
       showSnackbar(res?.message, 'success');
       toggle();
@@ -196,10 +189,7 @@ const BmtRolesModal = (prop) => {
     const menuBody = {
       roleId: user?.roleId?.toString(),
     };
-    console.log(menuBody, 'menusbody');
     await fetchMenus('/Common/rolemenus', { method: 'POST', body: JSON.stringify(menuBody) });
-    console.log(menuRes, 'menusRes');
-    console.log(menuRes.current, menuErr);
     if (menuRes?.current?.status === true) {
       dispatch(setPageRoles(menuRes?.current.data));
       dispatch(setNavItems(transformData(menuRes?.current.data)));

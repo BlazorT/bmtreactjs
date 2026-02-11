@@ -43,13 +43,6 @@ export const getcampaignslistingCols = (
     filterable: true,
     disableColumnMenu: true,
   },
-  // {
-  //   key: 'orgName',
-  //   name: 'Organization Name',
-  //   editable: false,
-  //   filterable: true,
-  //   disableColumnMenu: true,
-  // },
   {
     key: 'startTime',
     name: 'Start Time',
@@ -75,7 +68,6 @@ export const getcampaignslistingCols = (
     filterable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      // ✅ Prevent rendering for group rows
       if (params.row.isGroupRow) return null;
 
       return (

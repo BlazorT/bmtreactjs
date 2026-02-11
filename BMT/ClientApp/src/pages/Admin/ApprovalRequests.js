@@ -3,24 +3,18 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import AppContainer from 'src/components/UI/AppContainer';
 import { getApprovalCols } from 'src/configs/ColumnsConfig/approvalCols';
 import { approvalFilterConfig } from 'src/configs/FiltersConfig/approvalFilterConfig';
-import { formatDateTime } from 'src/helpers/formatDate';
-import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
-import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
-import globalutil from 'src/util/globalutil';
 dayjs.extend(utc);
 
 const ApprovalRequests = () => {
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const {
     postData: getOrgs,

@@ -58,9 +58,7 @@ const AddAlbumModel = ({ isOpen, toggle, networkId, refreshRecipients }) => {
     if (!form.checkValidity()) {
       return;
     }
-    console.log({ albumData });
     const res = await postData({ ...albumData, networkid: parseInt(albumData?.networkid) });
-    console.log({ res });
     if (res && res?.status) {
       showToast(
         res?.message || `Album ${albumData?.name} has been submitted successfully`,

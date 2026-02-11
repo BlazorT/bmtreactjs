@@ -1,5 +1,6 @@
 import TemplateActionCell from 'src/components/DataGridCustomCells/TemplateActionCell';
 import { formatDate, formatDateTime } from 'src/helpers/formatDate';
+import { NETWORKS } from 'src/util/constants';
 import globalutil from 'src/util/globalutil';
 
 /* eslint-disable react/react-in-jsx-scope */
@@ -39,7 +40,7 @@ export const getTemplateCols = (canDelete, fetching, whatsappNetworkSettings) =>
     editable: false,
     renderCell: (params) => {
       const networkTemplate =
-        params.row.networkId == 2
+        params.row.networkId == NETWORKS.WHATSAPP
           ? params.row?.templateJson
             ? JSON.parse(params.row?.templateJson)
             : ''

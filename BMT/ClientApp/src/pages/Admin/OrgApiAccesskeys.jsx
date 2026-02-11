@@ -240,7 +240,7 @@ const OrgApiAccesskeys = () => {
         };
         apiKeyBody.push(networkBody);
       }
-      console.log({ apiKeyBody });
+      // console.log({ apiKeyBody });
       const res = await submitApiKey(apiKeyBody);
 
       if (!res || !res?.status) {
@@ -275,7 +275,7 @@ const OrgApiAccesskeys = () => {
           RowVer: 0,
         },
       ];
-      console.log({ apiKeyBody });
+      // console.log({ apiKeyBody });
       const res = await submitApiKey(apiKeyBody);
 
       if (res && res?.status) {
@@ -325,7 +325,7 @@ const OrgApiAccesskeys = () => {
       },
     ];
 
-    console.log({ apiKeyBody });
+    // console.log({ apiKeyBody });
     const res = await submitApiKey(apiKeyBody);
 
     if (res && res?.status) {

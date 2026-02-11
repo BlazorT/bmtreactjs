@@ -11,24 +11,20 @@ const DARoles = (prop) => {
 
   const sortedData = rolesData !== undefined ? rolesData.sort((a, b) => a.id - b.id) : [];
   const menus = organizeData(sortedData);
-  console.table('sortedData', sortedData);
-  console.log('menus', menus);
-  const [rolesRow, setRolesRow] = useState(() =>
-    menus.flatMap((parent) => [
-      {
-        group: parent.name,
-        screen: '',
-      },
-      ...(parent.children.length > 0
-        ? parent.children.map((child) => ({
-            group: '',
-            screen: child.name,
-            select: parent.name,
-          }))
-        : [{ group: '', screen: 'Dashboard', select: 'Dashboard' }]),
-    ]),
-  );
-  console.log('rolesRow', rolesRow);
+  const rolesRow = menus.flatMap((parent) => [
+    {
+      group: parent.name,
+      screen: '',
+    },
+    ...(parent.children.length > 0
+      ? parent.children.map((child) => ({
+          group: '',
+          screen: child.name,
+          select: parent.name,
+        }))
+      : [{ group: '', screen: 'Dashboard', select: 'Dashboard' }]),
+  ]);
+
   const roles_grid_cols = [
     {
       key: 'group',

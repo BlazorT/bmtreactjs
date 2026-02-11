@@ -1,8 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope */
-
-import globalutil from 'src/util/globalutil';
-
-export const getrecipietslistingCols = (albums) => [
+export const getrecipietslistingCols = () => [
   {
     key: 'networkId',
     name: 'Network Name',

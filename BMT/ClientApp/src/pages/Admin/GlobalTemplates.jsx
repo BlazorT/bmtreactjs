@@ -10,7 +10,6 @@ import { getTemplateCols } from 'src/configs/ColumnsConfig/templateGridCols';
 import { getTemplateFilters } from 'src/configs/FiltersConfig/templateFilterConfig';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
-import globalutil from 'src/util/globalutil';
 
 const GlobalTemplates = () => {
   const pageRoles = usePageRoles('Global Template');

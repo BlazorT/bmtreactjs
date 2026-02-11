@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { cilPencil, cilSettings } from '@coreui/icons';
-import { CCol, CRow, CTooltip } from '@coreui/react';
-//import { Tooltip } from '@material-ui/core';
 import CIcon from '@coreui/icons-react';
-import BmtRolesModal from '../Modals/BmtRolesModal';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import { useDispatch } from 'react-redux';
-import ActionButton from '../UI/ActionButton';
+import { CCol, CRow, CTooltip } from '@coreui/react';
+import { useState } from 'react';
 import useApi from 'src/hooks/useApi';
-import Spinner from '../UI/Spinner';
 import { useShowToast } from 'src/hooks/useShowToast';
+import BmtRolesModal from '../Modals/BmtRolesModal';
+import Spinner from '../UI/Spinner';
+
 const BmtRolesCustomCell = (prop) => {
   const { value, canUpdate } = prop;
-  const dispatch = useDispatch();
   const showToast = useShowToast();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -24,7 +21,6 @@ const BmtRolesCustomCell = (prop) => {
     };
 
     const res = await fetchRoles(fetchBody);
-    console.log({ res });
     if (res?.status === true) {
       setModalOpen(true);
     } else {

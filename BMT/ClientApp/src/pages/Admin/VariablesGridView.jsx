@@ -1,6 +1,7 @@
 import { cilChevronBottom } from '@coreui/icons';
+import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
@@ -10,9 +11,6 @@ import { getVariableCols } from 'src/configs/ColumnsConfig/variableGridCols';
 import { getVariableFilters } from 'src/configs/FiltersConfig/variableFilterConfig';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
-import globalutil from 'src/util/globalutil';
-import { useNavigate } from 'react-router-dom';
-import dayjs from 'dayjs';
 
 const VariablesGridView = () => {
   const pageRoles = usePageRoles('Global Template');
@@ -52,7 +50,7 @@ const VariablesGridView = () => {
     error,
     postData: refectch,
   } = useApi('Template/getallvariablesdata', 'POST', requestData);
-  console.log("data", data);
+
   const toggleShowFilters = () => setIsShowFilters((prev) => !prev);
   const toggleShowVariableModal = () => setIsVariableModalOpen((prev) => !prev);
   const toggleShowGrid = () => setIsShowGrid((prev) => !prev);
@@ -67,7 +65,6 @@ const VariablesGridView = () => {
 
   const fetching = () => {
     refectch(requestData);
-   
   };
   const handleReset = () => {
     setFilters({
@@ -116,8 +113,8 @@ const VariablesGridView = () => {
             addBtnClick: () => navigate('/AddVariable'),
             //addBtnClick: pageRoles.canAdd === 1 ? () => toggleShowVariableModal() : undefined,
             otherControls: [{ icon: cilChevronBottom, fn: toggleShowGrid }],
-           // canPrint: pageRoles?.canPrint === 1,
-           // canExport: pageRoles?.canExport === 1,
+            // canPrint: pageRoles?.canPrint === 1,
+            // canExport: pageRoles?.canExport === 1,
             fileName: 'Variables',
           }}
         />

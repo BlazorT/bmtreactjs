@@ -268,7 +268,6 @@ const ApprovalActionCell = (prop) => {
         rowVer: 1,
       };
       const isSend = await sendNotificationEmail(status, updateBody, token);
-      console.log({ isSend });
       if (!isSend) return;
       const response = await createOrUpdateRequest(updateBody);
 

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { cilChevronBottom } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import _ from 'lodash';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
@@ -14,8 +13,8 @@ import { getcampaignslistingCols } from 'src/configs/ColumnsConfig/campaignslist
 import { getOrgFiltersFields } from 'src/configs/FiltersConfig/orgFilterConfig';
 import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchCampaigns } from 'src/hooks/api/useFetchCampaigns';
-import useApi from 'src/hooks/useApi';
 import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
+import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 
 dayjs.extend(utc);
@@ -100,44 +99,12 @@ const campaignslisting = () => {
         createdAt: formatDateTime(data.createdAt),
         startTime: formatDateTime(data.startTime),
         finishTime: formatDateTime(data.finishTime),
+        paymentStatus: data?.paymentStatus,
         status: data?.status,
         createdMonth: dayjs(data.createdAt).format('MMMM YYYY'), // month-year for grouping
         month: dayjs(data.createdAt).format('MMMM YYYY'), // month-year for grouping
       };
     });
-
-    // ✅ Group by month-year
-    // const groupedData = _.groupBy(mappedArray, (item) => item.createdMonth);
-
-    // const groupedRows = Object.entries(groupedData).flatMap(([month, groupItems], index) => {
-    //   // Group header row
-    //   const groupRow = {
-    //     id: `group-${index}`,
-    //     month: month, // show month as group header
-    //     name: '',
-    //     startTime: '',
-    //     finishTime: '',
-    //     orgName: '',
-    //     isGroupRow: true, // flag for rendering
-    //   };
-
-    //   // Child rows
-    //   const childRows = groupItems.map((item, i) => ({
-    //     id: `${item.id}-${i}`,
-    //     campaignId: item.id,
-    //     name: item.name, // show campaign name in children
-    //     totalBudget: item?.totalBudget || '--',
-    //     createdBy: item.createdBy,
-    //     createdAt: item.createdAt,
-    //     status: item?.status,
-    //     startTime: item.startTime,
-    //     finishTime: item.finishTime,
-    //     orgName: item.orgName,
-    //     isGroupRow: false,
-    //   }));
-
-    //   return [groupRow, ...childRows];
-    // });
 
     setRows(mappedArray);
   };

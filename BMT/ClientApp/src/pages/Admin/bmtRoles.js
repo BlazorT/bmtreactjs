@@ -36,7 +36,6 @@ const BmtRoles = () => {
   };
 
   const rolesCols = getRolesCols(pageRoles);
-  console.log('pageRoles', pageRoles);
   return (
     <AppContainer>
       <DataGridHeader

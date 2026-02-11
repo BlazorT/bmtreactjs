@@ -28,7 +28,6 @@ import { useCampaignForm } from 'src/hooks/useCampaignForm';
 import useFetch from 'src/hooks/useFetch';
 import { useNetworkSelection } from 'src/hooks/useNetworkSelection';
 import { useScheduleManagement } from 'src/hooks/useScheduleManagement';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
@@ -72,7 +71,6 @@ const campaignadd = () => {
   const [showForm, setshowForm] = useState(true);
   const [targetAudience, setTargetAudience] = useState(false);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
-  const showConfirmation = useShowConfirmation();
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
@@ -87,7 +85,7 @@ const campaignadd = () => {
   const [submitFromGrid, setSubmitFromGrid] = useState(false);
 
   const { getOrgs } = useFetchOrgs();
-  const { data, loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const { data, fetchRecipients: getRecipientList } = useFetchRecipients();
 
   const { data: pricingRes, fetchPricing, loading: pricingLoading } = useFetchPricing();
 
@@ -190,11 +188,6 @@ const campaignadd = () => {
   };
 
   useEffect(() => {
-    // if (user?.roleId === 2 && !user?.orgInfo?.signature) {
-    //   navigate('/organizationadd', { state: { id: user?.orgInfo?.id, org: [user?.orgInfo] } });
-    //   showToast('To proceed, review and sign the aggreement.', 'warning');
-    //   return;
-    // }
     const campaign = state?.campaign;
     getTemplates();
     getNetworksList(!!campaign);
@@ -215,11 +208,6 @@ const campaignadd = () => {
       const { videoAttachment, imageAttachment, pdfAttachment } =
         categorizeAttachments(attachments);
 
-      console.log({
-        campaignSchedules,
-        campaignDetails,
-        campaign,
-      });
       const selectedNetworks = campaignDetails?.map((cd) => cd?.networkName);
       const selectedTemplates = campaignDetails?.reduce((acc, cd, index) => {
         const parsedTemplate = safeParse(cd?.template, '');
@@ -373,7 +361,6 @@ const campaignadd = () => {
         image: 5 * 1024 * 1024, // 5MB
         pdf: 100 * 1024 * 1024, // 100MB
       };
-      console.log(file.size);
       if (file.size > maxSizes[label]) {
         e.target.value = null;
         showToast(
@@ -624,8 +611,6 @@ const campaignadd = () => {
         console.log({ amount, orderRefNumber, message });
         if (window.opener) {
           if (pp_ResponseCode) {
-            console.log({ filteredResponse });
-
             window.opener.postMessage(
               {
                 status: pp_ResponseCode === '000' ? 'failed' : 'success',

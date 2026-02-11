@@ -1,20 +1,21 @@
 /* eslint-disable react/prop-types */
+import { CCol, CRow } from '@coreui/react';
 import React from 'react';
-import { CRow, CCol } from '@coreui/react';
-import Button from '../UI/Button';
-import globalutil from 'src/util/globalutil';
 import { useShowToast } from 'src/hooks/useShowToast';
+import { NETWORKS } from 'src/util/constants';
+import globalutil from 'src/util/globalutil';
+import Button from '../UI/Button';
 
 const NETWORK_COLOR_MAP = {
-  1: '#0d6efd', // SMS - blue
-  2: '#25D366', // WhatsApp - green
-  3: '#0dcaf0', // Email - cyan
-  4: '#000000', // Twitter - black
-  5: '#1877F2', // Facebook - blue
-  6: '#E1306C', // Instagram - pink
-  7: '#0A66C2', // LinkedIn - blue
-  8: '#6c757d', // TikTok - dark gray
-  9: '#FFFC00', // Snapchat - yellow
+  [NETWORKS.SMS]: '#0d6efd', // SMS - blue
+  [NETWORKS.WHATSAPP]: '#25D366', // WhatsApp - green
+  [NETWORKS.EMAIL]: '#0dcaf0', // Email - cyan
+  [NETWORKS.TWITTER]: '#000000', // Twitter - black
+  [NETWORKS.FACEBOOK]: '#1877F2', // Facebook - blue
+  [NETWORKS.INSTAGRAM]: '#E1306C', // Instagram - pink
+  [NETWORKS.LINKEDIN]: '#0A66C2', // LinkedIn - blue
+  [NETWORKS.TIKTOK]: '#6c757d', // TikTok - dark gray
+  [NETWORKS.SNAPCHAT]: '#FFFC00', // Snapchat - yellow
 };
 
 const AlbumListSelector = ({

@@ -376,8 +376,6 @@ const BlazorNetworkInputs = (prop) => {
       return;
     }
 
-
-
     formValidator();
     const form = document.querySelector('.network-settings-form');
 
@@ -494,7 +492,6 @@ const BlazorNetworkInputs = (prop) => {
         return;
       }
 
-
       if (networkList.length === 0) {
         dispatch(
           updateToast({
@@ -508,7 +505,9 @@ const BlazorNetworkInputs = (prop) => {
 
       const body = networkList?.map((nl) => ({
         ...nl,
-        finishTime: nl?.finishTime ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]') : null,
+        finishTime: nl?.finishTime
+          ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')
+          : null,
         autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
         status: nl?.status ? 1 : 0,
         smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,

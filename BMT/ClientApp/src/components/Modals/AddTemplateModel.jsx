@@ -17,6 +17,7 @@ import SendTestEmailModel from './SendTestEmailModel';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
 import WhatsappTemplate from '../UI/WhatsappTemplate';
 import { generateInitialParameters, safeParseJSON } from 'src/helpers/campaignHelper';
+import { NETWORKS } from 'src/util/constants';
 
 const defaultTemplateData = {
   id: 0,
@@ -25,7 +26,7 @@ const defaultTemplateData = {
   subject: '',
   template: '',
   templateJson: '',
-  networkId: 1,
+  networkId: NETWORKS.EMAIL,
   status: 1,
   rowVer: 1,
 };
@@ -56,12 +57,13 @@ const AddTemplateModal = ({
     if (!template || !isOpen) return;
 
     let initialTemplateJson =
-      (template?.networkId === 3 || template?.networkId === 2) && template?.templateJson
+      (template?.networkId === NETWORKS.EMAIL || template?.networkId === NETWORKS.WHATSAPP) &&
+      template?.templateJson
         ? template?.templateJson
         : null;
 
     // When editing WhatsApp templates, read templateType from templateJson if present
-    if (template?.networkId === 2 && initialTemplateJson) {
+    if (template?.networkId === NETWORKS.WHATSAPP && initialTemplateJson) {
       try {
         const parsed = JSON.parse(initialTemplateJson);
         if (parsed?.templateType === 1 || parsed?.templateType === 2) {
@@ -115,7 +117,7 @@ const AddTemplateModal = ({
     if (!form.checkValidity()) {
       return;
     }
-    if (templateData?.networkId == 2) {
+    if (templateData?.networkId == NETWORKS.WHATSAPP) {
       if (whatsappTemplateType === 1 && templateData?.templateJson === '') {
         showToast('Select template first.', 'warning');
         return;
@@ -127,7 +129,7 @@ const AddTemplateModal = ({
       }
     }
 
-    if (templateData?.template === '' && templateData?.networkId != 2) {
+    if (templateData?.template === '' && templateData?.networkId != NETWORKS.WHATSAPP) {
       showToast('Save template first.', 'warning');
       return;
     }
@@ -275,7 +277,7 @@ const AddTemplateModal = ({
           {/* Render the template prop if provided, otherwise show a default message */}
 
           <Inputs inputFields={templateInputFields} isBtn={false}>
-            {templateData?.networkId == 2 ? (
+            {templateData?.networkId == NETWORKS.WHATSAPP ? (
               <div className="mt-2">
                 {whatsappTemplateType === 1 ? (
                   !templateData?.templateJson ||
@@ -311,7 +313,7 @@ const AddTemplateModal = ({
                   )
                 ) : (
                   <SocialMediaTextEditor
-                    networkId={2}
+                    networkId={NETWORKS.WHATSAPP}
                     value={templateData.template}
                     onChange={(e) => {
                       setTemplateData((prev) => ({
@@ -323,7 +325,7 @@ const AddTemplateModal = ({
                   />
                 )}
               </div>
-            ) : templateData?.networkId != '3' ? (
+            ) : templateData?.networkId != NETWORKS.EMAIL ? (
               <SocialMediaTextEditor
                 networkId={parseInt(templateData?.networkId)}
                 value={templateData.template} // Ensure value is a string
@@ -357,13 +359,13 @@ const AddTemplateModal = ({
         </CModalBody>
         <CModalFooter>
           <Button title="Close" onClick={confirmationModal} disabled={loading} />
-          {templateData?.networkId === 3 && (
+          {templateData?.networkId === NETWORKS.EMAIL && (
             <Button
               title="Send Test Email"
               onClick={toggleSendEmailModel}
               disabled={
                 !(
-                  templateData?.networkId === 3 &&
+                  templateData?.networkId === NETWORKS.EMAIL &&
                   templateData?.title &&
                   templateData?.subject &&
                   templateData?.template
