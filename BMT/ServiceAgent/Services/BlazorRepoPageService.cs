@@ -1124,13 +1124,15 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                     compaignsdetails = "" + (dr["compaignsdetails"]),
                                     compaignschedules = "" + (dr["compaignschedules"]),
                                     attachments = "" + (dr["attachments"]),
-                                    HashTags = "" + (dr["HashTags"]),                                  
+                                    HashTags = "" + (dr["HashTags"]),
+                                   // paymentRef = "" + (dr["paymentRef"]),
                                     StartTime = Convert.ToDateTime(dr["StartTime"]),
                                     // remarks = "" + (dr["remarks"]),
                                     TaxApplicable = Convert.ToDouble(dr["TaxApplicable"]),
                                     Discount = Convert.ToDouble(dr["Discount"]),                                    
                                     TotalBudget = Convert.ToDouble(dr["TotalBudget"]),
                                     FinishTime = Convert.ToDateTime(dr["FinishTime"]),
+                                    PaymentStatus = Convert.ToByte(dr["paymentStatus"]),
                                     Status = Convert.ToInt16(dr["Status"]),
                                    
                             };
@@ -1245,8 +1247,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 mdl.purchasedQouta = Convert.ToDouble(sts["purchasedQouta"]);
                                 mdl.UnitPrice = Convert.ToDouble(sts["unitprice"]); 
                                 mdl.usedQuota = Convert.ToDouble(sts["usedQuota"]);
-                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
-                                mdl.Discount = Convert.ToDouble(sts["Discount"]);
+                                mdl.Discount = Convert.ToDouble(sts["Discount"]);                              
                                 mdl.FreeAllowed = Convert.ToInt32(sts["FreeAllowed"]);
                                 mdl.Status = Convert.ToInt32(sts["Status"]);                                
                                 mdl.NetworkId = Convert.ToInt32(sts["NetworkId"]);
@@ -1839,6 +1840,9 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         parameter.Add(pUserid);
                         MySqlParameter pStatus = new MySqlParameter("p_status", MySqlDbType.Int32);
                         pStatus.Value = model.Status;
+                        parameter.Add(pStatus);
+                        MySqlParameter pPaymentStatus = new MySqlParameter("p_paymentstatus", MySqlDbType.Int32);
+                        pPaymentStatus.Value = Convert.ToInt32(model.PaymentStatus);
                         parameter.Add(pStatus);
                         command.CommandText = "spWebApiCreateCompaignWithNetworkDetails";
                         command.CommandType = System.Data.CommandType.StoredProcedure;
