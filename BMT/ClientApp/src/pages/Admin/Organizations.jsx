@@ -139,6 +139,7 @@ const OrgList = () => {
               fileName: 'Organizations',
             }}
             rows={rows}
+            rowHeight={50}
             columns={orgsListCols}
             pagination={true}
             loading={orgsLoading || citiesLoading}

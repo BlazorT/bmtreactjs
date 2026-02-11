@@ -30,7 +30,9 @@ const PricingActionCell = (prop) => {
         {/*{canUpdate === 1 && (*/}
         <CCol>
           <CTooltip content="Edit Pricing">
-            <CIcon onClick={toggleShowEditModal} className="stock-toggle-icon" icon={cilPencil} />
+            <CIcon onClick={toggleShowEditModal} className="stock-toggle-icon" icon={cilPencil}
+              size="lg"
+            />
           </CTooltip>
         </CCol>
       </CRow>

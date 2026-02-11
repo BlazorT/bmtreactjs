@@ -125,6 +125,7 @@ const Users: React.FC = () => {
           noRowsMessage={error ? 'Error Fetching data' : ''}
           sorting={[{ columnKey: 'lastUpdatedAt', direction: 'DESC' }]}
           showGrid={showUserGrid}
+          rowHeight={50}
           headerProps={{
             title: 'BMT Users',
             filterDisable: true,
