@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import AppContainer from 'src/components/UI/AppContainer';
 import {
   getInitialNetworkData,
   getNetworkInputFields,
 } from 'src/configs/InputConfig/networkFromConfig';
+import { generateInitialParameters } from 'src/helpers/campaignHelper';
 import { formValidator } from 'src/helpers/formValidator';
 import useApi from 'src/hooks/useApi';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -22,13 +24,12 @@ import PaymentModel from '../Modals/PaymentModel';
 import SendTestEmailModel from '../Modals/SendTestEmailModel';
 import TemplateListModel from '../Modals/TemplateListModel';
 import Button from '../UI/Button';
+import EmailTextEditor from '../UI/email-editor';
 import Form from '../UI/Form';
 import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
-import EmailTextEditor from '../UI/email-editor';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
-import { generateInitialParameters, safeParseJSON } from 'src/helpers/campaignHelper';
-import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import { NETWORKS, ROLES } from 'src/util/constants';
 
 dayjs.extend(utc);
 
@@ -115,9 +116,9 @@ const BlazorNetworkInputs = (prop) => {
         else if (diffYears === 3) packageId = 8; // 3 Year
       }
       const initialWhatsAppTemplateType =
-        data?.networkId === 2 && templateData?.templateType === 2 ? 2 : 1;
+        data?.networkId === NETWORKS.WHATSAPP && templateData?.templateType === 2 ? 2 : 1;
 
-      if (data?.networkId === 2) {
+      if (data?.networkId === NETWORKS.WHATSAPP) {
         setWhatsappTemplateType(initialWhatsAppTemplateType);
       }
 
@@ -168,7 +169,7 @@ const BlazorNetworkInputs = (prop) => {
       });
     } else {
       setNetworkState(getInitialNetworkData(organizationId, user, networkId));
-      if (networkId === 2) {
+      if (networkId === NETWORKS.WHATSAPP) {
         setWhatsappTemplateType(1);
       }
     }
@@ -234,7 +235,7 @@ const BlazorNetworkInputs = (prop) => {
     setNetworkState((prev) => ({
       ...prev,
       startTime: start.format(), // e.g. "2025-10-16T00:00:00Z"
-      finishTime: finish ? finish.format() : dayjs().utc().format(), // e.g. "2025-10-23T00:00:00Z"
+      finishTime: finish ? finish.format() : null, // e.g. "2025-10-23T00:00:00Z"
     }));
   }, [networkState?.packageId]);
 
@@ -370,6 +371,13 @@ const BlazorNetworkInputs = (prop) => {
   };
 
   const onSave = () => {
+    if (Number(networkState?.packageId) === 9 && !networkState?.finishTime) {
+      showToast('Please select Finish time or Date To', 'error');
+      return;
+    }
+
+
+
     formValidator();
     const form = document.querySelector('.network-settings-form');
 
@@ -377,7 +385,7 @@ const BlazorNetworkInputs = (prop) => {
       setshowFilters(true);
       return;
     }
-    if (networkState?.networkId === 2) {
+    if (networkState?.networkId === NETWORKS.WHATSAPP) {
       // WhatsApp validation
       if (!networkState?.templateTitle || !networkState?.templateSubject) {
         setshowFilters(true);
@@ -417,7 +425,7 @@ const BlazorNetworkInputs = (prop) => {
     }
 
     if (
-      (networkState?.templateSubject === '' && networkId === 3) ||
+      (networkState?.templateSubject === '' && networkId === NETWORKS.EMAIL) ||
       networkState?.templateTitle === ''
     ) {
       setshowFilters(true);
@@ -438,7 +446,7 @@ const BlazorNetworkInputs = (prop) => {
 
     const updatedState = { ...networkState };
 
-    if (updatedState.networkId === 2) {
+    if (updatedState.networkId === NETWORKS.WHATSAPP) {
       updatedState.whatsappTemplateType = whatsappTemplateType;
     }
 
@@ -481,6 +489,12 @@ const BlazorNetworkInputs = (prop) => {
   };
   const onSubmit = async () => {
     try {
+      if (networkState?.packageId === 9 && !networkState?.finishTime) {
+        showToast('Please select Finish time or Date To', 'error');
+        return;
+      }
+
+
       if (networkList.length === 0) {
         dispatch(
           updateToast({
@@ -494,14 +508,16 @@ const BlazorNetworkInputs = (prop) => {
 
       const body = networkList?.map((nl) => ({
         ...nl,
+        finishTime: nl?.finishTime ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]') : null,
         autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
         status: nl?.status ? 1 : 0,
         smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
         virtualAccount: nl?.virtualAccount ? 1 : 0,
         unitId: nl?.unitId ? parseInt(nl?.unitId) : 0,
         purchasedQouta: nl?.purchasedQouta ? parseInt(nl?.purchasedQouta) : 0,
+        usedQuota: 5,
         Custom1:
-          nl?.networkId === 2
+          nl?.networkId === NETWORKS.WHATSAPP
             ? nl?.whatsappTemplateType === 2
               ? JSON.stringify({
                   templateType: 2,
@@ -598,7 +614,7 @@ const BlazorNetworkInputs = (prop) => {
   );
 
   const onSelectTemplate = (t) => {
-    if (networkId === 2) {
+    if (networkId === NETWORKS.WHATSAPP) {
       // WhatsApp Logic
       console.log({ t });
       if (t?.whatsappTemplate) {
@@ -838,7 +854,7 @@ const BlazorNetworkInputs = (prop) => {
             />
             {showFilters && (
               <CRow>
-                <CCol md={networkState?.networkId === 2 ? 3 : 6}>
+                <CCol md={networkState?.networkId === NETWORKS.WHATSAPP ? 3 : 6}>
                   <CustomInput
                     label="Template Title"
                     icon={cilUser}
@@ -854,27 +870,37 @@ const BlazorNetworkInputs = (prop) => {
                     message="Enter Template Title"
                   />
                 </CCol>
-                <CCol md={networkState?.networkId === 2 ? 3 : 6}>
+                <CCol md={networkState?.networkId === NETWORKS.WHATSAPP ? 3 : 6}>
                   <CustomInput
                     label={
-                      networkId === 2 && whatsappTemplateType == 1
+                      networkId === NETWORKS.WHATSAPP && whatsappTemplateType == 1
                         ? 'Template Language'
                         : 'Template Subject'
                     }
                     icon={cilUser}
                     value={networkState.templateSubject}
                     onChange={handleNetworkSetting}
-                    placeholder={networkId === 2 ? 'e.g., en, en_US' : 'Input Template Subject'}
+                    placeholder={
+                      networkId === NETWORKS.WHATSAPP ? 'e.g., en, en_US' : 'Input Template Subject'
+                    }
                     type="text"
                     id="templateSubject"
                     name="templateSubject"
                     className="form-control item"
-                    isRequired={networkId === 3 || networkId === 2}
-                    title={networkId === 2 ? 'Template Language Code' : 'Input Template Subject'}
-                    message={networkId === 2 ? 'Enter Language Code' : 'Enter Template Subject'}
+                    isRequired={networkId === NETWORKS.EMAIL || networkId === NETWORKS.WHATSAPP}
+                    title={
+                      networkId === NETWORKS.WHATSAPP
+                        ? 'Template Language Code'
+                        : 'Input Template Subject'
+                    }
+                    message={
+                      networkId === NETWORKS.WHATSAPP
+                        ? 'Enter Language Code'
+                        : 'Enter Template Subject'
+                    }
                   />
                 </CCol>
-                {networkState?.networkId === 2 && (
+                {networkState?.networkId === NETWORKS.WHATSAPP && (
                   <CCol md={3}>
                     <CustomSelectInput
                       label="Template Type"
@@ -895,7 +921,7 @@ const BlazorNetworkInputs = (prop) => {
                   </CCol>
                 )}
                 <CCol md={12}>
-                  {networkState?.networkId === 2 ? (
+                  {networkState?.networkId === NETWORKS.WHATSAPP ? (
                     <>
                       {whatsappTemplateType === 1 ? (
                         <WhatsAppTemplateEditor
@@ -913,7 +939,7 @@ const BlazorNetworkInputs = (prop) => {
                         />
                       ) : (
                         <SocialMediaTextEditor
-                          networkId={2}
+                          networkId={NETWORKS.WHATSAPP}
                           value={networkState.Custom1}
                           onChange={(e) => {
                             setNetworkState((prev) => ({ ...prev, Custom1: e }));
@@ -922,7 +948,7 @@ const BlazorNetworkInputs = (prop) => {
                         />
                       )}
                     </>
-                  ) : networkState?.networkId !== 3 ? (
+                  ) : networkState?.networkId !== NETWORKS.EMAIL ? (
                     <SocialMediaTextEditor
                       networkId={networkState?.networkId}
                       value={networkState.Custom1}
@@ -950,7 +976,7 @@ const BlazorNetworkInputs = (prop) => {
               </CRow>
             )}
           </AppContainer>
-          {user?.roleId === 1 && ( //!!nneed to make it 1
+          {user?.roleId === ROLES.SUPERADMIN && ( //!!nneed to make it 1
             <AppContainer>
               <DataGridHeader
                 title="Integration Setting"
@@ -1003,7 +1029,7 @@ const BlazorNetworkInputs = (prop) => {
           </AppContainer>
           <div className="CenterAlign pt-2 gap-4">
             <Button title="Cancel" onClick={onCancel} disabled={loading} />
-            {networkId === 3 &&
+            {networkId === NETWORKS.EMAIL &&
               networkState?.smtpserver &&
               networkState?.smtpcredpwd &&
               networkState?.smtpcreduser &&

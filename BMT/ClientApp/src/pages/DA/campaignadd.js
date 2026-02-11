@@ -698,6 +698,14 @@ const campaignadd = () => {
     return <Loading />;
   }
 
+  const budgetByNetwork = schedulerows.reduce((acc, row) => {
+    const networkId = row.NetworkId;
+    const budget = Number(row.budget) || 0;
+
+    acc[networkId] = (acc[networkId] || 0) + budget;
+    return acc;
+  }, {});
+
   // console.log({ gn: globalutil.networks(), networksList });
   return (
     <Form name="dsp-reg-form">
@@ -919,12 +927,41 @@ const campaignadd = () => {
                     columns={schedulecolumns}
                     rowHeight={55}
                     pagination={true}
-                    summary={[
-                      {
-                        field: 'budget',
-                        aggregates: [{ aggregate: 'sum', caption: 'Total Budget' }],
-                      },
-                    ]}
+                    footer={
+                      <div className="summary-container mt-0 py-3 px-2 bg-dark-color text-white">
+                        <div className="grid-footer-summary d-flex justify-content-end align-items-center gap-2 flex-wrap">
+                          {Object.entries(budgetByNetwork).map(
+                            ([networkId, totalBudget], index, arr) => {
+                              const networkName =
+                                globalutil.networks()?.find((n) => n?.id == networkId)?.name ||
+                                'Unknown';
+
+                              return (
+                                <span key={networkId} className="d-flex align-items-center gap-2">
+                                  <span>
+                                    {networkName} : {totalBudget?.toFixed(2)}
+                                  </span>
+
+                                  {index < arr.length - 1 && <span className="opacity-75">|</span>}
+                                </span>
+                              );
+                            },
+                          )}
+
+                          {/* Divider before total */}
+                          {Object.keys(budgetByNetwork).length > 0 && (
+                            <span className="opacity-75 mx-1">|</span>
+                          )}
+
+                          <span className="fw-bold">
+                            Total Budget :{' '}
+                            {schedulerows
+                              .reduce((sum, row) => sum + (Number(row.budget) || 0), 0)
+                              ?.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    }
                   />
                   {schedulerows.length > 0 && (
                     <div className="mt-3 d-flex justify-content-end">
@@ -974,6 +1011,7 @@ const campaignadd = () => {
         editSchedule={editingSchedule}
         onScheduleUpdate={handleScheduleUpdate}
         submitFromGrid={submitFromGrid}
+        networksList={networksList}
         templateForPricing={
           selectedSMSTemplate || networkSettingsTemplate || globalSMSTemplate || null
         }

@@ -1,0 +1,20 @@
+export const NETWORKS = {
+  SMS: 1,
+  WHATSAPP: 2,
+  EMAIL: 3,
+  TWITTER: 4,
+  FACEBOOK: 5,
+  INSTAGRAM: 6,
+  LINKEDIN: 7,
+  TIKTOK: 8,
+  SNAPCHAT: 9,
+};
+
+export const ROLES = {
+  SUPERADMIN: 1,
+  ADMIN: 2,
+  SUPERVISOR: 3,
+  PUBLIC_USER: 4,
+  OPERATION_MANAGER: 5,
+  STAFF: 6,
+};

@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import PricingActionCell from 'src/components/DataGridCustomCells/PricingActionCell';
+import { ROLES } from 'src/util/constants';
 
 export const getPricingCols = (user, getPricing) => [
   {
@@ -45,7 +46,7 @@ export const getPricingCols = (user, getPricing) => [
     key: 'startTime',
     editable: false,
   },
-  ...(user?.roleId === 1
+  ...(user?.roleId === ROLES.SUPERADMIN
     ? [
         {
           filterable: true,
@@ -53,8 +54,7 @@ export const getPricingCols = (user, getPricing) => [
           name: 'Action',
           key: 'action',
           editable: false,
-          renderCell: (params) =>
-            <PricingActionCell value={params} getPricing={getPricing} />,
+          renderCell: (params) => <PricingActionCell value={params} getPricing={getPricing} />,
         },
       ]
     : []),

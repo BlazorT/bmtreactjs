@@ -5,9 +5,9 @@ import { useEffect, useMemo, useState } from 'react';
 import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import Loading from 'src/components/UI/Loading';
+import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 import useApi from 'src/hooks/useApi';
 import BlazorTabs from '../../components/CustomComponents/BlazorTabs';
-import { useFetchPricing } from 'src/hooks/api/useFetchPricing';
 
 const globalpreference = () => {
   const [activeTab, setActiveTab] = useState(1);

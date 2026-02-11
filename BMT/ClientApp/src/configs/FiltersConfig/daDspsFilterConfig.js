@@ -21,21 +21,6 @@ export const getDaDspsFiltersFields = (filters, changeFilter, cityList) => [
     isRequired: false,
     title: ' using by Name, Contact, Email',
   },
- 
-  //{
-  //  component: CustomSelectInput,
-  //  label: 'Country',
-  //  value: filters.state,
-  //  onChange: changeFilter,
-  //  icon: cilFlagAlt,
-  //  id: 'state',
-  //  name: 'state',
-  //  disableOption: 'Select Country',
-  //  options: globalutil?.states() ?? [],
-  //  className: 'form-control item form-select',
-  //  title: 'Org Country',
-  //},
-  
   {
     component: CustomDatePicker,
     label: `Reg. Date (>=)`,
@@ -56,8 +41,6 @@ export const getDaDspsFiltersFields = (filters, changeFilter, cityList) => [
     isRequired: false,
     disableOption: 'Select City',
     message: 'Please select your city',
-    options: cityList
-
+    options: cityList,
   },
- 
 ];

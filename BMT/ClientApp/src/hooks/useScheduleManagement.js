@@ -10,7 +10,7 @@ export const useScheduleManagement = (initialSchedules = []) => {
 
   // Format schedules for grid display
   const scheduleRows = useMemo(() => {
-    const dayNames = ['Sun', 'Mon', 'Tues', 'Wedn', 'Thur', 'Fri', 'Sat'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     return schedules.map((item, index) => {
       let parsedDays = [];
@@ -27,7 +27,7 @@ export const useScheduleManagement = (initialSchedules = []) => {
       }
 
       return {
-        id: item.id || index + 1,
+        id: item.id || item?.gridId,
         originalId: item.id, // Keep original ID for editing
         interval: item?.Intervalval ?? '',
         budget: item.Budget ?? '',
@@ -52,7 +52,8 @@ export const useScheduleManagement = (initialSchedules = []) => {
     setSchedules((prev) =>
       prev.map((s) => {
         // Match by id or by NetworkId + Budget combination if id is missing
-        if (s.id === scheduleId || (!s.id && s.NetworkId === updatedSchedule.NetworkId)) {
+
+        if (s.gridId === scheduleId) {
           return { ...s, ...updatedSchedule };
         }
         return s;
@@ -72,11 +73,8 @@ export const useScheduleManagement = (initialSchedules = []) => {
         if (scheduleToDelete.originalId) {
           return prev.filter((s) => s.id !== scheduleToDelete.originalId);
         }
-
         // Otherwise filter by NetworkId + Budget combination
-        return prev.filter(
-          (s) => s.NetworkId !== scheduleToDelete.NetworkId || s.Budget !== scheduleToDelete.budget,
-        );
+        return prev.filter((s) => s.gridId !== scheduleToDelete.id);
       });
     },
     [scheduleRows],

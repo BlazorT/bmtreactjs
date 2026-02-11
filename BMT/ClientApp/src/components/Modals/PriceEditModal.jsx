@@ -99,10 +99,10 @@ const PricingModal = ({
       status: 1,
       rowVer: 1,
     };
-    console.log({ submissionData });
-    console.log({ submissionData: JSON.stringify(submissionData) });
+    // console.log({ submissionData });
+    // console.log({ submissionData: JSON.stringify(submissionData) });
     const res = await postData(submissionData);
-    console.log({ res });
+    // console.log({ res });
     if (res) {
       if (res?.status) {
         getPricing();
@@ -193,12 +193,6 @@ const PricingModal = ({
     },
   ];
 
-  const calculateFinalPrice = () => {
-    const price = Number(pricingData.unitPrice) || 0;
-    const discount = Number(pricingData.discount) || 0;
-    return price - discount;
-  };
-  //   console.log(networkData);
   return (
     <CModal
       visible={isOpen}
@@ -216,32 +210,6 @@ const PricingModal = ({
 
         <CModalBody>
           <Inputs inputFields={inputFields} isBtn={false} />
-
-          {/* {pricingData.unitPrice && (
-            <div className="mt-3 p-3 bg-light rounded">
-              <h6 className="mb-2">Price Summary</h6>
-              <div className="d-flex justify-content-between">
-                <span>Unit Price:</span>
-                <span className="fw-bold">${Number(pricingData.unitPrice).toFixed(2)}</span>
-              </div>
-              {pricingData.discount && (
-                <div className="d-flex justify-content-between text-danger">
-                  <span>Discount:</span>
-                  <span>-${Number(pricingData.discount).toFixed(2)}</span>
-                </div>
-              )}
-              <hr />
-              <div className="d-flex justify-content-between">
-                <span className="fw-bold">Final Price:</span>
-                <span className="fw-bold text-success">${calculateFinalPrice().toFixed(2)}</span>
-              </div>
-              {pricingData.freeQuota && (
-                <div className="mt-2 text-muted">
-                  <small>Free Quota: {pricingData.freeQuota} units</small>
-                </div>
-              )}
-            </div>
-          )} */}
         </CModalBody>
 
         <CModalFooter>

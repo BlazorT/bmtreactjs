@@ -1,4 +1,4 @@
-export const getProductsCols = (pageRoles, getProducts, products) => [
+export const getPackagesCols = () => [
   {
     filterable: true,
     disableColumnMenu: false,
