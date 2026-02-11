@@ -520,6 +520,10 @@ const BlazorNetworkInputs = (prop) => {
           unitId: nl?.unitId ? parseInt(nl?.unitId) : 0,
           // Send TOTAL purchased quota = existing (from server) + new (from user input)
           purchasedQouta: existingPurchased + newPurchased,
+          createdAt: nl?.createdAt || dayjs().utc().format,
+          lastUpdatedAt: dayjs().utc().format,
+          createdBy: nl?.createdBy || user?.userId,
+          lastUpdatedBy: user?.userId,
           Custom1:
             nl?.networkId === NETWORKS.WHATSAPP
               ? nl?.whatsappTemplateType === 2
