@@ -1843,7 +1843,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         parameter.Add(pStatus);
                         MySqlParameter pPaymentStatus = new MySqlParameter("p_paymentstatus", MySqlDbType.Int32);
                         pPaymentStatus.Value = Convert.ToInt32(model.PaymentStatus);
-                        parameter.Add(pStatus);
+                        parameter.Add(pPaymentStatus);
                         command.CommandText = "spWebApiCreateCompaignWithNetworkDetails";
                         command.CommandType = System.Data.CommandType.StoredProcedure;
                         command.Parameters.AddRange(parameter.ToArray());
