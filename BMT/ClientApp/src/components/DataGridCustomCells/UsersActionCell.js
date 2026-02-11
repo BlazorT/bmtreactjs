@@ -34,7 +34,6 @@ const UsersActionCell = (prop) => {
 
   const onYesToggle = async (status) => {
     const response = await updateStatus(user, status);
-    console.log(response);
     if (response.status) {
       setUserStatus(status);
       showToast(`${user[0].userName} ${status === 1 ? 're-activated' : 'deleted'} successfully`);

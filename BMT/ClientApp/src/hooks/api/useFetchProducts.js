@@ -1,16 +1,13 @@
-import useApi, { ApiPostDataType } from '../useApi';
+import useApi from '../useApi';
 import { useShowToast } from '../useShowToast';
 
-
-export const useFetchProducts = () => {
+export const useFetchPackages = () => {
   const showToast = useShowToast();
 
-  const { data, error, loading, postData } = useApi('/Admin/packageslist','GET');
+  const { data, error, loading, postData } = useApi('/Admin/packageslist', 'GET');
 
-  const fetchProducts = async () => {
-
+  const fetchPackages = async () => {
     const res = await postData();
-    console.log({res},'pkg')
     if (res?.status === true) {
       return res?.data;
     } else {
@@ -19,5 +16,5 @@ export const useFetchProducts = () => {
     }
   };
 
-  return { data, error, loading, fetchProducts };
+  return { data, error, loading, fetchPackages };
 };

@@ -15,6 +15,7 @@ import { getStatusColor } from 'src/helpers/campaignHelper';
 import { useShowToast } from 'src/hooks/useShowToast';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import { cilUser } from '@coreui/icons';
+import { NETWORKS } from 'src/util/constants';
 
 const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT }) => {
   const showToast = useShowToast();
@@ -36,7 +37,7 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
 
   useEffect(() => {
     if (isOpen && networkId) {
-      if (Number(networkId) === 2) {
+      if (Number(networkId) === NETWORKS.WHATSAPP) {
         // WhatsApp
         if (whatsappLoadType === 1) {
           // Load from Meta (official WhatsApp templates)
@@ -91,7 +92,7 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
             template: template.name, // template name for WhatsApp
             title: template.name,
             subject: template.language, // language code
-            networkId: 2,
+            networkId: NETWORKS.WHATSAPP,
             whatsappTemplate: template, // full template data
           });
           toggle();
@@ -210,7 +211,7 @@ const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT 
     </CListGroupItem>
   );
 
-  const isWhatsApp = Number(networkId) === 2;
+  const isWhatsApp = Number(networkId) === NETWORKS.WHATSAPP;
   const templates = isWhatsApp
     ? whatsappLoadType === 1
       ? whatsappTemplateData?.data || []

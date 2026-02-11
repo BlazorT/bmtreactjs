@@ -22,6 +22,7 @@ import Button from '../UI/Button';
 import { AlbumListModel } from './AlbumListModel';
 import PaymentModel from './PaymentModel';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
+import QuotaBadge from '../Component/QuotaBadge';
 
 const SMS_SEGMENT_LENGTH = 160;
 dayjs.extend(utc);
@@ -48,8 +49,8 @@ const AddScheduleModel = (prop) => {
     onScheduleUpdate = null, // Callback for updating schedule
     submitFromGrid = false, // Flag to indicate submit from grid
     templateForPricing = '',
+    networksList,
   } = prop;
-
   const isEditMode = !!editSchedule;
 
   const [budgetData, setBudgetData] = useState({
@@ -353,9 +354,15 @@ const AddScheduleModel = (prop) => {
 
       const totalMessages = validDays * recipients * segments;
 
-      if (totalMessages <= matchedPricing.freeAllowed) return sum;
+      // if (totalMessages <= matchedPricing.freeAllowed) return sum;
 
-      return sum + matchedPricing.unitPrice * recipients * segments * validDays;
+      return (
+        sum +
+        (matchedPricing.unitPrice - (matchedPricing.discount || 0)) *
+          recipients *
+          segments *
+          validDays
+      );
     }, 0);
 
     // ✅ calculate total schedule budget using the summed prices
@@ -377,10 +384,12 @@ const AddScheduleModel = (prop) => {
         const segments = networkId === 1 ? getSmsSegments(templateForPricing) : 1;
         const recipients = getNetworkRecipients(networkId);
         const totalMessages = validDays * recipients * segments;
+
         const totalNetworkPrice =
-          totalMessages <= freeAllowed
-            ? 0
-            : matchedPricing.unitPrice * recipients * segments * validDays;
+          (matchedPricing.unitPrice - (matchedPricing.discount || 0)) *
+          recipients *
+          segments *
+          validDays;
         return {
           networkId,
           totalNetworkPrice: parseFloat((totalNetworkPrice || 0)?.toFixed(2)),
@@ -389,6 +398,33 @@ const AddScheduleModel = (prop) => {
       }),
     });
   };
+
+  const messagesByNetwork = scheduleJson.reduce((acc, curr) => {
+    const networkId = curr.NetworkId;
+    acc[networkId] = (acc[networkId] || 0) + (Number(curr.MessageCount) || 0);
+    return acc;
+  }, {});
+
+  const totalToPay = Object.entries(messagesByNetwork).reduce((sum, [networkId, totalMessages]) => {
+    const pricing = pricingData?.find((p) => p.networkId == networkId);
+    if (!pricing) return sum;
+
+    const quota = networksList?.find((n) => n.networkId == networkId);
+    if (!quota) return sum;
+
+    const remainingQuota = (Number(quota.purchasedQouta) || 0) - (Number(quota.usedQuota) || 0);
+
+    const overUsed = Math.max(0, totalMessages - remainingQuota);
+
+    const unitPrice = Number(pricing.unitPrice) - (Number(pricing.discount) || 0);
+
+    const overUsedPrice = overUsed * unitPrice;
+
+    return sum + overUsedPrice;
+  }, 0);
+
+  // ✅ format at the end
+  const totalToPayNumber = Number(totalToPay.toFixed(2));
 
   useEffect(() => {
     setScheduleJson(data);
@@ -611,6 +647,11 @@ const AddScheduleModel = (prop) => {
     });
   };
 
+  const getNextGridId = () => {
+    if (!scheduleJson?.length) return 1;
+    return Math.max(...scheduleJson.map((s) => s.gridId || 0)) + 1;
+  };
+
   const onSave = () => {
     // Use local schedule networks, not parent's selectedNetworks
     const networksToUse = isEditMode ? editModeNetworks : scheduleNetworks;
@@ -703,10 +744,15 @@ const AddScheduleModel = (prop) => {
       .second(0)
       .millisecond(0);
 
+    let nextGridId = getNextGridId();
+
     const schedulePayload = [];
     for (let ntwk of selectedNetworkObjects) {
       const payloadItem = {
         id: isEditMode && editSchedule?.rawData?.id ? editSchedule.rawData.id : 0,
+        gridId: isEditMode
+          ? editSchedule?.gridId || editSchedule?.rawData?.gridId || nextGridId
+          : nextGridId++,
         NetworkId: ntwk.NetworkId,
         CompaignDetailId:
           isEditMode && editSchedule?.rawData?.CompaignDetailId
@@ -742,19 +788,20 @@ const AddScheduleModel = (prop) => {
 
     if (isEditMode && onScheduleUpdate) {
       // Update existing schedule
-      onScheduleUpdate(editSchedule.id || editSchedule.rawData?.id, schedulePayload[0]);
+      onScheduleUpdate(
+        editSchedule?.rawData?.gridId || editSchedule.rawData?.id,
+        schedulePayload[0],
+      );
       showToast('Schedule updated successfully!', 'success');
       toggle();
     } else {
       // Add new schedule
       const updatedSchedule = [...scheduleJson, ...schedulePayload];
-      console.log({ updatedSchedule, budgetData });
       setScheduleJson(updatedSchedule);
       setData(updatedSchedule);
       showToast('Schedule saved successfully!', 'success');
     }
   };
-
   // ✅ Helper to get hashtags as clean comma-separated string (for backend)
   const getHashTagsForDB = () => {
     return submitData?.hashTags?.join(','); // Returns: "tag1,tag2,tag3"
@@ -972,6 +1019,21 @@ const AddScheduleModel = (prop) => {
                         const matchedPricing = pricingData?.find(
                           (price) => network?.id === price.networkId,
                         );
+                        const networkBundle = networksList.find(
+                          (apiNet) => apiNet?.networkId === network.id,
+                        );
+
+                        const scheduleUse = scheduleJson.reduce((sum, item) => {
+                          if (item?.NetworkId === network.id) {
+                            return sum + (Number(item?.MessageCount) || 0);
+                          }
+                          return sum;
+                        }, 0);
+
+                        const totalQuota = networkBundle?.purchasedQouta || 0;
+                        const usedQuota = networkBundle?.usedQuota + scheduleUse;
+                        const remainingQuota = totalQuota - usedQuota;
+
                         return (
                           <div
                             key={index}
@@ -987,9 +1049,9 @@ const AddScheduleModel = (prop) => {
                               label={
                                 <label>
                                   {network.name}
-                                  <span className="text-dim" style={{ fontSize: 12 }}>
-                                    {` (Free Allowed: ${matchedPricing?.freeAllowed ?? 0})`}
-                                  </span>
+                                  {/* <span className="text-dim" style={{ fontSize: 12 }}> */}
+                                  {/* {` (Free Allowed: ${matchedPricing?.freeAllowed ?? 0})`} */}
+                                  {/* </span> */}
                                 </label>
                               }
                               checked={(isEditMode ? editModeNetworks : scheduleNetworks).includes(
@@ -1010,6 +1072,11 @@ const AddScheduleModel = (prop) => {
                                 }
                               }}
                               className="d-flex align-items-center m-0 fw-semibold text-capitalize"
+                            />
+                            <QuotaBadge
+                              totalQuota={totalQuota}
+                              usedQuota={usedQuota}
+                              remainingQuota={remainingQuota}
                             />
                           </div>
                         );
@@ -1180,7 +1247,7 @@ const AddScheduleModel = (prop) => {
                     </span>
                   </div>
                   <CRow className="gy-3">
-                    <CCol md={4} sm={6}>
+                    <CCol md={totalToPayNumber > 1 ? 3 : 4} sm={6}>
                       <label htmlFor="" className="profile-user-labels mt-2 labelName">
                         Schedule Messages
                       </label>
@@ -1191,9 +1258,9 @@ const AddScheduleModel = (prop) => {
                         disabled
                       />
                     </CCol>
-                    <CCol md={4} sm={6}>
+                    <CCol md={totalToPayNumber > 1 ? 3 : 4} sm={6}>
                       <label htmlFor="" className="labelName profile-user-labels mt-2">
-                        Schedule Budget({currencyName || ''})
+                        Schedule Budget ({currencyName || ''})
                       </label>
                       <input
                         id="TotalSchBudget"
@@ -1202,9 +1269,9 @@ const AddScheduleModel = (prop) => {
                         disabled
                       />
                     </CCol>
-                    <CCol md={4} sm={12}>
+                    <CCol md={totalToPayNumber > 1 ? 3 : 4} sm={12}>
                       <label htmlFor="" className="profile-user-labels mt-2 labelName">
-                        Campaign Budget({currencyName || ''})
+                        Campaign Budget ({currencyName || ''})
                       </label>
                       <input
                         id="TotalCampBudget"
@@ -1213,6 +1280,19 @@ const AddScheduleModel = (prop) => {
                         disabled
                       />
                     </CCol>
+                    {totalToPayNumber > 1 ? (
+                      <CCol md={3} sm={12}>
+                        <label htmlFor="" className="profile-user-labels mt-2 labelName">
+                          To Pay
+                        </label>
+                        <input
+                          id="TotalCampBudget"
+                          className="form-control item user-profile-input"
+                          value={totalToPayNumber?.toFixed(2)}
+                          disabled
+                        />
+                      </CCol>
+                    ) : null}
                   </CRow>
                 </div>
               </div>
@@ -1250,7 +1330,7 @@ const AddScheduleModel = (prop) => {
                         disabled={loading || scheduleJson?.length === 0}
                         loading={loading}
                         onClick={() =>
-                          budgetData?.TotalCampBudget < 1 ? submitCompaign('') : togglePaymentMdl()
+                          totalToPayNumber < 1 ? submitCompaign('') : togglePaymentMdl()
                         }
                         type="submit"
                         className="w-auto px-4"
@@ -1276,7 +1356,8 @@ const AddScheduleModel = (prop) => {
       <PaymentModel
         isOpen={isPaymentOpen}
         toggle={togglePaymentMdl}
-        amount={budgetData.TotalCampBudget}
+        amount={totalToPayNumber}
+        // amount={1}
         onSubmit={submitCompaign}
       />
     </>

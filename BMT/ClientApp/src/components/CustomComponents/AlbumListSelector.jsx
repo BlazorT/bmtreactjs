@@ -148,14 +148,14 @@ const AlbumListSelector = ({
             </div>
 
             <Button
-              className="w-auto flex-shrink-0"
+              className="w-auto flex-shrink-0 px-4 py-0"
               onClick={onSelectClick}
               title={
                 <span className="d-flex align-items-center">
                   <i
                     className={`bi ${selectedAlbumList?.length === 0 ? 'bi-plus-lg' : 'bi-pencil'}`}
                   ></i>
-                  {selectedAlbumList?.length === 0 ? 'Select' : 'Edit'}
+                  {selectedAlbumList?.length === 0 ? 'Select Contacts' : 'Edit'}
                 </span>
               }
             />

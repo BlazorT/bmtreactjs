@@ -25,12 +25,12 @@ import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setUserData } from 'src/redux/user/userSlice';
 import { generateAgreementPDF } from 'src/reports/orgAggrrement';
+import { ROLES } from 'src/util/constants';
 
 const OrganizationAdd = () => {
   dayjs.extend(utc);
 
   const user = useSelector((state) => state.user);
-  // console.log({ user });
   const showConfirmation = useShowConfirmation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,7 +42,6 @@ const OrganizationAdd = () => {
 
   const { postData: getCities, loading: citiesLoading, data: cityRes } = useApi('/Common/cities');
 
-  const [showStock, setShowStock] = useState(true);
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [emailMessage, setEmailMessage] = useState('Enter Valid Email Address');
@@ -153,14 +152,13 @@ const OrganizationAdd = () => {
         formData.append('createdAt', dayjs().utc().format());
 
         const uploadAvatarRes = await uploadAvatar(formData);
-        console.log({ uploadAvatarRes })
+        console.log({ uploadAvatarRes });
         if (uploadAvatarRes?.status === true) {
           const avatarPath =
             'productimages/' + uploadAvatarRes.keyValue.toString().split('\\').pop();
           const res = await createUpdateOrg({ ...daBody, logoAvatar: avatarPath });
           if (res.status === true) {
             if (user?.orgId === daBody?.id) {
-
               dispatch(
                 setUserData({
                   orgInfo: { ...user?.orgInfo, signature: daBody?.signature },
@@ -168,14 +166,13 @@ const OrganizationAdd = () => {
                 }),
               );
             }
-            await uploadDaAttachments(res.data.id)
+            await uploadDaAttachments(res.data.id);
           }
         }
       } else {
         const res = await createUpdateOrg(daBody);
         if (res.status === true) {
           if (user?.orgId === daBody?.id) {
-
             dispatch(
               setUserData({
                 orgInfo: { ...user?.orgInfo, signature: daBody?.signature },
@@ -219,8 +216,6 @@ const OrganizationAdd = () => {
     navigate(user?.userId ? '/Organizations' : '/');
   };
 
-  const toggleStock = () => setShowStock(!showStock);
-
   const TermsModal = async () => {
     setLoadingModal(true); // show loader
     setTermsmodalOpen(true);
@@ -246,50 +241,75 @@ const OrganizationAdd = () => {
   return (
     <React.Fragment>
       <AppContainer>
-        {showStock && (
-          <Form name="apply-org-form">
-            <Inputs
-              inputFields={daApplyInputs}
-              yesFn={goToAnotherPage}
-              submitFn={submitDA}
-              submitting={submitting} // ✅ pass submitting state
-            >
-              {user?.isAuthenticated && (user?.roleId === 2 || signature) && (
-                <CCol
-                  md={
-                    user?.isAuthenticated &&
-                      user?.roleId === 2 &&
-                      signature &&
-                      user?.userId === signatureJSON?.adminId
-                      ? 3
-                      : 6
-                  }
-                >
+        <Form name="apply-org-form">
+          <Inputs
+            inputFields={daApplyInputs}
+            yesFn={goToAnotherPage}
+            submitFn={submitDA}
+            submitting={submitting} // ✅ pass submitting state
+          >
+            {user?.isAuthenticated && (user?.roleId === ROLES.ADMIN || signature) && (
+              <CCol
+                md={
+                  user?.isAuthenticated &&
+                  user?.roleId === ROLES.ADMIN &&
+                  signature &&
+                  user?.userId === signatureJSON?.adminId
+                    ? 3
+                    : 6
+                }
+              >
+                <div className="d-flex flex-column ">
+                  <label className="login_label labelName text-left mb-2 mt-2">
+                    Agreement Contract
+                  </label>
+                  <Button
+                    title={
+                      signature
+                        ? 'View and Download'
+                        : !signature
+                          ? 'View and Sign'
+                          : 'View and Download'
+                    }
+                    onClick={async () => {
+                      if (signature)
+                        await generateAgreementPDF(
+                          signature,
+                          signatureJSON?.adminName,
+                          signatureJSON?.dt,
+                        );
+                      else setTermsmodalOpen(true);
+                    }}
+                    className="w-auto"
+                    icon={
+                      <FontAwesomeIcon
+                        icon={faFileContract}
+                        size="xl"
+                        style={{
+                          marginRight: 10,
+                        }}
+                      />
+                    }
+                  />
+                </div>
+              </CCol>
+            )}
+            {user?.isAuthenticated &&
+              user?.roleId === ROLES.ADMIN &&
+              signature &&
+              user?.userId === signatureJSON?.adminId && (
+                <CCol md={3}>
                   <div className="d-flex flex-column ">
-                    <label className="login_label labelName text-left mb-2 mt-2">
-                      Agreement Contract
-                    </label>
+                    <div className="change-signature-margin"></div>
                     <Button
-                      title={
-                        signature
-                          ? 'View and Download'
-                          : !signature
-                            ? 'View and Sign'
-                            : 'View and Download'
-                      }
-                      onClick={async () => {
-                        if (signature)
-                          await generateAgreementPDF(
-                            signature,
-                            signatureJSON?.adminName,
-                            signatureJSON?.dt,
-                          );
-                        else setTermsmodalOpen(true);
+                      title={'Change Signature'}
+                      onClick={() => {
+                        setTermsmodalOpen(true);
                       }}
                       className="w-auto"
                       icon={
                         <FontAwesomeIcon
-                          icon={faFileContract}
+                          icon={faSignature}
                           size="xl"
                           style={{
                             marginRight: 10,
@@ -300,52 +320,25 @@ const OrganizationAdd = () => {
                   </div>
                 </CCol>
               )}
-              {user?.isAuthenticated &&
-                user?.roleId === 2 &&
-                signature &&
-                user?.userId === signatureJSON?.adminId && (
-                  <CCol md={3}>
-                    <div className="d-flex flex-column ">
-                      <div className="change-signature-margin"></div>
-                      <Button
-                        title={'Change Signature'}
-                        onClick={() => {
-                          setTermsmodalOpen(true);
-                        }}
-                        className="w-auto"
-                        icon={
-                          <FontAwesomeIcon
-                            icon={faSignature}
-                            size="xl"
-                            style={{
-                              marginRight: 10,
-                            }}
-                          />
-                        }
-                      />
-                    </div>
-                  </CCol>
-                )}
-              <CFormCheck
-                className="mt-3 d-flex flex-row justify-content-center"
-                title="Are you agree for this?"
-                label={
-                  <span>
-                    By providing this info, you agree to our terms & conditions, read our{' '}
-                    <strong className="lblTerms" onClick={TermsModal}>
-                      Terms & Conditions (EULA)
-                    </strong>
-                  </span>
-                }
-                name="isTermsAccepted"
-                id="isTermsAccepted"
-                required
-                checked={daApplyFormData.isTermsAccepted}
-                onChange={handleDAFormData}
-              />
-            </Inputs>
-          </Form>
-        )}
+            <CFormCheck
+              className="mt-3 d-flex flex-row justify-content-center"
+              title="Are you agree for this?"
+              label={
+                <span>
+                  By providing this info, you agree to our terms & conditions, read our{' '}
+                  <strong className="lblTerms" onClick={TermsModal}>
+                    Terms & Conditions (EULA)
+                  </strong>
+                </span>
+              }
+              name="isTermsAccepted"
+              id="isTermsAccepted"
+              required
+              checked={daApplyFormData.isTermsAccepted}
+              onChange={handleDAFormData}
+            />
+          </Inputs>
+        </Form>
 
         <ConfirmationModal
           header="Confirmation!"
@@ -361,7 +354,7 @@ const OrganizationAdd = () => {
         isOpen={termsmodalOpen}
         toggle={() => setTermsmodalOpen(false)}
         signature={signature}
-        setSignature={user?.roleId === 2 && user?.isAuthenticated ? setSignature : null}
+        setSignature={user?.roleId === ROLES.ADMIN && user?.isAuthenticated ? setSignature : null}
         onSubmit={submitDA}
         setSignatureJSON={setSignatureJSON}
       />

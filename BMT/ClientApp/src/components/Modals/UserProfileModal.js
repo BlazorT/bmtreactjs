@@ -24,6 +24,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
   const fields = [
     ...(user.userInfo.userName
       ? {
@@ -49,6 +50,10 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
           value: user.userInfo.userContact,
         }
       : []),
+    {
+      label: 'Organization',
+      value: user?.orgInfo?.name || '',
+    },
   ];
 
   const changePassword = async () => {
