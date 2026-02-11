@@ -234,7 +234,7 @@ const BlazorNetworkInputs = (prop) => {
     setNetworkState((prev) => ({
       ...prev,
       startTime: start.format(), // e.g. "2025-10-16T00:00:00Z"
-      finishTime: finish ? finish.format() : dayjs().utc().format(), // e.g. "2025-10-23T00:00:00Z"
+      finishTime: finish ? finish.format() : null, // e.g. "2025-10-23T00:00:00Z"
     }));
   }, [networkState?.packageId]);
 
@@ -370,6 +370,13 @@ const BlazorNetworkInputs = (prop) => {
   };
 
   const onSave = () => {
+    if (Number(networkState?.packageId) === 9 && !networkState?.finishTime) {
+      showToast('Please select Finish time or Date To', 'error');
+      return;
+    }
+
+
+
     formValidator();
     const form = document.querySelector('.network-settings-form');
 
@@ -481,6 +488,12 @@ const BlazorNetworkInputs = (prop) => {
   };
   const onSubmit = async () => {
     try {
+      if (networkState?.packageId === 9 && !networkState?.finishTime) {
+        showToast('Please select Finish time or Date To', 'error');
+        return;
+      }
+
+
       if (networkList.length === 0) {
         dispatch(
           updateToast({
@@ -494,6 +507,7 @@ const BlazorNetworkInputs = (prop) => {
 
       const body = networkList?.map((nl) => ({
         ...nl,
+        finishTime: nl?.finishTime ? dayjs(nl.finishTime).utc().format('YYYY-MM-DDTHH:mm:ss[Z]') : null,
         autoReplyAllowed: nl?.autoReplyAllowed ? 1 : 0,
         status: nl?.status ? 1 : 0,
         smtpsslenabled: nl?.smtpsslenabled ? 1 : 0,
