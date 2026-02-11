@@ -442,8 +442,7 @@ const AddScheduleModel = (prop) => {
   useEffect(() => {
     if (submitFromGrid && isOpen) {
       // When opened from grid, show payment modal or submit directly
-      const totalCampBudget = scheduleJson?.reduce((acc, curr) => acc + (curr.Budget || 0), 0) || 0;
-      if (totalCampBudget < 1) {
+      if (totalToPayNumber <= 1) {
         // Free campaign, submit directly
         setTimeout(() => {
           submitCompaign('');
@@ -455,7 +454,7 @@ const AddScheduleModel = (prop) => {
         }, 100);
       }
     }
-  }, [isOpen, submitFromGrid, scheduleJson]);
+  }, [isOpen, submitFromGrid, totalToPayNumber]);
 
   useEffect(() => {
     if (selectedNetworks.length > 0) {
