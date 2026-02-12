@@ -445,12 +445,25 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         parameter.Add(DateFrom);
                         // ❌ You can ignore adding this unless the query uses it.
 
+                        //command.CommandText = @"
+                        //  SELECT 
+                        //    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
+                        //    `CreatedBy`,  `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
+                        //  FROM `compaignrecipients` 
+                        //  WHERE orgid = @p_OrgId AND (AlbumId = @p_AlbumId OR ifnull(@p_AlbumId,0) =0) AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
+                        //";
+                        // In GetCampaignRecipientsData method
                         command.CommandText = @"
-  SELECT 
-    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
-    `CreatedBy`,  `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
-  FROM `compaignrecipients` 
-  WHERE orgid = @p_OrgId AND (AlbumId = @p_AlbumId OR ifnull(@p_AlbumId,0) =0) AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
+  SELECT
+    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`,
+    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`, IFNULL(`albumid`, 0) albumid
+  FROM `compaignrecipients`
+  WHERE orgid = @p_OrgId
+    AND (AlbumId = @p_AlbumId OR IFNULL(@p_AlbumId, 0) = 0)
+    AND (NetworkId = @p_NetworkId OR IFNULL(@p_NetworkId, 0) = 0)
+    AND CreatedAt >= @p_DateFrom
+    AND (ContentId LIKE CONCAT('%', @p_ContentId, '%') OR LENGTH(@p_ContentId) <= 0)
+    AND Status IN (1, 2);   -- ← ONLY THIS LINE CHANGED: now returns both 1 and 2
 ";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
