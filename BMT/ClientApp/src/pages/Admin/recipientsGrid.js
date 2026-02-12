@@ -221,7 +221,7 @@ const recipientslisting = () => {
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
   };
-  const recipientslistingCols = getrecipietslistingCols();
+  const recipientslistingCols = getrecipietslistingCols( pageRoles);
 
   return (
     <React.Fragment>

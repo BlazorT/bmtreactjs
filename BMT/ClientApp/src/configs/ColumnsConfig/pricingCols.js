@@ -6,27 +6,53 @@ export const getPricingCols = (user, getPricing) => [
   {
     name: 'Network Name',
     key: 'name',
+<<<<<<< HEAD
+=======
+    flex: 1,
+    editable: false,
+>>>>>>> 0879477860104145becebbb26176bac821469060
   },
 
   {
     name: 'Pricing Unit',
     key: 'unitName',
+<<<<<<< HEAD
+=======
+    flex: 1,
+    editable: false,
+>>>>>>> 0879477860104145becebbb26176bac821469060
   },
   {
     name: 'Unit Price',
     key: 'unitPrice',
+<<<<<<< HEAD
+=======
+    flex: 1,
+    editable: false,
+>>>>>>> 0879477860104145becebbb26176bac821469060
   },
   {
     name: 'Discount',
     key: 'discount',
+<<<<<<< HEAD
+=======
+    flex: 1,
+    editable: false,
+>>>>>>> 0879477860104145becebbb26176bac821469060
   },
   {
     name: 'Free Quota',
+    flex: 1,
     key: 'freeAllowed',
   },
   {
     name: 'Applicable Date',
     key: 'startTime',
+<<<<<<< HEAD
+=======
+    flex: 1,
+    editable: false,
+>>>>>>> 0879477860104145becebbb26176bac821469060
   },
   ...(user?.roleId === ROLES.SUPERADMIN
     ? [

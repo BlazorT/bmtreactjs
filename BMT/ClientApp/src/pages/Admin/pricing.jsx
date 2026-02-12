@@ -31,6 +31,7 @@ const Products = () => {
 
   const getProducts = async () => {
     const pricingList = await fetchPricing();
+    console.log("pricingList", pricingList);
     // const gByNetwork = _.groupBy(pricingList, (item) => item.networkId);
     // const groupedData = Object.entries(gByNetwork);
     const networkGroup = pricingList?.map((data) => ({
@@ -48,6 +49,7 @@ const Products = () => {
   };
   // console.log({ user });
   const pricingCols = getPricingCols(user, getProducts);
+  const headerTitle = `Network Prices${user?.orgInfo?.currencyName ? ` (${user.orgInfo.currencyName})` : ''}`;
   return (
     <AppContainer>
       <CustomDatagrid
@@ -61,7 +63,7 @@ const Products = () => {
         enableGrouping
         defaultExpandedGroups
         headerProps={{
-          title: 'Network Prices',
+          title: headerTitle,
           filterDisable: true,
           canPrint: pageRoles?.canPrint === 1,
           canExport: pageRoles?.canExport === 1,
