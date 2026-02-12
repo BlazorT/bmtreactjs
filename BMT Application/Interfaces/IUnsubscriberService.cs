@@ -15,6 +15,7 @@ namespace com.blazor.bmt.application.interfaces
         Task<IEnumerable<UnsubscriberModel>> GetUnsubscribersListAllFiltersAsync(UnsubscriberModel compaign);
        // Task<UnsubscriberModel> Create(UnsubscriberModel model);
         Task Update(UnsubscriberModel configurationsModel);
+        Task<UnsubscriberModel> CreateSingle(UnsubscriberModel models);
         Task<List<UnsubscriberModel>> Create(List<UnsubscriberModel> models);
 
 

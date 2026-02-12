@@ -410,7 +410,7 @@ namespace com.blazor.bmt.controllers
         }
         [HttpPost("unsubscribecontact")]
         [Route("unsubscribecontact")]
-        public async Task<ActionResult> unsubscribeOrgContact(CompaignrecipientModel model)
+        public async Task<ActionResult> unsubscribeOrgContact([FromBody] CompaignrecipientModel model)
         {
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey) && model.Desc==Convert.ToBase64String(Encoding.UTF8.GetBytes(model.ContentId + "&" + model.OrgId))) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
             BlazorResponseViewModel response = new BlazorResponseViewModel();
@@ -420,7 +420,7 @@ namespace com.blazor.bmt.controllers
                 {
                     UnsubscriberModel uModel = new UnsubscriberModel {Contactid= model.ContentId, LastUpdatedAt= GlobalUTIL.CurrentDateTime, RowVer=1, Status=1,  LastUpdatedBy = model.CreatedBy,   Networkid = model.NetworkId };
 
-                    response.data = _unsubscriberService.Create(new(){uModel});
+                    response.data = _unsubscriberService.CreateSingle(uModel);
                     response.status = true;
                     response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.ContentId, GlobalUTIL.CurrentDateTime.ToString());
                 }

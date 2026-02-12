@@ -68,7 +68,26 @@ namespace com.blazor.bmt.application.services
 
             return resultList;
         }
+        public async Task<UnsubscriberModel> CreateSingle(UnsubscriberModel models)
+        {
+            try
+            {
+                var mappedEntity = _mapper.Map<Unsubscriber>(models);
+                if (mappedEntity == null) throw new ApplicationException("Entity could not be mapped.");
 
+                var newEntity = await _unsubscriberRepository.AddAsync(mappedEntity);
+                _logger.LogInformation("Entity successfully added - UnsubscriberService");
+
+                var newMappedEntity = _mapper.Map<UnsubscriberModel>(newEntity);
+                return newMappedEntity;
+            }
+            catch (Exception ex) {
+                Console.Write(ex);
+                return null;
+            }
+
+          
+        }
         public async Task Update(UnsubscriberModel model)
         {
             // ValidateProductIfNotExist(PaymentModel);

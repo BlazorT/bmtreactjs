@@ -16,10 +16,13 @@ namespace com.blazor.bmt.infrastructure.repositories
         {
 
         }
-      //  Task<IEnumerable<Unsubscriber>> GetUnsubscribersByContactIdAsync(string name);
-      //  Task<IEnumerable<Unsubscriber>> GetUnsubscribersByOrganizationAsync(int orgId);
-       // Task<Unsubscriber> GetUnsubscribersByIdAsync(long id);
-       // Task<IEnumerable<Compaign>> GetCompaignByAllFiltersAsync(Unsubscriber compaign);
+        
+
+      
+        //  Task<IEnumerable<Unsubscriber>> GetUnsubscribersByContactIdAsync(string name);
+        //  Task<IEnumerable<Unsubscriber>> GetUnsubscribersByOrganizationAsync(int orgId);
+        // Task<Unsubscriber> GetUnsubscribersByIdAsync(long id);
+        // Task<IEnumerable<Compaign>> GetCompaignByAllFiltersAsync(Unsubscriber compaign);
         public async Task<IEnumerable<Unsubscriber>> GetUnsubscribersByContactIdAsync(string name)
         {
             //var spec = new UsersWithRoleSpecification(name);

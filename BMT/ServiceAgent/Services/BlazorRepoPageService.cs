@@ -1833,7 +1833,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         pStartTime.Value = (model.StartTime == null ? GlobalUTIL.CurrentDateTime : model.StartTime);
                         parameter.Add(pStartTime);
                         MySqlParameter pFinishTime = new MySqlParameter("p_finishTime", MySqlDbType.DateTime);
-                        pFinishTime.Value = GlobalUTIL.CurrentDateTime.AddDays(10);// (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddMonths(1) : model.FinishTime);
+                        pFinishTime.Value = (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddDays(10) : model.FinishTime);  ;// (model.FinishTime == null ? GlobalUTIL.CurrentDateTime.AddMonths(1) : model.FinishTime);
                         parameter.Add(pFinishTime);
                         MySqlParameter pUserid = new MySqlParameter("p_userId", MySqlDbType.Int32);
                         pUserid.Value = model.CreatedBy <= 0 ? model.LastUpdatedBy : model.CreatedBy;
