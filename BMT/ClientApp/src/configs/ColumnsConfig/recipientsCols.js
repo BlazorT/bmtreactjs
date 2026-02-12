@@ -42,6 +42,12 @@ export const getrecipietslistingCols = (pageRoles, getRecipientsList) => [
     filterable: false,
     disableColumnMenu: true,
     width: 120,
-    renderCell: (params) => <RecipientsActionCell row={params.row} pageRoles={pageRoles} />,
+    renderCell: (params) => (
+      <RecipientsActionCell
+        row={params.row}
+        pageRoles={pageRoles}
+        getRecipientsList={getRecipientsList}
+      />
+    ),
   },
 ];
