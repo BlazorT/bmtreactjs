@@ -336,6 +336,43 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
 
         }
+        [HttpPost("updatecrecipient")]
+        [Route("updatecrecipient")]
+        public async Task<ActionResult> updateCompaignRecipient(CompaignrecipientModel model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            try
+            {
+               
+                if (model.Id > 0)
+                {
+
+                    model.Status = model.Status <= 0 ? (int)COMPAIGNS_STATUS.DROPPED : model.Status;
+                    model.LastUpdatedBy = model.LastUpdatedBy;
+                    model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                    model= await _campaignRecipientService.Update(model);
+                    response.data = model;
+                    response.status = true;
+                    response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.ContentId, GlobalUTIL.CurrentDateTime.ToString());
+                }
+                else
+                {
+                    response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.ContentId, "Failed to change status of compaign");
+                    response.status = false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.ContentId, ex.Message);
+                //response.message = ex.Message;
+            }
+            return Ok(response);
+
+        }
         [HttpPost("contentsubscribers")]
         [Route("contentsubscribers")]
         public async Task<ActionResult> GetContentSubscribersList(WebApiFilters model)
