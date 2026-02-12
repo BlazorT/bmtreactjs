@@ -29,6 +29,7 @@ const PricingModal = ({
   getPricing,
 }) => {
   const user = useSelector((state) => state.user);
+  console.log("user", user);
   const showConfirmation = useShowConfirmation();
   const showToast = useShowToast();
 
@@ -146,7 +147,8 @@ const PricingModal = ({
       isRequired: true,
       disableOption: 'Select Unit',
       message: errors.unitId || 'Please select a unit',
-      disabled: pricingData.unitId,
+      // disabled: pricingData.unitId,
+      disabled: user?.roleId !== 1,     // ← only enabled when roleId is exactly 1
     },
     {
       component: CustomInput,

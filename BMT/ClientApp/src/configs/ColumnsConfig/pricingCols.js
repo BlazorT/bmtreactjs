@@ -8,6 +8,7 @@ export const getPricingCols = (user, getPricing) => [
     disableColumnMenu: false,
     name: 'Network Name',
     key: 'name',
+    flex: 1,
     editable: false,
   },
 
@@ -16,6 +17,7 @@ export const getPricingCols = (user, getPricing) => [
     disableColumnMenu: false,
     name: 'Pricing Unit',
     key: 'unitName',
+    flex: 1,
     editable: false,
   },
   {
@@ -23,6 +25,7 @@ export const getPricingCols = (user, getPricing) => [
     disableColumnMenu: false,
     name: 'Unit Price',
     key: 'unitPrice',
+    flex: 1,
     editable: false,
   },
   {
@@ -30,12 +33,14 @@ export const getPricingCols = (user, getPricing) => [
     disableColumnMenu: false,
     name: 'Discount',
     key: 'discount',
+    flex: 1,
     editable: false,
   },
   {
     filterable: true,
     disableColumnMenu: false,
     name: 'Free Quota',
+    flex: 1,
     key: 'freeAllowed',
     editable: false,
   },
@@ -44,6 +49,7 @@ export const getPricingCols = (user, getPricing) => [
     disableColumnMenu: false,
     name: 'Applicable Date',
     key: 'startTime',
+    flex: 1,
     editable: false,
   },
   ...(user?.roleId === ROLES.SUPERADMIN
