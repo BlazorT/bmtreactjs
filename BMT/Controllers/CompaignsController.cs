@@ -383,7 +383,7 @@ namespace com.blazor.bmt.controllers
             {
 
                 // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
-                var ls = await _campaignRecipientService.GetCampaignRecipientsAlFiltersList(new CompaignrecipientModel { Id = 0, OrgId = Convert.ToInt32(model.orgId), Status=1, ContentId= model.userId });
+                var ls = await _campaignRecipientService.GetCampaignRecipientsAlFiltersList(new CompaignrecipientModel { Id = 0, OrgId = Convert.ToInt32(model.orgId), Status=1, NetworkId=0, albumid=0, CreatedAt=GlobalUTIL.CurrentDateTime.AddYears(-10),  ContentId= model.userId });
                 if (ls.Any())
                 {                   
                     response.data = ls;
