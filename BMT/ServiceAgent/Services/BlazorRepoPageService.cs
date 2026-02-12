@@ -445,26 +445,26 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         parameter.Add(DateFrom);
                         // ❌ You can ignore adding this unless the query uses it.
 
-                        command.CommandText = @"
-                          SELECT 
-                            `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
-                            `CreatedBy`,  `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
-                          FROM `compaignrecipients` 
-                          WHERE orgid = @p_OrgId AND (AlbumId = @p_AlbumId OR ifnull(@p_AlbumId,0) =0) AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
-                        ";
+                        //command.CommandText = @"
+                        //  SELECT 
+                        //    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`, 
+                        //    `CreatedBy`,  `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,ifnull(`albumid` ,0)  albumid
+                        //  FROM `compaignrecipients` 
+                        //  WHERE orgid = @p_OrgId AND (AlbumId = @p_AlbumId OR ifnull(@p_AlbumId,0) =0) AND (NetworkId = @p_NetworkId OR ifnull(@p_NetworkId,0) =0) AND CreatedAt >= @p_DateFrom AND (ContentId like CONCAT('%', @p_ContentId, '%')  OR length(@p_ContentId) <=0)  AND Status = 1;
+                        //";
                         // In GetCampaignRecipientsData method
-//                        command.CommandText = @"
-//  SELECT
-//    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`,
-//    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`, IFNULL(`albumid`, 0) albumid
-//  FROM `compaignrecipients`
-//  WHERE orgid = @p_OrgId
-//    AND (AlbumId = @p_AlbumId OR IFNULL(@p_AlbumId, 0) = 0)
-//    AND (NetworkId = @p_NetworkId OR IFNULL(@p_NetworkId, 0) = 0)
-//    AND CreatedAt >= @p_DateFrom
-//    AND (ContentId LIKE CONCAT('%', @p_ContentId, '%') OR LENGTH(@p_ContentId) <= 0)
-//    AND Status IN (1, 2);   -- ← ONLY THIS LINE CHANGED: now returns both 1 and 2
-//";
+                        command.CommandText = @"
+  SELECT
+    `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`,
+    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`, IFNULL(`albumid`, 0) albumid
+  FROM `compaignrecipients`
+  WHERE orgid = @p_OrgId
+    AND (AlbumId = @p_AlbumId OR IFNULL(@p_AlbumId, 0) = 0)
+    AND (NetworkId = @p_NetworkId OR IFNULL(@p_NetworkId, 0) = 0)
+    AND CreatedAt >= @p_DateFrom
+    AND (ContentId LIKE CONCAT('%', @p_ContentId, '%') OR LENGTH(@p_ContentId) <= 0)
+    AND Status IN (1, 2);   -- ← ONLY THIS LINE CHANGED: now returns both 1 and 2
+";
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
 
@@ -1102,7 +1102,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         pFromDate.Value = model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddMonths(-12) : model.CreatedAt;
                         parameters.Add(pFromDate);
                         MySqlParameter pToDate = new MySqlParameter("p_DateTo", MySqlDbType.DateTime);
-                        pToDate.Value = model.LastUpdatedAt == null || model.CreatedAt.Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
+                        pToDate.Value = model.LastUpdatedAt == null || Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
                         parameters.Add(pToDate);
                         MySqlParameter pId = new MySqlParameter("p_Id", SqlDbType.BigInt);
                         pId.Value = Convert.ToInt64(model.Id);

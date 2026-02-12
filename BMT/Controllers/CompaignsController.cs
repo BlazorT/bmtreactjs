@@ -347,11 +347,12 @@ namespace com.blazor.bmt.controllers
                
                 if (model.Id > 0)
                 {
-
-                    model.Status = model.Status <= 0 ? (int)COMPAIGNS_STATUS.DROPPED : model.Status;
-                    model.LastUpdatedBy = model.LastUpdatedBy;
-                    model.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
-                    model= await _campaignRecipientService.Update(model);
+                    CompaignrecipientModel dModel = await _campaignRecipientService.GetCampaignRecipientsById(model.Id);
+                    dModel.Status = (model.Status == null || model.Status <= 0) ? (int)COMMON_STATUS.IN_ACTIVE : model.Status;
+                    dModel.LastUpdatedBy = model.LastUpdatedBy;
+                    dModel.LastUpdatedAt = GlobalUTIL.CurrentDateTime;
+                    dModel.RowVer = dModel.RowVer + 1;
+                    model = await _campaignRecipientService.Update(dModel);
                     response.data = model;
                     response.status = true;
                     response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.ContentId, GlobalUTIL.CurrentDateTime.ToString());
