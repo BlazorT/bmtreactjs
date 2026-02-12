@@ -20,7 +20,7 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
   const canDelete = pageRoles?.canDelete === 1;
 
   const handleToggleStatus = (newStatus) => {
-    const isReactivate = newStatus === 5;
+    const isReactivate = newStatus === 1;
     const action = isReactivate ? 'reactivate' : 'delete';
     const successMsg = isReactivate ? 'reactivated' : 'deleted';
 
@@ -32,51 +32,46 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
         try {
           const response = await updateStatus(row, newStatus);
 
-          // Close dialog in both cases
           showConfirmation({ isOpen: false });
 
           if (response?.status) {
             showToast(`Recipient ${successMsg} successfully`, 'success');
-            await getRecipientsList();
-            // Force refresh the whole page (simple but effective)
-        
+            if (getRecipientsList) {
+              await getRecipientsList(); // refresh grid
+            }
           } else {
             showToast(response?.message || 'Failed to update status', 'error');
           }
         } catch (err) {
-          // Close dialog on error too
           showConfirmation({ isOpen: false });
           console.error('Toggle status error:', err);
           showToast('Something went wrong', 'error');
         }
       },
-      onNo: () => {
-        showConfirmation({ isOpen: false });
-      },
+      onNo: () => showConfirmation({ isOpen: false }),
     });
   };
 
-  // Show spinner while any status update is in progress (global to this hook)
   if (loading) {
     return <Spinner size="sm" />;
   }
 
   return (
     <CRow className="gap-2 justify-content-center">
-      {row.status === 4 ? (
-        // Deleted/Inactive → show Reactivate
+      {row.status === 2 ? (
+        // Inactive (status = 2) → show Reactivate icon
         <CCol xs="auto">
           <CTooltip content="Re-activate Recipient">
             <CIcon
               icon={cilReload}
               size="lg"
               className="stock-toggle-icon text-success pointer"
-              onClick={() => handleToggleStatus(5)}
+              onClick={() => handleToggleStatus(1)} // ← reactivate sets to 1
             />
           </CTooltip>
         </CCol>
       ) : (
-        // Active → show Delete (if allowed)
+        // Active (status = 1) → show Delete icon (if permitted)
         canDelete && (
           <CCol xs="auto">
             <CTooltip content="Delete Recipient">
@@ -84,7 +79,7 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
                 icon={cilTrash}
                 size="lg"
                 className="stock-toggle-icon text-danger pointer"
-                onClick={() => handleToggleStatus(4)}
+                onClick={() => handleToggleStatus(2)} // ← delete sets to 2
               />
             </CTooltip>
           </CCol>

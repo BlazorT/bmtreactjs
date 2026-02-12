@@ -85,6 +85,7 @@ const recipientslisting = () => {
   const getRecipientsList = async (filters) => {
     const recipientsList = await getRecipientList(filters);
     const albumsList = await fetchAlbums();
+    console.log("recipientsList", recipientsList);
     // If this is the first load (no filters applied yet)
     if (fullRecipientsData.length === 0) {
       setFullRecipientsData(recipientsList); // <-- store full list once
