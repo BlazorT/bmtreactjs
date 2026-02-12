@@ -1089,7 +1089,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         pFromDate.Value = model.CreatedAt.Year <= 1900 ? System.DateTime.Now.AddMonths(-12) : model.CreatedAt;
                         parameters.Add(pFromDate);
                         MySqlParameter pToDate = new MySqlParameter("p_DateTo", MySqlDbType.DateTime);
-                        pToDate.Value = model.LastUpdatedAt == null || model.CreatedAt.Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
+                        pToDate.Value = model.LastUpdatedAt == null || Convert.ToDateTime(model.LastUpdatedAt).Year <= 1900 ? GlobalUTIL.CurrentDateTime : model.LastUpdatedAt;
                         parameters.Add(pToDate);
                         MySqlParameter pId = new MySqlParameter("p_Id", SqlDbType.BigInt);
                         pId.Value = Convert.ToInt64(model.Id);
