@@ -1,59 +1,46 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useShowToast } from '../useShowToast';
+import { useShowToast } from '../useShowToast'; // if needed for toast
 import useApi from '../useApi';
 
-export const useToggleRecipientsStatus = () => {
-  dayjs.extend(utc);
-  const { data, error, loading, postData } = useApi('/BlazorApi/updateuserstatus');
+dayjs.extend(utc);
 
-  const updateStatus = async (user, status, body) => {
-    let deleteBody;
-    if (user) {
-      deleteBody = {
-        id: user[0].id,
-        paymentDetailId: user[0].paymentDetailId,
-        orgId: user[0].orgId === 1 ? 0 : user[0].orgId,
-        userCode: '',
-        registrationSource: user[0].registrationSource,
-        fmctoken: user[0].fmctoken,
-        cityId: user[0].cityId,
-        userName: user[0].userName,
-        securityToken: user[0].securityToken,
-        contact: user[0].contact,
-        firstName: '',
-        middleName: user[0].middleName,
-        lastName: '',
-        nick: user[0].nick,
-        email: user[0].email,
-        password: user[0].password,
-        roleId: user[0].roleId,
-        gpslocation: user[0].gpslocation,
-        ims: user[0].ims,
-        addressId: user[0].addressId,
-        genderId: user[0].genderId,
-        avatar: user[0].avatar,
-        remarks: 'delete confirmation',
-        title: user[0].title,
-        status: status,
-        businessVolume: user[0].businessVolume,
-        dob: user[0].dob,
-        registrationTime: user[0].registrationTime,
-        createdBy: user[0].createdBy,
-        createdAt: user[0].createdAt,
-        lastUpdatedBy: user[0].lastUpdatedBy,
-        lastUpdatedAt: dayjs().utc().format(),
-        rowVer: user[0].rowVer,
-        cityName: user[0].cityName,
-        completeName: user[0].completeName,
-        roleName: user[0].roleName,
-        orgName: user[0].orgName,
-        stateName: user[0].stateName,
-      };
+export const useToggleRecipientsStatus = () => {
+  const { data, error, loading, postData } = useApi('/Compaigns/updatecrecipient');
+
+  const updateStatus = async (recipient, newStatus) => {
+    // recipient should be the row object from your grid (params.row)
+    if (!recipient?.id) {
+      console.error('No recipient ID provided');
+      return { status: false, message: 'Invalid recipient' };
     }
-    console.log('deleteBody', body || deleteBody);
-    const response = await postData(body || deleteBody);
-    return response;
+
+    // Build minimal body matching CompaignrecipientModel
+    const body = {
+      id: recipient.id,                    // must be number/long
+      ContentId: recipient.contentId,                    // must be number/long
+      CreatedBy: recipient.lastUpdatedBy || 0,                    // must be number/long
+      status: newStatus,                   // 4 = delete, 5 = reactivate
+      lastUpdatedBy: recipient.lastUpdatedBy || 0,   // current user ID if available
+      lastUpdatedAt: dayjs().utc().format(),         // ISO format
+      rowVer: recipient.rowVer || 0,       // keep current version (concurrency)
+
+      // Optional: only include if your backend requires them for update
+      // networkId: recipient.networkId,
+      // albumid: recipient.albumid,
+      // contentId: recipient.contentId,
+    };
+
+    console.log('Sending status update body:', body);
+    console.log('recipient:', recipient);
+
+    try {
+      const response = await postData(body);
+      return response;
+    } catch (err) {
+      console.error('Status update failed:', err);
+      return { status: false, message: 'Request failed' };
+    }
   };
 
   return { data, error, loading, updateStatus };

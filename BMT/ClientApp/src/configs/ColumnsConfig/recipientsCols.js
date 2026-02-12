@@ -2,7 +2,7 @@
 // src/configs/ColumnsConfig/recipientsCols.js
 import RecipientsActionCell from 'src/components/DataGridCustomCells/RecipientsActionCell';
 
-export const getrecipietslistingCols = (pageRoles) => [
+export const getrecipietslistingCols = (pageRoles, getRecipientsList) => [
   {
     key: 'networkId',
     name: 'Network Name',
