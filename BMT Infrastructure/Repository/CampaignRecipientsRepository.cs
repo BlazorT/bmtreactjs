@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 namespace com.blazor.bmt.infrastructure.repositories
 {
 
-    public class CampaignRecipientsRepository  : RepositoryTransaction<Compaignrecipient>, ICampaignRecipientsRepository
+    public class CampaignRecipientsRepository  : RepositoryTransaction<Compaignrecipient>, ICampaignRecipientsRepository 
     {
         public CampaignRecipientsRepository(_bmtContext dbContext) : base(dbContext)
         {
 
         }
-        //Task<IEnumerable<Compaignrecipient>> GetCompaignrecipientsByNetworkLAndOrgist(int NetworkId, int OrgId;
-        //Task<IEnumerable<Compaignrecipient>> GetCampaignRecipientsListAllFilters(Compaignrecipient model);
         public async Task<IEnumerable<Compaignrecipient>> GetCompaignrecipientsByNetworkLAndOrgist(int NetworkId, int OrgId)
         {
             return await _dbContext.Compaignrecipients.AsNoTracking()

@@ -1,14 +1,18 @@
-﻿using Blazor.Web.UI.Interfaces;
+﻿using Blazor.Web.Application.Interfaces;
+using Blazor.Web.UI.Interfaces;
+using com.blazor.bmt.application.interfaces;
+using com.blazor.bmt.application.model;
+using com.blazor.bmt.application.services;
+using com.blazor.bmt.core;
+using com.blazor.bmt.util;
+using com.blazor.bmt.viewmodels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using com.blazor.bmt.viewmodels;
-using com.blazor.bmt.util;
-using com.blazor.bmt.application.model;
-using com.blazor.bmt.application.interfaces;
-using com.blazor.bmt.core;
-using Blazor.Web.Application.Interfaces;
-using com.blazor.bmt.application.services;
+using Org.BouncyCastle.Utilities;
+using Org.BouncyCastle.Utilities.Encoders;
+using System.Globalization;
+using System.Text;
 
 namespace com.blazor.bmt.controllers
 {
@@ -20,16 +24,18 @@ namespace com.blazor.bmt.controllers
     {            
         private readonly IBlazorUtilPageService _utilPageService;
         private readonly ICompaignService _compaignService;
+        private readonly IUnsubscriberService _unsubscriberService;
         private readonly IBlazorRepoPageService _blazorRepoPageService;
         private readonly ICampaignRecipientService _campaignRecipientService;
         private readonly IContactAlbumService _contactAlbumService;
         private readonly IMemoryCache _cache;
-        public CompaignsController(IContactAlbumService contactAlbumService,IBlazorUtilPageService utilPageService, ICampaignRecipientService campaignRecipientService, ICompaignService compaignService, IBlazorRepoPageService blazorRepoPageService,  IMemoryCache cache)
+        public CompaignsController(IContactAlbumService contactAlbumService, IUnsubscriberService unsubscriberService,IBlazorUtilPageService utilPageService, ICampaignRecipientService campaignRecipientService, ICompaignService compaignService, IBlazorRepoPageService blazorRepoPageService,  IMemoryCache cache)
         {
              _blazorRepoPageService = blazorRepoPageService ?? throw new ArgumentNullException(nameof(blazorRepoPageService));
             _campaignRecipientService= campaignRecipientService ?? throw new ArgumentNullException(nameof(campaignRecipientService));
             _contactAlbumService = contactAlbumService ?? throw new ArgumentNullException(nameof(contactAlbumService));
             _utilPageService = utilPageService ?? throw new ArgumentNullException(nameof(utilPageService));
+            _unsubscriberService = unsubscriberService ?? throw new ArgumentNullException(nameof(unsubscriberService));
             _compaignService = compaignService ?? throw new ArgumentNullException(nameof(compaignService));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));           
           //  _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor)); 
@@ -325,6 +331,74 @@ namespace com.blazor.bmt.controllers
             {
                 response.status = false;
                 response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.Name, ex.Message);
+                //response.message = ex.Message;
+            }
+            return Ok(response);
+
+        }
+        [HttpPost("contentsubscribers")]
+        [Route("contentsubscribers")]
+        public async Task<ActionResult> GetContentSubscribersList(WebApiFilters model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            try
+            {
+
+                // string token = UTIL.CryptoEngine.Encrypt(Convert.ToString(UTIL.PackageUtil.GenerateRandomNo()) + UTIL.BlazorConstants.TOKEN_EXTERNAL_DELIMETER + id.ToString(), true, UTIL.Configurations.SecKeyCode);
+                var ls = await _campaignRecipientService.GetCampaignRecipientsAlFiltersList(new CompaignrecipientModel { Id = 0, OrgId = Convert.ToInt32(model.orgId), Status=1, ContentId= model.userId });
+                if (ls.Any())
+                {                   
+                    response.data = ls;
+                    response.keyValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(model.userId + "&" + model.orgId));
+                    response.status = true;
+                   response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.userId, GlobalUTIL.CurrentDateTime.ToString());
+                }
+                else
+                {
+                    response.message = string.Format(BlazorConstant.DOES_NOT_EXISTS, model.userId, GlobalUTIL.CurrentDateTime );
+                    response.status = false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.userId, ex.Message);
+                //response.message = ex.Message;
+            }
+            return Ok(response);
+
+        }
+        [HttpPost("unsubscribecontact")]
+        [Route("unsubscribecontact")]
+        public async Task<ActionResult> unsubscribeOrgContact(CompaignrecipientModel model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey) && model.Desc==Convert.ToBase64String(Encoding.UTF8.GetBytes(model.ContentId + "&" + model.OrgId))) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            try
+            {                
+                if (!string.IsNullOrWhiteSpace(model.Desc))
+                {
+                    UnsubscriberModel uModel = new UnsubscriberModel {Contactid= model.ContentId, LastUpdatedAt= GlobalUTIL.CurrentDateTime, RowVer=1, Status=1,  LastUpdatedBy = model.CreatedBy,   Networkid = model.NetworkId };
+
+                    response.data = _unsubscriberService.Create(new(){uModel});
+                    response.status = true;
+                    response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.ContentId, GlobalUTIL.CurrentDateTime.ToString());
+                }
+                else
+                {
+                    response.message = string.Format(BlazorConstant.DOES_NOT_EXISTS, model.ContentId, GlobalUTIL.CurrentDateTime);
+                    response.status = false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.status = false;
+                response.message = string.Format(BlazorConstant.UPDATE_FAILED, model.ContentId, ex.Message);
                 //response.message = ex.Message;
             }
             return Ok(response);

@@ -11,6 +11,7 @@ namespace com.blazor.bmt.util
         public static string UPDATED_NOTIFIED_SUCCESS = "<b> {0} </b> is updated & notified via email {1} successfully, at {2}";
         public static string INSERTED_SUCCESS = "<b> {0} </b> is added successfully, at {1}";
         public static string INSERTED_FAILED = "<b> {0} </b> insert is failed,can try again or contact administrator, Error {1}";
+        public static string DOES_NOT_EXISTS = "<b> {0} </b> does not exists, can try again or contact administrator, time - {1}";
         public static string MERCHANT_ACTIVATION_FAILED = "<b> {0} </b> activation is failed,can try again or contact administrator, Error {1}";
         public static string MERCHANT_ACTIVATION_SUCCESS = "<b> {0} </b> is activated successfully, ready for login, at {1}";
         public static string VEHICLE_DETAILS_SHARE_MESSAGE_SUCCESS = "Vehicle - <b> {0} </b>  details are shared successfully, email sent to  <b>{1}</b> , at {2}";

@@ -40,6 +40,15 @@ namespace com.blazor.bmt.application.services
             var List = await _campaignRecipientsRepository.GetCompaignRecipientByIdAsnc(id);
             var mapped = _mapper.Map<CompaignrecipientModel>(List);
             return mapped;
+        }      
+
+        public async Task<CompaignrecipientModel> Update(CompaignrecipientModel model)
+        {       
+
+          var editModel=  _mapper.Map<Compaignrecipient>(model);
+            await _campaignRecipientsRepository.UpdateAsync(editModel);
+          //  var mapped = _mapper.Map<CompaignrecipientModel>(uModel);
+            return model;         
         }
         //public async Task<IEnumerable<CityModel>> GetCitiesByStatusList(int status)
         //{
