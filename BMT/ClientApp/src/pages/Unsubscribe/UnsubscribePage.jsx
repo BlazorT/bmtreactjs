@@ -195,6 +195,7 @@ export default function UnsubscribePage() {
         id: maxId,
         ContentId: userId,
         OrgId: Number(orgId),
+        networkId: contentList?.[0]?.networkId,
         Desc: code,
         CreatedBy: 1,
         LastUpdatedBy: 1,
