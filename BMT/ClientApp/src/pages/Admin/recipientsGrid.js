@@ -98,6 +98,7 @@ const recipientslisting = () => {
         networkId: globalutil.networks()?.find((n) => n.id === r?.networkId)?.name || '--',
         albumid: albumsList?.find((n) => n.id === r?.albumid)?.name || '--',
         createdAt: formatDateTime(r?.createdAt),
+        recipient: r,
       })),
     );
   };

@@ -18,7 +18,7 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
   const loginUser = useSelector((state) => state.user);
 
   const canDelete = pageRoles?.canDelete === 1;
-
+  console.log({ row });
   const handleToggleStatus = (newStatus) => {
     const isReactivate = newStatus === 1;
     const action = isReactivate ? 'reactivate' : 'delete';
@@ -30,11 +30,10 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
       isOpen: true,
       onYes: async () => {
         try {
-          const response = await updateStatus(row, newStatus);
+          const response = await updateStatus(row?.recipient, newStatus);
 
           showConfirmation({ isOpen: false });
-
-          if (response?.status) {
+          if (response?.status === true) {
             showToast(`Recipient ${successMsg} successfully`, 'success');
             if (getRecipientsList) {
               await getRecipientsList(); // refresh grid
