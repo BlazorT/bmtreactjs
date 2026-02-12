@@ -18,13 +18,14 @@ export const useToggleRecipientsStatus = () => {
     //const network = globalutil.networks().find((n) => n.id === networkId);
     const body = {
       id: recipient.id,
-      ContentId: recipient.ContentId || '',
+      ContentId: recipient.contentId || '',
       CreatedBy: user.userId || 0,
       networkId: recipient.nId || recipient.nId || 0,
       status: newStatus,              // 2 = inactive/delete, 1 = active/reactivate
       LastUpdatedBy: user.userId || 0,
       orgId: user.orgId || 0,
       LastUpdatedAt: dayjs().utc().format(),
+      CreatedAt: dayjs().utc().format(),
       RowVer: recipient.rowVer || recipient.RowVer || 0,
     };
 
