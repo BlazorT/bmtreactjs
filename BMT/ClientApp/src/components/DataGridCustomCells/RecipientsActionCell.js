@@ -1,5 +1,5 @@
 // src/components/DataGridCustomCells/RecipientsActionCell.jsx
-/* eslint-disable react/prop-types */   // quick fix for prop-types warnings
+/* eslint-disable react/prop-types */
 
 import React from 'react';
 import { cilReload, cilTrash } from '@coreui/icons';
@@ -11,10 +11,10 @@ import { useShowToast } from 'src/hooks/useShowToast';
 import { useToggleRecipientsStatus } from 'src/hooks/api/useToggleRecipientsStatus';
 import Spinner from '../UI/Spinner';
 
-const RecipientsActionCell = ({ row, pageRoles }) => {
+const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-  const { updateStatus, loading } = useToggleRecipientsStatus(); // ensure this hook works for recipients
+  const { updateStatus, loading } = useToggleRecipientsStatus();
   const loginUser = useSelector((state) => state.user);
 
   const canDelete = pageRoles?.canDelete === 1;
@@ -30,21 +30,33 @@ const RecipientsActionCell = ({ row, pageRoles }) => {
       isOpen: true,
       onYes: async () => {
         try {
-          const response = await updateStatus(row.id, newStatus); // adjust params if your API needs different format
+          const response = await updateStatus(row, newStatus);
+
+          // Close dialog in both cases
+          showConfirmation({ isOpen: false });
+
           if (response?.status) {
             showToast(`Recipient ${successMsg} successfully`, 'success');
-            // No auto-refresh — user can reload page or use any existing refresh button
+            await getRecipientsList();
+            // Force refresh the whole page (simple but effective)
+        
           } else {
             showToast(response?.message || 'Failed to update status', 'error');
           }
         } catch (err) {
+          // Close dialog on error too
+          showConfirmation({ isOpen: false });
+          console.error('Toggle status error:', err);
           showToast('Something went wrong', 'error');
         }
       },
-      onNo: () => showConfirmation({ isOpen: false }),
+      onNo: () => {
+        showConfirmation({ isOpen: false });
+      },
     });
   };
 
+  // Show spinner while any status update is in progress (global to this hook)
   if (loading) {
     return <Spinner size="sm" />;
   }
@@ -52,23 +64,24 @@ const RecipientsActionCell = ({ row, pageRoles }) => {
   return (
     <CRow className="gap-2 justify-content-center">
       {row.status === 4 ? (
-        // Inactive / Deleted → show Reactivate icon
+        // Deleted/Inactive → show Reactivate
         <CCol xs="auto">
           <CTooltip content="Re-activate Recipient">
             <CIcon
               icon={cilReload}
+              size="lg"
               className="stock-toggle-icon text-success pointer"
               onClick={() => handleToggleStatus(5)}
             />
           </CTooltip>
         </CCol>
       ) : (
-        // Active → show only Delete icon (if permitted)
+        // Active → show Delete (if allowed)
         canDelete && (
           <CCol xs="auto">
             <CTooltip content="Delete Recipient">
               <CIcon
-                  icon={cilTrash}
+                icon={cilTrash}
                 size="lg"
                 className="stock-toggle-icon text-danger pointer"
                 onClick={() => handleToggleStatus(4)}
