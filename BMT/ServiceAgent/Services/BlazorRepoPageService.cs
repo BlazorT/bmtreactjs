@@ -428,6 +428,10 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         pOrgId.Value = cModel.OrgId;
                         parameter.Add(pOrgId);
 
+                        MySqlParameter pStatus = new MySqlParameter("@p_Status", MySqlDbType.Int32);
+                        pStatus.Value = cModel.Status;
+                        parameter.Add(pStatus);
+
                         MySqlParameter pNetworkId = new MySqlParameter("@p_NetworkId", MySqlDbType.Int32);
                         pNetworkId.Value = cModel.NetworkId;
                         parameter.Add(pNetworkId); // ✅ Fix: Add this line
@@ -456,15 +460,20 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         command.CommandText = @"
   SELECT
     `Id`, `networkId`, `ContentId`, `SourceId`, `Desc`, `OrgId`,
-    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`, IFNULL(`albumid`, 0) albumid
+    `CreatedBy`, `CreatedAt`, `LastUpdatedBy`, `LastUpdatedAt`, `RowVer`, `Status`,
+    IFNULL(`albumid`, 0) albumid
   FROM `compaignrecipients`
   WHERE orgid = @p_OrgId
     AND (AlbumId = @p_AlbumId OR IFNULL(@p_AlbumId, 0) = 0)
     AND (NetworkId = @p_NetworkId OR IFNULL(@p_NetworkId, 0) = 0)
     AND CreatedAt >= @p_DateFrom
     AND (ContentId LIKE CONCAT('%', @p_ContentId, '%') OR LENGTH(@p_ContentId) <= 0)
-    AND Status IN (1, 2);   -- ← ONLY THIS LINE CHANGED: now returns both 1 and 2
+    AND (
+          @p_Status = 0
+          OR Status = @p_Status
+        );
 ";
+
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddRange(parameter.ToArray());
 
