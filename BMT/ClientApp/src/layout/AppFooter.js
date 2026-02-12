@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
 import ContactUs from 'src/components/Modals/ContactUs';
 import Unsubscribe from 'src/components/Modals/Unsubscribe';
@@ -8,10 +8,17 @@ import TermOfUse from 'src/components/Modals/TermOfUse';
 
 function AppFooter() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [contactUsmodalOpen, setContactUsmodalOpen] = useState(false);
   const [UnsubscribeModalOpen, setUnsubscribeModalOpen] = useState(false);
   const [termOfUsemodalOpen, setTermOfUsemodalOpen] = useState(false);
+
+  useEffect(() => {
+    if (id == 'unsubscribe') setUnsubscribeModalOpen(true);
+  }, [id]);
+
   const TermsModal = () => {
     setTermsmodalOpen((prev) => !prev);
   };

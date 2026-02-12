@@ -19,7 +19,7 @@ const Unsubscribe = (prop) => {
   const timerRef = useRef(null);
 
   const { fetchData } = useFetch();
-  const TermsModal = () => setTermsmodalOpen(prev => !prev);
+  const TermsModal = () => setTermsmodalOpen((prev) => !prev);
 
   // Timer effect
   useEffect(() => {
@@ -36,7 +36,7 @@ const Unsubscribe = (prop) => {
       showToast('Email is required', 'warning');
       return;
     }
-  
+
     setLoading(true);
 
     const body = {
@@ -52,7 +52,7 @@ const Unsubscribe = (prop) => {
       GenderId: 0,
       Password: '',
       CreatedAt: new Date(),
-      RowVer: 1
+      RowVer: 1,
     };
 
     const res = await new Promise((resolve) => {
@@ -61,9 +61,9 @@ const Unsubscribe = (prop) => {
         {
           method: 'POST',
           body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         },
-        (res) => resolve(res)
+        (res) => resolve(res),
       );
     });
 
@@ -71,8 +71,8 @@ const Unsubscribe = (prop) => {
 
     if (res?.status) {
       showToast(res?.message || 'Code sent successfully', 'success');
-      setCodeInputEnabled(true);      // enable verification code input
-      setTimer(120);                  // 2-minute countdown
+      setCodeInputEnabled(true); // enable verification code input
+      setTimer(120); // 2-minute countdown
     } else {
       showToast(res?.message || res?.errorCode, 'error');
     }
@@ -104,7 +104,7 @@ const Unsubscribe = (prop) => {
       GenderId: 0,
       Password: '',
       CreatedAt: new Date(),
-      RowVer: 1
+      RowVer: 1,
     };
 
     const res = await new Promise((resolve) => {
@@ -113,9 +113,9 @@ const Unsubscribe = (prop) => {
         {
           method: 'POST',
           body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         },
-        (res) => resolve(res)
+        (res) => resolve(res),
       );
     });
 
@@ -139,7 +139,6 @@ const Unsubscribe = (prop) => {
         <ModalHeader toggle={toggle}>Delete Account</ModalHeader>
 
         <ModalBody className="paddingAllSide">
-
           <div className="note-box mb-3">
             <strong>Note :</strong>
             <ul className="mb-0">
@@ -167,7 +166,6 @@ const Unsubscribe = (prop) => {
                 disabled={loading || timer > 0}
               >
                 {timer > 0 ? `Resend in ${formatTime(timer)}` : 'Get Code'}
-
               </button>
             </CCol>
           </CRow>
@@ -203,7 +201,11 @@ const Unsubscribe = (prop) => {
             <button className="btn btn-secondary" onClick={toggle}>
               Cancel
             </button>
-            <button className="btn btn-secondary"onClick={handleSubmit} disabled={loading || !verificationCode.trim()}>
+            <button
+              className="btn btn-secondary"
+              onClick={handleSubmit}
+              disabled={loading || !verificationCode.trim()}
+            >
               Submit
             </button>
 

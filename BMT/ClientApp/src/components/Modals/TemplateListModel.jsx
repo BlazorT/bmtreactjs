@@ -1,21 +1,20 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import {
+  CBadge,
   CListGroup,
   CListGroupItem,
   CModal,
   CModalHeader,
   CModalTitle,
-  CBadge,
 } from '@coreui/react';
 import { useEffect, useState } from 'react';
-import useApi from 'src/hooks/useApi';
-import Spinner from '../UI/Spinner';
-import { getStatusColor } from 'src/helpers/campaignHelper';
-import { useShowToast } from 'src/hooks/useShowToast';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import { cilUser } from '@coreui/icons';
+import { getStatusColor } from 'src/helpers/campaignHelper';
+import useApi from 'src/hooks/useApi';
+import { useShowToast } from 'src/hooks/useShowToast';
 import { NETWORKS } from 'src/util/constants';
+import Spinner from '../UI/Spinner';
 
 const TemplateListModel = ({ isOpen, toggle, networkId = 0, onSelect, WABA, WAT }) => {
   const showToast = useShowToast();

@@ -26,11 +26,13 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const fields = [
-    ...(user.userInfo.userName
-      ? {
-          label: 'Login Name',
-          value: user.userInfo.userName,
-        }
+    ...(user?.userInfo?.userName
+      ? [
+          {
+            label: 'Login Name',
+            value: user.userInfo.userName,
+          },
+        ]
       : []),
     {
       label: 'Full Name',
@@ -44,11 +46,13 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
       label: 'Date Of Joining',
       value: formatDate(user.userInfo.doj),
     },
-    ...(user.userInfo.userContact
-      ? {
-          label: 'Contact',
-          value: user.userInfo.userContact,
-        }
+    ...(user?.userInfo?.userContact
+      ? [
+          {
+            label: 'Contact',
+            value: user.userInfo.userContact,
+          },
+        ]
       : []),
     {
       label: 'Organization',

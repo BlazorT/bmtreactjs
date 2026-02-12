@@ -15,7 +15,6 @@ import PaymentConfirmation from './pages/Admin/EPToken';
 import PricingDetails from './pages/Admin/pricingDetails';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsOfUse from './pages/PrivacyPolicy/TermsOfUse';
-import VerifyImportRequest from './pages/Admin/VerifyImportRequest';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));
 
@@ -24,6 +23,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
 
 // Page
 const Index = React.lazy(() => import('./pages/Auth/SignIn'));
+const Unsubscribe = React.lazy(() => import('./pages/Unsubscribe/UnsubscribePage'));
 const Register = React.lazy(() => import('./pages/Auth/Register'));
 const Page404 = React.lazy(() => import('./pages/Error/Page404'));
 const Page500 = React.lazy(() => import('./pages/Error/Page500'));
@@ -69,6 +69,7 @@ const App = () => {
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route exact path="/" name="Index Page" element={<Index />} />
+            <Route exact path="/unsubscribe" name="Unsubscribe Page" element={<Unsubscribe />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />

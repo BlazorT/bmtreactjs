@@ -429,7 +429,7 @@ const CampignNetworkSettings = ({
                               setShowTemplateList((prev) => ({ ...prev, [network?.name]: true }));
                               getTemplates(network?.id);
                             }}
-                            className="w-auto btn btn-outline-primary btn-sm ms-2"
+                            className="w-auto btn btn-outline-primary btn-sm ms-2 px-2"
                             size="sm"
                           />
                         </div>

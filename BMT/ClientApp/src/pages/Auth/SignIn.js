@@ -1,27 +1,27 @@
+/* eslint-disable react/react-in-jsx-scope */
 // React and third-party libraries
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 //import CIcon from '@coreui/icons-react';
-import Carousel from 'react-bootstrap/Carousel';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Carousel from 'react-bootstrap/Carousel';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 //import { Modal } from 'reactstrap';
 //import { cilChevronRight } from '@coreui/icons';
 
 import globalutil from '../../util/globalutil';
 // local imports
-import Loading from '../../components/UI/Loading';
-import Fotter from 'src/layout/AppFooter.js';
-import useFetch from 'src/hooks/useFetch.jsx';
 import { useDispatch, useSelector } from 'react-redux';
+import useFetch from 'src/hooks/useFetch.jsx';
+import Fotter from 'src/layout/AppFooter.js';
 import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
 import { setUserData } from 'src/redux/user/userSlice';
+import Loading from '../../components/UI/Loading';
 //import { getCountryById } from 'src/constants/countries_and_states';
+import dayjs from 'dayjs';
+import useApi from 'src/hooks/useApi';
 import { transformData } from 'src/navItem';
 import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
-import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
-import useApi from 'src/hooks/useApi';
-import dayjs from 'dayjs';
 
 function SignIn() {
   // const { response, error, loading, fetchData } = useFetch('/storeusers');
@@ -129,7 +129,6 @@ function SignIn() {
   const getUtils = async () => {
     await fetchUtils('/Common/lovs');
     if (utilRes?.current?.status === true) {
-      console.log(utilRes.current.data, 'util');
       addGlobalUtils(utilRes.current.data);
     }
   };
