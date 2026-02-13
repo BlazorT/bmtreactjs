@@ -1,8 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser, cilInfo } from '@coreui/icons';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,130 +12,14 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
 
-const columns = [
-  {
-    key: 'campaignDate',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Campiagn Date',
-    flex: 1,
-    width: 140,
-    editable: false,
-    filterable: true,
-    type: 'timestamp',
-  },
-  {
-    key: 'createdAt',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Campiagn Time',
-    flex: 1,
-    width: 140,
-    editable: false,
-    filterable: true,
-    type: 'timestamp',
-  },
-  {
-    key: 'name',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Campaign Name',
-    width: 160,
-    editable: false,
-    filterable: true,
-  },
-  {
-    key: 'networkName',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Network',
-    flex: 1,
-    width: 130,
-    editable: false,
-    filterable: true,
-  },
-  {
-    key: 'sent', // ✅ match with mapped row key
-    headerClassName: 'custom-header-data-grid',
-    name: 'Sent',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'failed', // ✅ match with mapped row key
-    headerClassName: 'custom-header-data-grid',
-    name: 'Failed',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'delivered', // ✅ match with mapped row key
-    headerClassName: 'custom-header-data-grid',
-    name: 'Delivered',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'readCount',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Reads',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'commentsCount',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Comments',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'clicksCount',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Clicks',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'sharesCount',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Shares',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-  {
-    key: 'likesCount',
-    headerClassName: 'custom-header-data-grid',
-    name: 'Likes',
-    // width: 120,
-    editable: false,
-    filterable: true,
-    flex: 1,
-  },
-];
-
-dayjs.extend(utc);
-
-const campaignNotificationReport = ({ reportField, fetchInspection, value }) => {
+const campaignNotificationReport = () => {
   const { loading, postData: fetchNotifications } = useApi('/Report/notificationsreportdata');
   const pageRoles = usePageRoles('Campaign Stats');
-
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -144,12 +28,180 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     recipient: '',
     deliveryStatus: '',
     status: 0,
-    createdAt: dayjs().subtract(1, 'year').utc().format(),
-    lastUpdatedAt: dayjs().utc().format(),
+    createdAt: dayjs().subtract(1, 'year').format(),
+    lastUpdatedAt: dayjs().format(),
   };
+
   const [filters, setFilters] = useState(initialFilter);
   const [rows, setRows] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const columns = [
+    {
+      key: 'campaignDate',
+      headerClassName: 'custom-header-data-grid',
+      name: 'Campaign Date',
+      flex: 1,
+      width: 140,
+      editable: false,
+      filterable: true,
+      type: 'timestamp',
+    },
+    {
+      key: 'createdAt',
+      headerClassName: 'custom-header-data-grid',
+      name: 'Campaign Time',
+      flex: 1,
+      width: 140,
+      editable: false,
+      filterable: true,
+      type: 'timestamp',
+    },
+    {
+      key: 'networkName',
+      headerClassName: 'custom-header-data-grid',
+      name: 'Network',
+      flex: 1,
+      width: 130,
+      editable: false,
+      filterable: true,
+    },
+    {
+      key: 'name',
+      headerClassName: 'custom-header-data-grid',
+      name: 'Campaign Name',
+      width: 160,
+      editable: false,
+      filterable: true,
+    },
+    {
+      key: 'totalRecipients',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Total',
+      width: 100,
+      editable: false,
+      filterable: true,
+      cellClassName: 'text-center fw-bold',
+    },
+    {
+      key: 'sent',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Sent',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'failed',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Failed',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'delivered',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Delivered',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'readCount',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Reads',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'commentsCount',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Comments',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'clicksCount',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Clicks',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'sharesCount',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Shares',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'likesCount',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Likes',
+      editable: false,
+      filterable: true,
+      flex: 1,
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'actions',
+      headerClassName: 'custom-header-data-grid text-center',
+      name: 'Details',
+      width: 80,
+      editable: false,
+      filterable: false,
+      cellClassName: 'text-center',
+      renderCell: ({ row }) => (
+        <button
+          type="button"
+          className="btn btn-sm btn-link p-0 text-primary"
+          onClick={() => openDetailModal(row)}
+          title="View campaign details"
+        >
+          <CIcon icon={cilInfo} size="lg" />
+        </button>
+      ),
+    },
+  ];
+
+  const openDetailModal = (row) => {
+    setSelectedCampaign(row);
+    console.log('Selected row for modal:', row);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => setModalVisible(false);
+
+  //const getStatusInfo = (deliveryStatus) => {
+  //  const statuses = globalutil.deliverstatus();
+  //  const found = statuses.find((item) => String(item.id) === String(deliveryStatus));
+  //  if (!found) return { label: 'Unknown', color: 'secondary' };
+
+  //  const label = found.name.trim();
+  //  const lower = label.toLowerCase();
+
+  //  let color = 'secondary';
+  //  if (lower.includes('sent') || lower.includes('pending')) color = 'primary';
+  //  else if (lower.includes('delivered') || lower.includes('read') || lower.includes('seen')) color = 'success';
+  //  else if (lower.includes('failed') || lower.includes('undelivered')) color = 'danger';
+  //  else if (lower.includes('deleted')) color = 'dark';
+
+  //  return { label, color };
+  //};
 
   useEffect(() => {
     getNotiList();
@@ -158,20 +210,15 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
-        e.preventDefault(); // avoid form default submit if inside input
+        e.preventDefault();
         applyFilters();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [filters]); // dependencies so it uses the latest filters
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [filters]);
 
-  const toggleFilters = () => {
-    setShowFilters((prev) => !prev);
-  };
+  const toggleFilters = () => setShowFilters((prev) => !prev);
 
   const handleReset = () => {
     setFilters(initialFilter);
@@ -182,10 +229,10 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: dayjs(e).utc().format(),
+        [date]: dayjs(e).format(),
       }));
     } else {
-      const { name, value, type, checked } = e.target;
+      const { name, value } = e.target;
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: value,
@@ -196,97 +243,96 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
   const applyFilters = async () => {
     const filterBody = {
       recipient: filters.recipient,
-      deliveryStatus: String(filters.deliveryStatus || '0'), // ✅ Always string
-      createdAt: dayjs(filters.createdAt).utc().format(),
-      lastUpdatedAt: dayjs(filters.lastUpdatedAt).utc().format(),
+      deliveryStatus: String(filters.deliveryStatus || '0'),
+      createdAt: dayjs(filters.createdAt).format(),
+      lastUpdatedAt: dayjs(filters.lastUpdatedAt).format(),
     };
     getNotiList(filterBody);
   };
 
-  const getNotiList = async (filters) => {
+  const getNotiList = async (filters = {}) => {
     const fetchBody = {
       Id: 0,
       Status: 1,
       OrgId: user.orgId,
-      createdAt: dayjs().utc().subtract(1, 'year').format(),
-      lastUpdatedAt: dayjs().utc().format(),
+      createdAt: dayjs().subtract(1, 'year').format(),
+      lastUpdatedAt: dayjs().format(),
       ...filters,
     };
 
     const res = await fetchNotifications(fetchBody);
+    console.log('res notification', res);
 
     if (!res || !res.status) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: res?.message,
+          toastMessage: res?.message || 'Something went wrong',
           toastVariant: 'error',
-        }),
+        })
       );
       setRows([]);
       return;
     }
 
-    /* 1️⃣ Group by Date + Hour */
+    // Group by date + hour + networkName
     const grouped = _.groupBy(res.data, (item) => {
-      const t = dayjs(item.createdAt).utc().local();
-      return `${t.format('YYYY-MM-DD')}|${t.startOf('hour').format('hh:00 A')}`;
+      const t = dayjs(item.createdAt).local();
+      return `${t.format('YYYY-MM-DD')}|${t.startOf('hour').format('hh:00 A')}|${item.networkName}`;
     });
 
-    const rows = Object.entries(grouped).flatMap(([groupKey, items]) => {
-      const [groupDate, groupHour] = groupKey.split('|');
+    const aggregatedRows = Object.entries(grouped).map(([groupKey, items]) => {
+      const [groupDate, groupHour, networkName] = groupKey.split('|');
 
-      /* 2️⃣ Compute status counts ONCE per hour (same as before) */
+      // Compute status counts once per group
       const statusCounts = {};
       globalutil.deliverstatus().forEach((statusObj) => {
         const statusId = statusObj.id.toString();
         statusCounts[statusObj.name.toLowerCase()] = items.filter(
-          (d) => d.deliveryStatus === statusId,
+          (d) => d.deliveryStatus === statusId
         ).length;
       });
 
-      /* 3️⃣ Map rows and attach hour-level counts */
-      return items.map((item) => {
-        const localTime = dayjs(item.createdAt).utc().local();
+      // Sum engagement metrics across all items in group
+      const totalRead = _.sumBy(items, 'readCount');
+      const totalComments = _.sumBy(items, 'commentsCount');
+      const totalClicks = _.sumBy(items, 'clicksCount');
+      const totalShares = _.sumBy(items, 'sharesCount');
+      const totalLikes = _.sumBy(items, 'likesCount');
 
-        return {
-          id: item.id,
+      // Take first item's name / description / times (assuming same campaign)
+      const representative = items[0] || {};
 
-          /* 🔑 GROUPING KEYS */
-          groupDate,
-          groupHour,
+      const localTime = dayjs(representative.createdAt || new Date()).local();
 
-          /* SORT */
-          sortTime: localTime.valueOf(),
-
-          /* DISPLAY */
-          campaignDate: formatDate(localTime),
-          createdAt: groupHour, // same as your old hour row
-
-          name: item.name,
-          networkName: item.networkName,
-
-          readCount: item.readCount || 0,
-          commentsCount: item.commentsCount || 0,
-          clicksCount: item.clicksCount || 0,
-          sharesCount: item.sharesCount || 0,
-          likesCount: item.likesCount || 0,
-
-          /* ✅ HOUR-LEVEL STATUS COUNTS (EXACT MATCH) */
-          sent: statusCounts.sent || 0,
-          delivered: statusCounts.delivered || 0,
-          failed: statusCounts.failed || 0,
-          deleted: statusCounts.deleted || 0,
-          read: statusCounts.read || 0,
-          seen: statusCounts.seen || 0,
-          undelivered: statusCounts.undelivered || 0,
-          pending: statusCounts.pending || 0,
-        };
-      });
+      return {
+        id: groupKey, // unique group key
+        groupDate,
+        groupHour,
+        sortTime: localTime.valueOf(),
+        campaignDate: localTime.format('DD-MMM-YYYY'),
+        createdAt: groupHour,
+        name: representative.name || 'Multiple Campaigns',
+        networkName,
+        totalRecipients: items.length, // ← this is the TOTAL count you wanted
+        sent: statusCounts.sent || 0,
+        delivered: statusCounts.delivered || 0,
+        failed: statusCounts.failed || 0,
+        readCount: totalRead || 0,
+        commentsCount: totalComments || 0,
+        clicksCount: totalClicks || 0,
+        sharesCount: totalShares || 0,
+        likesCount: totalLikes || 0,
+        description: representative.description || '',
+        startTime: representative.startTime,
+        finishTime: representative.finishTime,
+        deliveryStatus: representative.deliveryStatus || '',
+        remarks: representative.remarks || '',
+      };
     });
 
-    /* 4️⃣ Sorting (Date → Hour → Time) */
-    rows.sort((a, b) => {
+    // Sort
+    aggregatedRows.sort((a, b) => {
       if (a.groupDate !== b.groupDate) {
         return dayjs(b.groupDate).valueOf() - dayjs(a.groupDate).valueOf();
       }
@@ -296,7 +342,7 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       return b.sortTime - a.sortTime;
     });
 
-    setRows(rows);
+    setRows(aggregatedRows);
   };
 
   return (
@@ -308,8 +354,10 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           otherControls={[{ icon: cilChevronBottom, fn: toggleFilters }]}
           filterDisable={true}
         />
+
         {showFilters && (
-          <div>
+          <div className="p-3 bg-light rounded mb-3">
+            {/* ... your filter form remains the same ... */}
             <div className="row">
               <div className="col-md-6">
                 <CustomInput
@@ -323,11 +371,9 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                   placeholder="recipient"
                   className="form-control item"
                   isRequired={false}
-                  title="recipient "
-                  // message="Enter Buisness Name"
+                  title="recipient"
                 />
               </div>
-
               <div className="col-md-6">
                 <CustomSelectInput
                   label="Delivery Status"
@@ -343,6 +389,7 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                 />
               </div>
             </div>
+
             <div className="row">
               <div className="col-md-6 mt-2">
                 <CustomDatePicker
@@ -362,32 +409,21 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                   id="lastUpdatedAt"
                   name="lastUpdatedAt"
                   value={filters.lastUpdatedAt}
-                  title=" Campaign end date  "
+                  title="Campaign end date"
                   onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
                 />
               </div>
             </div>
-            <div className="row">
-              <div className="col-md-6"> </div>
+
+            <div className="row mt-3">
+              <div className="col-md-6"></div>
               <div className="col-md-6">
-                <div className="mt-2">
-                  <button
-                    type="submit"
-                    title="Click for searching user report data"
-                    onClick={applyFilters}
-                    className="btn_Default m-2 sales-btn-style alignLeft"
-                  >
-                    Search
-                  </button>
-                  <button
-                    type="button"
-                    title="Click For Reset Data"
-                    className="btn_Default m-2 sales-btn-style alignLeft"
-                    onClick={handleReset}
-                  >
-                    Reset
-                  </button>
-                </div>
+                <button type="button" onClick={applyFilters} className="btn btn-primary me-2">
+                  Search
+                </button>
+                <button type="button" onClick={handleReset} className="btn btn-outline-secondary">
+                  Reset
+                </button>
               </div>
             </div>
           </div>
@@ -404,18 +440,10 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           defaultExpandedGroups
           groupBy={['campaignDate', 'createdAt']}
           summary={[
-            {
-              field: 'sent',
-              aggregates: [{ aggregate: 'sum', caption: 'Total Sent' }],
-            },
-            {
-              field: 'failed',
-              aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }],
-            },
-            {
-              field: 'delivered',
-              aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }],
-            },
+            { field: 'sent', aggregates: [{ aggregate: 'sum', caption: 'Total Sent' }] },
+            { field: 'failed', aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }] },
+            { field: 'delivered', aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }] },
+            { field: 'totalRecipients', aggregates: [{ aggregate: 'sum', caption: 'Total Recipients' }] },
           ]}
           headerProps={{
             title: 'Campaign Stats',
@@ -426,7 +454,121 @@ const campaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           }}
         />
       </AppContainer>
+
+      {/* ====================== DETAILS MODAL ====================== */}
+      {modalVisible && selectedCampaign && (
+        <div
+          className="modal fade show"
+          style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
+          tabIndex="-1"
+        >
+          <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-content border-0 shadow">
+              <div className="modal-header bg-light">
+                <h5 className="modal-title fw-bold">
+                  Campaign Details — {selectedCampaign.name}
+                </h5>
+                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close" />
+              </div>
+
+              <div className="modal-body">
+                <div className="row g-3">
+                  {/* Left Column – with legend borders */}
+                  <div className="col-md-3">
+                    <div className="mb-4 border-start border-3 border-primary ps-3">
+                      <small className="text-muted d-block mb-1">Campaign Name</small>
+                      <p className="mb-0 fw-medium">{selectedCampaign.name || '—'}</p>
+                    </div>
+                   
+
+                    {/*<div className="mb-4 border-start border-3 border-info ps-3">*/}
+                    {/*  <small className="text-muted d-block mb-1">Network</small>*/}
+                    {/*  <p className="mb-0">{selectedCampaign.networkName || '—'}</p>*/}
+                    {/*</div>*/}
+
+                    {/*<div className="mb-4 border-start border-3 border-success ps-3">*/}
+                    {/*  <small className="text-muted d-block mb-1">Created / Sent At</small>*/}
+                    {/*  <p className="mb-0">*/}
+                    {/*    {dayjs(`${selectedCampaign.campaignDate} ${selectedCampaign.createdAt}`, 'DD-MMM-YYYY hh:mm A')*/}
+                    {/*      .format('DD-MMM-YYYY • hh:mm A')}*/}
+                    {/*  </p>*/}
+                    {/*</div>*/}
+
+                   
+
+                  </div>
+
+                  {/* Right Column – also with legend borders */}
+                  <div className="col-md-6">
+                    <div className="mb-4 border-start border-3 border-warning ps-3">
+                      <small className="text-muted d-block mb-1">Duration</small>
+                      <p className="mb-0">
+                        {dayjs(selectedCampaign.startTime).format('DD-MMM-YY hh:mm A')} —{' '}
+                        {dayjs(selectedCampaign.finishTime).format('DD-MMM-YY hh:mm A')}
+                      </p>
+                    </div>
+                 
+                  
+
+                    {/*<div className="mb-4 border-start border-3 border-success ps-3">*/}
+                    {/*  <small className="text-muted d-block mb-1">Engagement</small>*/}
+                    {/*  <div className="d-flex gap-4 flex-wrap">*/}
+                    {/*    <div>*/}
+                    {/*      <strong>{selectedCampaign.readCount}</strong>*/}
+                    {/*      <small className="d-block text-muted">Reads</small>*/}
+                    {/*    </div>*/}
+                    {/*    <div>*/}
+                    {/*      <strong>{selectedCampaign.clicksCount}</strong>*/}
+                    {/*      <small className="d-block text-muted">Clicks</small>*/}
+                    {/*    </div>*/}
+                    {/*    <div>*/}
+                    {/*      <strong>{selectedCampaign.commentsCount}</strong>*/}
+                    {/*      <small className="d-block text-muted">Comments</small>*/}
+                    {/*    </div>*/}
+                    {/*  </div>*/}
+                    {/*</div>*/}
+
+                    {/*{selectedCampaign.description && (*/}
+                    {/*  <div className="mb-4 border-start border-3 border-secondary ps-3">*/}
+                    {/*    <small className="text-muted d-block mb-1">Description</small>*/}
+                    {/*    <p className="small mb-0">{selectedCampaign.description}</p>*/}
+                    {/*  </div>*/}
+                    {/*)}*/}
+                  </div>
+                  <div className="col-md-3">
+
+                    <div className="mb-4 border-start border-3 border-dark ps-3">
+                      <small className="text-muted d-block mb-1">Total Recipients</small>
+                      <p className="mb-0 fw-bold text-primary">
+                        {selectedCampaign.totalRecipients || 0}
+                      </p>
+                    </div>
+                    {/*<div className="mb-4 border-start border-3 border-primary ps-3">*/}
+                    {/*  <small className="text-muted d-block mb-1">Current Status</small>*/}
+                    {/*  <span*/}
+                    {/*    className={`badge bg-${getStatusInfo(selectedCampaign.deliveryStatus)?.color || 'secondary'} text-white fs-6 px-3 py-2`}*/}
+                    {/*  >*/}
+                    {/*    {getStatusInfo(selectedCampaign.deliveryStatus)?.label || '—'}*/}
+                    {/*  </span>*/}
+                    {/*</div>*/}
+                 
+         
+                  
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light">
+                <button type="button" className="btn btn-secondary" onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
+
 export default campaignNotificationReport;

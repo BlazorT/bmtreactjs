@@ -4854,3 +4854,8 @@ input[id^='recipient-'] {
 .dashboard-link {
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
 }
+.bg-primary {
+  background: #1c8116!important;
+  --cui-bg-opacity: 1;
+  /* background-color: rgba(#1b9e3e, var(--cui-bg-opacity)) !important; */
+}
