@@ -1,5 +1,6 @@
 ﻿using Blazor.Web.ViewModels;
 using com.blazor.bmt.application.model;
+using com.blazor.bmt.core;
 using com.blazor.bmt.viewmodels;
 namespace Blazor.Web.UI.Interfaces
 {
@@ -21,6 +22,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<BlazorApiResponse> UpdateNetworksData(List<networkidvalues> lst, int UserId);
         Task<BlazorResponseViewModel> AddUpdateNetworkSettingsFormData(List<OrgpackagedetailViewModel> lst, int UserId);
         Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignsViewModel model);
+        Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(Compaignrecipient model);
         Task<IEnumerable<MenuViewModel>> loadRoleMenus(int roleid);
         Task<BlazorResponseViewModel> AddUpdateRoleRights(List<RolerightViewModel> vLst);
          Task<BlazorResponseViewModel> postCompaignData(CompaignsViewModel model, int UserId);

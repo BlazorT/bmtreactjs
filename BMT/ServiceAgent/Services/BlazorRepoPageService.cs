@@ -1,15 +1,16 @@
-﻿using Blazor.Web.UI.Interfaces;
-using AutoMapper;
-using System.Data.Common;
-using System.Data;
-using System.Text.Json;
-using com.blazor.bmt.viewmodels;
-using com.blazor.bmt.util;
-using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Blazor.Web.UI.Interfaces;
 using Blazor.Web.ViewModels;
-using com.blazor.bmt.core;
 using com.blazor.bmt.application.model;
+using com.blazor.bmt.core;
+using com.blazor.bmt.util;
+using com.blazor.bmt.viewmodels;
+using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Text.Json;
 
 namespace Blazor.Web.UI.Services
 {
@@ -305,6 +306,48 @@ namespace Blazor.Web.UI.Services
                         response.data = ls;
                         response.status = true;
                         response.message = string.Format("Data process is completed, new contacts {0} are saved successfully", ls.Count.ToString());
+                    }
+                }
+            }// Try
+            catch (Exception ex)
+            {
+                response.status = false;
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return response;
+
+        }
+        public async Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(Compaignrecipient model)
+        {
+            BlazorResponseViewModel response = new BlazorResponseViewModel();
+            List<CompaignrecipientModel> ls = new List<CompaignrecipientModel>();
+            try
+            {
+                string CompaignContactModelJSON = string.Empty;
+           
+
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    connection.Open();
+                    var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                    CompaignContactModelJSON = JsonSerializer.Serialize<Compaignrecipient>(model, options);
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+                        MySqlParameter pCompaignContentsJSON = new MySqlParameter("p_json", MySqlDbType.JSON);
+                        pCompaignContentsJSON.Value = CompaignContactModelJSON;
+                        parameter.Add(pCompaignContentsJSON);                       
+                        command.CommandText = "SpUpdateUnsubscribeContacts";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddRange(parameter.ToArray());
+                        //var result = await command.ExecuteReaderAsync();
+
+                        await command.ExecuteNonQueryAsync();
+                      
+                        response.data = model;
+                        response.status = true;
+                        response.message = string.Format("Data process is completed, contact {0} unsubscribed successfully", model.ToString());
                     }
                 }
             }// Try
