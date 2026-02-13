@@ -2,16 +2,11 @@
 using Blazor.Web.UI.Interfaces;
 using com.blazor.bmt.application.interfaces;
 using com.blazor.bmt.application.model;
-using com.blazor.bmt.application.services;
 using com.blazor.bmt.core;
 using com.blazor.bmt.util;
 using com.blazor.bmt.viewmodels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Org.BouncyCastle.Utilities;
-using Org.BouncyCastle.Utilities.Encoders;
-using System.Globalization;
 using System.Text;
 
 namespace com.blazor.bmt.controllers

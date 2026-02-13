@@ -59,6 +59,7 @@ services.AddScoped<IContactsAlbumRepository, ContactAlbumsRepository>();
 services.AddScoped<IUnsubscriberRepository, UnsubscriberRepository>();
 services.AddScoped<ITemplatevariablerRepository, TemplateVariableRepository>();
 
+
 services.AddScoped(typeof(IAppLogger<>), typeof(com.blazor.bmt.infrastructure.Logging.LoggerAdapter<>));
 
 // ServiceLayer
