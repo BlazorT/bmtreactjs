@@ -22,7 +22,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<BlazorApiResponse> UpdateNetworksData(List<networkidvalues> lst, int UserId);
         Task<BlazorResponseViewModel> AddUpdateNetworkSettingsFormData(List<OrgpackagedetailViewModel> lst, int UserId);
         Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignsViewModel model);
-        Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(Compaignrecipient model);
+        Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(UnsubscriberModel model);
         Task<IEnumerable<MenuViewModel>> loadRoleMenus(int roleid);
         Task<BlazorResponseViewModel> AddUpdateRoleRights(List<RolerightViewModel> vLst);
          Task<BlazorResponseViewModel> postCompaignData(CompaignsViewModel model, int UserId);
