@@ -40,14 +40,27 @@ export const getOrgFiltersFields = (filters, changeFilter, orgs, Role) => [
 
   {
     component: CustomDatePicker,
-    label: 'Date >=',
+    label: 'Date From (Start Time)',
     value: filters.createdAt,
     onChange: (e) => changeFilter(e, 'createdAt'),
     icon: cilCalendar,
     // title: ' DA Registration Date',
     isRequired: true,
     min: dayjs(filters.createdAt),
+    message: 'Enter Valid From Date',
+    maxDate: filters.lastUpdatedAt,
+  },
+  {
+    component: CustomDatePicker,
+    label: 'Date To (Start Time)',
+    value: filters.lastUpdatedAt,
+    onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
+    icon: cilCalendar,
+    // title: ' DA Registration Date',
+    isRequired: true,
+    min: dayjs(filters.lastUpdatedAt),
     message: 'Enter Valid To Date',
+    minDate: filters.createdAt,
   },
   //{
   //  component: CustomInput,

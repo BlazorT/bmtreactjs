@@ -3,6 +3,11 @@ import utc from 'dayjs/plugin/utc';
 import useApi from '../useApi';
 import { useShowToast } from '../useShowToast';
 
+const toNumberOrZero = (value) => {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+};
+
 export const useFetchRecipients = () => {
   dayjs.extend(utc);
 
@@ -12,22 +17,25 @@ export const useFetchRecipients = () => {
 
   const fetchRecipients = async (filters) => {
     //alert(JSON.stringify(filters));
+
     const recipientssBody = {
       id: 0,
-      orgId: filters ? parseInt(filters.orgId) : 0,
-      rowVer: filters ? filters.rowVer : 0,
-      networkId: filters ? parseInt(filters.networkId) : 0,
-      contentId: filters ? filters.contentId || '' : '',
-      status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
-      albumid: filters ? (filters?.albumid === '' ? 0 : Number(filters.albumid)) : 0,
-      createdAt: filters
+      orgId: toNumberOrZero(filters?.orgId),
+      rowVer: filters?.rowVer ?? 0,
+      networkId: toNumberOrZero(filters?.networkId),
+      contentId: filters?.contentId || '',
+      status: toNumberOrZero(filters?.status),
+      albumid: toNumberOrZero(filters?.albumid),
+
+      createdAt: filters?.createdAt
         ? dayjs(filters.createdAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
 
-      lastUpdatedAt: filters
+      lastUpdatedAt: filters?.lastUpdatedAt
         ? dayjs(filters.lastUpdatedAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().format('YYYY-MM-DD'),
     };
+
     // console.log({ recipientssBody });
     const res = await postData(recipientssBody);
     // alert((res.data.status) );

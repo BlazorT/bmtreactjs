@@ -23,6 +23,8 @@ export interface FilterField {
   message?: string;
   disableOption?: string;
   disabled?: boolean;
+  minDate?: string;
+  maxDate?: string;
 }
 
 interface CustomFiltersProps {
@@ -66,6 +68,8 @@ const CustomFilters: React.FC<CustomFiltersProps> = ({
                   disabled={field.disabled}
                   disableOption={field.disableOption}
                   optionsList={field.optionsList}
+                  minDate={field.minDate}
+                  maxDate={field.maxDate}
                 />
               </CCol>
             );
