@@ -416,7 +416,7 @@ namespace com.blazor.bmt.controllers
                 {
                     UnsubscriberModel uModel = new UnsubscriberModel {Contactid= model.ContentId, LastUpdatedAt= GlobalUTIL.CurrentDateTime, RowVer=1, Status=1,  LastUpdatedBy = model.CreatedBy,   Networkid = model.NetworkId };
 
-                    response.data = _blazorRepoPageService.ProcessUnsubscribeContacts(uModel);
+                    response.data =await _blazorRepoPageService.ProcessUnsubscribeContacts(uModel);
                     response.status = true;
                     response.message = string.Format(BlazorConstant.UPDATED_SUCCESS, model.ContentId, GlobalUTIL.CurrentDateTime.ToString());
                 }
