@@ -9,7 +9,6 @@
         public int? clicksCount { get; set; }
         public int? sharesCount { get; set; }
         public int? likesCount { get; set; }
-
         public string? Name { get; set; }
         public string? recipient { get; set; }
         public string? Description { get; set; }
@@ -21,10 +20,16 @@
         public DateTime? LastUpdatedAt { get; set; }
         public DateTime? FinishTime { get; set; }
         public DateTime? StartTime { get; set; }
+
+        public DateTime? nCreatedAt { get; set; }
+        public DateTime? nLastUpdatedAt { get; set; }
         public int Status { get; set; }
 
         // Fields from related tables
         public long? NotificationId { get; set; }
+        public string? MessageRefId { get; set; }
+        public string? failureDetails { get; set; }
+    
         public string? DeliveryStatus { get; set; }
         public string? NetworkName { get; set; }
     }
