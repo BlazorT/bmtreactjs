@@ -1,8 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import CIcon from '@coreui/icons-react';
-import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser, cilInfo } from '@coreui/icons';
+import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser, cilInfo, cilX } from '@coreui/icons';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';   // ← this line is missing
+
+dayjs.extend(relativeTime);   // ← this line is missing or not executed
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -186,23 +189,40 @@ const campaignNotificationReport = () => {
 
   const closeModal = () => setModalVisible(false);
 
-  //const getStatusInfo = (deliveryStatus) => {
-  //  const statuses = globalutil.deliverstatus();
-  //  const found = statuses.find((item) => String(item.id) === String(deliveryStatus));
-  //  if (!found) return { label: 'Unknown', color: 'secondary' };
+  const getStatusInfo = (deliveryStatus) => {
+    const statuses = globalutil.deliverstatus();
+    const found = statuses.find((item) => String(item.id) === String(deliveryStatus));
 
-  //  const label = found.name.trim();
-  //  const lower = label.toLowerCase();
+    if (!found) {
+      return {
+        label: 'Unknown',
+        color: 'secondary',
+        icon: '❓'   // Unicode question mark
+      };
+    }
 
-  //  let color = 'secondary';
-  //  if (lower.includes('sent') || lower.includes('pending')) color = 'primary';
-  //  else if (lower.includes('delivered') || lower.includes('read') || lower.includes('seen')) color = 'success';
-  //  else if (lower.includes('failed') || lower.includes('undelivered')) color = 'danger';
-  //  else if (lower.includes('deleted')) color = 'dark';
+    const label = found.name.trim();
+    const lower = label.toLowerCase();
 
-  //  return { label, color };
-  //};
+    let color = 'secondary';
+    let icon = '❓'; // default fallback
 
+    if (lower.includes('sent') || lower.includes('pending')) {
+      color = 'primary';
+      icon = '✓';     // Unicode check mark
+    } else if (lower.includes('delivered') || lower.includes('read') || lower.includes('seen')) {
+      color = 'success';
+      icon = '✓';     // Unicode check mark
+    } else if (lower.includes('failed') || lower.includes('undelivered')) {
+      color = 'danger';
+      icon = '✗';     // Unicode ballot cross (or you can use ×)
+    } else if (lower.includes('deleted')) {
+      color = 'dark';
+      icon = '🗑';     // Unicode trash / wastebasket
+    }
+
+    return { label, color, icon };
+  };
   useEffect(() => {
     getNotiList();
   }, []);
@@ -249,7 +269,13 @@ const campaignNotificationReport = () => {
     };
     getNotiList(filterBody);
   };
+  const [searchTerm, setSearchTerm] = useState('');
 
+  const filteredRecipients = selectedCampaign?.recipients?.filter((r) =>
+    r.recipient?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.messageRefId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.failureDetails?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
   const getNotiList = async (filters = {}) => {
     const fetchBody = {
       Id: 0,
@@ -314,7 +340,7 @@ const campaignNotificationReport = () => {
         createdAt: groupHour,
         name: representative.name || 'Multiple Campaigns',
         networkName,
-        totalRecipients: items.length, // ← this is the TOTAL count you wanted
+        totalRecipients: items.length,
         sent: statusCounts.sent || 0,
         delivered: statusCounts.delivered || 0,
         failed: statusCounts.failed || 0,
@@ -328,6 +354,15 @@ const campaignNotificationReport = () => {
         finishTime: representative.finishTime,
         deliveryStatus: representative.deliveryStatus || '',
         remarks: representative.remarks || '',
+        // Store full recipients list for modal
+        recipients: items.map((item) => ({
+          recipient: item.recipient,
+          nCreatedAt: item.nCreatedAt,
+          nLastUpdatedAt: item.nLastUpdatedAt,
+          deliveryStatus: item.deliveryStatus,
+          messageRefId: item.messageRefId,
+          failureDetails: item.failureDetails || '',
+        })),
       };
     });
 
@@ -357,7 +392,6 @@ const campaignNotificationReport = () => {
 
         {showFilters && (
           <div className="p-3 bg-light rounded mb-3">
-            {/* ... your filter form remains the same ... */}
             <div className="row">
               <div className="col-md-6">
                 <CustomInput
@@ -414,18 +448,26 @@ const campaignNotificationReport = () => {
                 />
               </div>
             </div>
-
             <div className="row mt-3">
-              <div className="col-md-6"></div>
-              <div className="col-md-6">
-                <button type="button" onClick={applyFilters} className="btn btn-primary me-2">
-                  Search
-                </button>
-                <button type="button" onClick={handleReset} className="btn btn-outline-secondary">
+              <div className="col-12 d-flex justify-content-end">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="btn btn-outline-secondary me-2"
+                >
                   Reset
+                </button>
+
+                <button
+                  type="button"
+                  onClick={applyFilters}
+                  className="btn btn-primary"
+                >
+                  Search
                 </button>
               </div>
             </div>
+
           </div>
         )}
       </AppContainer>
@@ -462,99 +504,240 @@ const campaignNotificationReport = () => {
           style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
           tabIndex="-1"
         >
-          <div className="modal-dialog modal-lg modal-dialog-centered">
+          <div className="modal-dialog modal-xl modal-dialog-centered">
             <div className="modal-content border-0 shadow">
               <div className="modal-header bg-light">
                 <h5 className="modal-title fw-bold">
-                  Campaign Details — {selectedCampaign.name}
+                  Campaign - {selectedCampaign.name || 'Multiple Campaigns'}
                 </h5>
-                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close" />
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={closeModal}
+                  aria-label="Close"
+                />
               </div>
 
               <div className="modal-body">
-                <div className="row g-3">
-                  {/* Left Column – with legend borders */}
-                  <div className="col-md-3">
+                {/* Summary Section */}
+                <div className="row g-4 mb-2">
+                  {/* Left Column – Summary Info */}
+                  <div className="col-md-4">
                     <div className="mb-4 border-start border-3 border-primary ps-3">
                       <small className="text-muted d-block mb-1">Campaign Name</small>
                       <p className="mb-0 fw-medium">{selectedCampaign.name || '—'}</p>
                     </div>
-                   
-
-                    {/*<div className="mb-4 border-start border-3 border-info ps-3">*/}
-                    {/*  <small className="text-muted d-block mb-1">Network</small>*/}
-                    {/*  <p className="mb-0">{selectedCampaign.networkName || '—'}</p>*/}
-                    {/*</div>*/}
-
-                    {/*<div className="mb-4 border-start border-3 border-success ps-3">*/}
-                    {/*  <small className="text-muted d-block mb-1">Created / Sent At</small>*/}
-                    {/*  <p className="mb-0">*/}
-                    {/*    {dayjs(`${selectedCampaign.campaignDate} ${selectedCampaign.createdAt}`, 'DD-MMM-YYYY hh:mm A')*/}
-                    {/*      .format('DD-MMM-YYYY • hh:mm A')}*/}
-                    {/*  </p>*/}
-                    {/*</div>*/}
-
-                   
 
                   </div>
+                  <div className="col-md-4">
+                    <div className="mb-4 border-start border-3 border-primary ps-3">
+                      <small className="text-muted d-block mb-1">Network Name</small>
+                      <p className="mb-0 fw-medium">{selectedCampaign.networkName || '—'}</p>
+                    </div>
 
-                  {/* Right Column – also with legend borders */}
-                  <div className="col-md-6">
+                  </div>
+                  <div className="col-md-4">
                     <div className="mb-4 border-start border-3 border-warning ps-3">
-                      <small className="text-muted d-block mb-1">Duration</small>
+                      <small className="text-muted d-block mb-1">Campaign Time</small>
                       <p className="mb-0">
-                        {dayjs(selectedCampaign.startTime).format('DD-MMM-YY hh:mm A')} —{' '}
+                        {dayjs(selectedCampaign.startTime).format('DD-MMM-YY hh:mm A')} ~ {' '}
                         {dayjs(selectedCampaign.finishTime).format('DD-MMM-YY hh:mm A')}
                       </p>
                     </div>
-                 
-                  
-
-                    {/*<div className="mb-4 border-start border-3 border-success ps-3">*/}
-                    {/*  <small className="text-muted d-block mb-1">Engagement</small>*/}
-                    {/*  <div className="d-flex gap-4 flex-wrap">*/}
-                    {/*    <div>*/}
-                    {/*      <strong>{selectedCampaign.readCount}</strong>*/}
-                    {/*      <small className="d-block text-muted">Reads</small>*/}
-                    {/*    </div>*/}
-                    {/*    <div>*/}
-                    {/*      <strong>{selectedCampaign.clicksCount}</strong>*/}
-                    {/*      <small className="d-block text-muted">Clicks</small>*/}
-                    {/*    </div>*/}
-                    {/*    <div>*/}
-                    {/*      <strong>{selectedCampaign.commentsCount}</strong>*/}
-                    {/*      <small className="d-block text-muted">Comments</small>*/}
-                    {/*    </div>*/}
-                    {/*  </div>*/}
-                    {/*</div>*/}
-
-                    {/*{selectedCampaign.description && (*/}
-                    {/*  <div className="mb-4 border-start border-3 border-secondary ps-3">*/}
-                    {/*    <small className="text-muted d-block mb-1">Description</small>*/}
-                    {/*    <p className="small mb-0">{selectedCampaign.description}</p>*/}
-                    {/*  </div>*/}
-                    {/*)}*/}
                   </div>
-                  <div className="col-md-3">
 
-                    <div className="mb-4 border-start border-3 border-dark ps-3">
-                      <small className="text-muted d-block mb-1">Total Recipients</small>
-                      <p className="mb-0 fw-bold text-primary">
+                
+                </div>
+
+                {/* Recipients Details – Beautiful List with Legend Borders + Search */}
+                <div className="mt-2">
+                  {/* Header with Title, Badge, and Centered Search */}
+                  {/* Center: Search (grows to fill space) */}
+                  {/* Header with Title, Badge, and Perfectly Centered Search */}
+                  <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4 gap-3">
+
+                    {/* LEFT – Title + Badge */}
+                    <div className="d-flex align-items-center gap-3 flex-shrink-0">
+                      <h5 className="mb-0 fw-semibold text-primary">
+                        Recipients Details
+                      </h5>
+                      <span className="badge bg-primary rounded-pill fs-6 px-3 py-1">
                         {selectedCampaign.totalRecipients || 0}
-                      </p>
+                      </span>
                     </div>
-                    {/*<div className="mb-4 border-start border-3 border-primary ps-3">*/}
-                    {/*  <small className="text-muted d-block mb-1">Current Status</small>*/}
-                    {/*  <span*/}
-                    {/*    className={`badge bg-${getStatusInfo(selectedCampaign.deliveryStatus)?.color || 'secondary'} text-white fs-6 px-3 py-2`}*/}
-                    {/*  >*/}
-                    {/*    {getStatusInfo(selectedCampaign.deliveryStatus)?.label || '—'}*/}
-                    {/*  </span>*/}
-                    {/*</div>*/}
-                 
-         
-                  
+
+                    {/* CENTER – Search */}
+                    <div className="flex-grow-1 d-flex justify-content-center">
+                      <div
+                        className="input-group input-group-sm"
+                        style={{ maxWidth: '450px', width: '100%' }}
+                      >
+                        <input
+                          type="text"
+                          className="form-control border-start-0 border-end-0"
+                          placeholder="Search by recipient, ref ID or failure reason..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        {searchTerm && (
+                          <button
+                            className="btn btn-sm btn-outline-secondary border-start-0 px-2"
+                            type="button"
+                            onClick={() => setSearchTerm('')}
+                            title="Clear search"
+                          >
+                            <CIcon icon={cilX} size="sm" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* RIGHT – Search Result Count */}
+                    <div className="d-flex align-items-center justify-content-md-end flex-shrink-0">
+                      <span className="text-muted small">
+                        Search Result -{' '}
+                        <strong className="text-primary">
+                          {filteredRecipients?.length || 0}
+                        </strong>{' '}
+                        {filteredRecipients?.length !== 1 ? '' : ''}
+                      </span>
+                    </div>
+
                   </div>
+
+
+                  {/* Filtered Recipients List */}
+                  {selectedCampaign.recipients?.length > 0 ? (
+                    <div className="row g-3">
+                      {filteredRecipients.map((recipient, index) => {
+                        const statusInfo = getStatusInfo(recipient.deliveryStatus);
+
+                        // Dynamic label for nLastUpdatedAt
+                        let statusTimeLabel = 'Updated At';
+                        if (recipient.deliveryStatus === '6') statusTimeLabel = 'Sent At';
+                        else if (recipient.deliveryStatus === '7') statusTimeLabel = 'Delivered At';
+                        else if (recipient.deliveryStatus === '8') statusTimeLabel = 'Failed At';
+                        else if (recipient.deliveryStatus === '9') statusTimeLabel = 'Deleted At';
+                        else if (recipient.deliveryStatus === '10') statusTimeLabel = 'Read At';
+                        else if (recipient.deliveryStatus === '11') statusTimeLabel = 'Seen At';
+
+                        // Border color based on status
+                        const borderColorClass =
+                          recipient.deliveryStatus === '8' ? 'border-danger' :
+                            recipient.deliveryStatus === '7' || recipient.deliveryStatus === '10' || recipient.deliveryStatus === '11' ? 'border-success' :
+                              recipient.deliveryStatus === '6' ? 'border-primary' :
+                                'border-warning';
+
+                        // Relative time from nLastUpdatedAt
+                        const relativeTime = recipient.nLastUpdatedAt
+                          ? dayjs(recipient.nLastUpdatedAt).fromNow()
+                          : '—';
+
+                        return (
+                          <div key={index} className="col-12">
+                            <div
+                              className={`card border-0 shadow-sm hover-shadow transition-all ${borderColorClass} border-start border-4 position-relative`}
+                              style={{
+                                transition: 'all 0.25s ease',
+                                background: 'rgba(255,255,255,0.97)',
+                                borderRadius: '0.75rem',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-4px)';
+                                e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.12)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.08)';
+                              }}
+                            >
+                              <div className="card-body p-4 pb-5"> {/* extra bottom padding for relative time */}
+                                <div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                                  {/* Left – Main Info */}
+                                  <div className="d-flex flex-column gap-3 flex-grow-1">
+                                    <div className="d-flex align-items-center gap-3">
+                                      {/*<div*/}
+                                      {/*  className="rounded-circle bg-light d-flex align-items-center justify-content-center flex-shrink-0"*/}
+                                      {/*  style={{ width: '50px', height: '50px' }}*/}
+                                      {/*>*/}
+                                      {/*  <strong className="text-muted fs-5">{index + 1}</strong>*/}
+                                      {/*</div>*/}
+                                      <div className="flex-grow-1">
+                                        <h6 className="mb-1 fw-semibold text-white">
+                                          {recipient.recipient || 'Unknown Recipient'}
+                                        </h6>
+                                        <small className="text-muted d-block">
+                                          Ref: {recipient.messageRefId || '—'}
+                                        </small>
+                                      </div>
+                                    </div>
+
+                                    <div className="d-flex gap-4 flex-wrap">
+                                      <div>
+                                        <small className="text-muted d-block">Sent At</small>
+                                        <strong className="text-white">
+                                          {recipient.nCreatedAt
+                                            ? dayjs(recipient.nCreatedAt).format('DD-MMM-YY • hh:mm A')
+                                            : '—'}
+                                        </strong>
+                                      </div>
+
+                                      <div>
+                                        <small className="text-muted d-block">{statusTimeLabel}</small>
+                                        <strong className="text-white">
+                                          {recipient.nLastUpdatedAt
+                                            ? dayjs(recipient.nLastUpdatedAt).format('DD-MMM-YY • hh:mm A')
+                                            : '—'}
+                                        </strong>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Right – Status Badge with Icon */}
+                                  <div className="d-flex flex-column align-items-end gap-2">
+                                    <span
+                                      className={`badge bg-${statusInfo.color} text-white px-3 py-2 fs-6 d-flex align-items-center gap-2`}
+                                      style={{ minWidth: '120px', justifyContent: 'center' }}
+                                    >
+                                      <span style={{ fontSize: '1.1rem' }}>{statusInfo.icon}</span>
+                                      <span>{statusInfo.label}</span>
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Failure Details */}
+                                {recipient.deliveryStatus === '8' && recipient.failureDetails && (
+                                  <div className="mt-4 pt-3 border-top">
+                                    <small className="text-danger fw-medium d-block mb-2">
+                                      Failure Reason:
+                                    </small>
+                                    <p className="text-danger small mb-0">
+                                      {recipient.failureDetails}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Relative Update Time – Bottom Right */}
+                              <div
+                                className="position-absolute bottom-0 end-0 me-3 mb-2"
+                                style={{ fontSize: '0.75rem' }}
+                              >
+                                <small className="text-muted fst-italic">
+                                  {relativeTime}
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="alert alert-info text-center p-4 mb-0 rounded-3">
+                      No individual recipient details available for this campaign group.
+                    </div>
+                  )}
                 </div>
               </div>
 

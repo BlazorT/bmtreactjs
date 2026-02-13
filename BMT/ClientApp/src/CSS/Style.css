@@ -4859,3 +4859,6 @@ input[id^='recipient-'] {
   --cui-bg-opacity: 1;
   /* background-color: rgba(#1b9e3e, var(--cui-bg-opacity)) !important; */
 }
+.border-top {
+  border-top: var(--cui-border-width) var(--cui-border-style) #dbdfe63d !important;
+}
