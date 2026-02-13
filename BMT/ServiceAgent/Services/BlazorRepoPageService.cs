@@ -346,7 +346,7 @@ SELECT
     IFNULL(n.clicksCount, 0) AS clicksCount,
     IFNULL(n.sharesCount, 0) AS sharesCount,
     IFNULL(n.likesCount, 0) AS likesCount,
-IFNULL(n.LastUpdateAt, n.CreatedAt) AS nLastUpdatedAt,
+IFNULL(n.LastUpdatedAt, n.CreatedAt) AS nLastUpdatedAt,
 IFNULL(n.CreatedAt, now(3)) AS nCreatedAt,
     c.Remarks,
     c.HashTags,
