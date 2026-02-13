@@ -35,7 +35,7 @@ export const useFetchOrgUser = () => {
       // keyword: filters ? filters.keyword : '',
       createdAt: filters
         ? dayjs(filters.createdAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().subtract(2, 'year').format('YYYY-MM-DD'),
+        : dayjs().utc().subtract(5, 'year').format('YYYY-MM-DD'),
       lastUpdatedAt: filters
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
         : dayjs().utc().format('YYYY-MM-DD'),

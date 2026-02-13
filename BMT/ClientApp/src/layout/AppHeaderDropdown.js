@@ -1,47 +1,31 @@
-import React, { useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useEffect, useState } from 'react';
 
 import {
-  CDropdown,
-  CDropdownDivider,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-} from '@coreui/react';
-import {
-  cilLockLocked,
-  cilChevronBottom,
-  cilUser,
   cilAccountLogout,
+  cilChevronBottom,
+  cilLockLocked,
+  cilUser,
   cilUserX,
 } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
+import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import { setUserData } from 'src/redux/user/userSlice';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import UserProfileModal from '../components/Modals/UserProfileModal';
-import useFetch from 'src/hooks/useFetch';
-import { setNavItems } from 'src/redux/navItems/navItemsSlice';
-import { keysToKeep } from './AppHeader';
-import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import Spinner from 'src/components/UI/Spinner';
-import { useShowToast } from 'src/hooks/useShowToast';
-import { faMonument } from '@fortawesome/free-solid-svg-icons';
-import dayjs from 'dayjs';
 import Unsubscribe from 'src/components/Modals/UnsubscribeModal';
+import { useLogout } from 'src/hooks/api/useLogout';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import UserProfileModal from '../components/Modals/UserProfileModal';
 
 const AppHeaderDropdown = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const showConfirmation = useShowConfirmation();
-  const showToast = useShowToast();
 
-  const { loading, updateStatus } = useToggleUserStatus();
+  const { logout, logoutLoading } = useLogout();
 
   const user = useSelector((state) => state.user);
+  const confirMdl = useSelector((state) => state.confirMdl);
 
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -52,12 +36,15 @@ const AppHeaderDropdown = () => {
   const UnsubscribeModal = () => {
     setUnsubscribeModalOpen((prev) => !prev);
   };
-  const {
-    response: logoutRes,
-    error: logoutmenuErr,
-    loading: logoutLoading,
-    fetchData: userLogout,
-  } = useFetch();
+
+  useEffect(() => {
+    if (confirMdl.isOpen && confirMdl.body === 'Are you sure you want to Logout?') {
+      showConfirmation({
+        ...confirMdl,
+        loading: logoutLoading,
+      });
+    }
+  }, [logoutLoading]);
 
   const handleLogout = () => {
     dispatch(
@@ -72,46 +59,8 @@ const AppHeaderDropdown = () => {
   };
 
   const onYesLogOut = async () => {
-    dispatch(
-      setConfirmation({
-        body: (
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status"></div>
-          </div>
-        ),
-      }),
-    );
-    await userLogout('/Common/logout', { method: 'POST' });
-    if (logoutRes.current?.status === true) {
-      navigate('/');
-      dispatch(setNavItems([]));
-      dispatch(
-        setUserData({
-          userId: '',
-          dspId: '',
-          roleId: '',
-          userInfo: {},
-          isAuthenticated: false,
-          socialApiKey: '',
-        }),
-      );
-
-      // Object.keys(localStorage).forEach((key) => {
-      //   if (!keysToKeep.includes(key)) {
-      //     localStorage.removeItem(key);
-      //   }
-      // });
-      onNo();
-    } else {
-      onNo();
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: 'something went wrong try again later',
-          toastVariant: 'error',
-        }),
-      );
-    }
+    await logout();
+    onNo();
   };
 
   const onNo = () => {
@@ -122,74 +71,8 @@ const AppHeaderDropdown = () => {
     );
   };
 
-  const toggleStatus = () => {
-    showConfirmation({
-      header: 'Confirmation!',
-      body: `Are you sure you want to unsubscribe ${user?.userInfo?.fullName}?`,
-      isOpen: true,
-      onYes: () => onYesToggle(2),
-      onNo: () => onNoConfirm(),
-    });
-  };
-
-  const onYesToggle = async (status) => {
-    showConfirmation({
-      body: (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border" role="status"></div>
-        </div>
-      ),
-    });
-    const body = {
-      id: user?.userInfo?.id,
-      email: user?.userInfo?.email,
-      roleId: user?.userInfo?.roleId,
-      firstName: user?.userInfo?.firstName || user?.userInfo?.fullName?.split(' ')[0] || '',
-      lastName: user?.userInfo?.lastName || user?.userInfo?.fullName?.split(' ')[1] || '',
-      status: 2,
-      rowVer: user?.userInfo?.rowVer, // MUST match DB rowVer
-      lastUpdatedBy: user?.userInfo?.id,
-      UserCode: '',
-      GenderId: 0,
-      CreatedAt: dayjs().utc().format(),
-    };
-    const response = await updateStatus(null, status, body);
-    console.log(response);
-    if (response.status) {
-      showToast(`${user?.userInfo?.fullName} has been unsubscribe successfully`);
-      await userLogout('/Common/logout', { method: 'POST' });
-      if (logoutRes.current?.status === true) {
-        navigate('/');
-        dispatch(setNavItems([]));
-        dispatch(
-          setUserData({
-            userId: '',
-            dspId: '',
-            roleId: '',
-            userInfo: {},
-            isAuthenticated: false,
-          }),
-        );
-
-        Object.keys(localStorage).forEach((key) => {
-          if (!keysToKeep.includes(key)) {
-            localStorage.removeItem(key);
-          }
-        });
-        onNo();
-      }
-    } else {
-      showToast(response.message, 'error');
-    }
-    onNoConfirm();
-  };
-
-  const onNoConfirm = () => {
-    showConfirmation({ isOpen: false });
-  };
   return (
     <CDropdown variant="nav-item">
-      {loading && <Spinner />}
       <CDropdownItem className="text-center UserNameNav">{user.userInfo.fullName}</CDropdownItem>
       <CDropdownToggle className="py-0 text-center labelName RoleNameIconNav" caret={false}>
         {user.userInfo.userRole}

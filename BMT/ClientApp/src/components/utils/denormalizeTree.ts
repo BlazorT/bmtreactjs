@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clone } from './clone';
 
 export const denormalizeTree = (data: any) => {
@@ -17,9 +18,7 @@ export const denormalizeTree = (data: any) => {
         item.children = [];
 
         tmpItem.children.map((id: any) => {
-          const clonedChildrenData = clone(
-            originalData.filter((oItem: any) => oItem.id === id)[0]
-          );
+          const clonedChildrenData = clone(originalData.filter((oItem: any) => oItem.id === id)[0]);
 
           delete clonedChildrenData.id;
           delete clonedChildrenData.parent;

@@ -1,16 +1,9 @@
-import React from 'react';
-import {
-  cilMediaPause,
-  cilMediaPlay,
-  cilMediaStop,
-  cilPencil,
-  cilReload,
-  cilTrash,
-} from '@coreui/icons';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable react/react-in-jsx-scope */
+import { cilMediaPause, cilMediaPlay, cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CBadge, CCol, CRow, CTooltip } from '@coreui/react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useToggleCampaignStatus } from 'src/hooks/api/useFetchUpdateCampaign';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -45,8 +38,7 @@ const CampaignActionCell = (prop) => {
       return;
     }
 
-    const campaignName =
-      campaign?.[0]?.name || value?.row?.name || 'this campaign';
+    const campaignName = campaign?.[0]?.name || value?.row?.name || 'this campaign';
 
     let actionLabel = '';
 
@@ -85,8 +77,7 @@ const CampaignActionCell = (prop) => {
       if (response?.status) {
         fetching();
 
-        const campaignName =
-          campaign?.[0]?.name || value?.row?.name || 'Campaign';
+        const campaignName = campaign?.[0]?.name || value?.row?.name || 'Campaign';
 
         let successMessage = '';
 
@@ -159,7 +150,7 @@ const CampaignActionCell = (prop) => {
                   <CIcon
                     onClick={() => toggleStatus(STATUS.PAUSE)}
                     className="stock-toggle-icon"
-                      icon={cilMediaPause}
+                    icon={cilMediaPause}
                     size="lg"
                     style={{ cursor: 'pointer' }}
                   />
@@ -178,8 +169,8 @@ const CampaignActionCell = (prop) => {
                     <CIcon
                       onClick={() => toggleStatus(STATUS.REACTIVATE)}
                       className="stock-toggle-icon"
-                        icon={cilReload}
-                        size="lg"
+                      icon={cilReload}
+                      size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>
@@ -195,8 +186,8 @@ const CampaignActionCell = (prop) => {
                     <CIcon
                       onClick={editCampaign}
                       className="stock-toggle-icon"
-                          icon={cilPencil}
-                          size="lg"
+                      icon={cilPencil}
+                      size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>
@@ -207,8 +198,8 @@ const CampaignActionCell = (prop) => {
                       <CIcon
                         onClick={() => toggleStatus(STATUS.RESUME)}
                         className="stock-toggle-icon"
-                            icon={cilMediaPlay}
-                            size="lg"
+                        icon={cilMediaPlay}
+                        size="lg"
                         style={{ cursor: 'pointer' }}
                       />
                     </CTooltip>
@@ -217,8 +208,8 @@ const CampaignActionCell = (prop) => {
                       <CIcon
                         onClick={() => toggleStatus(STATUS.PAUSE)}
                         className="stock-toggle-icon"
-                              icon={cilMediaPause}
-                              size="lg"
+                        icon={cilMediaPause}
+                        size="lg"
                         style={{ cursor: 'pointer' }}
                       />
                     </CTooltip>
@@ -239,8 +230,8 @@ const CampaignActionCell = (prop) => {
                     <CTooltip content="Delete Campaign">
                       <CIcon
                         className="stock-toggle-icon IconColorRed"
-                            icon={cilTrash}
-                            size="lg"
+                        icon={cilTrash}
+                        size="lg"
                         onClick={() => toggleStatus(STATUS.DELETE)}
                         style={{ cursor: 'pointer' }}
                       />

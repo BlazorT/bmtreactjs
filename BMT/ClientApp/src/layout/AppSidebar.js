@@ -13,7 +13,7 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 
 // sidebar nav config
-import navigation, { mapNavItem } from '../_nav';
+import { mapNavItem } from '../_nav';
 import { toggleSidebar, setSidebar } from '../redux/sidebar/sidebarSlice';
 
 const AppSidebar = () => {

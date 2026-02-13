@@ -42,25 +42,20 @@ const campaignadd = () => {
   const dispatch = useDispatch();
 
   // Custom hooks for state management
-  const {
-    campaignData: campaignRegData,
-    setCampaignData: setCampaignRegData,
-    updateCampaignData,
-  } = useCampaignForm(user);
+  const { campaignData: campaignRegData, setCampaignData: setCampaignRegData } =
+    useCampaignForm(user);
   const {
     schedules: scheduleData,
     scheduleRows: schedulerows,
     setSchedules: setScheduleData,
     updateSchedule,
     deleteSchedule,
-    getScheduleById,
   } = useScheduleManagement([]);
   const {
     selectedNetworks,
     selectedPostTypes,
     selectedTemplates,
     setSelectedNetworks,
-    setSelectedPostTypes,
     setSelectedTemplates,
     toggleNetwork: handleCheckboxChange,
     togglePostType: handlePostTypeToggle,
@@ -103,7 +98,7 @@ const campaignadd = () => {
     [user],
   );
 
-  const { data: networkSettingsRes, loading: networkSettingsLoading } = useApi(
+  const { data: networkSettingsRes } = useApi(
     '/Organization/orgpackagedetails',
     'POST',
     networkSettingBody,
@@ -209,7 +204,7 @@ const campaignadd = () => {
         categorizeAttachments(attachments);
 
       const selectedNetworks = campaignDetails?.map((cd) => cd?.networkName);
-      const selectedTemplates = campaignDetails?.reduce((acc, cd, index) => {
+      const selectedTemplates = campaignDetails?.reduce((acc, cd) => {
         const parsedTemplate = safeParse(cd?.template, '');
 
         const matchedTemplate = templatesRes?.data?.find(

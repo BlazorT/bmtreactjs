@@ -1,10 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { cilMinus, cilCheckAlt, cilCheck } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import globalutil from 'src/util/globalutil';
+/* eslint-disable react/react-in-jsx-scope */
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import PropTypes from 'prop-types';
 
 function StatusCustomeCell({ value }) {
   StatusCustomeCell.propTypes = {
@@ -20,7 +17,7 @@ function StatusCustomeCell({ value }) {
           ) : (
             <CloseIcon fontSize="medium" className="text-danger " />
           )}
-        {/*  {globalutil.vehiclestatuss().find((item) => item.id == value.row.status).name}*/}
+          {/*  {globalutil.vehiclestatuss().find((item) => item.id == value.row.status).name}*/}
         </p>
       </div>
       {value.row.GroundedIssue && <p className="m-0 text-dim">{value.row.GroundedIssue}</p>}

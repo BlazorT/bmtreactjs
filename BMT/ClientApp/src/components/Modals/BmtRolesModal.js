@@ -23,7 +23,7 @@ const BmtRolesModal = (prop) => {
   const { showToast: showSnackbar, showConfirmation } = useNotification();
   const { loading, postData: postRoles } = useApi('/Common/submitgrouprights');
 
-  const { response: menuRes, error: menuErr, fetchData: fetchMenus } = useFetch();
+  const { response: menuRes, fetchData: fetchMenus } = useFetch();
 
   const [rolesSetting, setRoleSetting] = useState([]);
 

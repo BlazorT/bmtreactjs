@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { CFormLabel } from '@coreui/react';
-import CustomInput from '../InputsComponent/CustomInput';
 import { cilUser } from '@coreui/icons';
+import React from 'react';
+import CustomInput from '../InputsComponent/CustomInput';
 
 const HashtagInput = ({
   label,

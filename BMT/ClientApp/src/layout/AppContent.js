@@ -1,16 +1,15 @@
 import React, { Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { CContainer, CSpinner } from '@coreui/react';
+import { Route, Routes } from 'react-router-dom';
 
 // routes config
 
-import '../scss/style.scss';
-import '../CSS/Style.css';
-import '../CSS/Form.css';
-import Loading from 'src/components/UI/Loading';
 import { useSelector } from 'react-redux';
-import { routes, rolesRoutes } from 'src/routes';
+import Loading from 'src/components/UI/Loading';
 import Page404 from 'src/pages/Error/Page404';
+import { rolesRoutes, routes } from 'src/routes';
+import '../CSS/Form.css';
+import '../CSS/Style.css';
+import '../scss/style.scss';
 
 const AppContent = () => {
   const nav = useSelector((state) => state.navItems.navItems);

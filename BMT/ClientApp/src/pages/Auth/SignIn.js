@@ -5,16 +5,15 @@ import { useEffect, useState } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Carousel from 'react-bootstrap/Carousel';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 //import { Modal } from 'reactstrap';
 //import { cilChevronRight } from '@coreui/icons';
 
-import globalutil from '../../util/globalutil';
 // local imports
 import { useDispatch, useSelector } from 'react-redux';
 import useFetch from 'src/hooks/useFetch.jsx';
 import Fotter from 'src/layout/AppFooter.js';
-import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
+import { updateToast } from 'src/redux/toast/toastSlice';
 import { setUserData } from 'src/redux/user/userSlice';
 import Loading from '../../components/UI/Loading';
 //import { getCountryById } from 'src/constants/countries_and_states';
@@ -22,13 +21,13 @@ import dayjs from 'dayjs';
 import useApi from 'src/hooks/useApi';
 import { transformData } from 'src/navItem';
 import { setNavItems, setPageRoles } from 'src/redux/navItems/navItemsSlice';
+import { addGlobalUtils } from 'src/util/utilHelper';
 
 function SignIn() {
   // const { response, error, loading, fetchData } = useFetch('/storeusers');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const toast = useSelector(selectToast);
 
   const user = useSelector((state) => state.user);
 
@@ -36,19 +35,9 @@ function SignIn() {
     if (user?.isAuthenticated) navigate('/Dashboard');
   }, []);
 
-  const {
-    response: utilRes,
-    error: utilErr,
-    loading: utilLoading,
-    fetchData: fetchUtils,
-  } = useFetch();
+  const { response: utilRes, fetchData: fetchUtils } = useFetch();
 
-  const {
-    response: menuRes,
-    error: menuErr,
-    loading: menuLoading,
-    fetchData: fetchMenus,
-  } = useFetch();
+  const { response: menuRes, fetchData: fetchMenus } = useFetch();
 
   const { postData: getOrgs, loading: orgLoading } = useApi('/BlazorApi/orgsfulldata');
 
@@ -82,7 +71,7 @@ function SignIn() {
 
       if (data?.token) return data?.token;
       return null;
-    } catch (error) {
+    } catch {
       return null;
     }
   };
@@ -102,28 +91,6 @@ function SignIn() {
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
-  };
-
-  const addGlobalUtils = (data) => {
-    globalutil.setnetworks(data.networks);
-    globalutil.setstates(data.states);
-    globalutil.setstatuses(data.statuses);
-    globalutil.setintervals(data.intervals);
-    globalutil.setcountries(data.countries);
-    globalutil.setcategories(data.categories);
-    globalutil.setalerts(data.alerts);
-    globalutil.setpackages(data.packages);
-    globalutil.setCurrencies(data.currencies);
-    globalutil.setPostTypes(data.postTypes);
-    globalutil.setmenus(data.menus);
-    globalutil.setservicetypes(data.servicetypes);
-    globalutil.setcommonstatuses(data.commonstatuses);
-    globalutil.setauditentities(data.auditentities);
-    globalutil.setuserroles(data.userroles);
-    globalutil.setbusinessentitiess(data.businessentities);
-    globalutil.setbusinesstypes(data.businesstypes);
-    globalutil.setdeliverstatus(data.deliverstatus);
-    globalutil.setcampaignunits(data.campaignunits);
   };
 
   const getUtils = async () => {

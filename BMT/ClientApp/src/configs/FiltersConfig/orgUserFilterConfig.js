@@ -1,13 +1,10 @@
 // userFormConfig.js
 
-import { cilFlagAlt, cilCalendar, cilUser } from '@coreui/icons';
-import dayjs from 'dayjs';
-import CustomInput from 'src/components/InputsComponent/CustomInput';
+import { cilCalendar, cilFlagAlt, cilUser } from '@coreui/icons';
+import CustomSearch from 'src/components//InputsComponent/CustomSearch';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
-import CustomSearch from 'src/components//InputsComponent/CustomSearch';
-import { useDispatch, useSelector } from 'react-redux';
 
 export const getorgUsersFilterFields = (filters, changeFilter, orgs, Role) => [
   {
@@ -25,7 +22,7 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs, Role) => [
     className: 'form-control item',
     isRequired: false,
     title: 'name of organization',
-    disabled: Role !== 1 // <-- This disables unless roleId is 1
+    disabled: Role !== 1, // <-- This disables unless roleId is 1
   },
 
   {
@@ -60,9 +57,9 @@ export const getorgUsersFilterFields = (filters, changeFilter, orgs, Role) => [
     value: filters.createdAt,
     onChange: (e) => changeFilter(e, 'createdAt'),
     icon: cilCalendar,
-   // title: ' DA Registration Date',
+    // title: ' DA Registration Date',
     isRequired: true,
-   // min: dayjs(filters.createdAt),
+    // min: dayjs(filters.createdAt),
     message: 'Enter Valid To Date',
   },
   //{

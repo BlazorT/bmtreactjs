@@ -22,12 +22,12 @@ export const safeParseJSON = (value, fallback = null) => {
 };
 
 // Helper function to calculate fraction of day
-const calculateFractionOfDay = (durationInMinutes) => {
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const durationInMilliseconds = durationInMinutes * 60 * 1000;
-  const fractionOfDay = durationInMilliseconds / millisecondsPerDay;
-  return parseFloat(fractionOfDay.toFixed(2));
-};
+// const calculateFractionOfDay = (durationInMinutes) => {
+//   const millisecondsPerDay = 24 * 60 * 60 * 1000;
+//   const durationInMilliseconds = durationInMinutes * 60 * 1000;
+//   const fractionOfDay = durationInMilliseconds / millisecondsPerDay;
+//   return parseFloat(fractionOfDay.toFixed(2));
+// };
 
 // Helper function to get days between dates
 function getDaysBetweenDates(startDateString, endDateString) {

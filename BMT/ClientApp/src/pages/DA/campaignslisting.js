@@ -32,7 +32,7 @@ const campaignslisting = () => {
     postData: getOrgs,
   } = useApi('/BlazorApi/orgsfulldata');
   const { data, loading, fetchCompaigns: getCompaignsList } = useFetchCampaigns();
-  const { data: usersRes, loading: usersLoading, error, fetchUsers } = useFetchUsers();
+  const { data: usersRes, loading: usersLoading, fetchUsers } = useFetchUsers();
 
   const [showFilters, setshowFilters] = useState(false);
   const [showDaGrid, setshowDaGrid] = useState(true);
@@ -109,7 +109,7 @@ const campaignslisting = () => {
     setRows(mappedArray);
   };
 
-  const changeFilter = (event, fieldName, label) => {
+  const changeFilter = (event, fieldName) => {
     if (fieldName === 'createdAt' || fieldName === 'lastUpdatedAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,

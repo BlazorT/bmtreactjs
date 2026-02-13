@@ -1,6 +1,5 @@
-import React from 'react';
 import CIcon from '@coreui/icons-react';
-import Select from 'react-select';
+import React from 'react';
 import { formatDate } from 'src/helpers/formatDate';
 const CustomSelectInput = (prop) => {
   const {
@@ -17,7 +16,6 @@ const CustomSelectInput = (prop) => {
     label,
     value,
     disableOption,
-    onClick,
     width,
     optionsList,
     showDisableOption = true,

@@ -1,5 +1,5 @@
 import { CCol, CFormCheck } from '@coreui/react';
-import { faFileContract, faSign, faSignature } from '@fortawesome/free-solid-svg-icons';
+import { faFileContract, faSignature } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -192,7 +192,7 @@ const OrganizationAdd = () => {
     }
   };
 
-  const uploadDaAttachments = async (userId) => {
+  const uploadDaAttachments = async () => {
     const fileInputs = [
       'licenceImageFront',
       'licenceImageBack',

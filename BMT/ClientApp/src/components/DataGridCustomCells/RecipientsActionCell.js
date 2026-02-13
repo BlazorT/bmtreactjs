@@ -5,7 +5,6 @@ import React from 'react';
 import { cilReload, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CCol, CRow, CTooltip } from '@coreui/react';
-import { useSelector } from 'react-redux';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { useToggleRecipientsStatus } from 'src/hooks/api/useToggleRecipientsStatus';
@@ -15,10 +14,8 @@ const RecipientsActionCell = ({ row, pageRoles, getRecipientsList }) => {
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
   const { updateStatus, loading } = useToggleRecipientsStatus();
-  const loginUser = useSelector((state) => state.user);
 
   const canDelete = pageRoles?.canDelete === 1;
-  console.log({ row });
   const handleToggleStatus = (newStatus) => {
     const isReactivate = newStatus === 1;
     const action = isReactivate ? 'reactivate' : 'delete';

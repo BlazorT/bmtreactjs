@@ -16,7 +16,6 @@ const CustomSearch = (prop) => {
     title,
     placeholder,
     disabled,
-    className,
     textAlign,
     getOptionLabel,
   } = prop;

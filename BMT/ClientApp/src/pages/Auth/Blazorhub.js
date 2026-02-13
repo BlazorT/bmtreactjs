@@ -16,13 +16,13 @@ class Blazorhub extends Component {
   componentDidMount = () => {
     const nick = window.prompt('Your name:', 'John');
 
-    const hubConnection = new HubConnectionBuilder().withUrl('/BlazorNotificationHub').build();    
+    const hubConnection = new HubConnectionBuilder().withUrl('/BlazorNotificationHub').build();
 
     this.setState({ hubConnection, nick }, () => {
       this.state.hubConnection
         .start()
         .then(() => console.log('Connection started!'))
-        .catch(err => console.log('Error while establishing connection :('));
+        .catch(() => console.log('Error while establishing connection :('));
 
       this.state.hubConnection.on('BlazorServerMessage', (nick, receivedMessage) => {
         const text = `${nick}: ${receivedMessage}`;
@@ -35,9 +35,9 @@ class Blazorhub extends Component {
   sendMessage = () => {
     this.state.hubConnection
       .invoke('BlazorServerMessage', this.state.nick, this.state.message)
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
 
-      this.setState({message: ''});      
+    this.setState({ message: '' });
   };
 
   render() {
@@ -47,14 +47,17 @@ class Blazorhub extends Component {
         <input
           type="text"
           value={this.state.message}
-          onChange={e => this.setState({ message: e.target.value })}
+          onChange={(e) => this.setState({ message: e.target.value })}
         />
 
         <button onClick={this.sendMessage}>Send</button>
 
         <div>
           {this.state.messages.map((message, index) => (
-            <span style={{display: 'block'}} key={index}> {message} </span>
+            <span style={{ display: 'block' }} key={index}>
+              {' '}
+              {message}{' '}
+            </span>
           ))}
         </div>
       </div>

@@ -10,7 +10,7 @@ import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 const UsersActionCell = (prop) => {
-  const { params, fetching, user, canEdit, canDelete } = prop;
+  const { params, fetching, user, canDelete } = prop;
   const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
@@ -61,8 +61,8 @@ const UsersActionCell = (prop) => {
                   <CIcon
                     onClick={() => toggleStatus(1)}
                     className="stock-toggle-icon"
-                      icon={cilReload}
-                      size="lg"
+                    icon={cilReload}
+                    size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -75,8 +75,8 @@ const UsersActionCell = (prop) => {
                   <CIcon
                     onClick={() => editUser(params.id)}
                     className="stock-toggle-icon"
-                        icon={cilPencil}
-                        size="lg"
+                    icon={cilPencil}
+                    size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -86,8 +86,8 @@ const UsersActionCell = (prop) => {
                     <CIcon
                       className="stock-toggle-icon IconColorRed"
                       onClick={() => toggleStatus(2)}
-                          icon={cilTrash}
-                          size="lg"
+                      icon={cilTrash}
+                      size="lg"
                       style={{ cursor: 'pointer' }}
                     />
                   </CTooltip>

@@ -113,7 +113,7 @@ const AuditLogs = () => {
     const res = await fetchAuditLogs(fetchBody);
 
     if (res?.status === true) {
-      const mappedArray = res.data.map((data, index) => ({
+      const mappedArray = res.data.map((data) => ({
         id: data.id,
         attributeName: data.attributeName,
         orgId: data.orgId,
@@ -145,7 +145,7 @@ const AuditLogs = () => {
         [date]: dayjs(e).utc().format(),
       }));
     } else {
-      const { name, value, type, checked } = e.target;
+      const { name, value } = e.target;
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: value,

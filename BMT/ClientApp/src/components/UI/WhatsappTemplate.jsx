@@ -7,7 +7,7 @@ import useApi from 'src/hooks/useApi';
 import Spinner from '../UI/Spinner';
 import { useShowToast } from 'src/hooks/useShowToast';
 
-const WhatsappTemplate = ({ onSelect, WABA, WAT, whatsappTemplateType }) => {
+const WhatsappTemplate = ({ onSelect, WABA, WAT }) => {
   const showToast = useShowToast();
 
   const {

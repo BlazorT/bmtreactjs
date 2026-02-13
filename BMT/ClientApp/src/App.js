@@ -15,6 +15,9 @@ import PaymentConfirmation from './pages/Admin/EPToken';
 import PricingDetails from './pages/Admin/pricingDetails';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsOfUse from './pages/PrivacyPolicy/TermsOfUse';
+import { addGlobalUtils } from './util/utilHelper';
+import useApi from './hooks/useApi';
+import { useShowToast } from './hooks/useShowToast';
 
 const Loading = React.lazy(() => import('../src/components/UI/Loading'));
 
@@ -30,10 +33,15 @@ const Page500 = React.lazy(() => import('./pages/Error/Page500'));
 const Page401 = React.lazy(() => import('./pages/Error/Page401'));
 
 const App = () => {
+  const showToast = useShowToast();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const confirMdl = useSelector((state) => state.confirMdl);
 
+  const { postData: fetchUtils } = useApi('/Common/lovs');
+
   useEffect(() => {
+    getUtils();
+
     function hideError(e) {
       if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
         const resizeObserverErrDiv = document.getElementById(
@@ -55,6 +63,15 @@ const App = () => {
     };
   }, []);
 
+  const getUtils = async () => {
+    const res = await fetchUtils();
+    if (res?.status === true) {
+      addGlobalUtils(res?.data);
+    } else {
+      showToast(res?.message, 'error');
+    }
+  };
+
   return (
     <React.Fragment>
       <ToastNotification />
@@ -62,6 +79,7 @@ const App = () => {
         header={confirMdl.header}
         body={confirMdl.body}
         isOpen={confirMdl.isOpen}
+        loading={confirMdl.loading}
         onYes={confirMdl?.onYes ? () => confirMdl.onYes() : null}
         onNo={() => confirMdl.onNo()}
       />

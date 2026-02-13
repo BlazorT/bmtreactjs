@@ -1,4 +1,3 @@
-import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
 export const useUploadAvatar = () => {

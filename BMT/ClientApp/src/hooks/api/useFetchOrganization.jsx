@@ -1,12 +1,10 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useSelector } from 'react-redux';
-import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
+import { useShowToast } from '../useShowToast';
 
 export const useFetchOrganization = () => {
   dayjs.extend(utc);
-  const user = useSelector((state) => state.user);
 
   const showToast = useShowToast();
 
@@ -15,11 +13,11 @@ export const useFetchOrganization = () => {
   const fetchOrganization = async (role, filters) => {
     const userBody = {
       id: 0,
-      roleId: role,     
+      roleId: role,
       orgId: 0,
       email: '',
       name: '',
-      contact: "",
+      contact: '',
       rowVer: 0,
       cityId: filters ? (filters.state === '' ? 0 : filters.state) : 0,
       status: filters ? (filters.status === '' ? 0 : filters.status) : 0,
@@ -30,12 +28,12 @@ export const useFetchOrganization = () => {
 
       lastUpdatedAt: filters
         ? dayjs(filters.lastUpdatedAt).utc().format('YYYY-MM-DD')
-        : dayjs().utc().format('YYYY-MM-DD')
+        : dayjs().utc().format('YYYY-MM-DD'),
     };
-    console.log(userBody,'body')
+    console.log(userBody, 'body');
     const res = await postData(userBody);
-    console.log(( res) );
-   // alert((res.data.status) );
+    console.log(res);
+    // alert((res.data.status) );
     if (res.status) {
       return res.data;
     } else {

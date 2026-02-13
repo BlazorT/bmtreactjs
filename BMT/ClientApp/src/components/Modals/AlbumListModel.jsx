@@ -23,7 +23,7 @@ import Spinner from '../UI/Spinner';
 import AddAlbumModel from './AddAlbumModel';
 import CustomInput from '../InputsComponent/CustomInput';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilPlus, cilTrash } from '@coreui/icons';
+import { cilCheckCircle } from '@coreui/icons';
 
 export const AlbumListModel = ({
   isOpen,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,30 +7,20 @@ import CIcon from '@coreui/icons-react';
 
 import { CCol, CRow, CTooltip } from '@coreui/react';
 
-import { useShowToast } from 'src/hooks/useShowToast';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from '../UI/Spinner';
 
 const OrgUserActionCell = (prop) => {
-  const { value, user, fetching, canUpdate, canDelete } = prop;
-  console.log({ user });
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const { value, user, canUpdate, canDelete } = prop;
 
   const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-  const { data, error, loading, updateStatus } = useToggleUserStatus();
+  const { loading, updateStatus } = useToggleUserStatus();
 
   const toggleStatus = (status) => {
-    handleClose();
     showConfirmation({
       header: 'Confirmation!',
       body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'}  ${
@@ -62,7 +52,6 @@ const OrgUserActionCell = (prop) => {
   };
 
   const editUser = () => {
-    handleClose();
     navigate('/UserRegister', { state: { id: value.row.id, user: user } });
   };
 
@@ -100,8 +89,8 @@ const OrgUserActionCell = (prop) => {
                   <CIcon
                     onClick={() => editUser(value.row.id)}
                     className="stock-toggle-icon"
-                      icon={cilPencil}
-                      size="lg"
+                    icon={cilPencil}
+                    size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -111,8 +100,8 @@ const OrgUserActionCell = (prop) => {
                 <CTooltip content="Delete Organization User">
                   <CIcon
                     className="stock-toggle-icon IconColorRed"
-                      icon={cilTrash}
-                      size="lg"
+                    icon={cilTrash}
+                    size="lg"
                     onClick={() => toggleStatus(4)}
                     style={{ cursor: 'pointer' }}
                   />

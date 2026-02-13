@@ -1,7 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
-import CampNotiActionCell from 'src/components/DataGridCustomCells/CampNotiActionCell';
 
-export const getcampaignNotiCols = (getDasList, daRes, pageRoles) => [
+export const getcampaignNotiCols = () => [
   {
     field: 'campaignName',
     headerName: 'Campaign Name',

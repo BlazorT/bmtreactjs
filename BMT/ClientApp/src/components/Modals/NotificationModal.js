@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useState } from 'react';
 
-import CIcon from '@coreui/icons-react';
 import { cilItalic } from '@coreui/icons';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { CCol, CFormCheck, CRow } from '@coreui/react';
-import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 import { useDispatch } from 'react-redux';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { formValidator } from 'src/helpers/formValidator';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { updateToast } from 'src/redux/toast/toastSlice';
-import { formValidator } from 'src/helpers/formValidator';
+import CustomSelectInput from '../InputsComponent/CustomSelectInput';
 
 const NotificationModal = (prop) => {
   const { isOpen, toggle } = prop;

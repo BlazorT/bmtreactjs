@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { cilLockLocked, cilPencil, cilReload, cilTrash } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,14 +7,14 @@ import CIcon from '@coreui/icons-react';
 
 import { CCol, CRow, CTooltip } from '@coreui/react';
 
-import { useShowToast } from 'src/hooks/useShowToast';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-import { useToggleOrgStatus } from 'src/hooks/api/useToggleOrgStatus';
-import Spinner from '../UI/Spinner';
 import { useSelector } from 'react-redux';
+import { useToggleOrgStatus } from 'src/hooks/api/useToggleOrgStatus';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
+import Spinner from '../UI/Spinner';
 
 const OrgActionCell = (prop) => {
-  const { value, org, fetching, canUpdate, canDelete } = prop;
+  const { value, org, canUpdate, canDelete } = prop;
 
   const user = useSelector((state) => state.user);
 
@@ -89,8 +89,8 @@ const OrgActionCell = (prop) => {
                   <CIcon
                     onClick={toOrgAccessKeys}
                     className="stock-toggle-icon"
-                      icon={cilLockLocked}
-                      size="lg"
+                    icon={cilLockLocked}
+                    size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -100,8 +100,8 @@ const OrgActionCell = (prop) => {
                   <CIcon
                     onClick={() => editUser(value.row.id)}
                     className="stock-toggle-icon"
-                      icon={cilPencil}
-                      size="lg"
+                    icon={cilPencil}
+                    size="lg"
                     style={{ cursor: 'pointer' }}
                   />
                 </CTooltip>
@@ -111,8 +111,8 @@ const OrgActionCell = (prop) => {
                 <CTooltip content="Delete Organization">
                   <CIcon
                     className="stock-toggle-icon IconColorRed"
-                      icon={cilTrash}
-                      size="lg"
+                    icon={cilTrash}
+                    size="lg"
                     onClick={() => toggleStatus(4)}
                     style={{ cursor: 'pointer' }}
                   />

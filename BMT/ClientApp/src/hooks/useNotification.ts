@@ -21,8 +21,9 @@ export const useNotification = (): NotificationHook => {
     isOpen = true,
     onYes,
     onNo,
+    loading,
   }: ConfirmationDialogState): void => {
-    dispatch(setConfirmation({ header, body, isOpen, onYes, onNo }));
+    dispatch(setConfirmation({ header, body, isOpen, onYes, onNo, loading }));
   };
 
   // Show toast notification

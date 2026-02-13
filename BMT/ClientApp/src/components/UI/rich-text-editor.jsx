@@ -20,7 +20,6 @@ import {
   cilList,
   cilListNumbered,
   cilMinus,
-  cilReload,
   cilUnderline,
 } from '@coreui/icons';
 

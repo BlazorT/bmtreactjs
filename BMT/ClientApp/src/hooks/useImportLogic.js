@@ -28,7 +28,6 @@ export const useImportLogic = (
     selectedRecipientIds,
     userAlbums,
     targetOrgId,
-    targetOrgName,
   ) => {
     setIsImporting(true);
     setProgress(0);

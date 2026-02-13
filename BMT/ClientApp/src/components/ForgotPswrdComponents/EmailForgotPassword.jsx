@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { formValidator } from 'src/helpers/formValidator';
 import { cilEnvelopeClosed } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import CustomInput from '../InputsComponent/CustomInput';
+import React from 'react';
+import { formValidator } from 'src/helpers/formValidator';
 import useApi from 'src/hooks/useApi';
-import Button from '../InputsComponent/Button';
-import LoadingBtn from '../UI/LoadingBtn';
 import { useShowToast } from 'src/hooks/useShowToast';
+import Button from '../InputsComponent/Button';
+import CustomInput from '../InputsComponent/CustomInput';
+import LoadingBtn from '../UI/LoadingBtn';
 
 function EmailForgotPassword(prop) {
   dayjs.extend(utc);
   const { setOnTaskName, setToken, email, setEmail } = prop;
 
-  const { data, loading, error, postData } = useApi('/BlazorApi/forgot');
+  const { loading, postData } = useApi('/BlazorApi/forgot');
   const showToast = useShowToast();
 
   const onSend = async () => {
@@ -43,7 +43,7 @@ function EmailForgotPassword(prop) {
       const emailRes = await postData(forgotPassword);
       console.log({ emailRes });
 
-      if (emailRes!= null && emailRes.status === true) {
+      if (emailRes != null && emailRes.status === true) {
         setToken(emailRes.data.token);
         showToast(
           `Token successfully sent to ${email}, please check your email for further instructions.`,
@@ -72,7 +72,9 @@ function EmailForgotPassword(prop) {
       <div className="text-leftside">
         <h2 className="forgot-password-title text-center">Forgot Password ?</h2>
         <p className="forgot-password-email-title text-start ">
-          Forgotten your password? Enter your email address | login name to begin reset process. After successful submission of reset request, your account will become dorment untill security code is applied and password retreival will automatically activate account.
+          Forgotten your password? Enter your email address | login name to begin reset process.
+          After successful submission of reset request, your account will become dorment untill
+          security code is applied and password retreival will automatically activate account.
         </p>
       </div>
       <div className="mt-3">

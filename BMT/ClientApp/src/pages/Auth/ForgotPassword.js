@@ -1,21 +1,17 @@
+/* eslint-disable react/react-in-jsx-scope */
 // React and third-party libraries
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // local imports
-import Fotter from 'src/layout/AppFooter';
+import EmailForgotPassword from 'src/components/ForgotPswrdComponents/EmailForgotPassword';
 import ResetPassword from 'src/components/ForgotPswrdComponents/ResetPassword';
 import SecurityCode from 'src/components/ForgotPswrdComponents/SecurityCode';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectToast, updateToast } from 'src/redux/toast/toastSlice';
-import EmailForgotPassword from 'src/components/ForgotPswrdComponents/EmailForgotPassword';
+import Fotter from 'src/layout/AppFooter';
 
 const ForgotPassword = () => {
   const [token, setToken] = useState('');
   const [email, setEmail] = useState('');
   const [onTaskName, setOnTaskName] = useState('email');
-
-  const dispatch = useDispatch();
-  const toast = useSelector(selectToast);
 
   return (
     <div className="overflow-hidden">

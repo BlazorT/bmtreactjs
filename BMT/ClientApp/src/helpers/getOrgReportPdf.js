@@ -1,6 +1,4 @@
 import jsPDF from 'jspdf';
-import globalutil from 'src/util/globalutil';
-import { formatDateTime } from './formatDate';
 
 export const getOrgReportPdf = (reportRows) => {
   const doc = new jsPDF({ orientation: 'p', format: 'letter', unit: 'mm' });
@@ -87,7 +85,6 @@ export const getOrgReportPdf = (reportRows) => {
 
   // Set the table styles
   const headerStyle = { fillColor: '#525659', textColor: '#ffffff' };
-  const rowStyle = { normal: '#f2f2f2', highlighted: '#d9d9d9' };
 
   // Draw the table headers
   let tableX = pageX;
@@ -101,7 +98,6 @@ export const getOrgReportPdf = (reportRows) => {
       row[0] === 'Driver Side' ||
       row[0] === 'Passenger Side' ||
       row[0] === 'In Cab';
-    const currentRowStyle = isGroup ? rowStyle.highlighted : rowStyle.normal;
 
     // Check if it is a group and adjust the tableX and width accordingly
     const fullWidth = doc.internal.pageSize.width - 10; // Adjust the padding as needed
@@ -233,35 +229,35 @@ export const getOrgReportPdf = (reportRows) => {
   return doc;
 };
 
-function renderSubmissionSection(label, value, subfield, startY, doc, time) {
-  const sectionLabelY = startY;
+// function renderSubmissionSection(label, value, subfield, startY, doc, time) {
+//   const sectionLabelY = startY;
 
-  const sectionTextFieldY = sectionLabelY + 10;
+//   const sectionTextFieldY = sectionLabelY + 10;
 
-  const sectionTextFieldWidth = 80;
+//   const sectionTextFieldWidth = 80;
 
-  const sectionTextFieldX = 5;
+//   const sectionTextFieldX = 5;
 
-  doc.setTextColor(0);
-  doc.setFontSize(12);
-  doc.setFont('times', 'bold');
-  doc.text(label, 5, sectionLabelY);
+//   doc.setTextColor(0);
+//   doc.setFontSize(12);
+//   doc.setFont('times', 'bold');
+//   doc.text(label, 5, sectionLabelY);
 
-  doc.setLineWidth(0.5);
-  doc.line(
-    sectionTextFieldX,
-    sectionTextFieldY - 2,
-    sectionTextFieldX + sectionTextFieldWidth,
-    sectionTextFieldY - 2,
-  );
+//   doc.setLineWidth(0.5);
+//   doc.line(
+//     sectionTextFieldX,
+//     sectionTextFieldY - 2,
+//     sectionTextFieldX + sectionTextFieldWidth,
+//     sectionTextFieldY - 2,
+//   );
 
-  doc.setFont('times', 'normal');
+//   doc.setFont('times', 'normal');
 
-  doc.text(value, sectionTextFieldX, sectionTextFieldY - 3);
+//   doc.text(value, sectionTextFieldX, sectionTextFieldY - 3);
 
-  doc.text(subfield, sectionTextFieldX, sectionTextFieldY + 2);
+//   doc.text(subfield, sectionTextFieldX, sectionTextFieldY + 2);
 
-  doc.setFont('times', 'bold');
+//   doc.setFont('times', 'bold');
 
-  doc.text(`Date and time : ${time}`, sectionTextFieldX + 100, sectionTextFieldY - 3);
-}
+//   doc.text(`Date and time : ${time}`, sectionTextFieldX + 100, sectionTextFieldY - 3);
+// }

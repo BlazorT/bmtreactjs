@@ -6,37 +6,38 @@ export const getPricingCols = (user, getPricing) => [
   {
     name: 'Network Name',
     key: 'name',
-    flex: 1,
+    minWidth: 120,
     editable: false,
   },
-
   {
     name: 'Pricing Unit',
     key: 'unitName',
-    flex: 1,
+    minWidth: 120,
     editable: false,
   },
   {
     name: 'Unit Price',
     key: 'unitPrice',
-    flex: 1,
+    minWidth: 100,
     editable: false,
   },
   {
     name: 'Discount',
     key: 'discount',
-    flex: 1,
+    minWidth: 100,
     editable: false,
   },
   {
     name: 'Free Quota',
-    flex: 1,
+    minWidth: 100,
     key: 'freeAllowed',
+    editable: false,
   },
   {
     name: 'Applicable Date',
     key: 'startTime',
-    flex: 1,
+    // ✅ Make this column flexible to fill remaining space
+    minWidth: 100,
     editable: false,
   },
   ...(user?.roleId === ROLES.SUPERADMIN
@@ -46,6 +47,7 @@ export const getPricingCols = (user, getPricing) => [
           disableColumnMenu: false,
           name: 'Action',
           key: 'action',
+          width: 100,
           editable: false,
           renderCell: (params) => <PricingActionCell value={params} getPricing={getPricing} />,
         },

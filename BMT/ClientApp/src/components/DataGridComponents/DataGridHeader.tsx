@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { ReactNode } from 'react';
+import { cilArrowThickToBottom, cilFile, cilPrint } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
 import {
   CCol,
   CDropdown,
@@ -10,19 +11,12 @@ import {
   CRow,
   CTooltip,
 } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import {
-  cilArrowBottom,
-  cilArrowThickToBottom,
-  cilCloudDownload,
-  cilFile,
-  cilPrint,
-} from '@coreui/icons';
-import FilterIconMenu from './FilterIconMenu';
 import dayjs from 'dayjs';
+import React, { ReactNode } from 'react';
 import { DataGridHandle } from 'react-data-grid';
-import { exportToCsv, exportToPdf } from 'src/helpers/gridHelper';
 import { useSelector } from 'react-redux';
+import { exportToCsv, exportToPdf } from 'src/helpers/gridHelper';
+import FilterIconMenu from './FilterIconMenu';
 
 const CDropdownAny = CDropdown as any;
 const CDropdownMenuAny = CDropdownMenu as any;
@@ -69,7 +63,6 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
   addSecButton,
   addSecBtnClick,
   filterDisable = false,
-  exportFn,
   addBtnContent,
   popOverId,
   actionCell,
@@ -132,7 +125,7 @@ const DataGridHeader: React.FC<DataGridHeaderProps> = ({
           </div>
         </CCol>
 
-        <CCol className="d-flex justify-content-end align-items-center gap-3 p-0">
+        <CCol className="d-flex justify-content-end align-items-center gap-3 p-0 flex-wrap">
           {/* Action Cell */}
           {actionCell && actionCell}
 

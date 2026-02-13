@@ -1,42 +1,31 @@
-import React, { useState } from 'react';
-import CIcon from '@coreui/icons-react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useState } from 'react';
 
 import { cilLockLocked } from '@coreui/icons';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
-import useApi from 'src/hooks/useApi';
-import LoadingBtn from '../UI/LoadingBtn';
-import CustomInput from '../InputsComponent/CustomInput';
-import Button from '../InputsComponent/Button';
 import { formValidator } from 'src/helpers/formValidator';
+import useApi from 'src/hooks/useApi';
 import { useShowToast } from 'src/hooks/useShowToast';
+import Button from '../InputsComponent/Button';
+import CustomInput from '../InputsComponent/CustomInput';
+import LoadingBtn from '../UI/LoadingBtn';
 //import moment from 'moment';
+import { CCol, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { CCol, CRow } from '@coreui/react';
 import { checkPasswordStrength } from 'src/helpers/getPasswordStrength';
 
 function ResetPassword(prop) {
   dayjs.extend(utc);
   const { token, email, setOnTaskName } = prop;
 
-  const { data, loading, error, postData } = useApi('/BlazorApi/forgot');
+  const { loading, postData } = useApi('/BlazorApi/forgot');
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const showToast = useShowToast();
-
-  const togglePasswordVisibility = (id) => {
-    if (id === 1) setShowPassword((prev) => !prev);
-    if (id === 2) setShowConfirmPassword((prev) => !prev);
-  };
 
   const changePassword = async () => {
     const form = document.querySelector('.forgot-password-form');
@@ -61,7 +50,7 @@ function ResetPassword(prop) {
           createdBy: 0,
         };
 
-        const passRes = await postData(forgotPassword);  
+        const passRes = await postData(forgotPassword);
         if (passRes.status === true) {
           showToast('Password is reset successful, log in with your new credentials.');
           navigateToSignIn();
@@ -91,7 +80,8 @@ function ResetPassword(prop) {
       <div className="text-leftside mb-3">
         <h2 className="forgot-password-title text-center ">Reset Password</h2>
         <p className="forgot-password-email-title">
-          This allows you to change password, need to set new password, will be logged out and need to login again.
+          This allows you to change password, need to set new password, will be logged out and need
+          to login again.
         </p>
       </div>
       <CRow className="justify-content-center align-items-center">
@@ -147,7 +137,7 @@ function ResetPassword(prop) {
         autoComplete="off"
         onChange={(e) => setConfirmPassword(e.target.value)}
         icon={cilLockLocked}
-        type={showConfirmPassword ? 'text' : 'password'}
+        type={'text'}
         id="confirmPassword"
         name="confirmPassword"
         disabled={loading}
@@ -158,10 +148,7 @@ function ResetPassword(prop) {
       />
       {/* <div className="w-100"> */}
       {password !== '' && (
-        <p className="password-strength">
-          Password Strength : 
-          {checkPasswordStrength(password)}
-        </p>
+        <p className="password-strength">Password Strength :{checkPasswordStrength(password)}</p>
       )}
 
       {/* </div> */}

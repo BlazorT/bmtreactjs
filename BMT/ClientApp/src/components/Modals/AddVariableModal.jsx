@@ -1,18 +1,16 @@
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import dayjs, { utc } from 'dayjs';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getVariableFormConfig } from 'src/configs/InputConfig/variableFormConfig';
 import { formValidator } from 'src/helpers/formValidator';
+import useApi from 'src/hooks/useApi';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
+import { useShowToast } from 'src/hooks/useShowToast';
 import Inputs from '../Filters/Inputs';
 import Button from '../UI/Button';
 import Form from '../UI/Form';
-import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
-import EmailTextEditor from '../UI/email-editor';
-import { useShowToast } from 'src/hooks/useShowToast';
-import useApi from 'src/hooks/useApi';
-import dayjs, { utc } from 'dayjs';
-import { useSelector } from 'react-redux';
 import SendTestEmailModel from './SendTestEmailModel';
 
 const defaultTemplateData = {
@@ -37,7 +35,6 @@ const AddVariableModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
   const { postData, loading } = useApi('Template/submitcampaigntemplate');
 
   const [templateData, setTemplateData] = React.useState(defaultTemplateData);
-  const [showEmailEditor, setShowEmailEditor] = useState(false);
   const [showTestEmailModel, setShowTestEmailModel] = useState(false);
 
   useEffect(() => {
@@ -56,11 +53,10 @@ const AddVariableModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
     });
   }, [template, isOpen]);
 
-  const toggleEmailEditor = () => setShowEmailEditor((prev) => !prev);
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
 
   // Handle user input changes
-  const handleTemplateData = async (e, label) => {
+  const handleTemplateData = async (e) => {
     const { name, value, type, checked } = e.target;
     const fieldValue = type === 'checkbox' ? checked : value;
 
@@ -150,9 +146,7 @@ const AddVariableModal = ({ isOpen, toggle, template, fetchTemplates, onEdit }) 
         <CModalBody>
           {/* Render the template prop if provided, otherwise show a default message */}
 
-          <Inputs inputFields={variableInputFields} isBtn={false}>
-           
-          </Inputs>
+          <Inputs inputFields={variableInputFields} isBtn={false}></Inputs>
         </CModalBody>
         <CModalFooter>
           <Button title="Close" onClick={confirmationModal} disabled={loading} />

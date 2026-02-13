@@ -1,10 +1,9 @@
 // userFormConfig.js
 
-import { cilList, cilFlagAlt, cilCalendar, cilUser } from '@coreui/icons';
+import { cilCalendar, cilFlagAlt, cilUser } from '@coreui/icons';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import globalutil from 'src/util/globalutil';
 
 export const getDaDspsFiltersFields = (filters, changeFilter, cityList) => [
   {

@@ -1,18 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useMemo, Key, ReactNode, useEffect, useRef } from 'react';
-import {
-  DataGrid,
-  TreeDataGrid,
-  Column,
-  SortColumn,
-  SelectColumn,
-  RowsChangeData,
-  DataGridHandle,
-} from 'react-data-grid';
-import CustomSummary from './DataGridSummary';
-import DataGridHeader, { DataGridHeaderProps } from './DataGridHeader';
-import DatagridSkeleton from './DatagridSkeleton';
-import CIcon from '@coreui/icons-react';
 import {
   cilChevronDoubleLeft,
   cilChevronDoubleRight,
@@ -20,7 +6,21 @@ import {
   cilChevronRight,
   cilInbox,
 } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
 import { CTooltip } from '@coreui/react';
+import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Column,
+  DataGrid,
+  DataGridHandle,
+  RowsChangeData,
+  SelectColumn,
+  SortColumn,
+  TreeDataGrid,
+} from 'react-data-grid';
+import DataGridHeader, { DataGridHeaderProps } from './DataGridHeader';
+import DatagridSkeleton from './DatagridSkeleton';
+import CustomSummary from './DataGridSummary';
 
 interface CustomDatagridProps {
   rows: any[];
@@ -133,6 +133,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
       setExpandedGroupIds(expanded);
     });
   }, [rows, enableGrouping, defaultExpandedGroups, groupBy]);
+
   /* ---------------------------------- FILTER ---------------------------------- */
   const filteredRows = useMemo(() => {
     if (!searchTerm) return rows;
@@ -170,6 +171,69 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     if (rowSelection) cols.unshift(SelectColumn as any);
     return cols;
   }, [columns, rowSelection]);
+
+  // ✅ Simplified fix since widths are now defined in columns
+  // ✅ Persistent TreeGrid Column Fix (working from prod test)
+  // useEffect(() => {
+  //   if (!enableGrouping || !gridRef.current) return;
+
+  //   let lockedWidths: string | null = null;
+
+  //   const applyFix = () => {
+  //     const gridElement = gridRef.current?.element;
+  //     if (!gridElement) return;
+
+  //     const headers = gridElement.querySelectorAll('[role="columnheader"]');
+
+  //     if (!lockedWidths) {
+  //       const widths: string[] = [];
+  //       headers.forEach((header, i) => {
+  //         if (i === headers.length - 1) {
+  //           widths.push('minmax(160px, 1fr)');
+  //         } else {
+  //           widths.push(`${(header as HTMLElement).offsetWidth}px`);
+  //         }
+  //       });
+  //       lockedWidths = widths.join(' ');
+  //       console.log('🔒 Locked widths:', lockedWidths);
+  //     }
+
+  //     gridElement.style.gridTemplateColumns = lockedWidths;
+  //   };
+
+  //   // Initial fix
+  //   const timer = setTimeout(applyFix, 300);
+
+  //   // Watch for changes and re-apply
+  //   let observer: MutationObserver | null = null;
+  //   const setupObserver = () => {
+  //     const gridElement = gridRef.current?.element;
+  //     if (!gridElement) return;
+
+  //     observer = new MutationObserver(() => {
+  //       if (gridElement.style.gridTemplateColumns !== lockedWidths) {
+  //         console.log('⚡ Re-applying fix after grid change');
+  //         applyFix();
+  //       }
+  //     });
+
+  //     observer.observe(gridElement, {
+  //       attributes: true,
+  //       attributeFilter: ['style'],
+  //     });
+
+  //     console.log('✅ Persistent fix active');
+  //   };
+
+  //   const observerTimer = setTimeout(setupObserver, 400);
+
+  //   // Cleanup
+  //   return () => {
+  //     clearTimeout(timer);
+  //     clearTimeout(observerTimer);
+  //     observer?.disconnect();
+  //   };
+  // }, [enableGrouping, finalColumns]);
 
   /* ---------------------------------- GROUPER ---------------------------------- */
   const rowGrouper = (rows: readonly any[], columnKey: string): Record<string, readonly any[]> => {
@@ -311,6 +375,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
                     rowKeyGetter={(row) => row?.content}
                     className="rdg-dark fill-grid"
                     rowHeight={rowHeight}
+                    rowClass={getRowClassName}
                     groupBy={groupBy}
                     rowGrouper={rowGrouper}
                     expandedGroupIds={expandedGroupIds}

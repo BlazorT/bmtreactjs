@@ -1,5 +1,5 @@
 import TemplateActionCell from 'src/components/DataGridCustomCells/TemplateActionCell';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
+import { formatDateTime } from 'src/helpers/formatDate';
 import { NETWORKS } from 'src/util/constants';
 import globalutil from 'src/util/globalutil';
 

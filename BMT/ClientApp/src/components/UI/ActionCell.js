@@ -5,7 +5,7 @@ import { CCol, CRow } from '@coreui/react';
 import { Tooltip } from '@material-ui/core';
 import CIcon from '@coreui/icons-react';
 
-const ActionCell = ({ actions, productData }) => (
+const ActionCell = ({ actions }) => (
   <CRow>
     {actions.map((action, index) => (
       <CCol key={index}>

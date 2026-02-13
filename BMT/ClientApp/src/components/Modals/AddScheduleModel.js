@@ -354,8 +354,6 @@ const AddScheduleModel = (prop) => {
       const recipients = getNetworkRecipients(networkId);
       const segments = networkId === NETWORKS.SMS ? getSmsSegments(templateForPricing) : 1;
 
-      const totalMessages = validDays * recipients * segments;
-
       // if (totalMessages <= matchedPricing.freeAllowed) return sum;
 
       return (
@@ -382,7 +380,6 @@ const AddScheduleModel = (prop) => {
           .networks()
           .find((n) => n?.name?.toLowerCase() === network?.toLowerCase())?.id;
         const matchedPricing = pricingData?.find((price) => networkId === price.networkId);
-        const freeAllowed = matchedPricing?.freeAllowed;
         const segments = networkId === NETWORKS.SMS ? getSmsSegments(templateForPricing) : 1;
         const recipients = getNetworkRecipients(networkId);
         const totalMessages = validDays * recipients * segments;
@@ -554,7 +551,7 @@ const AddScheduleModel = (prop) => {
     e.preventDefault();
   };
 
-  const handleCampaignAddForm = (e, label, date) => {
+  const handleCampaignAddForm = (e, label) => {
     // console.log('datee', e, label, date);
 
     if (label === 'startTime' || label === 'finishTime') {
@@ -816,7 +813,6 @@ const AddScheduleModel = (prop) => {
 
     const {
       name,
-      tag,
       autoGenerateLeads,
       startTime,
       finishTime,
@@ -834,21 +830,14 @@ const AddScheduleModel = (prop) => {
       return;
     }
     // 🔹 STEP 1: Find the max time from scheduleJson.FinishTime
-    let maxFinishTime = null;
-    if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
-      maxFinishTime = scheduleJson
-        .map((s) => dayjs(s.FinishTime))
-        .reduce((latest, current) => (current.isAfter(latest) ? current : latest));
-    }
+    // let maxFinishTime = null;
+    // if (Array.isArray(scheduleJson) && scheduleJson.length > 0) {
+    //   maxFinishTime = scheduleJson
+    //     .map((s) => dayjs(s.FinishTime))
+    //     .reduce((latest, current) => (current.isAfter(latest) ? current : latest));
+    // }
 
     // 🔹 STEP 2: Combine original finish date with max finish time
-    const finishTimeWithMaxTime = maxFinishTime
-      ? dayjs(finishTime)
-          .set('hour', maxFinishTime.hour())
-          .set('minute', maxFinishTime.minute())
-          .set('second', maxFinishTime.second())
-          .set('millisecond', 0)
-      : dayjs(finishTime); // fallback to original
 
     const campaignBody = {
       Id: id || 0,
@@ -1017,9 +1006,9 @@ const AddScheduleModel = (prop) => {
                           network.name.charAt(0).toUpperCase() +
                           network.name.slice(1).toLowerCase();
 
-                        const matchedPricing = pricingData?.find(
-                          (price) => network?.id === price.networkId,
-                        );
+                        // const matchedPricing = pricingData?.find(
+                        //   (price) => network?.id === price.networkId,
+                        // );
                         const networkBundle = networksList.find(
                           (apiNet) => apiNet?.networkId === network.id,
                         );

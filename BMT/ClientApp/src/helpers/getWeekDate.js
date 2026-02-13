@@ -47,7 +47,7 @@ export function getWeekRange(startDate, endDate) {
   return weekDates;
 }
 
-export function matchDateFormat(date1, date2, field) {
+export function matchDateFormat(date1, date2) {
   const formatDate = (inputDate) => {
     const dateToCheck = new Date(inputDate);
     const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(dateToCheck);

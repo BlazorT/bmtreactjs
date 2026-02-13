@@ -65,7 +65,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
 
       try {
         return new Date(date).toLocaleDateString();
-      } catch (error) {
+      } catch {
         return date;
       }
     },
@@ -81,7 +81,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
 
       try {
         return new Date(date).toLocaleDateString();
-      } catch (error) {
+      } catch {
         return date;
       }
     },
@@ -101,12 +101,7 @@ export const getUsersListCols = (fetching, usersData, pageRoles) => [
   },
 ];
 
-export const getUsersListColsFlexible = (
-  fetching,
-  usersData,
-  pageRoles,
-  containerWidth = 1200, // Default container width, can be passed dynamically
-) => [
+export const getUsersListColsFlexible = (fetching, usersData, pageRoles) => [
   {
     key: 'avatar',
     name: 'Picture',
@@ -134,7 +129,7 @@ export const getUsersListColsFlexible = (
 
       try {
         return new Date(date).toLocaleDateString();
-      } catch (error) {
+      } catch {
         return date;
       }
     },
@@ -148,7 +143,7 @@ export const getUsersListColsFlexible = (
 
       try {
         return new Date(date).toLocaleDateString();
-      } catch (error) {
+      } catch {
         return date;
       }
     },

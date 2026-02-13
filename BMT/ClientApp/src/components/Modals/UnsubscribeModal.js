@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import useFetch from 'src/hooks/useFetch';
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import CIcon from '@coreui/icons-react';
+import { CCol, CFormCheck, CPopover, CRow, CTooltip } from '@coreui/react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { CCol, CRow, CFormCheck } from '@coreui/react';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import AppContainer from 'src/components/UI/AppContainer';
+import useFetch from 'src/hooks/useFetch';
 import { useShowToast } from 'src/hooks/useShowToast';
 import globalutil from 'src/util/globalutil';
-import AppContainer from 'src/components/UI/AppContainer';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
-import CIcon from '@coreui/icons-react';
-import { CCard, CTooltip, CFormSelect, CButton, CAlert } from '@coreui/react';
-import { CPopover } from '@coreui/react';
 
-import CustomInput from 'src/components/InputsComponent/CustomInput';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
 import {
   cibFacebook,
   cibGmail,
@@ -25,6 +22,9 @@ import {
   cibWhatsapp,
   cilShortText,
 } from '@coreui/icons';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
 const UnsubscribeModal = (prop) => {
   const { isOpen, toggle } = prop;
 
@@ -372,7 +372,6 @@ const UnsubscribeModal = (prop) => {
             );
           })}
 
-    
           <div className="d-flex justify-content-center gap-3 mt-3">
             <button className="btn btn-secondary" onClick={toggle}>
               Cancel

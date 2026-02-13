@@ -16,23 +16,20 @@ import Inputs from 'src/components/Filters/Inputs';
 import AppContainer from 'src/components/UI/AppContainer';
 import Form from 'src/components/UI/Form';
 // Hooks and Helpers
+import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import { formValidator } from 'src/helpers/formValidator';
 import validateEmail from 'src/helpers/validateEmail';
-import useFetch from 'src/hooks/useFetch';
-import { setUserData as setLoginUser } from 'src/redux/user/userSlice';
-import { getInitialUserData, getUserInputFields } from 'src/configs/InputConfig/userRegConfig';
 import { useFetchOrgs } from 'src/hooks/api/useFetchOrgs';
 import { useUpdateUser } from 'src/hooks/api/useUpdateUser';
 import { useUserAvailability } from 'src/hooks/api/useUserAvailability';
 import useEmailVerification from 'src/hooks/useEmailVerification';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { updateToast } from 'src/redux/toast/toastSlice';
+import { setUserData as setLoginUser } from 'src/redux/user/userSlice';
 //import Spinner from 'src/components/UI/Spinner';
 import {} from 'src/components/UI/ImagePicker';
 import Loading from 'src/components/UI/Loading';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
-import globalutil from 'src/util/globalutil';
 import useApi from 'src/hooks/useApi';
 
 const UserRegister = () => {
@@ -43,7 +40,7 @@ const UserRegister = () => {
   const dispatch = useDispatch();
 
   // Hooks and Helper Functions
-  const { data, error, loading, checkEmailValidation } = useEmailVerification();
+  const { checkEmailValidation } = useEmailVerification();
   const { getOrgs } = useFetchOrgs();
   const { createUpdateUser, loading: userLoading } = useUpdateUser();
   const { loading: avatarLoading, uploadAvatar } = useUploadAvatar();

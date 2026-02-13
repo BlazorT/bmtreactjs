@@ -3,7 +3,6 @@
 import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser } from '@coreui/icons';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrgReportPdf } from 'src/helpers/getOrgReportPdf';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
 import dayjs from 'dayjs';
@@ -16,8 +15,8 @@ import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { formatDate } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
-import globalutil from 'src/util/globalutil';
 import usePageRoles from 'src/hooks/usePageRoles';
+import globalutil from 'src/util/globalutil';
 
 const columns = [
   {
@@ -91,13 +90,6 @@ const organizationreport = () => {
     setShowFilters((prev) => !prev);
   };
 
-  const generatePdf = async () => {
-    const reportRows = makeGroupingRows(rows);
-    const doc = getOrgReportPdf(reportRows);
-    doc.output('dataurlnewwindow');
-    console.log(reportRows, 'repoertdata');
-  };
-
   const applyFilters = async () => {
     const filterBody = {
       name: filters.name,
@@ -167,62 +159,6 @@ const organizationreport = () => {
     }
   };
 
-  const makeGroupingRows = (data) => {
-    const updatedData = [];
-    const uniqueDescValues = [...new Set(data.map((item) => item.daName))];
-
-    uniqueDescValues.forEach((uniqueDesc) => {
-      const id = Math.floor(Math.random() * 900) + 100; // Replace this with your actual parent name
-      const group = uniqueDesc;
-
-      updatedData.push({ group, id });
-
-      data
-        .filter((item) => item.daName === uniqueDesc)
-        .forEach((item) => {
-          updatedData.push(item);
-        });
-    });
-    const mappedArray = data.map((key, index) => {
-      let mappedObject;
-
-      if (index == 0) {
-        mappedObject = {
-          orgName: 'Organization Name',
-          contact: 'Contact',
-          strength: 'Strength',
-          packageName: 'Package',
-          status: 'Status',
-          expiryTime: 'Expiry Date',
-        };
-      } else {
-        mappedObject = {
-          orgName: key.orgName,
-          contact: key.contact,
-          strength: key.strength,
-          packageName: key.packageName,
-          status: key.status,
-          expiryTime: key.expiryTime,
-        };
-      }
-      return mappedObject;
-    });
-    // const header = ['name', 'contact', 'performance','status','date of joining'];
-
-    const grouping = mappedArray.flatMap((item, index) => {
-      const rowData = [
-        item.orgName,
-        item.contact,
-        item.strength.toString(),
-        item.packageName,
-        item.status.toString(),
-        item.expiryTime,
-      ];
-      return [rowData];
-    });
-    console.log({ grouping });
-    return grouping;
-  };
   const changeFilter = (e, date) => {
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
@@ -230,7 +166,7 @@ const organizationreport = () => {
         [date]: dayjs(e).utc().format(),
       }));
     } else {
-      const { name, value, type, checked } = e.target;
+      const { name, value } = e.target;
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: value,

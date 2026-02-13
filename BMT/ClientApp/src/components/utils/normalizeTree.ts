@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clone } from './clone';
 
 export const normalizeTree = (data: any[]) => {

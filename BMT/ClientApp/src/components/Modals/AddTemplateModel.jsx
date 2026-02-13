@@ -104,7 +104,7 @@ const AddTemplateModal = ({
   const toggleSendEmailModel = () => setShowTestEmailModel((prev) => !prev);
 
   // Handle user input changes
-  const handleTemplateData = async (e, label) => {
+  const handleTemplateData = async (e) => {
     const { name, value, type, checked } = e.target;
     const fieldValue = type === 'checkbox' ? checked : value;
 

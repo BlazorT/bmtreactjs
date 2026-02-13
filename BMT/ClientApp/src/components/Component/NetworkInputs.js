@@ -1,43 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { CFormSwitch } from '@coreui/react';
-import { CCol, CContainer, CRow } from '@coreui/react';
-import useFetch from 'src/hooks/useFetch';
-import { formValidator } from 'src/helpers/formValidator';
-import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import { CCol, CRow } from '@coreui/react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-//import BlazorTabs from '../CustomComponents/BlazorTabs';
+import { formValidator } from 'src/helpers/formValidator';
+import useFetch from 'src/hooks/useFetch';
+import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
+import { CFormCheck } from '@coreui/react';
+import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import { CFormCheck } from '@coreui/react';
-//import { dayjs } from '@coreui/react';
 import dayjs from 'dayjs';
 
-//import BlazorNetworkInput from 'src/components/Component/BlazorNetworkInputs'
-import {
-  cilUser,
-  cilCloudDownload,
-  cilCalendar,
-  cilChevronBottom,
-  cilFlagAlt,
-} from '@coreui/icons';
-import { useShowToast } from 'src/hooks/useShowToast';
-//import { getDaInventoryCols } from 'src/configs/ColumnsConfig/daInventoryCols';
-//import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
-//import CustomSearch from 'src/components/InputsComponent/CustomSearch';
-//import Loading from 'src/components/UI/Loading';
-//import DaNewAssignment from 'src/components/Component/DaNewAssignment';
-//import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-//import { useFetchUsers } from 'src/hooks/api/useFetchUsers';
-//import Button from 'src/components/InputsComponent/Button';
-//import LoadingBtn from 'src/components/UI/LoadingBtn';
-import AppContainer from 'src/components/UI/AppContainer';
+import { cilCalendar, cilChevronBottom, cilUser } from '@coreui/icons';
 import { useDispatch } from 'react-redux';
+import AppContainer from 'src/components/UI/AppContainer';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from '../../util/globalutil';
 const NetworkInputs = (prop) => {
-  const { header, networkId, setNetworkList, networkList } = prop;
+  const { networkId, setNetworkList, networkList } = prop;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const now = dayjs().utc();
@@ -71,14 +51,8 @@ const NetworkInputs = (prop) => {
   });
   const [showIntegration, setShowIntegration] = useState(false);
   const [showFilters, setshowFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    response: createNetworkSettingRes,
-    loading: createNetworkSettingLoading,
-    error: createNetworkSettingError,
-    fetchData: createNetworkSetting,
-  } = useFetch();
+  const { response: createNetworkSettingRes, fetchData: createNetworkSetting } = useFetch();
   const handleNetworkSetting = (e, label) => {
     // console.log("Label", label);
     if (label == 'startTime' || label == 'finishTime') {
@@ -198,8 +172,6 @@ const NetworkInputs = (prop) => {
           //  `${JSON.stringify(createUserRes.current.message)}`,
         }),
       );
-
-      setIsLoading(createNetworkSettingLoading.current);
     }
   };
 

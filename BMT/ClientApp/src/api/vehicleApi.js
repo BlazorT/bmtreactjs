@@ -1,5 +1,3 @@
-import { updateToast } from 'src/redux/toast/toastSlice';
-
 export const getVehicles = async (user, getVehicle) => {
   const getVehicleBody = {
     dspid: user.dspId.toString(),

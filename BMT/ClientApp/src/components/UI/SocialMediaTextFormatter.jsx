@@ -1,13 +1,12 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-control-regex */
 /* eslint-disable no-useless-escape */
 /* eslint-disable react/prop-types */
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import CIcon from '@coreui/icons-react';
-import { cilX } from '@coreui/icons';
 import { CTooltip } from '@coreui/react';
-import { styleMap } from 'src/constants/socialStyles';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { styleMap } from 'src/constants/socialStyles';
 
 // Reusable Social Media Text Editor Component
 const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
@@ -99,7 +98,6 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
       const selectedText = value.slice(start, end);
       const normalizedText = resetToNormal(selectedText);
       const isAlreadyStyled = isTextStyled(selectedText, style);
-      const isUppercaseStyle = ['circledDark', 'squared', 'squaredDark'].includes(style);
 
       let finalText;
       if (isAlreadyStyled) {
@@ -203,7 +201,7 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
     };
   }
 
-  const { parts, perPart, encoding } = calculateSmsParts(value || '');
+  const { parts, encoding } = calculateSmsParts(value || '');
   const charCount = [...(value || '')].length;
 
   return (

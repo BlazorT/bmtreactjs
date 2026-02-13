@@ -397,7 +397,7 @@ export const useVerification = (user, selectedOrg, showToast) => {
       } else {
         showToast('Authentication failed. Please try again.', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Authentication failed. Please try again.', 'error');
     }
   };

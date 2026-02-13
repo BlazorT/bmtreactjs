@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+/* eslint-disable react/react-in-jsx-scope */
 import CustomDatagrid from '../DataGridComponents/CustomDatagrid';
 import RolesCheckBox from '../DataGridCustomCells/RolesCheckBox';
 

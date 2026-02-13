@@ -1,25 +1,12 @@
 /* eslint-disable no-undef */
-import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useRef } from 'react';
 import { initialOptions } from 'src/constants/initialOptionsApi';
 
 function useFetch() {
-  const dispatch = useDispatch();
-
   const response = useRef();
   const error = useRef();
   const loading = useRef();
   const abortControllerRef = useRef();
-
-  const checkServerStatus = async () => {
-    const serverStatusUrl = `192.168.50.18`;
-    try {
-      const res = await fetch(serverStatusUrl);
-      return res.ok;
-    } catch (err) {
-      return false;
-    }
-  };
 
   const fetchData = async (url, customOptions, callback) => {
     loading.current = true;

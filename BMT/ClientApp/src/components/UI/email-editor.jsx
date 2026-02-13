@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { cilFullscreen, cilFullscreenExit } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { useEffect, useRef, useState } from 'react';
 import EmailEditor from 'react-email-editor';
 import Button from '../InputsComponent/Button';
-import CIcon from '@coreui/icons-react';
-import { cilFullscreen, cilFullscreenExit } from '@coreui/icons';
-import { htmlToStructuredDesign } from 'src/helpers/emailJson';
 
 // eslint-disable-next-line react/prop-types
 const EmailTextEditor = ({ open, toggle, onSave, value, isModal = true }) => {

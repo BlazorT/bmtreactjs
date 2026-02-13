@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/react-in-jsx-scope */
-import { useRef, useState, useEffect, useCallback, useImperativeHandle } from 'react';
+import { cilClock } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { CModal, CModalBody, CModalHeader, CModalTitle, CSpinner } from '@coreui/react';
+import { useCallback, useEffect, useState } from 'react';
 import useApi from 'src/hooks/useApi';
 import useCountdownTimer from 'src/hooks/useCountdownTimer';
 import { SOCKET_URL } from 'src/hooks/useJazzCash';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { CModal, CModalHeader, CModalTitle, CModalBody, CSpinner } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilClock } from '@coreui/icons';
 
 export default function JazzCashConfirm({
   isVisible,

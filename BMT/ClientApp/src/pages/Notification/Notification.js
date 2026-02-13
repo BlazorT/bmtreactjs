@@ -5,7 +5,7 @@ import { CCol, CFormCheck, CRow } from '@coreui/react';
 import useFetch from 'src/hooks/useFetch';
 import { updateToast } from 'src/redux/toast/toastSlice';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 //import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
@@ -13,8 +13,6 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 //import NotificationInfoModal from 'src/components/Modals/NotificationInfoModal';
 import AppContainer from '../../components/UI/AppContainer';
 //import { formValidator } from 'src/helpers/formValidator';
-import { useNavigate } from 'react-router-dom';
-import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import {
   cibFacebook,
   cibGmail,
@@ -27,23 +25,16 @@ import {
   cilShortText,
 } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 
 const Notification = (toggle) => {
-  const user = useSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState(true);
   const showConfirmation = useShowConfirmation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [networks, setNetworks] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-  const {
-    response: GetNetworkRes,
-    loading: NetworkLoading,
-    error: createNetworkError,
-    fetchData: GetNetworks,
-  } = useFetch();
+  const { fetchData: GetNetworks } = useFetch();
   useEffect(() => {
     getNetworksList();
   }, []);
@@ -68,22 +59,15 @@ const Notification = (toggle) => {
           );
           /*   setRows([]);*/
         }
-        setIsLoading(NetworkLoading.current);
       },
     );
   };
-  const {
-    response: createNotificationRes,
-    loading: createNotificationLoading,
-    error: createNotificationError,
-    fetchData: createNotification,
-  } = useFetch();
+  const { response: createNotificationRes, fetchData: createNotification } = useFetch();
 
   //alert(JSON.stringify(networkBody));
   const onSave = async () => {
     const body = networks.map((n) => ({ id: n.id, status: n.status, createdBy: n.createdBy }));
     // alert(JSON.stringify(networkBody));
-    setIsLoading(createNotificationLoading.current);
     await createNotification('/Admin/updatenetworsbulk', {
       method: 'POST',
       body: JSON.stringify(body),
@@ -110,7 +94,6 @@ const Notification = (toggle) => {
           //  `${JSON.stringify(createUserRes.current.message)}`,
         }),
       );
-      setIsLoading(createNotificationLoading.current);
     }
   };
 
@@ -135,7 +118,7 @@ const Notification = (toggle) => {
     });
   };
   const handleNotificationSetting = (e, network) => {
-    const { name, value, type, checked } = e.target;
+    const { checked } = e.target;
     setNetworks((prevObjects) => {
       return prevObjects.map((obj) => {
         if (obj.id === network.id) {

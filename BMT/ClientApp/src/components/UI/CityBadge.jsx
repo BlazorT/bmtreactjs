@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { CTooltip } from '@coreui/react';
-import { cilInfo, cilCheckCircle, cilWarning, cilX } from '@coreui/icons';
+import { cilInfo, cilCheckCircle, cilWarning } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 
 /**

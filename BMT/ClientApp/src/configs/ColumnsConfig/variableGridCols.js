@@ -1,5 +1,5 @@
 import VariableActionCell from 'src/components/DataGridCustomCells/VariableActionCell';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
+import { formatDateTime } from 'src/helpers/formatDate';
 import globalutil from 'src/util/globalutil';
 
 /* eslint-disable react/react-in-jsx-scope */

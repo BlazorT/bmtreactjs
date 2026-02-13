@@ -4,6 +4,7 @@ export type ConfirmationDialogState = {
   header: string;
   body: string;
   isOpen: boolean;
+  loading: boolean;
   onYes: () => void;
   onNo: () => void;
 };
@@ -12,6 +13,7 @@ const initialState: ConfirmationDialogState = {
   header: '',
   body: '',
   isOpen: false,
+  loading: false,
   onYes: () => {},
   onNo: () => {},
 };

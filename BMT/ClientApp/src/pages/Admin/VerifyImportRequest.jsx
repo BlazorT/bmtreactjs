@@ -111,8 +111,6 @@ const VerifyImportRequest = () => {
     }
   };
 
-  const org = orgsData?.data?.find((o) => o.id == orgId);
-
   const handleApprove = async () => {
     try {
       // Send verification code to super admin via email
@@ -204,7 +202,7 @@ const VerifyImportRequest = () => {
       } else {
         showToast('Authentication failed. Please try again.', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Authentication failed. Please try again.', 'error');
     }
   };

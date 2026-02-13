@@ -4,7 +4,7 @@ interface SpinnerProps {
   title?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ title }) => {
+const Spinner: React.FC<SpinnerProps> = () => {
   return (
     <div className="d-flex justify-content-center">
       <div className="spinner-border" role="status">

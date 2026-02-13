@@ -13,8 +13,9 @@ export const useShowConfirmation = () => {
     isOpen = true,
     onYes,
     onNo,
+    loading,
   }: ConfirmationDialogState) => {
-    dispatch(setConfirmation({ header, body, isOpen, onYes, onNo }));
+    dispatch(setConfirmation({ header, body, isOpen, onYes, onNo, loading }));
   };
 
   return showConfirmation;

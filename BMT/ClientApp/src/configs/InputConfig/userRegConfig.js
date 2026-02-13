@@ -1,15 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 // userFormConfig.js
 
-import {
-  cilUser,
-  cilEnvelopeClosed,
-  cilLockLocked,
-  cilScreenSmartphone,
-  cilFlagAlt,
-  cilInfo,
-} from '@coreui/icons';
-import { CFormCheck } from '@coreui/react';
+import { cilUser, cilLockLocked, cilScreenSmartphone, cilFlagAlt, cilInfo } from '@coreui/icons';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
@@ -287,7 +279,7 @@ export const getUserInputFields = (
 ];
 dayjs.extend(utc);
 // Function to get initial user data
-export const getInitialUserData = (user, role) => ({
+export const getInitialUserData = (user) => ({
   id: 0,
   avatar: '',
   firstName: '',

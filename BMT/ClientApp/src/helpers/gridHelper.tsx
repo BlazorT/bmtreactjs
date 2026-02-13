@@ -1,8 +1,3 @@
-interface GridContent {
-  head: string[][];
-  body: string[][];
-  foot?: string[][];
-}
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -138,7 +133,7 @@ export async function exportToPdf(
         left: padding,
       };
     },
-    didDrawPage: (data) => {
+    didDrawPage: () => {
       const pageHeight = doc.internal.pageSize.getHeight();
 
       doc.setFontSize(8);

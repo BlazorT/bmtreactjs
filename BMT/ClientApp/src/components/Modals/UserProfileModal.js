@@ -19,7 +19,7 @@ function UserProfileModal({ toggle, isOpen, isChangePassword }) {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const showToast = useShowToast();
-  const { data, loading, error, postData } = useApi('/BlazorApi/changepassword');
+  const { loading, postData } = useApi('/BlazorApi/changepassword');
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

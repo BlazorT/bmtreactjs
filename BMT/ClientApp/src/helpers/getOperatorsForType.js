@@ -1,5 +1,3 @@
-import globalutil from 'src/util/globalutil';
-
 export const getOperatorsForId = (id) => {
   const operators = {
     1: [

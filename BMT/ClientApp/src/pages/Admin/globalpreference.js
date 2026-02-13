@@ -42,7 +42,7 @@ const globalpreference = () => {
         handleActiveTab={setActiveTab}
       />
       <CContainer fluid className="m-0 p-0 mt-1">
-        {tabs.map((tab, index) => (
+        {tabs.map((tab) => (
           <>
             {activeTab == tab.id && (
               <BlazorNetworkInput

@@ -94,7 +94,7 @@ const Logs = () => {
 
     const res = await fetchLogs(fetchBody);
     if (res?.status === true) {
-      const mappedArray = res.data.map((data, index) => ({
+      const mappedArray = res.data.map((data) => ({
         id: data.id,
         userId: data.userId,
         orgId: user.orgId.toString(),

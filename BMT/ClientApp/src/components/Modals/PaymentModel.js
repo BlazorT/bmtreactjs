@@ -55,7 +55,6 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
   // console.log({ amount });
   const {
     triggerJazzCashPayment,
-    loadingJC,
     initiateJCPayment,
     isPending: paymentInitiatedPending,
     isPaymentInitiated,
@@ -120,7 +119,7 @@ const PaymentModel = ({ isOpen, toggle, onSubmit, amount }) => {
           ),
         );
       }
-    } catch (error) {
+    } catch {
       setGateways([]);
       showToast('Failed to load payment gateways', 'error');
     } finally {

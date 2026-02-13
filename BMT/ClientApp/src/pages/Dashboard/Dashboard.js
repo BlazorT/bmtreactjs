@@ -7,14 +7,9 @@ import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 
 import AppContainer from 'src/components/UI/AppContainer';
 
-const Dashboard = (prop) => {
-  //const [operationsVisible, setOperationVisible] = useState(true);
-  //const [peopleVisible, setPeopleVisible] = useState(true);
+const Dashboard = () => {
   const [showFilters, setshowFilters] = useState(false);
-
-  // const user = useSelector((state) => state.user);
-  //const { title, attributesStatus2, attributesStatus3 } = prop;
-  const [vehDisprows, setVehDispRow] = useState([
+  const vehDisprows = [
     {
       id: 1,
       month: 'January',
@@ -47,9 +42,9 @@ const Dashboard = (prop) => {
       totalFunds: '1000',
       increase: '70%',
     },
-  ]);
+  ];
 
-  const [vehDispcolumns, setVehDispcolumns] = useState([
+  const vehDispcolumns = [
     {
       key: 'month',
       headerClassName: 'custom-header-data-grid',
@@ -107,10 +102,12 @@ const Dashboard = (prop) => {
       headerAlign: 'center',
       align: 'center',
     },
-  ]);
+  ];
+
   const toggleStock = () => {
     setshowFilters((prev) => !prev);
   };
+
   return (
     <>
       <div className="p-w-md m-t-sm">

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
-import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
+import { useShowToast } from '../useShowToast';
 
 export const useFetchUsers = () => {
   dayjs.extend(utc);

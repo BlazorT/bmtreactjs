@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable prettier/prettier */
 import { cilAccountLogout, cilBell, cilMenu, cilPeople } from '@coreui/icons';
 import {
   CContainer,
@@ -13,16 +12,14 @@ import {
   CPopover,
 } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { toggleSidebar } from '../redux/sidebar/sidebarSlice';
 //import Blazorhub from '../Blazorhub';
 import CIcon from '@coreui/icons-react';
 import { CBadge } from '@coreui/react';
-import useFetch from 'src/hooks/useFetch';
+import { useEffect } from 'react';
+import { useLogout } from 'src/hooks/api/useLogout';
+import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
-import { setNavItems } from 'src/redux/navItems/navItemsSlice';
-import { updateToast } from 'src/redux/toast/toastSlice';
-import { setUserData } from 'src/redux/user/userSlice';
 
 export const keysToKeep = [
   'dastatuses',
@@ -33,12 +30,23 @@ export const keysToKeep = [
   'networks',
 ];
 
-const AppHeader = (phoneNumber) => {
+const AppHeader = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const showConfirmation = useShowConfirmation();
+
+  const { logout, logoutLoading } = useLogout();
 
   const user = useSelector((state) => state.user);
-  const { response: logoutRes, fetchData: userLogout } = useFetch();
+  const confirMdl = useSelector((state) => state.confirMdl);
+
+  useEffect(() => {
+    if (confirMdl.isOpen && confirMdl.body === 'Are you sure you want to Logout?') {
+      showConfirmation({
+        ...confirMdl,
+        loading: logoutLoading,
+      });
+    }
+  }, [logoutLoading]);
 
   const Logout = () => {
     dispatch(
@@ -51,50 +59,12 @@ const AppHeader = (phoneNumber) => {
       }),
     );
   };
+
   const onYesLogout = async () => {
-    dispatch(
-      setConfirmation({
-        body: (
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status"></div>
-          </div>
-        ),
-      }),
-    );
-    // Need to pass id
-    await userLogout('/Common/logout?id=' + user.userId, { method: 'POST' });
-
-    if (logoutRes.current?.status === true) {
-      navigate('/');
-
-      Object.keys(localStorage).forEach((key) => {
-        if (!keysToKeep.includes(key)) {
-          localStorage.removeItem(key);
-        }
-      });
-      dispatch(
-        setUserData({
-          userId: '',
-          dspId: '',
-          roleId: '',
-          userInfo: {},
-          isAuthenticated: false,
-          socialApiKey: '',
-        }),
-      );
-      dispatch(setNavItems([]));
-      onNo();
-    } else {
-      onNo();
-      dispatch(
-        updateToast({
-          isToastOpen: true,
-          toastMessage: 'something went wrong try again later',
-          toastVariant: 'error',
-        }),
-      );
-    }
+    await logout();
+    onNo();
   };
+
   const onNo = () => {
     dispatch(
       setConfirmation({
@@ -102,11 +72,13 @@ const AppHeader = (phoneNumber) => {
       }),
     );
   };
+
   const notificationCount = 3;
   const handleChatClick = () => {
     const whatsappUrl = `https://api.whatsapp.com/send?phone=923337069742`;
     window.open(whatsappUrl, '_blank');
   };
+
   const popoverContent = (
     <div>
       <CListGroup>

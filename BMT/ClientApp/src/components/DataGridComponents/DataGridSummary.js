@@ -1,8 +1,7 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Column } from 'react-data-grid';
 import calculateTime from 'src/helpers/calculateTime';
 
 const CustomSummary = ({ rows, columns, summary }) => {
@@ -76,7 +75,7 @@ const CustomSummary = ({ rows, columns, summary }) => {
                 try {
                   const { min } = calculateTime(timestamps);
                   summaryResult.min = `${caption} : ${min}`;
-                } catch (error) {
+                } catch {
                   summaryResult.min = `${caption} : N/A`;
                 }
               } else {
@@ -102,7 +101,7 @@ const CustomSummary = ({ rows, columns, summary }) => {
                 try {
                   const { max } = calculateTime(timestamps);
                   summaryResult.max = `${caption} : ${max}`;
-                } catch (error) {
+                } catch {
                   summaryResult.max = `${caption} : N/A`;
                 }
               } else {

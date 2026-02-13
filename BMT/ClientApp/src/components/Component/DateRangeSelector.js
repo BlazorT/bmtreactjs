@@ -16,13 +16,6 @@ function useDateRange(startDate, endDate, setStartDate, setEndDate, prevDisable)
   );
 
   // Set end date to next Saturday from previous Sunday
-  const saturdayNextWeek = new Date(sundayThisWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-
-  const startOfWeek = new Date(
-    startDate.getTime() -
-      (startDate.getDay() === 0 ? 0 : startDate.getDay() - 1) * 24 * 60 * 60 * 1000,
-  ); // Monday of the current week
-  const endOfWeek = new Date(startOfWeek.getTime() + 5 * 24 * 60 * 60 * 1000); // Friday of the current week
 
   useEffect(() => {
     // Ensure initial `startDate` and `endDate` are always Sunday and Saturday of the current week

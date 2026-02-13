@@ -9,7 +9,6 @@ import DAInventoryModal from '../Modals/DAInventoryModal';
 
 import { CCol, CRow, CTooltip } from '@coreui/react';
 
-import { useSelector } from 'react-redux';
 import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
@@ -18,31 +17,16 @@ import Spinner from '../UI/Spinner';
 const OrgUserActionCell = (prop) => {
   const { value, user, fetching, canUpdate, canDelete } = prop;
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
   const [DADetailModalOpen, setDADetailModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isJustDispMdlOpen, setIsJustDispMdlOpen] = useState(false);
 
-  const loginUser = useSelector((state) => state.user);
-
   const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-  const { data, error, loading, updateStatus } = useToggleUserStatus();
+  const { loading, updateStatus } = useToggleUserStatus();
 
   const toggleStatus = (status) => {
-    handleClose();
     showConfirmation({
       header: 'Confirmation!',
       body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'}  ${
@@ -74,7 +58,6 @@ const OrgUserActionCell = (prop) => {
   };
 
   const editUser = () => {
-    handleClose();
     navigate('/UserRegister', { state: { id: value.row.id, user: user } });
   };
   const DADetailInfoModal = () => {

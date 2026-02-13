@@ -404,34 +404,34 @@ function drawBulletPoint(page, text, x, y, maxWidth, font, fontSize) {
 /**
  * Convert SVG to PNG data URL
  */
-async function svgToPngDataUrl(svgString) {
-  return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
+// async function svgToPngDataUrl(svgString) {
+//   return new Promise((resolve, reject) => {
+//     const canvas = document.createElement('canvas');
+//     const ctx = canvas.getContext('2d');
+//     const img = new Image();
 
-    // Convert SVG string to data URL
-    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
+//     // Convert SVG string to data URL
+//     const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+//     const url = URL.createObjectURL(svgBlob);
 
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+//     img.onload = () => {
+//       canvas.width = img.width;
+//       canvas.height = img.height;
+//       ctx.drawImage(img, 0, 0);
 
-      const pngDataUrl = canvas.toDataURL('image/png');
-      URL.revokeObjectURL(url);
-      resolve(pngDataUrl);
-    };
+//       const pngDataUrl = canvas.toDataURL('image/png');
+//       URL.revokeObjectURL(url);
+//       resolve(pngDataUrl);
+//     };
 
-    img.onerror = (error) => {
-      URL.revokeObjectURL(url);
-      reject(error);
-    };
+//     img.onerror = (error) => {
+//       URL.revokeObjectURL(url);
+//       reject(error);
+//     };
 
-    img.src = url;
-  });
-}
+//     img.src = url;
+//   });
+// }
 
 /**
  * Example usage:

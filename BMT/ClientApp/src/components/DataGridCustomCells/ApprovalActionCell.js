@@ -35,7 +35,7 @@ export const approvalStatus = [
 ];
 
 const ApprovalActionCell = (prop) => {
-  const { value, org, fetchApprovalReq, allOrgs } = prop;
+  const { value, fetchApprovalReq, allOrgs } = prop;
   const { id } = useParams();
 
   const user = useSelector((state) => state.user);
@@ -231,7 +231,7 @@ const ApprovalActionCell = (prop) => {
       } else {
         showToast('Authentication failed. Please try again.', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Authentication failed. Please try again.', 'error');
     }
   };

@@ -8,7 +8,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import HashtagInput from 'src/components/UI/HashtagInput';
 
-export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm, TermsModal) => [
+export const getCampaignAddConfig = (campaignRegData, handleCampaignAddForm) => [
   {
     component: CustomInput,
     label: 'Title',

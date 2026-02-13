@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import globalutil from 'src/util/globalutil';
-import WarningIcon from '@mui/icons-material/Warning';
 import LaunchIcon from '@mui/icons-material/Launch';
-import CachedIcon from '@mui/icons-material/Cached';
+import WarningIcon from '@mui/icons-material/Warning';
+import React from 'react';
 
 const ScheduleStatusCell = ({ status, type, params, isDull, vehicleList }) => {
   const mapStatus = {

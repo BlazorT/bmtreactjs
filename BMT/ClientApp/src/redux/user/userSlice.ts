@@ -51,10 +51,11 @@ export const userSlice = createSlice({
         state.socialApiKey = socialApiKey;
       }
     },
+    logout: () => initialState,
   },
 });
 
 // Action creator for setting user data
-export const { setUserData } = userSlice.actions;
+export const { setUserData, logout } = userSlice.actions;
 
 export default userSlice.reducer;

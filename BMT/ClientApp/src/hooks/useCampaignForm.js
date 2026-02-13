@@ -1,5 +1,4 @@
-import { useState, useCallback } from 'react';
-import dayjs from 'dayjs';
+import { useCallback, useState } from 'react';
 import { getInitialCampaignData } from 'src/configs/InputConfig/campaignAddConfig';
 
 /**

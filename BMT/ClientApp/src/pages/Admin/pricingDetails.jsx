@@ -1,28 +1,24 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
-  CRow,
-  CCol,
-  CFormCheck,
+  CBadge,
+  CButton,
   CCard,
   CCardBody,
   CCardTitle,
+  CCol,
   CCollapse,
-  CBadge,
-  CButton,
+  CFormCheck,
   CListGroup,
   CListGroupItem,
+  CRow,
 } from '@coreui/react';
+import { useEffect, useState } from 'react';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
 import AppContainer from 'src/components/UI/AppContainer';
 import globalutil from 'src/util/globalutil';
 
 const PricingDetails = () => {
-  const user = useSelector((state) => state.user);
-
   // =======================
   // STATE
   // =======================

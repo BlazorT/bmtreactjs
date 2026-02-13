@@ -5,7 +5,6 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import { packageUnits } from 'src/constants/constants';
-import globalutil from 'src/util/globalutil';
 
 const getLabels = (networkId, labelId) => {
   if (labelId === 'businessId') {
@@ -42,12 +41,7 @@ const getLabels = (networkId, labelId) => {
   }
 };
 
-export const getNetworkInputFields = (
-  networkState,
-  handleNetworkSetting,
-  networkId,
-  organizationId,
-) => [
+export const getNetworkInputFields = (networkState, handleNetworkSetting, networkId) => [
   ...(networkId !== 0
     ? [
         {

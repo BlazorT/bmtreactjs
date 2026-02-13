@@ -2,7 +2,7 @@
 import { CCol, CRow } from '@coreui/react';
 
 const BlazorTabs = (prop) => {
-  const { tabs, handleActiveTab, activeTab, onAddVehicle, disable } = prop;
+  const { tabs, handleActiveTab, activeTab, disable } = prop;
 
   const handleTab = (i) => {
     handleActiveTab(i);

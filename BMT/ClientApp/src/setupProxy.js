@@ -1,4 +1,5 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable no-undef */
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { env } = require('process');
 
@@ -20,7 +21,7 @@ const context = [
   '/Template',
 ];
 
-const onError = (err, req, resp, target) => {
+const onError = (err) => {
   console.error(`${err.message}`);
 };
 

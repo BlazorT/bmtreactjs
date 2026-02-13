@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useShowToast } from '../useShowToast';
 import useApi from '../useApi';
 
 export const useToggleCampaignStatus = () => {

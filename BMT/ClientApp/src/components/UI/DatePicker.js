@@ -83,7 +83,6 @@ export default function CustomDatePicker(prop) {
   const {
     icon,
     label,
-    title,
     id,
     name,
     value,

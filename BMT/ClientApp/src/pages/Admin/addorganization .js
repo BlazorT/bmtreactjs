@@ -91,7 +91,7 @@ const addorganization = () => {
           [label]: dayjs(event).utc().format(),
         }));
       } else {
-        const { name, value, type, files, checked } = event.target;
+        const { name, value, type, checked } = event.target;
 
         setDaApplyFormData((prevdaApplyFormData) => ({
           ...prevdaApplyFormData,
@@ -120,7 +120,7 @@ const addorganization = () => {
   };
   // Define a single change handler handleDAIdentification to update daIdentificationData dynamically
 
-  const { response: GetCityRes, loading: CityLoading, fetchData: GetCity } = useFetch();
+  const { response: GetCityRes, fetchData: GetCity } = useFetch();
 
   useEffect(() => {
     getCityList();

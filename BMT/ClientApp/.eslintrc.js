@@ -6,30 +6,38 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   extends: [
-    'eslint-config-prettier',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
+    'eslint-config-prettier',
   ],
-  plugins: ['eslint-plugin-prettier', '@typescript-eslint', 'react', 'jsx-a11y', 'import'],
+  plugins: ['@typescript-eslint', 'react'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-
   rules: {
-    // Note: you must disable the base rule as it can report incorrect errors
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      },
+    ],
   },
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['*.ts', '*.tsx'],
       rules: {
         'no-undef': 'off',
-        'no-unused-vars': 0,
-        '@typescript-eslint/no-unused-vars': 0,
       },
     },
   ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 };

@@ -12,7 +12,7 @@ export const useScheduleManagement = (initialSchedules = []) => {
   const scheduleRows = useMemo(() => {
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    return schedules.map((item, index) => {
+    return schedules.map((item) => {
       let parsedDays = [];
 
       if (Array.isArray(item.days)) {
@@ -21,7 +21,7 @@ export const useScheduleManagement = (initialSchedules = []) => {
         try {
           const parsed = JSON.parse(item.days);
           parsedDays = Array.isArray(parsed) ? parsed : [];
-        } catch (e) {
+        } catch {
           console.error('Failed to parse days:', item.days);
         }
       }

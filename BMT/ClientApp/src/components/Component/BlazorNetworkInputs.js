@@ -1,5 +1,6 @@
 import { cilCheckCircle, cilChevronBottom, cilInfo, cilUser, cilWarning } from '@coreui/icons';
-import { CBadge, CCard, CCardBody, CCol, CRow } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { CBadge, CCardBody, CCol, CRow } from '@coreui/react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -19,6 +20,7 @@ import useApi from 'src/hooks/useApi';
 import { useShowToast } from 'src/hooks/useShowToast';
 import { setConfirmation } from 'src/redux/confirmation_mdl/confirMdlSlice';
 import { updateToast } from 'src/redux/toast/toastSlice';
+import { NETWORKS, ROLES } from 'src/util/constants';
 import Inputs from '../Filters/Inputs';
 import PaymentModel from '../Modals/PaymentModel';
 import SendTestEmailModel from '../Modals/SendTestEmailModel';
@@ -29,8 +31,6 @@ import Form from '../UI/Form';
 import SocialMediaTextEditor from '../UI/SocialMediaTextFormatter';
 import Spinner from '../UI/Spinner';
 import WhatsAppTemplateEditor from '../UI/WhatsAppTemplateEditor';
-import { NETWORKS, ROLES } from 'src/util/constants';
-import CIcon from '@coreui/icons-react';
 
 dayjs.extend(utc);
 
@@ -580,11 +580,10 @@ const BlazorNetworkInputs = (prop) => {
           });
 
           try {
-            const res = await fetch('/BlazorApi/uploadattachments', {
+            await fetch('/BlazorApi/uploadattachments', {
               method: 'POST',
               body: formData,
             });
-            const result = await res.json();
           } catch (err) {
             console.error('❌ File upload failed for network:', net.networkId, err);
           }
@@ -750,7 +749,7 @@ const BlazorNetworkInputs = (prop) => {
       // Optional: check event.origin for security
       // Validate the structure
       if (event.data?.status) {
-        const { message, data, status } = event.data;
+        const { message, status } = event.data;
         if (status === 'failed') {
           showToast(message, 'error');
         } else {

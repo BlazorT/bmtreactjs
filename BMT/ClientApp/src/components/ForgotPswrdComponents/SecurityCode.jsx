@@ -33,7 +33,7 @@ function SecurityCode(prop) {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const { data, loading, error, postData } = useApi('/BlazorApi/forgot');
+  const { loading, postData } = useApi('/BlazorApi/forgot');
 
   const checkToken = async () => {
     const form = document.querySelector('.forgot-password-form');
@@ -73,7 +73,6 @@ function SecurityCode(prop) {
       //   );
       //   //
       // }
-
     } else {
       showToast(
         'Sorry, the entered security code doesnt match please double-check and try again',
@@ -99,7 +98,7 @@ function SecurityCode(prop) {
       password: '',
       rowVer: 0,
       status: 0,
-      createdAt: dayjs().utc().format() ,
+      createdAt: dayjs().utc().format(),
       createdBy: 0,
     };
 

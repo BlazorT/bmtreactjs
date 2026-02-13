@@ -88,17 +88,17 @@ const AlertIcon = () => (
   </svg>
 );
 
-const reasons = [
-  'Too many emails',
-  'Not relevant',
-  'Never signed up',
-  'Poor content',
-  'Prefer another channel',
-  'Other',
-];
+// const reasons = [
+//   'Too many emails',
+//   'Not relevant',
+//   'Never signed up',
+//   'Poor content',
+//   'Prefer another channel',
+//   'Other',
+// ];
 
 export default function UnsubscribePage() {
-  const [selectedReason, setSelectedReason] = useState(null);
+  // const [selectedReason, setSelectedReason] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [contentList, setContentList] = useState([]);

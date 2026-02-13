@@ -12,7 +12,7 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import { formatDate, formatDateTime } from 'src/helpers/formatDate';
+import { formatDate } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
@@ -23,8 +23,7 @@ const columns = [
     key: 'campaignDate',
     headerClassName: 'custom-header-data-grid',
     name: 'Campiagn Date',
-    flex: 1,
-    width: 140,
+    minWidth: 120,
     editable: false,
     filterable: true,
     type: 'timestamp',
@@ -34,7 +33,7 @@ const columns = [
     headerClassName: 'custom-header-data-grid',
     name: 'Campiagn Time',
     flex: 1,
-    width: 140,
+    minWidth: 120,
     editable: false,
     filterable: true,
     type: 'timestamp',
@@ -43,7 +42,7 @@ const columns = [
     key: 'name',
     headerClassName: 'custom-header-data-grid',
     name: 'Campaign Name',
-    width: 160,
+    minWidth: 160,
     editable: false,
     filterable: true,
   },
@@ -52,7 +51,7 @@ const columns = [
     headerClassName: 'custom-header-data-grid',
     name: 'Network',
     flex: 1,
-    width: 130,
+    minWidth: 130,
     editable: false,
     filterable: true,
   },
@@ -60,7 +59,7 @@ const columns = [
     key: 'sent', // ✅ match with mapped row key
     headerClassName: 'custom-header-data-grid',
     name: 'Sent',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -69,7 +68,7 @@ const columns = [
     key: 'failed', // ✅ match with mapped row key
     headerClassName: 'custom-header-data-grid',
     name: 'Failed',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -78,7 +77,7 @@ const columns = [
     key: 'delivered', // ✅ match with mapped row key
     headerClassName: 'custom-header-data-grid',
     name: 'Delivered',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -87,7 +86,7 @@ const columns = [
     key: 'readCount',
     headerClassName: 'custom-header-data-grid',
     name: 'Reads',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -96,7 +95,7 @@ const columns = [
     key: 'commentsCount',
     headerClassName: 'custom-header-data-grid',
     name: 'Comments',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -105,7 +104,7 @@ const columns = [
     key: 'clicksCount',
     headerClassName: 'custom-header-data-grid',
     name: 'Clicks',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -114,7 +113,7 @@ const columns = [
     key: 'sharesCount',
     headerClassName: 'custom-header-data-grid',
     name: 'Shares',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -123,7 +122,7 @@ const columns = [
     key: 'likesCount',
     headerClassName: 'custom-header-data-grid',
     name: 'Likes',
-    // width: 120,
+    minWidth: 120,
     editable: false,
     filterable: true,
     flex: 1,
@@ -132,7 +131,7 @@ const columns = [
 
 dayjs.extend(utc);
 
-const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => {
+const CampaignNotificationReport = () => {
   const { loading, postData: fetchNotifications } = useApi('/Report/notificationsreportdata');
   const pageRoles = usePageRoles('Campaign Stats');
 
@@ -182,10 +181,10 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
     if (date === 'lastUpdatedAt' || date === 'createdAt') {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [date]: dayjs(e).utc().format(),
+        [date]: dayjs(e).utc().startOf('day').format(),
       }));
     } else {
-      const { name, value, type, checked } = e.target;
+      const { name, value } = e.target;
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: value,
@@ -244,24 +243,20 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           (d) => d.deliveryStatus === statusId,
         ).length;
       });
-
       /* 3️⃣ Map rows and attach hour-level counts */
       return items.map((item) => {
         const localTime = dayjs(item.createdAt).utc().local();
 
+        const deliveryStatus = item.deliveryStatus?.toString();
         return {
           id: item.id,
 
-          /* 🔑 GROUPING KEYS */
           groupDate,
           groupHour,
-
-          /* SORT */
           sortTime: localTime.valueOf(),
 
-          /* DISPLAY */
           campaignDate: formatDate(localTime),
-          createdAt: groupHour, // same as your old hour row
+          createdAt: groupHour,
 
           name: item.name,
           networkName: item.networkName,
@@ -272,15 +267,15 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
           sharesCount: item.sharesCount || 0,
           likesCount: item.likesCount || 0,
 
-          /* ✅ HOUR-LEVEL STATUS COUNTS (EXACT MATCH) */
-          sent: statusCounts.sent || 0,
-          delivered: statusCounts.delivered || 0,
-          failed: statusCounts.failed || 0,
-          deleted: statusCounts.deleted || 0,
-          read: statusCounts.read || 0,
-          seen: statusCounts.seen || 0,
-          undelivered: statusCounts.undelivered || 0,
-          pending: statusCounts.pending || 0,
+          /* ✅ PER-ROW STATUS (1 or 0) */
+          sent: deliveryStatus == 6 ? 1 : 0,
+          delivered: deliveryStatus == 7 ? 1 : 0,
+          failed: deliveryStatus == 8 ? 1 : 0,
+          deleted: deliveryStatus == 9 ? 1 : 0,
+          read: deliveryStatus == 10 ? 1 : 0,
+          seen: deliveryStatus == 11 ? 1 : 0,
+          undelivered: deliveryStatus == 12 ? 1 : 0,
+          pending: deliveryStatus == 13 ? 1 : 0,
         };
       });
     });
@@ -295,7 +290,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
       }
       return b.sortTime - a.sortTime;
     });
-
+    console.log(rows);
     setRows(rows);
   };
 
@@ -353,6 +348,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                   value={filters.createdAt}
                   title="Campaign start date"
                   onChange={(e) => changeFilter(e, 'createdAt')}
+                  maxDate={filters.lastUpdatedAt}
                 />
               </div>
               <div className="col-md-6 mt-2">
@@ -364,6 +360,7 @@ const CampaignNotificationReport = ({ reportField, fetchInspection, value }) => 
                   value={filters.lastUpdatedAt}
                   title=" Campaign end date  "
                   onChange={(e) => changeFilter(e, 'lastUpdatedAt')}
+                  minDate={filters.createdAt}
                 />
               </div>
             </div>

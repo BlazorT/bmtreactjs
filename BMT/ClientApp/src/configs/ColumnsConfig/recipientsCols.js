@@ -7,32 +7,32 @@ export const getrecipietslistingCols = (pageRoles, getRecipientsList) => [
     key: 'networkId',
     name: 'Network Name',
     editable: false,
-    filterable: true,
-    flex: 1,
+    filterable: false,
+    minWidth: 120, // ✅ Changed from flex: 1
     disableColumnMenu: false,
   },
   {
     key: 'albumid',
     name: 'Album',
     editable: false,
-    filterable: true,
-    flex: 1,
+    filterable: false,
+    minWidth: 140, // ✅ Changed from flex: 1
     disableColumnMenu: false,
   },
   {
     key: 'contentId',
     name: 'Recipients',
     editable: false,
-    filterable: true,
-    flex: 1,
+    filterable: false,
+    minWidth: 180, // ✅ Changed from flex: 1
     disableColumnMenu: true,
   },
   {
     key: 'createdAt',
     name: 'Created At',
     editable: false,
-    flex: 1,
-    filterable: true,
+    minWidth: 150, // ✅ Changed from flex: 1 - flexible to fill remaining space
+    filterable: false,
     disableColumnMenu: true,
   },
   {
@@ -41,7 +41,7 @@ export const getrecipietslistingCols = (pageRoles, getRecipientsList) => [
     editable: false,
     filterable: false,
     disableColumnMenu: true,
-    width: 120,
+    minWidth: 120, // ✅ Already fixed width
     renderCell: (params) => (
       <RecipientsActionCell
         row={params.row}

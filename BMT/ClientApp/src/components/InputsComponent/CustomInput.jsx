@@ -1,10 +1,9 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import CIcon from '@coreui/icons-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { cilLockLocked } from '@coreui/icons';
-import { faFileWord } from '@fortawesome/free-solid-svg-icons';
+import CIcon from '@coreui/icons-react';
+import { faFileExcel, faFilePdf, faFileWord } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const getFileCategory = (src) => {
   if (typeof src !== 'string') return null;
@@ -65,7 +64,6 @@ const CustomInput = ({
   onMfaClick,
   containerClass,
 }) => {
-  const [fileError, setFileError] = useState('');
   const handleFileChange = (e) => {
     const files = e.target.files;
     if (files && files.length > 0) {
@@ -120,8 +118,6 @@ const CustomInput = ({
       }
     }
   };
-
-  const ext = src?.split('.').pop()?.toLowerCase();
 
   return (
     <div

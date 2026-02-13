@@ -1,17 +1,16 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import { cilFile, cilImage, cilText, cilVideo } from '@coreui/icons';
+import { CAlert, CBadge, CCol, CRow } from '@coreui/react';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useSelector } from 'react-redux';
-import { CCol, CRow, CAlert, CBadge } from '@coreui/react';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
-import { cilText, cilImage, cilVideo, cilFile } from '@coreui/icons';
-import { getStatusColor } from 'src/helpers/campaignHelper';
-import Button from '../InputsComponent/Button';
 import { useUploadAvatar } from 'src/hooks/api/useUploadAvatar';
 import { useShowToast } from 'src/hooks/useShowToast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import Button from '../InputsComponent/Button';
 
 dayjs.extend(utc);
 
@@ -51,7 +50,7 @@ const WhatsAppTemplateEditor = ({ value, onChange, onClear }) => {
       } else if (uploadAvatarRes?.message && showToast) {
         showToast(uploadAvatarRes.message, 'error');
       }
-    } catch (error) {
+    } catch {
       if (showToast) {
         showToast('Failed to upload file', 'error');
       }

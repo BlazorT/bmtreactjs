@@ -28,12 +28,12 @@ const clearStorage = () => {
   localStorage.removeItem(STORAGE_KEY);
 };
 
-// Helper: extract email from "John Doe <john@example.com>"
-const extractEmail = (fromHeader) => {
-  if (!fromHeader) return '';
-  const match = fromHeader.match(/<(.+?)>/);
-  return match ? match[1] : fromHeader.trim();
-};
+// // Helper: extract email from "John Doe <john@example.com>"
+// const extractEmail = (fromHeader) => {
+//   if (!fromHeader) return '';
+//   const match = fromHeader.match(/<(.+?)>/);
+//   return match ? match[1] : fromHeader.trim();
+// };
 
 export const useGmailImport = () => {
   const [profile, setProfile] = useState(null);

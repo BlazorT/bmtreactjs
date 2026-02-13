@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { cilList, cilFlagAlt, cilCalendar } from '@coreui/icons';
-import dayjs, { Dayjs } from 'dayjs';
+import { cilCalendar, cilFlagAlt, cilList } from '@coreui/icons';
+import dayjs from 'dayjs';
+import { FilterField } from 'src/components/Filters/CustomFilters';
 import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import CustomDatePicker from 'src/components/UI/DatePicker';
 import globalutil from 'src/util/globalutil';
-import { FilterField } from 'src/components/Filters/CustomFilters';
 
 export const getUsersFiltersFields = (
   filters: any,

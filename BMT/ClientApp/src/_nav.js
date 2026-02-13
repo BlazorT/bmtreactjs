@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable prettier/prettier */
 import CIcon from '@coreui/icons-react';
 
 import * as CoreUIIcons from '@coreui/icons';

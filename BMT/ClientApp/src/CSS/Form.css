@@ -35,6 +35,7 @@
 }
 .deleted-row-red {
   color: red !important;
+  /* background-color: #95a1af !important; */
   background-color: #95a1af !important;
 }
 

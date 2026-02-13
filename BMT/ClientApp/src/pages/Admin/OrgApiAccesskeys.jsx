@@ -529,7 +529,7 @@ const OrgApiAccesskeys = () => {
         }));
         showToast('Authentication failed. Please try again.', 'error');
       }
-    } catch (error) {
+    } catch {
       setPasswordModal((prev) => ({
         ...prev,
         error: 'Authentication failed. Please try again.',
@@ -570,7 +570,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'keyTypeName',
         name: 'Key Type',
-        minWidth: 150,
+        minWidth: 100,
         renderGroupCell: ({ row }) => {
           return (
             <div className="d-flex align-items-center gap-2">
@@ -596,6 +596,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'networkName',
         name: 'Network',
+        minWidth: 150,
         renderCell: ({ row }) => (
           <div className="d-flex align-items-center justify-content-center badge bg-light text-white border border-secondary px-2 py-2 gap-2">
             <CIcon icon={icons_id_map[row.networkId]} className="sm-icon" />
@@ -608,6 +609,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'publicKey',
         name: 'Public Key',
+        minWidth: 150,
         renderCell: ({ row }) => (
           <div className="bg-dark text-truncate bg-opacity-50 text-white rounded px-2 py-1 flex-grow-1 d-flex align-items-center justify-content-between gap-1">
             <div
@@ -629,6 +631,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'apiKey',
         name: 'Private Key',
+        minWidth: 150,
         renderCell: ({ row }) => (
           <div className="bg-dark text-truncate bg-opacity-50 text-white rounded px-2 py-1 flex-grow-1 d-flex align-items-center justify-content-between gap-1">
             <div
@@ -665,6 +668,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'statusName',
         name: 'Status',
+        minWidth: 150,
         renderCell: ({ row }) => (
           <div className="d-flex align-items-center justify-content-center">
             {row.isExpired ? (
@@ -705,6 +709,7 @@ const OrgApiAccesskeys = () => {
       {
         key: 'expiryDate',
         name: 'Expiry Date',
+        minWidth: 150,
         renderCell: ({ row }) => (
           <div className="d-flex flex-column">
             <span className={`${row.isExpired ? 'text-danger fw-bold' : 'text-white fw-semibold'}`}>
@@ -724,6 +729,7 @@ const OrgApiAccesskeys = () => {
             {
               key: 'action',
               name: 'Action',
+              minWidth: 150,
               renderCell: ({ row }) => (
                 <div className="d-flex align-items-center justify-content-center gap-2">
                   <button

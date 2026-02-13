@@ -1,10 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CustomDatagrid from 'src/components/DataGridComponents/CustomDatagrid';
-import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import AppContainer from 'src/components/UI/AppContainer';
 import { getPricingCols } from 'src/configs/ColumnsConfig/pricingCols';
 import { formatDate } from 'src/helpers/formatDate';
@@ -31,7 +29,7 @@ const Products = () => {
 
   const getProducts = async () => {
     const pricingList = await fetchPricing();
-    console.log("pricingList", pricingList);
+    console.log('pricingList', pricingList);
     // const gByNetwork = _.groupBy(pricingList, (item) => item.networkId);
     // const groupedData = Object.entries(gByNetwork);
     const networkGroup = pricingList?.map((data) => ({

@@ -86,7 +86,7 @@ const SingleDispatchment = () => {
             type="text"
             id="name"
             value={organization}
-            onChange={(e, value) => setOrganization(e)}
+            onChange={(e) => setOrganization(e)}
             placeholder="Organization"
             name="name"
             data={data?.data || []}

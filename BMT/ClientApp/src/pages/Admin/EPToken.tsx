@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+/* eslint-disable react/react-in-jsx-scope */
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const PaymentConfirmation = () => {
   const location = useLocation();
@@ -9,7 +10,6 @@ const PaymentConfirmation = () => {
     const urlParams = new URLSearchParams(location.search);
     return urlParams.get(param);
   };
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const authToken = getQueryParam('auth_token');

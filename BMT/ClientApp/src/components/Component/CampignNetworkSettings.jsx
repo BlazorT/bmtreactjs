@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
+import { cilPencil } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { cilInfo, cilPencil } from '@coreui/icons';
 import {
   CBadge,
   CCard,
@@ -16,9 +16,9 @@ import React, { useState } from 'react';
 import useApi from 'src/hooks/useApi';
 import globalutil from 'src/util/globalutil';
 import DataGridHeader from '../DataGridComponents/DataGridHeader';
+import AddTemplateModal from '../Modals/AddTemplateModel';
 import AppContainer from '../UI/AppContainer';
 import Button from '../UI/Button';
-import AddTemplateModal from '../Modals/AddTemplateModel';
 import QuotaBadge from './QuotaBadge';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
