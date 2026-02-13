@@ -318,10 +318,9 @@ namespace Blazor.Web.UI.Services
             return response;
 
         }
-        public async Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(Compaignrecipient model)
+        public async Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(UnsubscriberModel model)
         {
-            BlazorResponseViewModel response = new BlazorResponseViewModel();
-            List<CompaignrecipientModel> ls = new List<CompaignrecipientModel>();
+            BlazorResponseViewModel response = new BlazorResponseViewModel();          
             try
             {
                 string CompaignContactModelJSON = string.Empty;
@@ -331,7 +330,7 @@ namespace Blazor.Web.UI.Services
                 {
                     connection.Open();
                     var options = new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                    CompaignContactModelJSON = JsonSerializer.Serialize<Compaignrecipient>(model, options);
+                    CompaignContactModelJSON = JsonSerializer.Serialize<UnsubscriberModel>(model, options);
                     using (var command = connection.CreateCommand())
                     {
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
