@@ -3,9 +3,9 @@
 import CIcon from '@coreui/icons-react';
 import { cilCalendar, cilChevronBottom, cilFlagAlt, cilUser, cilInfo, cilX } from '@coreui/icons';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';   // ← this line is missing
+import relativeTime from 'dayjs/plugin/relativeTime'; // ← this line is missing
 
-dayjs.extend(relativeTime);   // ← this line is missing or not executed
+dayjs.extend(relativeTime); // ← this line is missing or not executed
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
 import globalutil from 'src/util/globalutil';
+import Button from 'src/components/UI/Button';
 
 const campaignNotificationReport = () => {
   const { loading, postData: fetchNotifications } = useApi('/Report/notificationsreportdata');
@@ -46,8 +47,7 @@ const campaignNotificationReport = () => {
       key: 'campaignDate',
       headerClassName: 'custom-header-data-grid',
       name: 'Campaign Date',
-      flex: 1,
-      width: 140,
+      minWidth: 120,
       editable: false,
       filterable: true,
       type: 'timestamp',
@@ -56,8 +56,7 @@ const campaignNotificationReport = () => {
       key: 'createdAt',
       headerClassName: 'custom-header-data-grid',
       name: 'Campaign Time',
-      flex: 1,
-      width: 140,
+      minWidth: 120,
       editable: false,
       filterable: true,
       type: 'timestamp',
@@ -66,8 +65,7 @@ const campaignNotificationReport = () => {
       key: 'networkName',
       headerClassName: 'custom-header-data-grid',
       name: 'Network',
-      flex: 1,
-      width: 130,
+      minWidth: 160,
       editable: false,
       filterable: true,
     },
@@ -75,7 +73,7 @@ const campaignNotificationReport = () => {
       key: 'name',
       headerClassName: 'custom-header-data-grid',
       name: 'Campaign Name',
-      width: 160,
+      minWidth: 130,
       editable: false,
       filterable: true,
     },
@@ -83,7 +81,7 @@ const campaignNotificationReport = () => {
       key: 'totalRecipients',
       headerClassName: 'custom-header-data-grid text-center',
       name: 'Total',
-      width: 100,
+      minWidth: 100,
       editable: false,
       filterable: true,
       cellClassName: 'text-center fw-bold',
@@ -94,7 +92,7 @@ const campaignNotificationReport = () => {
       name: 'Sent',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -103,7 +101,7 @@ const campaignNotificationReport = () => {
       name: 'Failed',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -112,7 +110,7 @@ const campaignNotificationReport = () => {
       name: 'Delivered',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -121,7 +119,7 @@ const campaignNotificationReport = () => {
       name: 'Reads',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -130,7 +128,7 @@ const campaignNotificationReport = () => {
       name: 'Comments',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -139,7 +137,7 @@ const campaignNotificationReport = () => {
       name: 'Clicks',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -148,7 +146,7 @@ const campaignNotificationReport = () => {
       name: 'Shares',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
@@ -157,26 +155,24 @@ const campaignNotificationReport = () => {
       name: 'Likes',
       editable: false,
       filterable: true,
-      flex: 1,
+      minWidth: 120,
       cellClassName: 'text-center',
     },
     {
       key: 'actions',
       headerClassName: 'custom-header-data-grid text-center',
       name: 'Details',
-      width: 80,
+      minWidth: 80,
       editable: false,
       filterable: false,
       cellClassName: 'text-center',
       renderCell: ({ row }) => (
-        <button
-          type="button"
-          className="btn btn-sm btn-link p-0 text-primary"
+        <Button
+          className="p-0 h-auto w-auto"
           onClick={() => openDetailModal(row)}
-          title="View campaign details"
-        >
-          <CIcon icon={cilInfo} size="lg" />
-        </button>
+          // title="View campaign details"
+          icon={<CIcon icon={cilInfo} size="lg" />}
+        />
       ),
     },
   ];
@@ -197,7 +193,7 @@ const campaignNotificationReport = () => {
       return {
         label: 'Unknown',
         color: 'secondary',
-        icon: '❓'   // Unicode question mark
+        icon: '❓', // Unicode question mark
       };
     }
 
@@ -209,16 +205,16 @@ const campaignNotificationReport = () => {
 
     if (lower.includes('sent') || lower.includes('pending')) {
       color = 'primary';
-      icon = '✓';     // Unicode check mark
+      icon = '✓'; // Unicode check mark
     } else if (lower.includes('delivered') || lower.includes('read') || lower.includes('seen')) {
       color = 'success';
-      icon = '✓';     // Unicode check mark
+      icon = '✓'; // Unicode check mark
     } else if (lower.includes('failed') || lower.includes('undelivered')) {
       color = 'danger';
-      icon = '✗';     // Unicode ballot cross (or you can use ×)
+      icon = '✗'; // Unicode ballot cross (or you can use ×)
     } else if (lower.includes('deleted')) {
       color = 'dark';
-      icon = '🗑';     // Unicode trash / wastebasket
+      icon = '🗑'; // Unicode trash / wastebasket
     }
 
     return { label, color, icon };
@@ -271,11 +267,13 @@ const campaignNotificationReport = () => {
   };
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredRecipients = selectedCampaign?.recipients?.filter((r) =>
-    r.recipient?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.messageRefId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.failureDetails?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  const filteredRecipients =
+    selectedCampaign?.recipients?.filter(
+      (r) =>
+        r.recipient?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.messageRefId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.failureDetails?.toLowerCase().includes(searchTerm.toLowerCase()),
+    ) || [];
   const getNotiList = async (filters = {}) => {
     const fetchBody = {
       Id: 0,
@@ -295,7 +293,7 @@ const campaignNotificationReport = () => {
           isToastOpen: true,
           toastMessage: res?.message || 'Something went wrong',
           toastVariant: 'error',
-        })
+        }),
       );
       setRows([]);
       return;
@@ -315,7 +313,7 @@ const campaignNotificationReport = () => {
       globalutil.deliverstatus().forEach((statusObj) => {
         const statusId = statusObj.id.toString();
         statusCounts[statusObj.name.toLowerCase()] = items.filter(
-          (d) => d.deliveryStatus === statusId
+          (d) => d.deliveryStatus === statusId,
         ).length;
       });
 
@@ -391,7 +389,7 @@ const campaignNotificationReport = () => {
         />
 
         {showFilters && (
-          <div className="p-3 bg-light rounded mb-3">
+          <div className="">
             <div className="row">
               <div className="col-md-6">
                 <CustomInput
@@ -458,16 +456,11 @@ const campaignNotificationReport = () => {
                   Reset
                 </button>
 
-                <button
-                  type="button"
-                  onClick={applyFilters}
-                  className="btn btn-primary"
-                >
+                <button type="button" onClick={applyFilters} className="btn btn-primary">
                   Search
                 </button>
               </div>
             </div>
-
           </div>
         )}
       </AppContainer>
@@ -485,7 +478,10 @@ const campaignNotificationReport = () => {
             { field: 'sent', aggregates: [{ aggregate: 'sum', caption: 'Total Sent' }] },
             { field: 'failed', aggregates: [{ aggregate: 'sum', caption: 'Total Failed' }] },
             { field: 'delivered', aggregates: [{ aggregate: 'sum', caption: 'Total Delivered' }] },
-            { field: 'totalRecipients', aggregates: [{ aggregate: 'sum', caption: 'Total Recipients' }] },
+            {
+              field: 'totalRecipients',
+              aggregates: [{ aggregate: 'sum', caption: 'Total Recipients' }],
+            },
           ]}
           headerProps={{
             title: 'Campaign Stats',
@@ -527,26 +523,23 @@ const campaignNotificationReport = () => {
                       <small className="text-muted d-block mb-1">Campaign Name</small>
                       <p className="mb-0 fw-medium">{selectedCampaign.name || '—'}</p>
                     </div>
-
                   </div>
                   <div className="col-md-4">
                     <div className="mb-4 border-start border-3 border-primary ps-3">
                       <small className="text-muted d-block mb-1">Network Name</small>
                       <p className="mb-0 fw-medium">{selectedCampaign.networkName || '—'}</p>
                     </div>
-
                   </div>
                   <div className="col-md-4">
                     <div className="mb-4 border-start border-3 border-warning ps-3">
                       <small className="text-muted d-block mb-1">Campaign Time</small>
                       <p className="mb-0">
-                        {dayjs(selectedCampaign.startTime).format('DD-MMM-YY hh:mm A')} ~ {' '}
-                        {dayjs(selectedCampaign.finishTime).format('DD-MMM-YY hh:mm A')}
+                        {dayjs.utc(selectedCampaign.startTime).local().format('DD-MMM-YY hh:mm A')}{' '}
+                        ~{' '}
+                        {dayjs.utc(selectedCampaign.finishTime).local().format('DD-MMM-YY hh:mm A')}
                       </p>
                     </div>
                   </div>
-
-                
                 </div>
 
                 {/* Recipients Details – Beautiful List with Legend Borders + Search */}
@@ -555,12 +548,9 @@ const campaignNotificationReport = () => {
                   {/* Center: Search (grows to fill space) */}
                   {/* Header with Title, Badge, and Perfectly Centered Search */}
                   <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4 gap-3">
-
                     {/* LEFT – Title + Badge */}
                     <div className="d-flex align-items-center gap-3 flex-shrink-0">
-                      <h5 className="mb-0 fw-semibold text-primary">
-                        Recipients Details
-                      </h5>
+                      <h5 className="mb-0 fw-semibold text-primary">Recipients Details</h5>
                       <span className="badge bg-primary rounded-pill fs-6 px-3 py-1">
                         {selectedCampaign.totalRecipients || 0}
                       </span>
@@ -597,19 +587,15 @@ const campaignNotificationReport = () => {
                     <div className="d-flex align-items-center justify-content-md-end flex-shrink-0">
                       <span className="text-muted small">
                         Search Result -{' '}
-                        <strong className="text-primary">
-                          {filteredRecipients?.length || 0}
-                        </strong>{' '}
+                        <strong className="text-primary">{filteredRecipients?.length || 0}</strong>{' '}
                         {filteredRecipients?.length !== 1 ? '' : ''}
                       </span>
                     </div>
-
                   </div>
-
 
                   {/* Filtered Recipients List */}
                   {selectedCampaign.recipients?.length > 0 ? (
-                    <div className="row g-3">
+                    <div className="row g-3 campaign-list-details">
                       {filteredRecipients.map((recipient, index) => {
                         const statusInfo = getStatusInfo(recipient.deliveryStatus);
 
@@ -624,10 +610,15 @@ const campaignNotificationReport = () => {
 
                         // Border color based on status
                         const borderColorClass =
-                          recipient.deliveryStatus === '8' ? 'border-danger' :
-                            recipient.deliveryStatus === '7' || recipient.deliveryStatus === '10' || recipient.deliveryStatus === '11' ? 'border-success' :
-                              recipient.deliveryStatus === '6' ? 'border-primary' :
-                                'border-warning';
+                          recipient.deliveryStatus === '8'
+                            ? 'border-danger'
+                            : recipient.deliveryStatus === '7' ||
+                                recipient.deliveryStatus === '10' ||
+                                recipient.deliveryStatus === '11'
+                              ? 'border-success'
+                              : recipient.deliveryStatus === '6'
+                                ? 'border-primary'
+                                : 'border-warning';
 
                         // Relative time from nLastUpdatedAt
                         const relativeTime = recipient.nLastUpdatedAt
@@ -652,7 +643,9 @@ const campaignNotificationReport = () => {
                                 e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.08)';
                               }}
                             >
-                              <div className="card-body p-4 pb-5"> {/* extra bottom padding for relative time */}
+                              <div className="card-body p-4 pb-5">
+                                {' '}
+                                {/* extra bottom padding for relative time */}
                                 <div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
                                   {/* Left – Main Info */}
                                   <div className="d-flex flex-column gap-3 flex-grow-1">
@@ -678,16 +671,24 @@ const campaignNotificationReport = () => {
                                         <small className="text-muted d-block">Sent At</small>
                                         <strong className="text-white">
                                           {recipient.nCreatedAt
-                                            ? dayjs(recipient.nCreatedAt).format('DD-MMM-YY • hh:mm A')
+                                            ? dayjs
+                                                .utc(recipient.nCreatedAt)
+                                                .local()
+                                                .format('DD-MMM-YY • hh:mm A')
                                             : '—'}
                                         </strong>
                                       </div>
 
                                       <div>
-                                        <small className="text-muted d-block">{statusTimeLabel}</small>
+                                        <small className="text-muted d-block">
+                                          {statusTimeLabel}
+                                        </small>
                                         <strong className="text-white">
                                           {recipient.nLastUpdatedAt
-                                            ? dayjs(recipient.nLastUpdatedAt).format('DD-MMM-YY • hh:mm A')
+                                            ? dayjs
+                                                .utc(recipient.nLastUpdatedAt)
+                                                .local()
+                                                .format('DD-MMM-YY • hh:mm A')
                                             : '—'}
                                         </strong>
                                       </div>
@@ -705,7 +706,6 @@ const campaignNotificationReport = () => {
                                     </span>
                                   </div>
                                 </div>
-
                                 {/* Failure Details */}
                                 {recipient.deliveryStatus === '8' && recipient.failureDetails && (
                                   <div className="mt-4 pt-3 border-top">
@@ -724,9 +724,7 @@ const campaignNotificationReport = () => {
                                 className="position-absolute bottom-0 end-0 me-3 mb-2"
                                 style={{ fontSize: '0.75rem' }}
                               >
-                                <small className="text-muted fst-italic">
-                                  {relativeTime}
-                                </small>
+                                <small className="text-muted fst-italic">{relativeTime}</small>
                               </div>
                             </div>
                           </div>

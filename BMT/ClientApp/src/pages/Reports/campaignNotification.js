@@ -12,7 +12,6 @@ import CustomInput from 'src/components/InputsComponent/CustomInput';
 import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
 import AppContainer from 'src/components/UI/AppContainer';
 import CustomDatePicker from 'src/components/UI/DatePicker';
-import { formatDate } from 'src/helpers/formatDate';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import { updateToast } from 'src/redux/toast/toastSlice';
@@ -32,7 +31,6 @@ const columns = [
     key: 'createdAt',
     headerClassName: 'custom-header-data-grid',
     name: 'Campiagn Time',
-    flex: 1,
     minWidth: 120,
     editable: false,
     filterable: true,
@@ -50,10 +48,18 @@ const columns = [
     key: 'networkName',
     headerClassName: 'custom-header-data-grid',
     name: 'Network',
-    flex: 1,
     minWidth: 130,
     editable: false,
     filterable: true,
+  },
+  {
+    key: 'totalRecipients',
+    headerClassName: 'custom-header-data-grid text-center',
+    name: 'Total',
+    minWidth: 100,
+    editable: false,
+    filterable: true,
+    cellClassName: 'text-center fw-bold',
   },
   {
     key: 'sent', // ✅ match with mapped row key
@@ -202,23 +208,24 @@ const CampaignNotificationReport = () => {
     getNotiList(filterBody);
   };
 
-  const getNotiList = async (filters) => {
+  const getNotiList = async (filters = {}) => {
     const fetchBody = {
       Id: 0,
       Status: 1,
       OrgId: user.orgId,
-      createdAt: dayjs().utc().subtract(1, 'year').format(),
-      lastUpdatedAt: dayjs().utc().format(),
+      createdAt: dayjs().subtract(1, 'year').format(),
+      lastUpdatedAt: dayjs().format(),
       ...filters,
     };
 
     const res = await fetchNotifications(fetchBody);
+    console.log('res notification', res);
 
     if (!res || !res.status) {
       dispatch(
         updateToast({
           isToastOpen: true,
-          toastMessage: res?.message,
+          toastMessage: res?.message || 'Something went wrong',
           toastVariant: 'error',
         }),
       );
@@ -226,16 +233,16 @@ const CampaignNotificationReport = () => {
       return;
     }
 
-    /* 1️⃣ Group by Date + Hour */
+    // Group by date + hour + networkName
     const grouped = _.groupBy(res.data, (item) => {
-      const t = dayjs(item.createdAt).utc().local();
-      return `${t.format('YYYY-MM-DD')}|${t.startOf('hour').format('hh:00 A')}`;
+      const t = dayjs(item.createdAt).local();
+      return `${t.format('YYYY-MM-DD')}|${t.startOf('hour').format('hh:00 A')}|${item.networkName}`;
     });
 
-    const rows = Object.entries(grouped).flatMap(([groupKey, items]) => {
-      const [groupDate, groupHour] = groupKey.split('|');
+    const aggregatedRows = Object.entries(grouped).map(([groupKey, items]) => {
+      const [groupDate, groupHour, networkName] = groupKey.split('|');
 
-      /* 2️⃣ Compute status counts ONCE per hour (same as before) */
+      // Compute status counts once per group
       const statusCounts = {};
       globalutil.deliverstatus().forEach((statusObj) => {
         const statusId = statusObj.id.toString();
@@ -243,45 +250,56 @@ const CampaignNotificationReport = () => {
           (d) => d.deliveryStatus === statusId,
         ).length;
       });
-      /* 3️⃣ Map rows and attach hour-level counts */
-      return items.map((item) => {
-        const localTime = dayjs(item.createdAt).utc().local();
 
-        const deliveryStatus = item.deliveryStatus?.toString();
-        return {
-          id: item.id,
+      // Sum engagement metrics across all items in group
+      const totalRead = _.sumBy(items, 'readCount');
+      const totalComments = _.sumBy(items, 'commentsCount');
+      const totalClicks = _.sumBy(items, 'clicksCount');
+      const totalShares = _.sumBy(items, 'sharesCount');
+      const totalLikes = _.sumBy(items, 'likesCount');
 
-          groupDate,
-          groupHour,
-          sortTime: localTime.valueOf(),
+      // Take first item's name / description / times (assuming same campaign)
+      const representative = items[0] || {};
 
-          campaignDate: formatDate(localTime),
-          createdAt: groupHour,
+      const localTime = dayjs(representative.createdAt || new Date()).local();
 
-          name: item.name,
-          networkName: item.networkName,
-
-          readCount: item.readCount || 0,
-          commentsCount: item.commentsCount || 0,
-          clicksCount: item.clicksCount || 0,
-          sharesCount: item.sharesCount || 0,
-          likesCount: item.likesCount || 0,
-
-          /* ✅ PER-ROW STATUS (1 or 0) */
-          sent: deliveryStatus == 6 ? 1 : 0,
-          delivered: deliveryStatus == 7 ? 1 : 0,
-          failed: deliveryStatus == 8 ? 1 : 0,
-          deleted: deliveryStatus == 9 ? 1 : 0,
-          read: deliveryStatus == 10 ? 1 : 0,
-          seen: deliveryStatus == 11 ? 1 : 0,
-          undelivered: deliveryStatus == 12 ? 1 : 0,
-          pending: deliveryStatus == 13 ? 1 : 0,
-        };
-      });
+      return {
+        id: groupKey, // unique group key
+        groupDate,
+        groupHour,
+        sortTime: localTime.valueOf(),
+        campaignDate: localTime.format('DD-MMM-YYYY'),
+        createdAt: groupHour,
+        name: representative.name || 'Multiple Campaigns',
+        networkName,
+        totalRecipients: items.length,
+        sent: statusCounts.sent || 0,
+        delivered: statusCounts.delivered || 0,
+        failed: statusCounts.failed || 0,
+        readCount: totalRead || 0,
+        commentsCount: totalComments || 0,
+        clicksCount: totalClicks || 0,
+        sharesCount: totalShares || 0,
+        likesCount: totalLikes || 0,
+        description: representative.description || '',
+        startTime: representative.startTime,
+        finishTime: representative.finishTime,
+        deliveryStatus: representative.deliveryStatus || '',
+        remarks: representative.remarks || '',
+        // Store full recipients list for modal
+        recipients: items.map((item) => ({
+          recipient: item.recipient,
+          nCreatedAt: item.nCreatedAt,
+          nLastUpdatedAt: item.nLastUpdatedAt,
+          deliveryStatus: item.deliveryStatus,
+          messageRefId: item.messageRefId,
+          failureDetails: item.failureDetails || '',
+        })),
+      };
     });
 
-    /* 4️⃣ Sorting (Date → Hour → Time) */
-    rows.sort((a, b) => {
+    // Sort
+    aggregatedRows.sort((a, b) => {
       if (a.groupDate !== b.groupDate) {
         return dayjs(b.groupDate).valueOf() - dayjs(a.groupDate).valueOf();
       }
@@ -290,8 +308,8 @@ const CampaignNotificationReport = () => {
       }
       return b.sortTime - a.sortTime;
     });
-    console.log(rows);
-    setRows(rows);
+
+    setRows(aggregatedRows);
   };
 
   return (

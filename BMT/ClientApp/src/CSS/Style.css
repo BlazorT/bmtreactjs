@@ -4855,10 +4855,14 @@ input[id^='recipient-'] {
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
 }
 .bg-primary {
-  background: #1c8116!important;
+  background: #1c8116 !important;
   --cui-bg-opacity: 1;
   /* background-color: rgba(#1b9e3e, var(--cui-bg-opacity)) !important; */
 }
 .border-top {
   border-top: var(--cui-border-width) var(--cui-border-style) #dbdfe63d !important;
+}
+.campaign-list-details {
+  max-height: 60dvh;
+  overflow-y: scroll;
 }
