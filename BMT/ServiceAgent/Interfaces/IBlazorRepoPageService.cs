@@ -20,6 +20,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<BlazorResponseViewModel> SocialMediaCreateLogin(UserViewModel model);
         Task<IEnumerable<BundlingpackagedetailViewModel>> LoadCustomBundlingPackagesData(int networks);
         Task<BlazorApiResponse> UpdateNetworksData(List<networkidvalues> lst, int UserId);
+        Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsAllData(CampaignRecipientsViewModel cModel);
         Task<BlazorResponseViewModel> AddUpdateNetworkSettingsFormData(List<OrgpackagedetailViewModel> lst, int UserId);
         Task<BlazorResponseViewModel> UpdateCompaignStatus(CompaignsViewModel model);
         Task<BlazorResponseViewModel> ProcessUnsubscribeContacts(UnsubscriberModel model);

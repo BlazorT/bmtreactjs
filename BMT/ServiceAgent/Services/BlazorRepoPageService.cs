@@ -464,7 +464,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
             return dList.OrderByDescending(x => x.CreatedAt).ToList();
         }
 
-        public async Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsData(CampaignRecipientsViewModel cModel) {
+        public async Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsAllData(CampaignRecipientsViewModel cModel) {
             List<CampaignRecipientsViewModel> dList = new List<CampaignRecipientsViewModel>();
             try
             {
@@ -539,6 +539,69 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                     NetworkId = Convert.ToInt32(dr["networkId"]),
                                     SourceId = Convert.ToInt32(dr["SourceId"]),                                    
                                     ContentId = ""+ dr["ContentId"]  ,                                 
+                                    Status = Convert.ToInt32(dr["Status"]),
+                                    albumid = Convert.ToInt32(dr["albumid"]),
+                                    CreatedAt = Convert.ToDateTime(dr["CreatedAt"])
+                                });
+                            }
+
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return dList.OrderByDescending(x => x.CreatedAt).AsQueryable();
+        }
+        public async Task<IEnumerable<CampaignRecipientsViewModel>> GetCampaignRecipientsData(CampaignRecipientsViewModel cModel)
+        {
+            List<CampaignRecipientsViewModel> dList = new List<CampaignRecipientsViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(BlazorConstant.CONNECTION_STRING))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameter = new List<MySqlParameter>();
+
+                        MySqlParameter pOrgId = new MySqlParameter("@p_OrgId", MySqlDbType.Int32);
+                        pOrgId.Value = cModel.OrgId;
+                        parameter.Add(pOrgId);
+                        MySqlParameter pStatus = new MySqlParameter("@p_Status", MySqlDbType.Int32);
+                        pStatus.Value = cModel.Status;
+                        parameter.Add(pStatus);
+                        MySqlParameter pNetworkId = new MySqlParameter("@p_NetworkId", MySqlDbType.Int32);
+                        pNetworkId.Value = cModel.NetworkId;
+                        parameter.Add(pNetworkId); // ✅ Fix: Add this line
+                        MySqlParameter pAlbumId = new MySqlParameter("@p_AlbumId", MySqlDbType.Int32);
+                        pAlbumId.Value = cModel.albumid;
+                        parameter.Add(pAlbumId); // ✅ Fix: Add this line
+                        MySqlParameter pContentId = new MySqlParameter("@p_ContentId", MySqlDbType.VarChar, 200);
+                        pContentId.Value = cModel.ContentId;
+                        parameter.Add(pContentId);
+                        MySqlParameter DateFrom = new MySqlParameter("@p_DateFrom", MySqlDbType.DateTime);
+                        DateFrom.Value = cModel.CreatedAt;
+                        parameter.Add(DateFrom);
+                        command.CommandText = "spGetValidCampaigContacts"; 
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.Parameters.AddRange(parameter.ToArray());
+
+
+                        using (DbDataReader dr = await command.ExecuteReaderAsync())
+                        {
+                            while (dr.Read())
+                            {
+                                dList.Add(new CampaignRecipientsViewModel
+                                {
+                                    Id = Convert.ToInt64(dr["id"]),
+                                    NetworkId = Convert.ToInt32(dr["networkId"]),
+                                    SourceId = Convert.ToInt32(dr["SourceId"]),
+                                    ContentId = "" + dr["ContentId"],
                                     Status = Convert.ToInt32(dr["Status"]),
                                     albumid = Convert.ToInt32(dr["albumid"]),
                                     CreatedAt = Convert.ToDateTime(dr["CreatedAt"])
