@@ -92,7 +92,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _blazorRepoPageService.GetCampaignRecipientsData(filter);
+                blazorApiResponse.data = await _blazorRepoPageService.GetCampaignRecipientsAllData(filter);
                 blazorApiResponse.errorCode = "200";
                 blazorApiResponse.status = true;
             }
@@ -116,7 +116,7 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _blazorRepoPageService.GetCampaignRecipientsAllData(filter);
+                blazorApiResponse.data = await _blazorRepoPageService.GetCampaignRecipientsData(filter);
                 blazorApiResponse.errorCode = "200";
                 blazorApiResponse.status = true;
             }
