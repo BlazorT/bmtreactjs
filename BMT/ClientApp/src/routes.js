@@ -10,6 +10,7 @@ const GlobalTemplates = React.lazy(() => import('./pages/Admin/GlobalTemplates')
 const VariablesGridView = React.lazy(() => import('./pages/Admin/VariablesGridView'));
 const pricing = React.lazy(() => import('./pages/Admin/pricing'));
 const AddVariable = React.lazy(() => import('./pages/Admin/AddVariable'));
+const SendMessage = React.lazy(() => import('./pages/Admin/SendMessage'));
 const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
 const ApprovalRequests = React.lazy(() => import('./pages/Admin/ApprovalRequests'));
@@ -25,7 +26,9 @@ const CampaignNotification = React.lazy(() => import('./pages/Reports/campaignNo
 const UserRegister = React.lazy(() => import('./pages/Admin/UserRegister'));
 const Logs = React.lazy(() => import('./pages/Reports/Logs'));
 const UserReport = React.lazy(() => import('./pages/Reports/UserReport'));
-const campaignNotificationReport = React.lazy(() => import('./pages/Reports/campaignNotificationReport'));
+const campaignNotificationReport = React.lazy(
+  () => import('./pages/Reports/campaignNotificationReport'),
+);
 const organizationreport = React.lazy(() => import('./pages/Reports/organizationreport'));
 const AuditLogs = React.lazy(() => import('./pages/Reports/AuditLogs'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
@@ -49,7 +52,11 @@ export const rolesRoutes = [
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
-  { path: '/campaignNotificationReport', name: 'campaignNotificationReport', element: campaignNotificationReport },
+  {
+    path: 'campaignNotificationReport',
+    name: 'campaignNotificationReport',
+    element: campaignNotificationReport,
+  },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
@@ -66,6 +73,7 @@ export const routes = [
   },
   { path: 'ApprovalRequests/:id?', name: 'ApprovalRequests', element: ApprovalRequests },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
+  { path: 'SendMessage', name: 'SendMessage', element: SendMessage },
   { path: '/organizationadd', name: 'organizationadd', element: OrganizationAdd },
   { path: '/UserRegister', name: 'UserRegister', element: UserRegister },
   { path: '/VariablesGridView', name: 'VariablesGridView', element: VariablesGridView },
@@ -90,6 +98,4 @@ export const routes = [
   { path: '/AuditLogs', name: 'AuditLogs', element: AuditLogs },
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/UserReport', name: 'UserReport', element: UserReport },
-  { path: '/campaignNotificationReport', name: 'campaignNotificationReport', element: campaignNotificationReport },
-  '',
 ];

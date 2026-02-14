@@ -42,7 +42,7 @@ const useApi = <T>(
       const response = await fetch(url, {
         ...initialOptions,
         method,
-        body,
+        ...(method === 'POST' && body ? { body } : {}),
         headers: customHeader
           ? customHeader
           : headers
