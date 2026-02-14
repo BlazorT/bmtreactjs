@@ -15,7 +15,7 @@ import { getrecipietslistingCols } from 'src/configs/ColumnsConfig/recipientsCol
 import { getRecipientsFilterConfig } from 'src/configs/FiltersConfig/recipientsFilterConfig';
 import { formatDateTime } from 'src/helpers/formatDate';
 import { useFetchAlbums } from 'src/hooks/api/useFetchAlbums';
-import { useFetchRecipients } from 'src/hooks/api/useFetchRecipients';
+import { useFetchAllRecipients } from 'src/hooks/api/useFetchAllRecipients';
 import useApi from 'src/hooks/useApi';
 import usePageRoles from 'src/hooks/usePageRoles';
 import globalutil from 'src/util/globalutil';
@@ -25,7 +25,7 @@ const recipientslisting = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const { loading, fetchRecipients: getRecipientList } = useFetchRecipients();
+  const { loading, fetchRecipients: getRecipientList } = useFetchAllRecipients();
   const { data: albums, loading: albumsLoading, fetchAlbums } = useFetchAlbums();
   const {
     postData: getOrgs,
