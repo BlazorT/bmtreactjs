@@ -1054,6 +1054,56 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
             return DashViewModel.AsQueryable();
 
         }
+        public async Task<IEnumerable<FleetDashboardViewModel>> GetFleetDashboardData(DashboardViewModel viewModel)
+        {
+            IEnumerable<FleetDashboardViewModel> DashViewModel = new List<FleetDashboardViewModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection((BlazorConstant.CONNECTION_STRING)))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<MySqlParameter> parameters = new List<MySqlParameter>();
+                        MySqlParameter pOrganizationId = new MySqlParameter("p_OrgId", MySqlDbType.Int32);
+                        pOrganizationId.Value = Convert.ToInt32(viewModel.OrganizationId);
+                        parameters.Add(pOrganizationId);
+                        command.Parameters.AddRange(parameters.ToArray());
+                        command.CommandText = "spDashboardFleetData";
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        using (DbDataReader reader = command.ExecuteReader())
+                        {
+                            DataTable dt = new DataTable();
+                            dt.Load(reader);
+                            var stats = from sts in dt.AsEnumerable()
+                                        select new FleetDashboardViewModel
+                                        {
+                                            totalActive = Convert.ToInt32(sts["totalActive"]),
+                                            totalOpr = Convert.ToInt32(sts["totalOpr"]),
+                                            totalGrnded = Convert.ToInt32(sts["totalGrnded"]),
+                                            RemOperational = Convert.ToInt32(sts["RemainingVehicles"]),
+                                            allDefct = Convert.ToInt32(sts["allDefct"]),
+                                            repairsDue = Convert.ToInt32(sts["repairsDue"]),
+                                            vhlgrnded = Convert.ToInt32(sts["vhlgrnded"]),                                                                             
+
+                                        };
+
+                            if (stats != null)
+                                DashViewModel = _mapper.Map<IEnumerable<FleetDashboardViewModel>>(stats);
+                        }
+
+                    }
+
+                }// Using
+            }// Try
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+            return DashViewModel.AsQueryable();
+
+        }
         public async Task<IEnumerable<OrganizationViewModel>> GetOrganizationsData(OrganizationViewModel model) { 
         
             List<OrganizationViewModel> organizations = new List<OrganizationViewModel>();

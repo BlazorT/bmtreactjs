@@ -11,6 +11,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<ReportStatsViewModel>> GetStatsReportData(ReportStatsViewModel resportViewmodel);
         Task<LoginViewModel> GetUserVerificationData(UserViewModel model);
         Task<IEnumerable<DashboardViewModel>> GetDashboardData(DashboardViewModel viewModel);
+        Task<IEnumerable<FleetDashboardViewModel>> GetFleetDashboardData(DashboardViewModel viewModel);
         Task<IEnumerable<AuditLogViewModel>> GetAuditLogDetailsData(AuditLogViewModel viewModel);
         Task<IEnumerable<OrganizationViewModel>> GetOrganizationListReport(int OrgId, string keyword, int status, DateTime dtFrom, DateTime dtTo);
         Task<IEnumerable<OrgpackagedetailViewModel>> GetOrganizationBundlingData(OrganizationViewModel model);
