@@ -11,7 +11,9 @@ import DataGridHeader from 'src/components/DataGridComponents/DataGridHeader';
 import CustomFilters from 'src/components/Filters/CustomFilters';
 import NotificationModal from 'src/components/Modals/NotificationModal';
 
-import { formatDate } from 'src/helpers/formatDate';
+//import { formatDate } from 'src/helpers/formatDate';
+import { formatDateTime } from 'src/helpers/formatDate';
+
 import globalutil from 'src/util/globalutil';
 
 import { campaignResultCols } from 'src/configs/ColumnsConfig/campaignResultCols';
@@ -49,9 +51,9 @@ const organizationsusers = () => {
   const [filters, setFilters] = useState({
     keyword: '',
     name: '',
-    status: 1,
+    deliveryStatus: 1,
     networkId: 1,
-    createdAt: dayjs().subtract(5, 'year').startOf('month').format(),
+    createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
   const [rows, setRows] = useState([]);
@@ -60,19 +62,41 @@ const organizationsusers = () => {
   const Role = user.roleId;
   // alert(Role);
 
-  const getCampaignResultList = async (filter) => {
-    const orgCampResultList = await getCampaignResult(0, filter);
-    console.log("orgCampResultList", orgCampResultList);
-    const mappedArray = orgCampResultList.map((data) => ({
-      id: data.id,
-      recipient: data.recipient,
-      networkId: globalutil.networks()?.find((n) => n.id === data?.networkId)?.name || '--',
-      createdAt: formatDate(data.createdAt),
-      lastUpdatedAt: formatDate(data.lastUpdatedAt),
-      deliveryStatus: data.deliveryStatus,
-      //status: data.status,
-    }));
-    setRows(mappedArray);
+  const getCampaignResultList = async (filter = {}) => {
+    try {
+      const orgCampResultList = await getCampaignResult(0, filter);
+      console.log("orgCampResultList", orgCampResultList);
+
+      // Optional: Create a lookup map for status names (faster lookups)
+      const statusMap = {};
+      globalutil.deliverstatus?.().forEach(s => {
+        statusMap[s.id] = s.name || s.desc || 'Unknown';
+      });
+
+      const mappedArray = orgCampResultList.map((data) => ({
+        id: data.id,
+        recipient: data.recipient || '--',
+        networkId: globalutil.networks()?.find(n => n.id === data?.networkId)?.name || '--',
+        createdAt: formatDateTime(data.createdAt) || '--',
+        lastUpdatedAt: formatDateTime(data.lastUpdatedAt ?? data.createdAt) || '--',
+        deliveryStatus: data.deliveryStatus,
+        deliveryStatusName: statusMap[data.deliveryStatus] || 'Unknown', // ← human-readable name
+        // Add numeric flags for easier counting (optional but useful for summary)
+        isSent: data.deliveryStatus === 6 ? 1 : 0,
+        isDelivered: data.deliveryStatus === 7 ? 1 : 0,
+        isFailed: data.deliveryStatus === 8 ? 1 : 0,
+        isDeleted: data.deliveryStatus === 9 ? 1 : 0,
+        isRead: data.deliveryStatus === 10 ? 1 : 0,
+        isSeen: data.deliveryStatus === 11 ? 1 : 0,
+        isUndelivered: data.deliveryStatus === 12 ? 1 : 0,
+        isPending: data.deliveryStatus === 13 ? 1 : 0,
+        isDropped: data.deliveryStatus === 14 ? 1 : 0,
+      }));
+
+      setRows(mappedArray);
+    } catch (err) {
+      console.error("Failed to load campaign results:", err);
+    }
   };
 
   const changeFilter = (e, date) => {
@@ -195,20 +219,47 @@ const organizationsusers = () => {
             columns={orgUsersCols}
             rowHeight={50}
             pagination={true}
-            sorting={[{ field: 'lastUpdated', sort: 'desc' }]}
+            sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
             showGrid={showDaGrid}
             loading={orgsLoading || loading}
             headerProps={{
               title: 'Campaign Results',
-             // addButton: pageRoles?.canAdd === 1 ? 'Campaign Results' : '',
-          //    addBtnClick: () => navigate('/UserRegister'),
               onClick: toggleGrid,
               otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
               filterDisable: true,
-            //  canPrint: pageRoles?.canPrint === 1,
-            //  canExport: pageRoles?.canExport === 1,
-              fileName: 'ORGANIZATION_USERS',
+              fileName: 'CAMPAIGN_RESULTS',
             }}
+            summary={[
+              {
+                field: 'isSent',
+                aggregates: [{ aggregate: 'sum', caption: 'Total SENT' }],
+              },
+              {
+                field: 'isDelivered',
+                aggregates: [{ aggregate: 'sum', caption: 'Total DELIVERED' }],
+              },
+              {
+                field: 'isFailed',
+                aggregates: [{ aggregate: 'sum', caption: 'Total FAILED' }],
+              },
+              {
+                field: 'isRead',
+                aggregates: [{ aggregate: 'sum', caption: 'Total READ' }],
+              },
+              {
+                field: 'isSeen',
+                aggregates: [{ aggregate: 'sum', caption: 'Total SEEN' }],
+              },
+              {
+                field: 'isPending',
+                aggregates: [{ aggregate: 'sum', caption: 'Total PENDING' }],
+              },
+              // Add others (Deleted, Undelivered, Dropped) as needed
+              {
+                field: 'id', // or any always-present field
+                aggregates: [{ aggregate: 'count', caption: 'Total Recipients' }],
+              },
+            ]}
           />
 
           <NotificationModal isOpen={NoticemodalOpen} toggle={NoticeModal} />

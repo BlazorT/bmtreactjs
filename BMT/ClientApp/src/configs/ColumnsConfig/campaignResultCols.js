@@ -13,7 +13,7 @@ export const campaignResultCols = (getDasList, daRes, pageRoles) => [
   },
   {
     key: 'recipient',
-    name: 'Contact',
+    name: 'Recipients',
     // Width: 100,
     editable: false,
     filterable: true,
@@ -33,8 +33,8 @@ export const campaignResultCols = (getDasList, daRes, pageRoles) => [
         : '',
   },
   {
-    key: 'createdAt',  
-    name: 'Date From',
+    key: 'lastUpdatedAt',  
+    name: 'Sent Time',
     // Width: 80,
     editable: false,
     filterable: true,
