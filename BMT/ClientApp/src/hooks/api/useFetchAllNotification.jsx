@@ -27,8 +27,8 @@ export const useFetchAllNotification = () => {
       rowVer: filters?.rowVer ?? 0,
       networkId: toNumberOrZero(filters?.networkId),
       contentId: filters?.contentId || '',
-      status: toNumberOrZero(filters?.deliveryStatus),
-
+      deliveryStatus: toNumberOrZero(filters?.deliveryStatus),
+      status:0,
       createdAt: filters?.createdAt
         ? dayjs(filters.createdAt).local().startOf('day').format('YYYY-MM-DD')
         : dayjs().utc().subtract(1, 'year').format('YYYY-MM-DD'),
