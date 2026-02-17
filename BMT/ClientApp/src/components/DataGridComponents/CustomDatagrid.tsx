@@ -264,6 +264,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     }
     if (
       Number.isInteger(row.status) &&
+      !row?.contentId &&
       !row?.targetorgid &&
       (row.status === 4 || row.status === 6 || row.status === 2)
     ) {

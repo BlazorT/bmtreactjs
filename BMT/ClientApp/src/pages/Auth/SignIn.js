@@ -97,6 +97,7 @@ function SignIn() {
     await fetchUtils('/Common/lovs');
     if (utilRes?.current?.status === true) {
       addGlobalUtils(utilRes.current.data);
+      console.log("addGlobalUtils", addGlobalUtils);
     }
   };
 
