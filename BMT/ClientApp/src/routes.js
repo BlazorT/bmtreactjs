@@ -15,6 +15,7 @@ const BmtRoles = React.lazy(() => import('./pages/Admin/bmtRoles'));
 const RecipientsGrid = React.lazy(() => import('./pages/Admin/recipientsGrid'));
 const ApprovalRequests = React.lazy(() => import('./pages/Admin/ApprovalRequests'));
 const campaignadd = React.lazy(() => import('./pages/DA/campaignadd'));
+const campaignresults = React.lazy(() => import('./pages/DA/campaignresults'));
 const Notification = React.lazy(() => import('./pages/Notification/Notification'));
 const networksetting = React.lazy(() => import('./pages/Admin/networksetting'));
 const globalpreference = React.lazy(() => import('./pages/Admin/globalpreference'));
@@ -57,6 +58,7 @@ export const rolesRoutes = [
     name: 'campaignNotificationReport',
     element: campaignNotificationReport,
   },
+  { path: '/campaignresults', name: 'campaignresults', element: campaignresults },
   { path: '/campaignadd', name: 'campaignadd', element: campaignadd },
   { path: '/organizationreport', name: 'organizationreport', element: organizationreport },
   { path: '/organizationsusers', name: 'organizationsusers', element: organizationsusers },
@@ -86,6 +88,7 @@ export const routes = [
   { path: '/Packages', name: 'Packages', element: Packages },
   { path: '/pricingDetails', name: 'pricingDetails', element: pricingDetails },
   { path: '/Users', name: 'Users', element: Users },
+  { path: '/campaignresults', name: 'campaignresults', element: campaignresults },
   { path: '/Organizations', name: 'Organizations', element: Organizations },
   { path: '/networksetting', name: 'networksetting', element: networksetting },
   { path: '/globalpreference', name: 'globalpreference', element: globalpreference },

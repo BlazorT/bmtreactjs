@@ -8,24 +8,23 @@ const toNumberOrZero = (value) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-export const useFetchAllRecipients = () => {
+export const useFetchAllNotification = () => {
   dayjs.extend(utc);
 
   const showToast = useShowToast();
 
-  const { data, error, loading, postData } = useApi('/BlazorApi/campaignallrecipients');
+  const { data, error, loading, postData } = useApi('/Notifications/mynotifications');
 
   const fetchRecipients = async (filters) => {
     //console.log(filters);
 
     const recipientssBody = {
       id: 0,
-      orgId: toNumberOrZero(filters?.orgId),
+      OrganizationId: toNumberOrZero(filters?.orgId),
       rowVer: filters?.rowVer ?? 0,
       networkId: toNumberOrZero(filters?.networkId),
       contentId: filters?.contentId || '',
       status: toNumberOrZero(filters?.status),
-      albumid: toNumberOrZero(filters?.albumid),
 
       createdAt: filters?.createdAt
         ? dayjs(filters.createdAt).local().startOf('day').format('YYYY-MM-DD')

@@ -1,0 +1,103 @@
+// userFormConfig.js
+
+import { cilCalendar, cilFlagAlt, cilUser } from '@coreui/icons';
+import CustomSearch from 'src/components//InputsComponent/CustomSearch';
+import CustomSelectInput from 'src/components/InputsComponent/CustomSelectInput';
+import CustomDatePicker from 'src/components/UI/DatePicker';
+import globalutil from 'src/util/globalutil';
+import CustomInput from 'src/components/InputsComponent/CustomInput';
+export const campaignresultsFilterConfig = (filters, changeFilter, orgs, Role) => [
+  {
+    component: CustomInput,
+    label: 'keyword',
+    value: filters.keyword,
+    onChange: changeFilter,
+    icon: cilUser,
+    type: 'text',
+    id: 'keyword',
+    name: 'keyword',
+    placeholder: 'using by Network, Contact, Recipient',
+    className: 'form-control item',
+    isRequired: false,
+    title: ' using by Network, Contact, Recipients',
+  },
+  {
+    component: CustomSearch,
+    label: 'Organization',
+    value: filters.name,
+    // onChange: setOrg,
+    onChange: changeFilter,
+    icon: cilUser,
+    type: 'text',
+    id: 'name',
+    data: orgs,
+    name: 'name',
+    placeholder: 'organization',
+    className: 'form-control item',
+    isRequired: false,
+    title: 'name of organization',
+    disabled: Role !== 1, // <-- This disables unless roleId is 1
+  },
+
+  // Multi-select for Networks
+  {
+    component: CustomSelectInput,
+    label: 'Networks',
+    value: filters.networks || [],           // ← must be array []
+    onChange: changeFilter,
+    icon: cilFlagAlt,
+    id: 'networks',
+    name: 'networks',
+    disableOption: 'Select Networks',        // ignored when multiple=true
+    options: globalutil.networks(),
+    className: 'form-control item form-select',
+    title: 'Networks',
+    multiple: true,                          // ← this enables multi-select
+  },
+  {
+    component: CustomSelectInput,
+    label: 'Status',
+    value: filters.status,
+    onChange: changeFilter,
+    icon: cilFlagAlt,
+    id: 'status',
+    name: 'status',
+    disableOption: 'Select Status',
+    options: globalutil.deliverstatus(),
+    className: 'form-control item form-select',
+    title: 'user status',
+  },
+  {
+    component: CustomDatePicker,
+    label: 'Date From ',
+    value: filters.createdAt,
+    onChange: (e) => changeFilter(e, 'createdAt'),
+    icon: cilCalendar,
+    // title: ' DA Registration Date',
+    isRequired: true,
+    // min: dayjs(filters.createdAt),
+    message: 'Enter Valid To Date',
+  },
+  {
+    component: CustomDatePicker,
+    label: 'Date To',
+    value: filters.lastUpdatedAt,
+    onChange: (e) => changeFilter(e, 'lastUpdatedAt'),
+    icon: cilCalendar,
+    // title: ' DA Registration Date',
+    isRequired: true,
+    // min: dayjs(filters.createdAt),
+    message: 'Enter Valid To Date',
+  },
+  //{
+  //  component: CustomInput,
+  //  label: ' #Tag',
+  //  value: filters.tags,
+  //  onChange: changeFilter,
+  //  icon: cilFlagAlt,
+  //  id: 'tags',
+  //  name: 'tags',
+  //  className: 'form-control item',
+  //  title: '# tags',
+  //},
+];
