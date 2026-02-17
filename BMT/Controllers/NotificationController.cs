@@ -67,8 +67,28 @@ namespace com.blazor.bmt.controllers
             }
             return Ok(response);
         }
-       
-      
+
+        [HttpPost("allnotifications")]
+        [HttpGet("allnotifications")]
+        [Route("allnotifications")]
+        public async Task<ActionResult> GetCandidateAllNotifications([FromBody] NotificationViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorApiResponse response = new BlazorApiResponse();
+            try
+            {
+
+                response.data = await _notificationPageService.GetNotificationAllFiltersLogDetails(model);
+                response.status = true;
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+                response.status = false;
+            }
+            return Ok(response);
+        }
+
 
     }
 }

@@ -10,6 +10,8 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<NotificationViewModel>> GetNotificationList();
         Task<NotificationViewModel> GetNotificationById(long notificationId);
         Task<IEnumerable<NotificationViewModel>> GetNotificationDetails(NotificationViewModel notificationViewModel);
+        Task<IEnumerable<NotificationViewModel>> GetNotificationAllFiltersLogDetails(NotificationViewModel notificationViewModel);
+        
 
         //Task<IEnumerable<NotificationModel>> GetNotificationByUserId(int userId);
         Task<IEnumerable<NotificationViewModel>> GetNotificationBySearchKeyword(string keyword);

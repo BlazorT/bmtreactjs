@@ -44,6 +44,14 @@ namespace com.blazor.bmt.application.services
             var mapped = _mapper.Map<IEnumerable<NotificationModel>>(list);
             return mapped;
         }
+        public async Task<IEnumerable<NotificationModel>> GetNotificationAllFiltersLogDetails(NotificationModel notificationModel)
+        {
+            var entity = _mapper.Map<Notification>(notificationModel);
+            var list = await _notificationsRepository.GetNotificationsLogAllFiltersAsync(entity);
+            var mapped = _mapper.Map<IEnumerable<NotificationModel>>(list);
+            return mapped;
+        }
+        
         public async Task<NotificationModel> GetNotificationById(long notificaitonId )
         {
            // var entity = _mapper.Map<Notification>(notificationModel);

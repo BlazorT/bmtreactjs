@@ -93,6 +93,14 @@ namespace Blazor.Web.UI.Services
             }
             return usronlineModel;
         }
+        
+            public async Task<IEnumerable<NotificationViewModel>> GetNotificationAllFiltersLogDetails(NotificationViewModel notificationViewModel)
+        {
+            var mapped = _mapper.Map<NotificationModel>(notificationViewModel);
+            var list = await _notificationService.GetNotificationAllFiltersLogDetails(mapped);
+            var retEntity = _mapper.Map<IEnumerable<NotificationViewModel>>(list);
+            return retEntity;
+        }
         public async Task<IEnumerable<NotificationViewModel>> GetNotificationDetails(NotificationViewModel notificationViewModel)
         {
             var mapped = _mapper.Map<NotificationModel>(notificationViewModel);
