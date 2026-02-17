@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import useApi from '../useApi';
 import { useShowToast } from '../useShowToast';
+import { useSelector } from 'react-redux';
 
 const toNumberOrZero = (value) => {
   const n = Number(value);
@@ -10,16 +11,18 @@ const toNumberOrZero = (value) => {
 
 export const useFetchAllNotification = () => {
   dayjs.extend(utc);
-
+  const user = useSelector((state) => state.user);
   const showToast = useShowToast();
-
-  const { data, error, loading, postData } = useApi('/Notifications/mynotifications');
+  //const orgId = user.orgId;
+  const Role = user.roleId;
+  const { data, error, loading, postData } = useApi('/Notifications/allnotifications');
 
   const fetchRecipients = async (filters) => {
     //console.log(filters);
 
     const recipientssBody = {
       id: 0,
+      CreatedBy: Role == 4 ? Role:0,
       OrganizationId: toNumberOrZero(filters?.orgId),
       rowVer: filters?.rowVer ?? 0,
       networkId: toNumberOrZero(filters?.networkId),
