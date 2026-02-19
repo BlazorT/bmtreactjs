@@ -4879,3 +4879,9 @@ input[id^='recipient-'] {
   .failed-row-red .rdg-cell {
     background-color: inherit !important;
   }
+
+  .rdg-7-0-0-beta-58-ccd2e5d9 {
+    --rdg-background-color: #143452!important;
+    --rdg-header-background-color: #143452!important;
+  }
+
