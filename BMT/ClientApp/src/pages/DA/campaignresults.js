@@ -49,22 +49,24 @@ const organizationsusers = () => {
 
   const [NoticemodalOpen, setNoticemodalOpen] = useState(false);
   const [filters, setFilters] = useState({
-    keyword: '',
-    name: '',
-    deliveryStatus: 1,
-    networkId: 1,
+    recipient: '',
+    organizationId: user.orgId,
+    deliveryStatus: 0,
+    networkId: 0,
     createdAt: dayjs().startOf('month').format(),
     lastUpdatedAt: dayjs().utc().startOf('day').format(),
   });
+
   const [rows, setRows] = useState([]);
 
   const orgId = user.orgId;
   const Role = user.roleId;
   // alert(Role);
 
-  const getCampaignResultList = async (filter = {}) => {
+  const getCampaignResultList = async (filter = filters) => {
     try {
-      const orgCampResultList = await getCampaignResult(0, filter);
+      console.log("getCampaignResultList received filter:", filter); // ✅ ADD
+      const orgCampResultList = await getCampaignResult( filter);
       console.log("orgCampResultList", orgCampResultList);
 
       // Optional: Create a lookup map for status names (faster lookups)
@@ -92,42 +94,70 @@ const organizationsusers = () => {
         isPending: data.deliveryStatus === 13 ? 1 : 0,
         isDropped: data.deliveryStatus === 14 ? 1 : 0,
       }));
-
+      console.log("mappedArray", mappedArray);
       setRows(mappedArray);
     } catch (err) {
       console.error("Failed to load campaign results:", err);
     }
   };
 
-  const changeFilter = (e, date) => {
-    if (date === 'name') {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        name: e,
-      }));
-    } else if (date === 'createdAt' || date === 'lastUpdatedAt') {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [date]: e,
-      }));
-    } else {
-      // Handle custom event (e is an object like { name: 'name', value: 'Org 1' })
-      if (e && e.name !== undefined && e.value !== undefined) {
-        setFilters((prevFilters) => ({
+  const changeFilter = (e, date,key, label) => {
+
+    console.log("changeFilter called:", e, date); // ✅ ADD
+
+    if (date === 'createdAt' || date === 'lastUpdatedAt') {
+
+      setFilters(prev => {
+        const updated = { ...prev, [date]: e };
+
+        console.log("Updated filters:", updated); // ✅ ADD
+
+        return updated;
+      });
+
+    }
+    else if (label === 'name') {
+      setFilters((prevFilters) => {
+        const updated = {
           ...prevFilters,
-          [e.name]: e.value,
-        }));
-      }
-      // Handle normal event
-      else if (e?.target) {
-        const { name, value } = e.target;
-        setFilters((prevFilters) => ({
-          ...prevFilters,
-          [name]: value,
-        }));
-      }
+          [key]: e,
+          organizationId: e?.id || 1,
+        };
+
+        console.log("Selected organization object:", e);
+        console.log("Organization ID:", updated.organizationId);
+        console.log("Updated filters:", updated);
+
+        return updated;
+      });
+    }
+
+    else if (e?.target) {
+
+      const { name, value } = e.target;
+
+      setFilters(prev => {
+        const updated = { ...prev, [name]: value };
+
+        console.log("Updated filters:", updated); // ✅ ADD
+
+        return updated;
+      });
+
+    }
+    else if (e?.name !== undefined) {
+
+      setFilters(prev => {
+        const updated = { ...prev, [e.name]: e.value };
+
+        console.log("Updated filters:", updated); // ✅ ADD
+
+        return updated;
+      });
+
     }
   };
+
 
   const NoticeModal = () => {
     setNoticemodalOpen((prev) => !prev);
@@ -144,10 +174,11 @@ const organizationsusers = () => {
   const handleReset = () => {
     getCampaignResultList();
     setFilters({
-      keyword: '',
+      recipient: '',
       name: '',
-      status: 1,
-      networkId: 1,
+      organizationId: 0,
+      deliveryStatus: 0,
+      networkId: 0,
       createdAt: dayjs().subtract(1, 'month').startOf('month').format(),
       lastUpdatedAt: dayjs().utc().startOf('day').format(),
     });
@@ -188,8 +219,8 @@ const organizationsusers = () => {
     }
   }, [orgData, orgId]);
 
-  const orgFilterFields = campaignresultsFilterConfig(filters, changeFilter, orgData || [], Role);
-  const orgUsersCols = campaignResultCols(getCampaignResultList, orgUserList?.data || [], pageRoles);
+  const campResultFields = campaignresultsFilterConfig(filters, changeFilter, orgData || [], Role);
+  const campResultCols = campaignResultCols(getCampaignResultList, orgUserList?.data || [], pageRoles);
 
   return (
     <React.Fragment>
@@ -208,7 +239,7 @@ const organizationsusers = () => {
               changeFilter={changeFilter}
               fetching={getCampaignResultList}
               handleReset={handleReset}
-              filterFields={orgFilterFields}
+              filterFields={campResultFields}
             />
           )}
         </AppContainer>
@@ -216,7 +247,7 @@ const organizationsusers = () => {
         <AppContainer>
           <CustomDatagrid
             rows={rows}
-            columns={orgUsersCols}
+            columns={campResultCols}
             rowHeight={50}
             pagination={true}
             sorting={[{ field: 'lastUpdatedAt', sort: 'desc' }]}
@@ -228,6 +259,16 @@ const organizationsusers = () => {
               otherControls: [{ icon: cilChevronBottom, fn: toggleGrid }],
               filterDisable: true,
               fileName: 'CAMPAIGN_RESULTS',
+            }}
+            hiddenCols={{
+              columnVisibilityModel: {
+                isFailed: true,
+                isDelivered: true,
+                isSent: true,
+                isRead: true,
+                isPending: true,
+                id: true,
+              },
             }}
             summary={[
               {

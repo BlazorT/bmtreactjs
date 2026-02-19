@@ -83,17 +83,20 @@ const CampaignResultActionCell = (prop) => {
             
 
             {/* Resend icon - only when status !== 14 */}
-            {status === 8 && (
+            {status === 8 ? (
               <CTooltip content="Resend Notification">
                 <CIcon
                   onClick={handleResend}
                   className="stock-toggle-icon"
-                  icon={cilSend}          // ← or use cilReload if preferred
+                  icon={cilSend}
                   size="lg"
-                  style={{ cursor: 'pointer', color: '#007bff' }} // optional: blue for send/action
+                  style={{ cursor: 'pointer', color: '#007bff' }}
                 />
               </CTooltip>
+            ) : (
+              <span className="text-muted">Not Available</span>
             )}
+
           </div>
         </CCol>
       </CRow>

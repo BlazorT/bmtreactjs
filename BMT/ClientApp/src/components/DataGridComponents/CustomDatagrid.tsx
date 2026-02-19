@@ -52,6 +52,10 @@ interface CustomDatagridProps {
   enableGrouping?: boolean;
   groupBy: string[];
   summaryRows?: any[];
+  hiddenCols?: {
+    columnVisibilityModel?: Record<string, boolean>;
+  };
+
   defaultExpandedGroups?: boolean; // new prop
 }
 
@@ -84,6 +88,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   showGrid = true,
   defaultExpandedGroups,
   summaryRows,
+  hiddenCols,   // ✅ ADD THIS
 }) => {
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
@@ -167,10 +172,21 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
   /* ---------------------------------- COLUMNS ---------------------------------- */
   const finalColumns = useMemo(() => {
-    const cols = [...columns];
+    let cols = [...columns];
+
+    // ✅ Hide columns
+    if (hiddenCols?.columnVisibilityModel) {
+      cols = cols.filter(
+        (col) => !hiddenCols.columnVisibilityModel?.[col.key]
+      );
+    }
+
+    // ✅ Add selection column if enabled
     if (rowSelection) cols.unshift(SelectColumn as any);
+
     return cols;
-  }, [columns, rowSelection]);
+  }, [columns, rowSelection, hiddenCols]);
+
 
   // ✅ Simplified fix since widths are now defined in columns
   // ✅ Persistent TreeGrid Column Fix (working from prod test)
