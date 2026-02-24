@@ -46,7 +46,30 @@ namespace com.blazor.bmt.controllers
             return Ok(response);
            
         }
-       
+        [HttpPost("createsinglenotification")]    
+        [Route("createsinglenotification")]
+        public async Task<ActionResult> CreateSingleNOtification([FromBody] NotificationViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]) != GlobalBasicConfigurationsViewModel.ApiAuthKey)) return Ok(new BlazorApiResponse { status = false, errorCode = "201", message = "Authorization Failed" });
+            BlazorApiResponse response = new BlazorApiResponse();
+            try
+            {
+
+                // GET DATA
+                response.data = await _notificationPageService.CreateNotification(model);
+                // response.data = await _blazorRepoPageService.loadRoleMenus(Convert.ToInt32(filter.roleId));
+                response.status = true;
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+                response.status = false;
+            }
+
+
+            return Ok(response);
+
+        }
         [HttpPost("mynotifications")]
         [HttpGet("mynotifications")]
         [Route("mynotifications")]
