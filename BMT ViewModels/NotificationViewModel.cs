@@ -22,6 +22,7 @@ namespace com.blazor.bmt.viewmodels
 
         public string? MessageRefId { get; set; }
         public int? DeliveryStatus { get; set; }
+        public int? RetriesAvailedCount { get; set; } = 0;
 
 
         public string? Recipient { get; set; }

@@ -24,6 +24,7 @@ public partial class NotificationModel:BaseModelTransactions
     public string? Body { get; set; }
 
     public string? Subject { get; set; }
+    public int? RetriesAvailedCount { get; set; } = 0;
 
     public string? Title { get; set; }
     public string? MessageRefId { get; set; }

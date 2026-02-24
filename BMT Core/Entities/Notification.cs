@@ -20,7 +20,7 @@ public partial class Notification:EntityTransaction
     public string? MessageRefId { get; set; }
     public int? DeliveryStatus { get; set; }
 
-
+    public int? RetriesAvailedCount { get; set; } = 0;
     public string? Recipient { get; set; }
 
     public string? SendFrom { get; set; }
