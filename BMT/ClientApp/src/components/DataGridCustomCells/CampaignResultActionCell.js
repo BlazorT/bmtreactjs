@@ -22,7 +22,7 @@ const CampaignResultActionCell = (prop) => {
     // Replace with real resend API call when you implement it
     showConfirmation({
       header: 'Resend Confirmation',
-      body: `Are you sure you want to resend the notification for Network ${value.row?.networkId ?? '—'} and Recipient ${value.row?.contentId ?? '—'}?`,
+      body: `Are you sure you want to resend ${value.row?.networkId ?? '—'}   (${value.row?.recipient ?? '—'}) ?`,
       isOpen: true,
       onYes: async () => {
         // TODO: Call your real resend API here, e.g.:
@@ -70,7 +70,7 @@ const CampaignResultActionCell = (prop) => {
   }
 
   const row = value?.row;
-  const status = row?.status;
+  const status = row?.deliveryStatus;
 
   // Only show actions if there's a row and status
   if (!row) return null;
@@ -83,17 +83,20 @@ const CampaignResultActionCell = (prop) => {
             
 
             {/* Resend icon - only when status !== 14 */}
-            {status !== 14 && (
-              <CTooltip content="Resend Invitation / Email">
+            {status === 8 ? (
+              <CTooltip content="Resend Notification">
                 <CIcon
                   onClick={handleResend}
                   className="stock-toggle-icon"
-                  icon={cilSend}          // ← or use cilReload if preferred
+                  icon={cilSend}
                   size="lg"
-                  style={{ cursor: 'pointer', color: '#007bff' }} // optional: blue for send/action
+                  style={{ cursor: 'pointer', color: '#007bff' }}
                 />
               </CTooltip>
+            ) : (
+              <span className="text-muted">Not Available</span>
             )}
+
           </div>
         </CCol>
       </CRow>

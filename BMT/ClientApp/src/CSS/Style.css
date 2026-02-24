@@ -4866,3 +4866,22 @@ input[id^='recipient-'] {
   max-height: 60dvh;
   overflow-y: scroll;
 }
+.failed-row-red {
+  /*  background-color: #fff5f5 !important; */ /* light red background */
+  color: #ad5454 !important; /* red text */
+  border-left: 4px solid #dc3545 !important; /* red left border */
+}
+
+  /*.failed-row-red:hover {
+    background-color: #ffebee !important;
+  }*/
+
+  .failed-row-red .rdg-cell {
+    background-color: inherit !important;
+  }
+
+  .rdg-7-0-0-beta-58-ccd2e5d9 {
+    --rdg-background-color: #143452!important;
+    --rdg-header-background-color: #143452!important;
+  }
+

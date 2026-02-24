@@ -52,6 +52,10 @@ interface CustomDatagridProps {
   enableGrouping?: boolean;
   groupBy: string[];
   summaryRows?: any[];
+  hiddenCols?: {
+    columnVisibilityModel?: Record<string, boolean>;
+  };
+
   defaultExpandedGroups?: boolean; // new prop
 }
 
@@ -84,6 +88,7 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
   showGrid = true,
   defaultExpandedGroups,
   summaryRows,
+  hiddenCols,   // ✅ ADD THIS
 }) => {
   const [sortColumns, setSortColumns] = useState<SortColumn[]>(sorting);
   const [searchTerm, setSearchTerm] = useState('');
@@ -167,10 +172,21 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
   /* ---------------------------------- COLUMNS ---------------------------------- */
   const finalColumns = useMemo(() => {
-    const cols = [...columns];
+    let cols = [...columns];
+
+    // ✅ Hide columns
+    if (hiddenCols?.columnVisibilityModel) {
+      cols = cols.filter(
+        (col) => !hiddenCols.columnVisibilityModel?.[col.key]
+      );
+    }
+
+    // ✅ Add selection column if enabled
     if (rowSelection) cols.unshift(SelectColumn as any);
+
     return cols;
-  }, [columns, rowSelection]);
+  }, [columns, rowSelection, hiddenCols]);
+
 
   // ✅ Simplified fix since widths are now defined in columns
   // ✅ Persistent TreeGrid Column Fix (working from prod test)
@@ -257,11 +273,9 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
 
   const getRowClassName = (row: any, idx: number): string => {
     const isRowSelected = selectedRows.has(row.content);
-    let classNames = 'rdg-row-even';
+    let classNames = idx % 2 === 0 ? 'rdg-row-even' : 'rdg-row-odd';
 
-    if (idx % 2 !== 0) {
-      classNames = 'rdg-row-odd';
-    }
+    // ─── Existing conditions ───
     if (
       Number.isInteger(row.status) &&
       !row?.contentId &&
@@ -270,19 +284,29 @@ const CustomDatagrid: React.FC<CustomDatagridProps> = ({
     ) {
       classNames += ' deleted-row-red';
     }
+
+    // ─── NEW: Failed status (8) ───
+    if (row.deliveryStatus === 8 || row.deliveryStatus === 14) {
+      classNames += ' failed-row-red';
+    }
+
     if (row.group) {
       classNames += ' row-roles-group';
     }
+
     if (row.inventoryOf === 2) {
       classNames += ' vehicle-da-inventory';
     }
+
     if (row.disabled === true) {
       classNames += ' disabled-row-red';
     }
+
     if (isRowSelected) {
       classNames += ' selected-row';
     }
-    return classNames;
+
+    return classNames.trim(); // optional: cleaner output
   };
 
   // ✅ FIX: Calculate dynamic height based on content

@@ -18,15 +18,14 @@ export const useFetchAllNotification = () => {
   const { data, error, loading, postData } = useApi('/Notifications/allnotifications');
 
   const fetchRecipients = async (filters) => {
-    //console.log(filters);
-
+    console.log("fetchRecipients received filters:", filters); // ✅ ADD
     const recipientssBody = {
       id: 0,
       CreatedBy: Role == 4 ? Role:0,
-      OrganizationId: toNumberOrZero(filters?.orgId),
+      OrganizationId: toNumberOrZero(filters?.organizationId),
       rowVer: filters?.rowVer ?? 0,
       networkId: toNumberOrZero(filters?.networkId),
-      contentId: filters?.contentId || '',
+      recipient: filters?.recipient || '',
       deliveryStatus: toNumberOrZero(filters?.deliveryStatus),
       status:0,
       createdAt: filters?.createdAt
