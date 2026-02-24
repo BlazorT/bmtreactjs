@@ -27,17 +27,17 @@ import usePageRoles from 'src/hooks/usePageRoles';
 
 dayjs.extend(utc);
 
-const organizationsusers = () => {
+const campaignresults = () => {
   const pageRoles = usePageRoles('Organizations Users');
   //const navigate = useNavigate();
   const user = useSelector((state) => state.user);
 
   const { loading, fetchRecipients: getCampaignResult, data: orgUserList } = useFetchAllNotification();
-  console.log("useFetchAllRecipients returned:", {
-    loading,
-    getCampaignResult,
-    orgUserList,
-  });
+  //console.log("useFetchAllRecipients returned:", {
+  //  loading,
+  //  getCampaignResult,
+  //  orgUserList,
+  //});
   const { getOrgs, orgsLoading, orgData } = useFetchOrgs();
 
   useEffect(() => {
@@ -65,9 +65,9 @@ const organizationsusers = () => {
 
   const getCampaignResultList = async (filter = filters) => {
     try {
-      console.log("getCampaignResultList received filter:", filter); // ✅ ADD
+     // console.log("getCampaignResultList received filter:", filter); // ✅ ADD
       const orgCampResultList = await getCampaignResult( filter);
-      console.log("orgCampResultList", orgCampResultList);
+    //  console.log("orgCampResultList", orgCampResultList);
 
       // Optional: Create a lookup map for status names (faster lookups)
       const statusMap = {};
@@ -82,6 +82,14 @@ const organizationsusers = () => {
         createdAt: formatDateTime(data.createdAt) || '--',
         lastUpdatedAt: formatDateTime(data.lastUpdatedAt ?? data.createdAt) || '--',
         deliveryStatus: data.deliveryStatus,
+        networkById: data.networkId,
+        status: data.status,
+        createdBy: data.createdBy,
+        retriesAvailedCount: data.retriesAvailedCount,
+        notificationTypeId: data.notificationTypeId,
+        lastUpdatedBy: data.lastUpdatedBy,
+        organizationId: data.organizationId,
+        expiryTime: data.expiryTime,
         deliveryStatusName: statusMap[data.deliveryStatus] || 'Unknown', // ← human-readable name
         // Add numeric flags for easier counting (optional but useful for summary)
         isSent: data.deliveryStatus === 6 ? 1 : 0,
@@ -94,7 +102,7 @@ const organizationsusers = () => {
         isPending: data.deliveryStatus === 13 ? 1 : 0,
         isDropped: data.deliveryStatus === 14 ? 1 : 0,
       }));
-      console.log("mappedArray", mappedArray);
+   //   console.log("mappedArray", mappedArray);
       setRows(mappedArray);
     } catch (err) {
       console.error("Failed to load campaign results:", err);
@@ -103,14 +111,14 @@ const organizationsusers = () => {
 
   const changeFilter = (e, date,key, label) => {
 
-    console.log("changeFilter called:", e, date); // ✅ ADD
+   // console.log("changeFilter called:", e, date); // ✅ ADD
 
     if (date === 'createdAt' || date === 'lastUpdatedAt') {
 
       setFilters(prev => {
         const updated = { ...prev, [date]: e };
 
-        console.log("Updated filters:", updated); // ✅ ADD
+//console.log("Updated filters:", updated); // ✅ ADD
 
         return updated;
       });
@@ -124,9 +132,9 @@ const organizationsusers = () => {
           organizationId: e?.id || 1,
         };
 
-        console.log("Selected organization object:", e);
-        console.log("Organization ID:", updated.organizationId);
-        console.log("Updated filters:", updated);
+        //console.log("Selected organization object:", e);
+        //console.log("Organization ID:", updated.organizationId);
+        //console.log("Updated filters:", updated);
 
         return updated;
       });
@@ -139,7 +147,7 @@ const organizationsusers = () => {
       setFilters(prev => {
         const updated = { ...prev, [name]: value };
 
-        console.log("Updated filters:", updated); // ✅ ADD
+      //  console.log("Updated filters:", updated); // ✅ ADD
 
         return updated;
       });
@@ -150,7 +158,7 @@ const organizationsusers = () => {
       setFilters(prev => {
         const updated = { ...prev, [e.name]: e.value };
 
-        console.log("Updated filters:", updated); // ✅ ADD
+      //  console.log("Updated filters:", updated); // ✅ ADD
 
         return updated;
       });
@@ -310,4 +318,4 @@ const organizationsusers = () => {
   );
 };
 
-export default organizationsusers;
+export default campaignresults;

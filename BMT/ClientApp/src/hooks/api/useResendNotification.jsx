@@ -4,27 +4,43 @@ import useApi from '../useApi';
 
 export const useResendNotification = () => {
   dayjs.extend(utc);
-  const { data, error, loading, postData } = useApi('/BlazorApi/updateuserstatus');
+  const { data, error, loading, postData } = useApi('/Notifications/createsinglenotification');
 
-  const resendNotification = async (value, status) => {
-    let resendBody;
-    if (value) {
-      resendBody = {
-        id: value[0].id,
-        networkId: value[0].networkId,
-        orgId: value[0].organizationId === 1 ? 0 : value[0].organizationId,
-        roleId: value[0].roleId,
-        status: status,
-        createdBy: value[0].createdBy,
-        createdAt: value[0].createdAt,
-        lastUpdatedBy: value[0].lastUpdatedBy,
-        lastUpdatedAt: dayjs().utc().format(),
-        rowVer: value[0].rowVer,
-      };
+  const resendNotification = async (value) => {
+
+  //  console.log("valuevalue", value);
+
+    if (!value || !value?.row) {
+      console.error("Invalid value received");
+      return null;
     }
-    console.log('resendBody', resendBody);
-    const response = await postData(resendBody);
-    return response;
+
+    const row = value.row;
+
+    const resendBody = {
+      id: 0,
+      networkId: row.networkById,
+      organizationId: row.organizationId === 1 ? 0 : row.organizationId,
+      status: row.status,
+      notificationTypeId: row.notificationTypeId,
+      retriesAvailedCount: row.retriesAvailedCount,
+      createdBy: row.createdBy,
+      createdAt: dayjs().utc().toISOString(),
+      lastUpdatedBy: row.lastUpdatedBy,
+      lastUpdatedAt: dayjs().utc().toISOString(),
+      rowVer: row.rowVer,
+      ExpiryTime: row.expiryTime,
+    };
+
+   // console.log('resendBody', resendBody);
+
+    try {
+      const response = await postData(resendBody);
+      return response;
+    } catch (error) {
+      console.error("Resend failed:", error);
+      return null;
+    }
   };
 
   return { data, error, loading, resendNotification };
