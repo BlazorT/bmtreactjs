@@ -17,7 +17,7 @@ export const formatDateTime = (dateTimeString) => {
   // Parse the input as UTC and convert to local time
   const localDateTime = dayjs.utc(dateTimeString).local();
   // Format in desired format
-  return localDateTime.format('MM/DD/YYYY hh:mm:ss A');
+  return localDateTime.format('MM/DD/YYYY hh:mm A');
 };
 export const formatTime = (TimeString) => {
   const parsedTime = dayjs.utc(TimeString);

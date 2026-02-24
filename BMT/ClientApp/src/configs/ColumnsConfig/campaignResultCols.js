@@ -1,7 +1,17 @@
 /* eslint-disable react/react-in-jsx-scope */
 import CampaignResultActionCell from 'src/components/DataGridCustomCells/CampaignResultActionCell';
 import globalutil from 'src/util/globalutil';
-
+const statusIcons = {
+  SENT: "📤",
+  DELIVERED: "✅",
+  FAILED: "❌",
+  DELETED: "🗑️",
+  READ: "📖",
+  SEEN: "👁️",
+  UNDELIVERED: "📭",
+  PENDING: "⏳",
+  DROPPED: "⚠️"
+};
 export const campaignResultCols = (getDasList, daRes, pageRoles) => [
   
   {
@@ -20,18 +30,7 @@ export const campaignResultCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: false,
   },
   
-  {
-    key: 'deliveryStatus',
-    name: 'Current Status',
-    // Width: 80,
-    editable: false,
-    filterable: true,
-    disableColumnMenu: true,
-    renderCell: (params) =>
-      globalutil.deliverstatus().find((item) => item.id === params.row.deliveryStatus)
-        ? globalutil.deliverstatus().find((item) => item.id === params.row.deliveryStatus).name
-        : '',
-  },
+ 
   {
     key: 'isFailed',  
     name: 'Failed',
@@ -89,22 +88,60 @@ export const campaignResultCols = (getDasList, daRes, pageRoles) => [
     disableColumnMenu: true,
   },
 
+  {
+    key: 'deliveryStatus',
+    name: 'Status',
+    editable: false,
+    filterable: true,
+    disableColumnMenu: true,
+    renderCell: (params) => {
 
+      const statusObj = globalutil
+        .deliverstatus()
+        .find((item) => item.id === params.row.deliveryStatus);
+
+      if (!statusObj) return '';
+
+      const icon = statusIcons[statusObj.name] || '';
+
+      return (
+        <span style={{ fontWeight: 600 }}>
+          {statusObj.name}
+          <span
+            style={{
+              fontSize: '20px',   // increase icon size
+              marginLeft: '6px',  // space between text and icon
+              verticalAlign: 'middle'
+            }}
+          >
+            {icon}
+          </span>
+        </span>
+      );
+    },
+  },
   {
     key: 'imageUrl',
-    name: 'Action',
-    // maxWidth: 100,
+    name: '',
     editable: false,
     filterable: false,
     disableColumnMenu: true,
-    renderCell: (params) => (
-      <CampaignResultActionCell
-        value={params}
-        fetching={getDasList}
-        user={daRes.filter((item) => item.id == params.row.id)}
-        canUpdate={pageRoles.canUpdate}
-        canDelete={pageRoles.canDelete}
-      />
-    ),
-  },
+    renderCell: (params) => {
+
+      // show only if deliveryStatus is 8 (FAILED)
+      if (params.row?.deliveryStatus !== 8) {
+        return null; // hide for other statuses
+      }
+
+      return (
+        <CampaignResultActionCell
+          value={params}
+          fetching={getDasList}
+          user={daRes.filter((item) => item.id == params.row.id)}
+          canUpdate={pageRoles.canUpdate}
+          canDelete={pageRoles.canDelete}
+        />
+      );
+    },
+  }
 ];

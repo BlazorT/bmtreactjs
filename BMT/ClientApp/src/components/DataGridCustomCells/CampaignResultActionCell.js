@@ -3,7 +3,7 @@ import { cilSend } from '@coreui/icons'; // ← added cilSend
 //import { useNavigate } from 'react-router-dom';
 import CIcon from '@coreui/icons-react';
 import { CCol, CRow, CTooltip } from '@coreui/react';
-import { useToggleUserStatus } from 'src/hooks/api/useToggleUserStatus';
+import { useResendNotification } from 'src/hooks/api/useResendNotification';
 import { useShowConfirmation } from 'src/hooks/useShowConfirmation';
 import { useShowToast } from 'src/hooks/useShowToast';
 import Spinner from '../UI/Spinner';
@@ -14,7 +14,7 @@ const CampaignResultActionCell = (prop) => {
   //const navigate = useNavigate();
   const showToast = useShowToast();
   const showConfirmation = useShowConfirmation();
-  const { loading, /*updateStatus*/ } = useToggleUserStatus();
+  const { loading, resendNotification } = useResendNotification();
 
   // You can rename this function if you add actual resend logic later
   const handleResend = () => {
@@ -26,44 +26,18 @@ const CampaignResultActionCell = (prop) => {
       isOpen: true,
       onYes: async () => {
         // TODO: Call your real resend API here, e.g.:
-        // const res = await resendInvitation(user[0].id);
-        // if (res.status) { showToast('Resent successfully', 'success'); }
-        showToast('Resend action triggered (placeholder)', 'success');
+        const response = await resendNotification(value, status);
+        if (response.status)
+        { showToast('Resent successfully', 'success'); } else {
+          showToast(response.message, 'error');
+        }
         showConfirmation({ isOpen: false });
       },
       onNo: () => showConfirmation({ isOpen: false }),
     });
   };
 
-  //const toggleStatus = (status) => {
-  //  showConfirmation({
-  //    header: 'Confirmation!',
-  //    body: `Are you sure you want to ${status === 1 ? 're active' : 'delete'} ${user[0]?.userName || 'this user'
-  //      }?`,
-  //    isOpen: true,
-  //    onYes: () => onYesToggle(status),
-  //    onNo: () => onNoConfirm(),
-  //  });
-  //};
-
-  //const onYesToggle = async (status) => {
-  //  const response = await updateStatus(user, status);
-  //  console.log(response, 'response');
-  //  if (response.status) {
-  //    showToast(`${user[0]?.userName || 'User'} ${status === 1 ? 're activated' : 'deleted'} successfully`);
-  //  } else {
-  //    showToast(response.message, 'error');
-  //  }
-  //  onNoConfirm();
-  //};
-
-  //const onNoConfirm = () => {
-  //  showConfirmation({ isOpen: false });
-  //};
-
-  //const editUser = () => {
-  //  navigate('/UserRegister', { state: { id: value.row.id, user: user } });
-  //};
+  
 
   if (loading) {
     return <Spinner />;
@@ -89,12 +63,12 @@ const CampaignResultActionCell = (prop) => {
                   onClick={handleResend}
                   className="stock-toggle-icon"
                   icon={cilSend}
-                  size="lg"
-                  style={{ cursor: 'pointer', color: '#007bff' }}
+                  size="xl"
+                  style={{ cursor: 'pointer', color: 'rgb(235 241 237)' }}
                 />
               </CTooltip>
             ) : (
-              <span className="text-muted">Not Available</span>
+              <span className="text-muted">---</span>
             )}
 
           </div>
