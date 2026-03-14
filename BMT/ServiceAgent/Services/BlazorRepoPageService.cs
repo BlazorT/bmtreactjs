@@ -855,7 +855,8 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                                 UserViewModel uvmi = new UserViewModel();
                                 uvmi.Id = Convert.ToInt32(reader["Id"]);
                                 // uvmi.SchoolId = Convert.ToInt32(reader["SchoolId"]);
-                                uvmi.UserCode = "" + reader["Id"];
+                               // uvmi.UserCode = "" + reader["Id"];
+                                uvmi.UserCode = "" + reader["UserCode"];
                                 uvmi.CompleteName = "" + reader["CompleteName"];
                                 uvmi.OrgId = Convert.ToInt32(reader["OrgId"]);
                                 uvmi.CityId = Convert.ToInt32(reader["AddCity"]);// CityId
