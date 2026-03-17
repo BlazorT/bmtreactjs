@@ -813,7 +813,7 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
         //    }
         //    return uvm.AsQueryable();
         //}
-        public async Task<IEnumerable<UserViewModel>> GetBMTUsersListAsync(int userId, int OrgId, int roleId, string name, int status, DateTime dtFrom, DateTime dtTo)
+        public async Task<IEnumerable<UserViewModel>> GetBMTUsersListAsync(int userId, int OrgId, int roleId, string name, string UserCode, int status, DateTime dtFrom, DateTime dtTo)
         {
             List<UserViewModel> uvm = new List<UserViewModel>();
             try
@@ -826,6 +826,8 @@ AND (c.Id = @p_CampaignId OR ifnull(@p_CampaignId,0)=0)
                         List<MySqlParameter> parameter = new List<MySqlParameter>();
                         MySqlParameter pkeyword = new MySqlParameter("p_keyword", "" + name);
                         parameter.Add(pkeyword);
+                        MySqlParameter pUserCode = new MySqlParameter("p_usercode", "" + UserCode);
+                        parameter.Add(pUserCode);                        
                         MySqlParameter pUserId = new MySqlParameter("p_UserId", MySqlDbType.Int32);
                         pUserId.Value = Convert.ToInt32(userId);
                         parameter.Add(pUserId);

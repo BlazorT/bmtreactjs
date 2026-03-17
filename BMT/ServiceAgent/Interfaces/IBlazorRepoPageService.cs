@@ -15,7 +15,7 @@ namespace Blazor.Web.UI.Interfaces
         Task<IEnumerable<AuditLogViewModel>> GetAuditLogDetailsData(AuditLogViewModel viewModel);
         Task<IEnumerable<OrganizationViewModel>> GetOrganizationListReport(int OrgId, string keyword, int status, DateTime dtFrom, DateTime dtTo);
         Task<IEnumerable<OrgpackagedetailViewModel>> GetOrganizationBundlingData(OrganizationViewModel model);
-        Task<IEnumerable<UserViewModel>> GetBMTUsersListAsync(int userId, int OrgId, int roleId, string name, int status, DateTime dtFrom, DateTime dtTo);
+        Task<IEnumerable<UserViewModel>> GetBMTUsersListAsync(int userId, int OrgId, int roleId, string name, string UserCode, int status, DateTime dtFrom, DateTime dtTo);
        // Task<IEnumerable<Configration>> LoadBasicConfigurationsData();
         Task<IEnumerable<Configration>> LoadOrgConfigurationsData(int OrgId);
         Task<BlazorResponseViewModel> SocialMediaCreateLogin(UserViewModel model);

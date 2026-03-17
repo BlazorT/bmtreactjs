@@ -198,7 +198,13 @@ namespace com.blazor.bmt.controllers
             if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]) || (Convert.ToString(Request.Headers["Authorization"]).Contains(BlazorConstant.API_AUTH_KEY) == false)) return Ok(new BlazorApiResponse { status = false, errorCode = "405", effectedRows = 0, data = "Authorization Failed" });
             try
             {
-                blazorApiResponse.data = await _blazorRepoPageService.GetBMTUsersListAsync(usr.Id, Convert.ToInt32(usr.OrgId), usr.RoleId, usr.UserName, usr.Status, usr.CreatedAt, usr.LastUpdatedAt==null?GlobalUTIL.CurrentDateTime: Convert.ToDateTime(usr.LastUpdatedAt));
+                if (!string.IsNullOrWhiteSpace(usr.UserCode) && long.TryParse(usr.UserCode, out _) && usr.Id <=0)
+                {
+                    usr.Id = Convert.ToInt32(usr.UserCode); // in this case usercode is user id
+                    usr.UserCode = string.Empty;
+                }
+
+                blazorApiResponse.data = await _blazorRepoPageService.GetBMTUsersListAsync(usr.Id, Convert.ToInt32(usr.OrgId), usr.RoleId, usr.UserName, usr.UserCode, usr.Status, usr.CreatedAt, usr.LastUpdatedAt==null?GlobalUTIL.CurrentDateTime: Convert.ToDateTime(usr.LastUpdatedAt));
                 blazorApiResponse.status = true;
             }
             catch (Exception ex)
