@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useEffect, useState } from 'react';
 
-import { useNavigate, useParams } from 'react-router-dom';
-import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ContactUs from 'src/components/Modals/ContactUs';
-import Unsubscribe from 'src/components/Modals/Unsubscribe';
 import TermOfUse from 'src/components/Modals/TermOfUse';
+import TermsAndConditionModal from 'src/components/Modals/TermsAndConditionModal';
+import Unsubscribe from 'src/components/Modals/Unsubscribe';
 
 function AppFooter() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   const [termsmodalOpen, setTermsmodalOpen] = useState(false);
   const [contactUsmodalOpen, setContactUsmodalOpen] = useState(false);
@@ -16,8 +17,10 @@ function AppFooter() {
   const [termOfUsemodalOpen, setTermOfUsemodalOpen] = useState(false);
 
   useEffect(() => {
-    if (id == 'unsubscribe') setUnsubscribeModalOpen(true);
-  }, [id]);
+    if (searchParams.get('unsub') === 'true') {
+      setUnsubscribeModalOpen(true);
+    }
+  }, [searchParams]);
 
   const TermsModal = () => {
     setTermsmodalOpen((prev) => !prev);

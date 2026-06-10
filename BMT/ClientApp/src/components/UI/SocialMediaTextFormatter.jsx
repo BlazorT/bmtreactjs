@@ -81,6 +81,16 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
     }
   };
 
+  // WhatsApp markdown equivalents for styles that support it
+  const waWrapperMap = {
+    bold: '*',
+    italic: '_',
+    strikethrough: '~',
+  };
+
+  // Returns true if text has any non-Latin characters (Arabic, Urdu, etc.)
+  const hasNonLatin = (text) => [...text].some((char) => char.codePointAt(0) > 0x024f);
+
   const applyStyle = useCallback(
     (style) => {
       const textarea = textareaRef.current;
@@ -97,17 +107,26 @@ const SocialMediaTextEditor = ({ value, onChange, placeholder, networkId }) => {
 
       const selectedText = value.slice(start, end);
       const normalizedText = resetToNormal(selectedText);
-      const isAlreadyStyled = isTextStyled(selectedText, style);
 
-      let finalText;
-      if (isAlreadyStyled) {
-        finalText = normalizedText;
-      } else {
-        finalText = transformText(normalizedText, style);
+      // ── Auto-detect non-Latin → use WhatsApp wrapper instead ──
+      if (hasNonLatin(normalizedText) && waWrapperMap[style]) {
+        const wrapper = waWrapperMap[style];
+        const isWrapped = selectedText.startsWith(wrapper) && selectedText.endsWith(wrapper);
+
+        const result = isWrapped
+          ? selectedText.slice(wrapper.length, selectedText.length - wrapper.length) // unwrap
+          : wrapper + selectedText + wrapper; // wrap
+
+        onChange(value.slice(0, start) + result + value.slice(end));
+        setErrorMessage('');
+        return;
       }
 
-      const newText = value.slice(0, start) + finalText + value.slice(end);
-      onChange(newText);
+      // ── Original Latin/Unicode path ──
+      const isAlreadyStyled = isTextStyled(selectedText, style);
+      const finalText = isAlreadyStyled ? normalizedText : transformText(normalizedText, style);
+
+      onChange(value.slice(0, start) + finalText + value.slice(end));
       copyToClipboard(finalText, isAlreadyStyled ? 'normal' : style);
       setErrorMessage('');
     },

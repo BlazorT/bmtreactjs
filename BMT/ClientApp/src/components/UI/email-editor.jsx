@@ -22,9 +22,9 @@ const EmailTextEditor = ({ open, toggle, onSave, value, isModal = true }) => {
   };
 
   const onReady = (unlayer) => {
-    unlayer.setBodyValues({ contentWidth: '100%', backgroundColor: 'TRANSPARENT' });
+    unlayer.setBodyValues({ contentWidth: 900 });
     unlayer.addEventListener('design:updated', () => {
-      unlayer.setBodyValues({ contentWidth: '100%', backgroundColor: 'TRANSPARENT' });
+      unlayer.setBodyValues({ contentWidth: 900 });
     });
 
     // Load existing design if available
